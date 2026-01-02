@@ -172,1718 +172,1025 @@ class EditionEditTest < IntegrationTest
     end
   end
 
-  context "tagging tab" do
-    context "No tagging is set" do
-      setup do
-        @draft_edition = FactoryBot.create(:edition, :draft)
-        visit edition_path(@draft_edition)
-        click_link("Tagging")
-      end
-
-      should "show 'Tagging' header" do
-        within :css, ".gem-c-heading h2" do
-          assert page.has_text?("Tagging")
-        end
-      end
-
-      should "show empty 'GOV.UK breadcrumb' summary in first position" do
-        within all(".govuk-summary-card")[0] do
-          assert page.has_text?("GOV.UK breadcrumb")
-          assert page.has_text?("No breadcrumb set")
-          assert page.has_link?("Set GOV.UK breadcrumb")
-        end
-      end
-
-      should "show empty 'Mainstream browse pages' summary in second position" do
-        within all(".govuk-summary-card")[1] do
-          assert page.has_text?("Mainstream browse pages")
-          assert page.has_text?("Not tagged to any browse pages")
-          assert page.has_link?("Tag to a browse page")
-        end
-      end
-
-      should "show empty 'Organisations' summary in third position" do
-        within all(".govuk-summary-card")[2] do
-          assert page.has_text?("Organisations")
-          assert page.has_text?("Not tagged to any organisations")
-          assert page.has_link?("Tag to an organisation")
-        end
-      end
-
-      should "show empty 'Related content' summary in fourth position" do
-        within all(".govuk-summary-card")[3] do
-          assert page.has_text?("Related content")
-          assert page.has_text?("Not tagged to any related content")
-          assert page.has_link?("Tag to related content")
-        end
-      end
-
-      should "not show 'Reorder' button in 'Related Content' when no related content items are present" do
-        within all(".govuk-summary-card")[3] do
-          assert page.has_no_text?("Reorder")
-        end
-      end
-
-      context "User does not have correct permissions" do
-        setup do
-          user = FactoryBot.create(:user, name: "Stub User")
-          login_as(user)
-          visit edition_path(@draft_edition)
-          click_link("Tagging")
-        end
-
-        should "not show the 'Tag to a browse page' link" do
-          within all(".govuk-summary-card")[1] do
-            assert page.has_no_link?("Tag to a browse page")
-          end
-        end
-
-        should "not show the 'Tag to organisations page' link" do
-          within all(".govuk-summary-card")[2] do
-            assert page.has_no_link?("Tag to an organisation")
-          end
-        end
-
-        should "not show the 'Tag to related content' link" do
-          within all(".govuk-summary-card")[3] do
-            assert page.has_no_link?("Tag to related content")
-          end
-        end
-      end
-    end
-
-    context "Tagging is set" do
-      setup do
-        stub_linkables_with_data
-        @draft_edition = FactoryBot.create(:edition, :draft)
-        visit edition_path(@draft_edition)
-        click_link("Tagging")
-      end
-
-      should "show 'GOV.UK breadcrumb' summary card in first position" do
-        within all(".gem-c-summary-card")[0] do
-          assert page.has_text?("GOV.UK breadcrumb")
-          assert page.has_css?("dt", text: "Breadcrumb")
-          assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
-        end
-      end
-
-      should "show 'Mainstream browse pages' summary card in second position" do
-        within all(".gem-c-summary-card")[1] do
-          assert page.has_text?("Mainstream browse pages")
-
-          within all(".govuk-summary-list__row")[0] do
-            assert page.has_css?("dt", text: "Browse page 1")
-            assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
-          end
-
-          within all(".govuk-summary-list__row")[1] do
-            assert page.has_css?("dt", text: "Browse page 2")
-            assert page.has_css?("dt", text: "Tax > RTI (draft)")
-          end
-
-          within all(".govuk-summary-list__row")[2] do
-            assert page.has_css?("dt", text: "Browse page 3")
-            assert page.has_css?("dt", text: "Tax > VAT")
-          end
-        end
-      end
-
-      should "show 'Organisations' summary card in third position" do
-        within all(".gem-c-summary-card")[2] do
-          assert page.has_text?("Organisations")
-
-          within all(".govuk-summary-list__row")[0] do
-            assert page.has_css?("dt", text: "Organisation")
-            assert page.has_css?("dt", text: "Student Loans Company")
-          end
-        end
-      end
-
-      should "show 'Related content' summary card in fourth position" do
-        within all(".gem-c-summary-card")[3] do
-          assert page.has_text?("Related content")
-          assert page.has_no_link?("Tag to related content")
-
-          within all(".govuk-summary-list__row")[0] do
-            assert page.has_css?("dt", text: "Related content 1")
-            assert page.has_css?("dt", text: "/company-tax-returns")
-          end
-
-          within all(".govuk-summary-list__row")[1] do
-            assert page.has_css?("dt", text: "Related content 2")
-            assert page.has_css?("dt", text: "/prepare-file-annual-accounts-for-limited-company")
-          end
-
-          within all(".govuk-summary-list__row")[2] do
-            assert page.has_css?("dt", text: "Related content 3")
-            assert page.has_css?("dt", text: "/corporation-tax")
-          end
-
-          within all(".govuk-summary-list__row")[3] do
-            assert page.has_css?("dt", text: "Related content 4")
-            assert page.has_css?("dt", text: "/tax-help")
-          end
-        end
-      end
-
-      context "User has permissions" do
-        should "show 'Edit' link on 'GOV.UK breadcrumb' summary card when user has permissions" do
-          within all(".gem-c-summary-card")[0] do
-            assert page.has_link?("Edit")
-          end
-        end
-
-        should "navigate to the 'Set GOV.UK breadcrumb' page when the 'Edit' link is clicked" do
-          within all(".gem-c-summary-card")[0] do
-            click_link("Edit")
-            assert_current_path tagging_breadcrumb_page_edition_path(@draft_edition)
-          end
-        end
-
-        should "show 'Remove' link on 'GOV.UK breadcrumb' summary card when user has permissions" do
-          within all(".gem-c-summary-card")[0] do
-            assert page.has_link?("Remove")
-          end
-        end
-
-        should "navigate to the remove breadcrumb page when the 'Remove' link is clicked" do
-          within all(".gem-c-summary-card")[0] do
-            click_link("Remove")
-            assert_current_path tagging_remove_breadcrumb_page_edition_path(@draft_edition)
-          end
-        end
-
-        should "show 'Edit' link on 'Mainstream browse pages' summary card when user has permissions" do
-          within all(".gem-c-summary-card")[1] do
-            assert page.has_link?("Edit")
-          end
-        end
-
-        should "navigate to the 'Tag browse pages' page when the 'Edit' link is clicked" do
-          within all(".gem-c-summary-card")[1] do
-            click_link("Edit")
-            assert_current_path tagging_mainstream_browse_pages_page_edition_path(@draft_edition)
-          end
-        end
-
-        should "show 'Edit' link on 'Organisations' summary card when user has permissions" do
-          within all(".gem-c-summary-card")[2] do
-            assert page.has_link?("Edit")
-          end
-        end
-
-        should "navigate to the 'Tag organisations' page when the 'Edit' link is clicked" do
-          within all(".gem-c-summary-card")[2] do
-            click_link("Edit")
-            assert_current_path tagging_organisations_page_edition_path(@draft_edition)
-          end
-        end
-
-        should "show 'Edit' link on 'Related content' summary card when user has permissions" do
-          within all(".gem-c-summary-card")[3] do
-            assert page.has_link?("Edit")
-          end
-        end
-
-        should "navigate to the 'Tag related content' page when the 'Edit' link is clicked" do
-          within all(".gem-c-summary-card")[3] do
-            click_link("Edit")
-            assert_current_path tagging_related_content_page_edition_path(@draft_edition)
-          end
-        end
-
-        should "show 'Reorder' link on 'Related content' summary card when user has permissions" do
-          within all(".gem-c-summary-card")[3] do
-            assert page.has_link?("Reorder")
-          end
-        end
-
-        should "navigate to the 'Reorder related content' page when the 'Reorder' link is clicked" do
-          within all(".gem-c-summary-card")[3] do
-            click_link("Reorder")
-            assert_current_path tagging_reorder_related_content_page_edition_path(@draft_edition)
-          end
-        end
-      end
-
-      context "User does not have permissions" do
-        setup do
-          user = FactoryBot.create(:user, name: "Stub User")
-          login_as(user)
-          visit edition_path(@draft_edition)
-          click_link("Tagging")
-        end
-
-        should "not show 'Edit' link on 'Mainstream browse pages' summary card when user does not have permissions" do
-          within all(".gem-c-summary-card")[1] do
-            assert page.has_no_link?("Edit")
-          end
-        end
-
-        should "not show 'Edit' link on 'Organisations' summary card when user does not have permissions" do
-          within all(".gem-c-summary-card")[2] do
-            assert page.has_no_link?("Edit")
-          end
-        end
-
-        should "not show 'Edit' link on 'Related content' summary card when user does not have permissions" do
-          within all(".gem-c-summary-card")[3] do
-            assert page.has_no_link?("Edit")
-          end
-        end
-
-        should "not show 'Reorder' link on 'Related content' summary card when user does not have permissions" do
-          within all(".gem-c-summary-card")[3] do
-            assert page.has_no_link?("Reorder")
-          end
-        end
-      end
-    end
-
-    context "minimal tagging is present" do
-      should "not show 'Reorder' link on 'Related content' summary card when only one related content item is present" do
-        stub_linkables_with_single_related_item
-        draft_edition = FactoryBot.create(:edition, :draft)
-
-        visit edition_path(draft_edition)
-        click_link("Tagging")
-
-        within all(".gem-c-summary-card")[3] do
-          assert page.has_link?("Edit")
-          assert page.has_no_link?("Reorder")
-        end
-      end
-    end
-  end
-
-  context "Breadcrumb page" do
-    setup do
-      @draft_edition = FactoryBot.create(:edition, :draft)
-      visit edition_path(@draft_edition)
-      click_link("Tagging")
-    end
-
-    context "Setting a breadcrumb" do
-      setup do
-        click_link("Set GOV.UK breadcrumb")
-      end
-
-      should "redirect to tagging tab when Cancel link is clicked" do
-        click_link("Cancel")
-        assert_current_path tagging_edition_path(@draft_edition.id)
-      end
-
-      should "show the 'Set GOV.UK breadcrumb' page" do
-        assert page.has_text?(@draft_edition.title)
-        assert page.has_text?("Set GOV.UK breadcrumb")
-        assert page.has_text?("Select the browse page you want to appear in the breadcrumb")
-        assert page.has_element?("legend", text: "Tax")
-        assert page.has_unchecked_field?("Capital Gains Tax")
-        assert page.has_unchecked_field?("RTI (draft)")
-        assert page.has_unchecked_field?("VAT")
-        assert page.has_element?("legend", text: "Benefits")
-        assert page.has_unchecked_field?("Benefits and financial support for families")
-        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
-        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
-        assert page.has_text?("Options")
-        assert page.has_button?("Save")
-        assert page.has_link?("Cancel")
-      end
-
-      should "save the selected breadcrumb when the form is submitted" do
-        choose("Capital Gains Tax")
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": [],
-                                            "mainstream_browse_pages": [],
-                                            "ordered_related_items": [],
-                                            "parent": %w[CONTENT-ID-CAPITAL] },
-                                 "previous_version": 0 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("GOV.UK breadcrumbs updated")
-      end
-    end
-
-    context "Editing a breadcrumb" do
-      setup do
-        stub_linkables_with_data
-        visit edition_path(@draft_edition)
-        click_link("Tagging")
-        within all(".gem-c-summary-card")[0] do
-          click_link("Edit")
-        end
-      end
-
-      should "redirect to tagging tab when Cancel link is clicked" do
-        click_link("Cancel")
-        assert_current_path tagging_edition_path(@draft_edition.id)
-      end
-
-      should "show the 'Set GOV.UK breadcrumb' page with preselected radio" do
-        assert page.has_text?(@draft_edition.title)
-        assert page.has_text?("Set GOV.UK breadcrumb")
-        assert page.has_text?("Select the browse page you want to appear in the breadcrumb")
-        assert page.has_element?("legend", text: "Tax")
-        assert page.has_checked_field?("Capital Gains Tax")
-        assert page.has_unchecked_field?("RTI (draft)")
-        assert page.has_unchecked_field?("VAT")
-        assert page.has_element?("legend", text: "Benefits")
-        assert page.has_unchecked_field?("Benefits and financial support for families")
-        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
-        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
-        assert page.has_text?("Options")
-        assert page.has_button?("Save")
-        assert page.has_link?("Cancel")
-      end
-
-      should "update the breadcrumb when the form is submitted" do
-        choose("VAT")
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
-                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
-                                            "parent": %w[CONTENT-ID-VAT] },
-                                 "previous_version": 1 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("GOV.UK breadcrumbs updated")
-      end
-    end
-  end
-
-  context "Removing a breadcrumb" do
-    setup do
-      stub_linkables_with_data
-      @draft_edition = FactoryBot.create(:edition, :draft)
-      visit edition_path(@draft_edition)
-      click_link("Tagging")
-      within all(".gem-c-summary-card")[0] do
-        click_link("Remove")
-      end
-    end
-
-    should "show the remove breadcrumb page " do
-      assert page.has_text?(@draft_edition.title)
-      assert page.has_text?("Are you sure you want to remove the breadcumb?")
-      assert page.has_text?("Breadcrumbs are displayed at the top of the page and help users to navigate. There may be some situations where you do not need a breadcrumb to display (for example, on Welsh translation pages).")
-      assert page.has_unchecked_field?("Yes, remove the breadcrumb")
-      assert page.has_unchecked_field?("No, keep the breadcrumb")
-      assert page.has_button?("Save")
-      assert page.has_link?("Cancel")
-    end
-
-    should "remove the breadcrumb when the form is submitted if the user selects 'Yes'" do
-      choose("Yes, remove the breadcrumb")
-      click_button("Save")
-
-      assert_requested :patch,
-                       "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                       body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                          "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
-                                          "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
-                                          "parent": [] },
-                               "previous_version": 1 }
-      assert_current_path tagging_edition_path(@draft_edition.id)
-      assert page.has_text?("GOV.UK breadcrumb removed")
-    end
-
-    should "retain the breadcrumb when the form is submitted if the user selects 'No'" do
-      choose("No, keep the breadcrumb")
-      click_button("Save")
-
-      assert_current_path tagging_edition_path(@draft_edition.id)
-      within all(".govuk-summary-card")[0] do
-        assert page.has_text?("GOV.UK breadcrumb")
-        assert page.has_css?("dt", text: "Breadcrumb")
-        assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
-      end
-    end
-
-    should "display an error if the user tries to save with no option selected" do
-      click_button("Save")
-      assert page.has_text?("Select an option")
-    end
-
-    should "redirect to tagging tab when Cancel link is clicked" do
-      click_link("Cancel")
-      assert_current_path tagging_edition_path(@draft_edition.id)
-    end
-  end
-
-  context "Mainstream browse pages page" do
-    setup do
-      @draft_edition = FactoryBot.create(:edition, :draft)
-      visit edition_path(@draft_edition)
-      click_link("Tagging")
-    end
-
-    context "Adding Tags to a browse page" do
-      setup do
-        click_link("Tag to a browse page")
-      end
-
-      should "show the 'Tag to a browse page' page" do
-        assert page.has_text?(@draft_edition.title)
-        assert page.has_text?("Tag browse pages")
-        assert page.has_text?("Select all that apply")
-        assert page.has_element?("legend", text: "Tax")
-        assert page.has_unchecked_field?("Capital Gains Tax")
-        assert page.has_unchecked_field?("RTI (draft)")
-        assert page.has_unchecked_field?("VAT")
-        assert page.has_element?("legend", text: "Benefits")
-        assert page.has_unchecked_field?("Benefits and financial support for families")
-        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
-        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
-        assert page.has_text?("Options")
-        assert page.has_button?("Save")
-        assert page.has_link?("Cancel")
-      end
-
-      should "redirect to tagging tab when Cancel link is clicked" do
-        click_link("Cancel")
-        assert_current_path tagging_edition_path(@draft_edition.id)
-      end
-
-      should "save the selected tags to the browse page when the form is submitted" do
-        check("Capital Gains Tax")
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": [],
-                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL],
-                                            "ordered_related_items": [],
-                                            "parent": [] },
-                                 "previous_version": 0 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Mainstream browse pages updated")
-      end
-    end
-
-    context "Editing tags for a browse page" do
-      setup do
-        stub_linkables_with_data
-        visit edition_path(@draft_edition)
-        click_link("Tagging")
-        within all(".gem-c-summary-card")[1] do
-          click_link("Edit")
-        end
-      end
-
-      should "show the 'Tag to a browse page' page with preselected options" do
-        assert page.has_text?(@draft_edition.title)
-        assert page.has_text?("Tag browse pages")
-        assert page.has_text?("Select all that apply")
-        assert page.has_element?("legend", text: "Tax")
-        assert page.has_checked_field?("Capital Gains Tax")
-        assert page.has_checked_field?("RTI (draft)")
-        assert page.has_checked_field?("VAT")
-        assert page.has_element?("legend", text: "Benefits")
-        assert page.has_unchecked_field?("Benefits and financial support for families")
-        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
-        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
-        assert page.has_button?("Save")
-        assert page.has_link?("Cancel")
-      end
-
-      should "update the tags for the browse page when the form is submitted" do
-        uncheck("RTI (draft)")
-        uncheck("VAT")
-        check("Benefits and financial support for families")
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                            "mainstream_browse_pages": %w[CONTENT-ID-FAMILIES CONTENT-ID-CAPITAL],
-                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
-                                            "parent": %w[CONTENT-ID-CAPITAL] },
-                                 "previous_version": 1 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Mainstream browse pages updated")
-      end
-    end
-  end
-
-  context "Tag related content page" do
-    setup do
-      @draft_edition = FactoryBot.create(:edition, :draft)
-      visit tagging_related_content_page_edition_path(@draft_edition)
-    end
-
-    should "render the 'Tag related content' page" do
-      within :css, ".gem-c-heading" do
-        assert page.has_css?("h1", text: "Tag related content")
-        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
-      end
-
-      assert page.has_text?("Related content items are displayed in the sidebar.")
-      assert page.has_button?("Save")
-      assert page.has_link?("Cancel")
-    end
-
-    context "Adding tags for a related content page" do
-      should "render an empty Add Another form" do
-        within :css, ".gem-c-add-another" do
-          assert page.has_css?("legend", text: "Related content 1")
-          assert page.has_css?("label", text: "URL or path")
-          assert page.has_css?(".gem-c-hint", text: "For example, /pay-vat")
-          assert page.has_css?(".govuk-input", count: 2)
-          assert page.has_css?(".govuk-input[value='']", count: 2)
-        end
-      end
-
-      should "redirect to tagging tab when Cancel link is clicked" do
-        click_link("Cancel")
-        assert_current_path tagging_edition_path(@draft_edition.id)
-      end
-
-      should "display an error when the form is submitted if a value entered is not a valid path" do
-        Services.publishing_api.stubs(:lookup_content_ids).returns({ "/company-tax-returns" => "830e403b-7d81-45f1-8862-81dcd55b4ec7", "/prepare-file-annual-accounts-for-limited-company" => "5cb58486-0b00-4da8-8076-382e474b4f03" })
-
-        within all(".js-add-another__fieldset")[0] do
-          fill_in "URL or path", with: "/invalid-path"
-        end
-
-        click_button("Save")
-
-        assert_current_path update_related_content_edition_path(@draft_edition.id)
-        assert page.has_text?("/invalid-path is not a known URL on GOV.UK, check URL or path is correctly entered.")
-      end
-
-      should "save the added 'Related content' tags when the form is submitted" do
-        within all(".js-add-another__fieldset")[0] do
-          fill_in "URL or path", with: "/company-tax-returns"
-        end
-
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": [],
-                                            "mainstream_browse_pages": [],
-                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7],
-                                            "parent": [] },
-                                 "previous_version": 0 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Related content updated")
-      end
-    end
-
-    context "Editing tags for a related content page" do
-      setup do
-        stub_linkables_with_data
-        visit tagging_related_content_page_edition_path(@draft_edition)
-      end
-
-      should "render a pre-populated Add Another form" do
-        within :css, ".gem-c-add-another" do
-          assert page.has_css?("legend", text: "Related content 1")
-          assert page.has_css?("label", text: "URL or path")
-          assert page.has_css?(".gem-c-hint", text: "For example, /pay-vat")
-          assert page.has_css?(".govuk-input", count: 5)
-          assert page.has_css?("input[value='/company-tax-returns']")
-          assert page.has_css?("input[value='/prepare-file-annual-accounts-for-limited-company']")
-          assert page.has_css?("input[value='/corporation-tax']")
-          assert page.has_css?("input[value='/tax-help']")
-        end
-      end
-
-      should "redirect to tagging tab when Cancel link is clicked" do
-        click_link("Cancel")
-        assert_current_path tagging_edition_path(@draft_edition.id)
-      end
-
-      should "save deleted 'Related content' tags when the form is submitted" do
-        within all(".js-add-another__fieldset")[1] do
-          check("Delete")
-        end
-        within all(".js-add-another__fieldset")[3] do
-          check("Delete")
-        end
-
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
-                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 853feaf2-152c-4aa5-8edb-ba84a88860bf],
-                                            "parent": %w[CONTENT-ID-CAPITAL] },
-                                 "previous_version": 1 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Related content updated")
-      end
-
-      should "save edited 'Related content' tags when the form is submitted" do
-        within all(".js-add-another__fieldset")[0] do
-          fill_in "URL or path", with: "/tax-help"
-        end
-        within all(".js-add-another__fieldset")[1] do
-          fill_in "URL or path", with: "/corporation-tax"
-        end
-        within all(".js-add-another__fieldset")[2] do
-          fill_in "URL or path", with: "/company-tax-returns"
-        end
-        within all(".js-add-another__fieldset")[3] do
-          fill_in "URL or path", with: "/prepare-file-annual-accounts-for-limited-company"
-        end
-
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
-                                            "ordered_related_items": %w[91fef6f6-3a59-42ab-a14d-42c4e5eee1a1 853feaf2-152c-4aa5-8edb-ba84a88860bf 830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03],
-                                            "parent": %w[CONTENT-ID-CAPITAL] },
-                                 "previous_version": 1 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Related content updated")
-      end
-    end
-
-    context "Reordering tags for a related content page" do
-      setup do
-        stub_linkables_with_data
-        visit tagging_reorder_related_content_page_edition_path(@draft_edition)
-      end
-
-      should "submit original tags when the form is submitted with no changes" do
-        click_button("Update order")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
-                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
-                                            "parent": %w[CONTENT-ID-CAPITAL] },
-                                 "previous_version": 1 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Related content order updated")
-      end
-
-      should "submit reordered tags when the form is submitted with changes" do
-        within all(".gem-c-reorderable-list__item")[0] do
-          fill_in "Position", with: "2"
-        end
-        within all(".gem-c-reorderable-list__item")[1] do
-          fill_in "Position", with: "1"
-        end
-        within all(".gem-c-reorderable-list__item")[2] do
-          fill_in "Position", with: "4"
-        end
-        within all(".gem-c-reorderable-list__item")[3] do
-          fill_in "Position", with: "3"
-        end
-
-        click_button("Update order")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
-                                            "ordered_related_items": %w[5cb58486-0b00-4da8-8076-382e474b4f03 830e403b-7d81-45f1-8862-81dcd55b4ec7 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1 853feaf2-152c-4aa5-8edb-ba84a88860bf],
-                                            "parent": %w[CONTENT-ID-CAPITAL] },
-                                 "previous_version": 1 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Related content order updated")
-      end
-    end
-  end
-
-  context "Tag organisations page" do
-    setup do
-      @draft_edition = FactoryBot.create(:edition, :draft)
-      visit tagging_organisations_page_edition_path(@draft_edition)
-    end
-
-    should "render the 'Tag organisations' page" do
-      within :css, ".gem-c-heading" do
-        assert page.has_css?("h1", text: "Tag organisations")
-        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
-      end
-
-      assert page.has_text?("Tagging a page to an organisation makes it appear in searches filtered by that organisation.")
-      assert page.has_text?("For example, a search for documents published by HMRC.")
-      assert page.has_button?("Save")
-      assert page.has_link?("Cancel")
-    end
-
-    should "redirect to tagging tab when Cancel link is clicked" do
-      click_link("Cancel")
-      assert_current_path tagging_edition_path(@draft_edition.id)
-    end
-
-    context "Adding tags for an organisations page" do
-      should "render an empty Organisations form" do
-        within :css, ".gem-c-select-with-search" do
-          assert page.has_css?("label", text: "Organisations")
-          assert page.has_css?("select")
-        end
-      end
-
-      should "save the added 'Organisations' tags when the form is submitted" do
-        select "Student Loans Company", from: "Organisations"
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                            "mainstream_browse_pages": [],
-                                            "ordered_related_items": [],
-                                            "parent": [] },
-                                 "previous_version": 0 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Organisations updated")
-      end
-    end
-
-    context "Editing tags for an organisations page" do
-      setup do
-        stub_linkables_with_data
-        visit tagging_organisations_page_edition_path(@draft_edition)
-      end
-
-      should "render a pre-populated Organisations form" do
-        within :css, "select" do
-          assert find("option[value='9a9111aa-1db8-4025-8dd2-e08ec3175e72']").selected?
-        end
-      end
-
-      should "delete 'Organisations' tags when the form is submitted" do
-        page.unselect "Student Loans Company", from: "Organisations"
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": [],
-                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
-                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
-                                            "parent": %w[CONTENT-ID-CAPITAL] },
-                                 "previous_version": 1 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Organisations updated")
-      end
-
-      should "add 'Organisations' tags when the form is submitted" do
-        page.select "Department for Education", from: "Organisations"
-        click_button("Save")
-
-        assert_requested :patch,
-                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                         body: { "links": { "organisations": %w[ebd15ade-73b2-4eaf-b1c3-43034a42eb37 9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
-                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
-                                            "parent": %w[CONTENT-ID-CAPITAL] },
-                                 "previous_version": 1 }
-        assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Organisations updated")
-      end
-    end
-  end
-
-  context "metadata tab" do
-    context "when state is 'draft' and user has govuk editor permissions" do
-      setup do
-        @draft_edition = FactoryBot.create(:edition, :draft)
-        visit edition_path(@draft_edition)
-        click_link("Metadata")
-      end
-
-      should "show 'Metadata' header and an update button" do
-        within :css, ".gem-c-heading h2" do
-          assert page.has_text?("Metadata")
-        end
-        assert page.has_button?("Update")
-      end
-
-      should "show slug input box prefilled" do
-        assert page.has_text?("Slug")
-        assert page.has_text?("If you change the slug of a published page, the old slug will automatically redirect to the new one.")
-        assert page.has_field?("artefact[slug]", with: /slug/)
-      end
-
-      should "update and show success message" do
-        fill_in "artefact[slug]", with: "changed-slug"
-        choose("Welsh")
-        click_button("Update")
-
-        assert find(".gem-c-radio input[value='cy']").checked?
-        assert page.has_text?("Metadata has successfully updated")
-        assert page.has_field?("artefact[slug]", with: "changed-slug")
-      end
-    end
-
-    context "when user has welsh editor permissions" do
-      should "show read-only values and no 'Update' button for welsh edition" do
-        @artefact = FactoryBot.create(:artefact, slug: "welsh-language-edition-test", language: "cy")
-        @welsh_edition = FactoryBot.create(
-          :edition,
-          :welsh,
-          :ready,
-          panopticon_id: @artefact.id,
-          slug: "welsh-language-edition-test",
-        )
-        login_as_welsh_editor
-
-        visit edition_path(@welsh_edition)
-        click_link("Metadata")
-
-        assert @user.has_editor_permissions?(@welsh_edition)
-        assert page.has_no_field?("artefact[slug]")
-        assert page.has_no_field?("artefact[language]")
-        assert page.has_text?("Slug")
-        assert page.has_text?(/welsh-language-edition-test/)
-        assert page.has_text?("Language")
-        assert page.has_text?(/Welsh/)
-        assert page.has_no_button?("Update")
-      end
-
-      should "show read-only values and no 'Update' button for a non-welsh edition" do
-        draft_edition = FactoryBot.create(:edition, :draft)
-        login_as_welsh_editor
-
-        visit edition_path(draft_edition)
-        click_link("Metadata")
-
-        assert_not @user.has_editor_permissions?(draft_edition)
-        assert page.has_no_field?("artefact[slug]")
-        assert page.has_no_field?("artefact[language]")
-        assert page.has_text?("Slug")
-        assert page.has_text?("Language")
-        assert page.has_no_button?("Update")
-      end
-    end
-
-    context "when user has no permissions" do
-      should "show read-only values and no 'Update' button" do
-        user = FactoryBot.create(:user, name: "Stub User")
-        draft_edition = FactoryBot.create(:edition, :draft)
-        login_as(user)
-
-        visit edition_path(draft_edition)
-        click_link("Metadata")
-
-        assert_not user.has_editor_permissions?(draft_edition)
-        assert page.has_no_button?("Update")
-      end
-    end
-
-    context "when state is not 'draft'" do
-      setup do
-        @artefact = FactoryBot.create(:artefact, slug: "can-i-get-a-driving-licence")
-        @published_edition = FactoryBot.create(:edition, :published, slug: "can-i-get-a-driving-licence", panopticon_id: @artefact.id)
-        visit edition_path(@published_edition)
-        click_link("Metadata")
-      end
-
-      should "show read-only values and no 'Update' button" do
-        assert page.has_no_field?("artefact[slug]")
-        assert page.has_no_field?("artefact[language]")
-        assert page.has_text?("Slug")
-        assert page.has_text?(/can-i-get-a-driving-licence/)
-        assert page.has_text?("Language")
-        assert page.has_text?(/English/)
-        assert page.has_no_button?("Update")
-      end
-    end
-  end
-
-  context "History and notes tab" do
-    setup do
-      @draft_edition = FactoryBot.create(:edition, :draft)
-      visit edition_path(@draft_edition)
-      click_link("History and notes")
-    end
-
-    should "show a heading" do
-      assert page.has_css?("h2", text: "History and notes")
-    end
-
-    should "show inset text" do
-      within :css, ".gem-c-inset-text" do
-        assert page.has_text?("Send fact check responses to #{@draft_edition.fact_check_email_address} and include [#{@draft_edition.id}] in the subject line.")
-      end
-    end
-
-    should "show an 'Add edition note' button" do
-      assert page.has_link?("Add edition note")
-    end
-
-    should "navigate to the 'Add edition note' page when the button is clicked" do
-      click_link("Add edition note")
-      assert_current_path history_add_edition_note_edition_path(@draft_edition.id)
-    end
-
-    should "display the accordion section headers" do
-      assert page.has_css?(".govuk-accordion__section-header h2", text: "Edition 1")
-    end
-
-    should "show an 'Update important note' button" do
-      assert page.has_link?("Update important note")
-    end
-
-    should "navigate to the 'Update important note' page when the button is clicked" do
-      click_link("Update important note")
-      assert_current_path history_update_important_note_edition_path(@draft_edition.id)
-    end
-
-    context "show a Preview or a view on GOV.UK link" do
-      should "show a Preview button when the edition is draft" do
-        assert page.has_link?("Preview (opens in new tab)")
-      end
-
-      should "show a Preview button when the edition is in review" do
-        @in_review_edition = FactoryBot.create(:edition, :in_review)
-        visit edition_path(@in_review_edition)
-        click_link("History and notes")
-
-        assert page.has_link?("Preview (opens in new tab)")
-      end
-
-      should "show a Preview button when the edition is out for fact check" do
-        @fact_check_edition = FactoryBot.create(:edition, :fact_check)
-        visit edition_path(@fact_check_edition)
-        click_link("History and notes")
-
-        assert page.has_link?("Preview (opens in new tab)")
-      end
-
-      should "show a Preview button when the edition is ready" do
-        @ready_edition = FactoryBot.create(:answer_edition, :ready)
-        visit edition_path(@ready_edition)
-        click_link("History and notes")
-
-        assert page.has_link?("Preview (opens in new tab)")
-      end
-
-      should "show a Preview button when the edition is scheduled for publishing" do
-        @scheduled_for_publishing_edition = FactoryBot.create(:edition, :scheduled_for_publishing)
-        visit edition_path(@scheduled_for_publishing_edition)
-        click_link("History and notes")
-
-        assert page.has_link?("Preview (opens in new tab)")
-      end
-
-      should "show a View on GOV.UK button when the edition is published" do
-        @published_edition = FactoryBot.create(:edition, :published)
-        visit edition_path(@published_edition)
-        click_link("History and notes")
-
-        assert page.has_link?("View on GOV.UK (opens in new tab)")
-      end
-
-      should "show a View on GOV.UK button when the edition is archived" do
-        @archived_edition = FactoryBot.create(:edition, :archived)
-        visit edition_path(@archived_edition)
-        click_link("History and notes")
-
-        assert page.has_link?("View on GOV.UK (opens in new tab)")
-      end
-
-      should "still show the conditional preview/view link when the user does not have editor permissions" do
-        @stub_user = FactoryBot.create(:user, name: "Stub user")
-        login_as(@stub_user)
-
-        visit edition_path(@draft_edition)
-        click_link("History and notes")
-
-        assert page.has_link?("Preview (opens in new tab)")
-      end
-    end
-
-    context "when the user has no permissions" do
-      should "hide the note action buttons from the user" do
-        user = FactoryBot.create(:user, name: "Stub User")
-        login_as(user)
-
-        visit edition_path(@draft_edition)
-        click_link("History and notes")
-
-        assert_not user.has_editor_permissions?(@draft_edition)
-        assert_not page.has_content?("Add edition note")
-        assert_not page.has_content?("Update important note")
-      end
-    end
-
-    context "when the user has welsh editor permissions" do
-      setup do
-        @user = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
-        @user_welsh = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
-        login_as(@user)
-      end
-
-      should "hide the note action buttons from the user on a non welsh document" do
-        visit edition_path(@draft_edition)
-        login_as(@user_welsh)
-
-        click_link("History and notes")
-
-        assert_not @user_welsh.has_editor_permissions?(@draft_edition)
-        assert_not page.has_content?("Add edition note")
-        assert_not page.has_content?("Update important note")
-      end
-
-      should "show the note action buttons for the user on a welsh document" do
-        edition = @user.create_edition(:answer, panopticon_id: FactoryBot.create(:artefact, language: "cy").id, title: "My Title", slug: "my-title")
-        edition.state = "fact_check"
-        edition.save!
-        login_as(@user_welsh)
-
-        visit edition_path(edition)
-        click_link("History and notes")
-
-        assert @user_welsh.has_editor_permissions?(edition)
-        assert page.has_content?("Add edition note")
-        assert page.has_content?("Update important note")
-      end
-    end
-
-    context "Edition displays the correct data for actions" do
-      setup do
-        @edition = FactoryBot.create(:edition, created_at: "2024-01-23")
-      end
-
-      should "display 'Assign' action" do
-        user = FactoryBot.create(:user, name: "Steve Ogrizovic")
-        @edition.actions.create! request_type: Action::ASSIGN, requester_id: user.id, created_at: "2024-02-24 15:41:00", comment: "Assigned to me"
-
-        visit edition_path(@edition)
-        click_link("History and notes")
-
-        within :css, ".history__action--assign__heading" do
-          assert page.has_css?("time", text: "3:41pm, 24 February 2024")
-          assert page.has_text?("Assign by Steve Ogrizovic")
-        end
-
-        within :css, ".history__action--assign__content" do
-          assert page.has_text?("Assigned to me")
-        end
-      end
-
-      should "display 'Note' action" do
-        user = FactoryBot.create(:user, name: "David Phillips")
-        @edition.actions.create! request_type: Action::NOTE, requester_id: user.id, created_at: "2024-03-01 10:30:00", comment: "This is a note"
-
-        visit edition_path(@edition)
-        click_link("History and notes")
-
-        within :css, ".history__action--note__heading" do
-          assert page.has_css?("time", text: "10:30am, 1 March 2024")
-          assert page.has_text?("Note by David Phillips")
-        end
-
-        within :css, ".history__action--note__content" do
-          assert page.has_text?("This is a note")
-        end
-      end
-
-      should "display 'Request review' action" do
-        user = FactoryBot.create(:user, name: "Greg Downs")
-        @edition.actions.create! request_type: Action::REQUEST_REVIEW, requester_id: user.id, created_at: "2024-04-02 17:23:00", comment: "Requesting review"
-
-        visit edition_path(@edition)
-        click_link("History and notes")
-
-        within :css, ".history__action--request_review__heading" do
-          assert page.has_css?("time", text: "5:23pm, 2 April 2024")
-          assert page.has_text?("Request review by Greg Downs")
-        end
-
-        within :css, ".history__action--request_review__content" do
-          assert page.has_text?("Requesting review")
-        end
-      end
-
-      should "display 'Send fact check' action" do
-        user = FactoryBot.create(:user, name: "Lloyd McGrath")
-        @edition.actions.create! request_type: Action::SEND_FACT_CHECK, requester_id: user.id, created_at: "2024-05-16 18:12:00", comment: "Fact check requested"
-
-        visit edition_path(@edition)
-        click_link("History and notes")
-
-        within :css, ".history__action--send_fact_check__heading" do
-          assert page.has_css?("time", text: "6:12pm, 16 May 2024")
-          assert page.has_text?("Send fact check by Lloyd McGrath")
-        end
-
-        within :css, ".history__action--send_fact_check__content" do
-          assert page.has_text?("Fact check requested")
-        end
-      end
-
-      should "display 'Receive fact check' action" do
-        @edition.actions.create! request_type: Action::RECEIVE_FACT_CHECK, created_at: "2024-06-06 8:32:00", comment: "We’re happy for you to publish. -----Original Message----- Reply and confirm the content is correct.", comment_sanitized: true
-
-        visit edition_path(@edition)
-        click_link("History and notes")
-
-        within :css, ".history__action--receive_fact_check__heading" do
-          assert page.has_css?("time", text: "8:32am, 6 June 2024")
-          assert page.has_text?("Receive fact check by GOV.UK Bot")
-        end
-
-        within :css, ".history__action--receive_fact_check__content" do
-          assert page.has_text?("We’re happy for you to publish.")
-          assert page.has_css?("div.js-earlier", text: "Reply and confirm the content is correct.")
-          assert page.has_text?("We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.")
-        end
-      end
-
-      should "display 'Request amendments' action" do
-        user = FactoryBot.create(:user, name: "Brian Kilcline")
-        @edition.actions.create! request_type: Action::REQUEST_AMENDMENTS, requester_id: user.id, created_at: "2024-06-27 10:56:00", comment: "Requesting amendments"
-
-        visit edition_path(@edition)
-        click_link("History and notes")
-
-        within :css, ".history__action--request_amendments__heading" do
-          assert page.has_css?("time", text: "10:56am, 27 June 2024")
-          assert page.has_text?("Request amendments by Brian Kilcline")
-        end
-
-        within :css, ".history__action--request_amendments__content" do
-          assert page.has_text?("Requesting amendments")
-        end
-      end
-
-      should "display 'Approve review' action" do
-        user = FactoryBot.create(:user, name: "Trevor Peake")
-        @edition.actions.create! request_type: Action::APPROVE_REVIEW, requester_id: user.id, created_at: "2024-07-05 19:31:00", comment: "Review approved"
-
-        visit edition_path(@edition)
-        click_link("History and notes")
-
-        within :css, ".history__action--approve_review__heading" do
-          assert page.has_css?("time", text: "7:31pm, 5 July 2024")
-          assert page.has_text?("Approve review by Trevor Peake")
-        end
-
-        within :css, ".history__action--approve_review__content" do
-          assert page.has_text?("Review approved")
-        end
-      end
-
-      should "display 'Content block update' action on Published and In Progress Editions" do
-        user = FactoryBot.create(:user, :govuk_editor, name: "Dave Bennett")
-        event = create_content_update_event(updated_by_user_uid: user["uid"])
-
-        stub_events_for_all_content_ids(events: [event])
-        stub_users_from_signon_api([user.uid], [user])
-
-        visit edition_path(@edition)
-        click_link("History and notes")
-
-        within :css, ".history__action--content_block_update__heading" do
-          assert page.has_css?("time", text: "11:26am, 7 August 2024")
-          assert page.has_text?("Content block updated by Dave Bennett")
-        end
-
-        within :css, ".history__action--content_block_update__content" do
-          assert page.has_text?("Email address updated")
-          assert page.has_link?("View in Content Block Manager")
-        end
-
-        published_edition = FactoryBot.create(
-          :edition,
-          :published,
-          created_at: Time.zone.parse(event["created_at"]).to_date - 1.day,
-        )
-
-        published_edition.actions.create!(
-          request_type: Action::PUBLISH,
-          requester: user,
-        )
-
-        visit edition_path(published_edition)
-        click_link("History and notes")
-
-        within :css, ".history__action--content_block_update__heading" do
-          assert page.has_css?("time", text: "11:26am, 7 August 2024")
-          assert page.has_text?("Content block updated by Dave Bennett")
-        end
-
-        within :css, ".history__action--content_block_update__content" do
-          assert page.has_text?("Email address updated")
-          assert page.has_link?("View in Content Block Manager")
-        end
-      end
-
-      should "does not display 'Content block update' action on Editions archived before the update" do
-        user = FactoryBot.create(:user, :govuk_editor, name: "Dave Bennett")
-        archived_edition = FactoryBot.create(:edition, :archived)
-        event = create_content_update_event(updated_by_user_uid: user["uid"])
-        stub_events_for_all_content_ids(events: [event])
-        stub_users_from_signon_api([user.uid], [user])
-
-        visit edition_path(archived_edition)
-        click_link("History and notes")
-
-        assert page.has_no_css?(".history__action--content_block_update__heading")
-        assert page.has_no_css?(".history__action--content_block_update__content")
-      end
-    end
-
-    context "when there are previous editions" do
-      should "display a link to compare editions" do
-        edition_one = FactoryBot.create(:answer_edition, :published)
-        edition_two = FactoryBot.create(
-          :answer_edition,
-          :published,
-          panopticon_id: edition_one.panopticon_id,
-          title: "Second edition title",
-        )
-
-        visit history_edition_path(edition_two)
-        page.find("a", text: "Compare with Edition 1").click
-
-        page.find("h1", text: "Compare edition 1 and 2")
-        assert page.has_css?("h1", text: "Compare edition 1 and 2")
-        assert page.has_content?(edition_two.title)
-      end
-    end
-
-    context "when there are not previous editions" do
-      should "not display a link to compare editions" do
-        edition_one = FactoryBot.create(:answer_edition, :published)
-        visit history_edition_path(edition_one)
-
-        assert page.has_css?("h2", text: "History and notes")
-        assert page.has_no_css?("a", text: "Compare with Edition")
-      end
-    end
-  end
-
-  context "Add edition note page" do
-    should "render the 'Add edition note' page" do
-      draft_edition = FactoryBot.create(:edition, :draft, title: "Example title")
-
-      visit edition_path(draft_edition)
-      click_link("History and notes")
-      click_link("Add edition note")
-
-      within :css, ".gem-c-heading" do
-        assert page.has_css?("h1", text: "Add edition note")
-        assert page.has_css?(".gem-c-heading__context", text: draft_edition.title)
-      end
-
-      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Jira card. You can also add an edition note when you send the edition for 2i review. Read guidance on writing good change notes (opens in new tab).")
-
-      within :css, ".gem-c-textarea" do
-        assert page.has_css?("label", text: "Edition note")
-        assert page.has_css?("textarea")
-      end
-
-      assert page.has_button?("Save")
-      assert page.has_link?("Cancel")
-    end
-  end
-
-  context "Update important note page" do
-    setup do
-      @draft_edition = FactoryBot.create(:edition, :draft)
-    end
-
-    should "render the 'Update important note' page" do
-      visit history_update_important_note_edition_path(@draft_edition)
-
-      within :css, ".gem-c-heading" do
-        assert page.has_css?("h1", text: "Update important note")
-        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
-      end
-
-      assert page.has_text?("Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.”.")
-      assert page.has_text?("Each edition can have only one important note at a time.")
-      assert page.has_text?("To delete the important note, clear any comments and select ‘Save’.")
-
-      within :css, ".gem-c-textarea" do
-        assert page.has_css?("label", text: "Important note")
-        assert page.has_css?("textarea")
-      end
-
-      assert page.has_button?("Save")
-      assert page.has_link?("Cancel")
-    end
-
-    should "pre-populate with the existing note" do
-      note_text = "This is really really urgent!"
-      create_important_note_for_edition(@draft_edition, note_text)
-
-      visit history_update_important_note_edition_path(@draft_edition)
-
-      assert page.has_field?("Important note", with: note_text)
-    end
-
-    should "not show important notes in edition history" do
-      note_text = "This is really really urgent!"
-      note_text_2 = "Another note"
-      note_text_3 = "Yet another note"
-      create_important_note_for_edition(@draft_edition, note_text)
-      create_important_note_for_edition(@draft_edition, note_text_2)
-      create_important_note_for_edition(@draft_edition, note_text_3)
-
-      visit edition_path(@draft_edition)
-      click_link("History and notes")
-
-      within :css, ".history__actions" do
-        assert page.has_no_text?("Important note updated by #{@govuk_editor.name}")
-        assert page.has_no_text?("This is really really urgent!")
-        assert page.has_no_text?("Another note")
-        assert page.has_no_text?("Yet another note")
-      end
-    end
-
-    should "not be carried forward to new editions" do
-      published_edition = FactoryBot.create(:edition, :published)
-      note_text = "This important note should not appear on a new edition."
-      create_important_note_for_edition(published_edition, note_text)
-
-      visit edition_path(published_edition)
-
-      assert page.has_content? note_text
-
-      click_on "Create new edition"
-      assert page.has_no_text?("Important note")
-    end
-  end
-
-  context "unpublish tab" do
-    context "user does not have required permissions" do
-      should "not show unpublish tab when user is not govuk editor" do
-        login_as(FactoryBot.create(:user, name: "Stub User"))
-        draft_edition = FactoryBot.create(:edition, :draft)
-
-        visit edition_path(draft_edition)
-
-        assert page.has_no_text?("Unpublish")
-      end
-    end
-
-    context "user has required permissions" do
-      context "when state is 'published'" do
-        setup do
-          @published_edition = FactoryBot.create(:edition, :published)
-          visit edition_path(@published_edition)
-          click_link("Unpublish")
-        end
-
-        should "show 'Unpublish' header and 'Continue' button" do
-          within :css, ".gem-c-heading h2" do
-            assert page.has_text?("Unpublish")
-          end
-          assert page.has_button?("Continue")
-        end
-
-        should "show 'cannot be undone' banner" do
-          assert page.has_text?("If you unpublish a page from GOV.UK it cannot be undone.")
-        end
-
-        should "show 'Redirect to URL' text, input box and example text" do
-          assert page.has_text?("Redirect to URL")
-          assert page.has_text?("For example: https://www.gov.uk/redirect-to-replacement-page")
-          assert page.has_css?(".govuk-input", count: 1)
-        end
-
-        should "navigate to 'confirm-unpublish' page when 'Continue' button is clicked" do
-          click_button("Continue")
-          assert_equal(page.current_path, "/editions/#{@published_edition.id}/unpublish/confirm-unpublish")
-        end
-      end
-
-      context "when state is not 'published'" do
-        should "not show unpublish tab" do
-          draft_edition = FactoryBot.create(:edition, :draft)
-          visit edition_path(draft_edition)
-
-          assert page.has_no_text?("Unpublish")
-        end
-      end
-    end
-  end
-
-  context "admin tab" do
-    context "user does not have required permissions" do
-      setup do
-        @draft_edition = FactoryBot.create(:edition, :draft)
-      end
-
-      should "not show when user is not govuk editor or welsh editor" do
-        login_as(FactoryBot.create(:user, name: "Stub User"))
-        visit edition_path(@draft_edition)
-
-        assert page.has_no_text?("Admin")
-      end
-
-      should "not show when user is welsh editor and edition is not welsh" do
-        login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-        visit edition_path(@draft_edition)
-
-        assert page.has_no_text?("Admin")
-      end
-    end
-
-    context "user has required permissions" do
-      %i[draft amends_needed in_review fact_check_received ready archived scheduled_for_publishing].each do |state|
-        context "when state is '#{state}'" do
-          should "not show the 'Update content type' form" do
-            edition = FactoryBot.create(:edition, state)
-
-            visit edition_path(edition)
-            click_link("Admin")
-
-            assert page.has_no_text?("Update content type")
-          end
-        end
-      end
-
-      %i[published archived scheduled_for_publishing].each do |state|
-        context "when state is '#{state}'" do
-          setup do
-            edition = FactoryBot.create(:edition, state)
-            visit edition_path(edition)
-            click_link("Admin")
-          end
-
-          should "show 'Admin' header and not show 'Skip fact check' button" do
-            within :css, ".gem-c-heading h2" do
-              assert page.has_text?("Admin")
-            end
-            assert page.has_no_button?("Skip fact check")
-          end
-
-          should "not show link to delete edition" do
-            assert page.has_no_link?("Delete edition")
-          end
-        end
-      end
-
-      %i[draft amends_needed in_review fact_check_received ready].each do |state|
-        context "when state is '#{state}'" do
-          setup do
-            edition = FactoryBot.create(:edition, state)
-            visit edition_path(edition)
-            click_link("Admin")
-          end
-
-          should "show 'Admin' header and not show 'Skip fact check' button" do
-            within :css, ".gem-c-heading h2" do
-              assert page.has_text?("Admin")
-            end
-            assert page.has_no_button?("Skip fact check")
-          end
-
-          should "show link to delete edition" do
-            assert page.has_link?("Delete edition")
-          end
-        end
-      end
-
-      context "when state is 'fact_check'" do
-        setup do
-          @fact_check_edition = FactoryBot.create(:edition, :fact_check)
-          visit edition_path(@fact_check_edition)
-          click_link("Admin")
-        end
-
-        should "show 'Admin' tab when user is welsh editor and edition is welsh edition" do
-          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-          welsh_edition = FactoryBot.create(:edition, :fact_check, :welsh)
-
-          visit edition_path(welsh_edition)
-
-          assert page.has_text?("Admin")
-        end
-
-        should "show 'Admin' header and an 'Skip fact check' button" do
-          within :css, ".gem-c-heading h2" do
-            assert page.has_text?("Admin")
-          end
-          assert page.has_button?("Skip fact check")
-        end
-
-        should "show link to delete edition" do
-          assert page.has_link?("Delete edition")
-        end
-
-        should "show success message when fact check skipped successfully" do
-          click_button("Skip fact check")
-          @fact_check_edition.reload
-
-          assert_equal "ready", @fact_check_edition.state
-          assert page.has_text?("The fact check has been skipped for this publication.")
-        end
-
-        should "show error message when skip fact check gives an error" do
-          User.any_instance.stubs(:progress).returns(false)
-
-          click_button("Skip fact check")
-          @fact_check_edition.reload
-
-          assert_equal "fact_check", @fact_check_edition.state
-          assert page.has_text?("Could not skip fact check for this publication.")
-        end
-      end
-
-      context "when state is 'published'" do
-        setup do
-          @published_edition = FactoryBot.create(:edition, :published)
-        end
-
-        context "edition is not the latest version of a publication" do
-          should "not show the 'Update content type' form" do
-            FactoryBot.create(:edition, :draft, panopticon_id: @published_edition.artefact.id)
-
-            visit edition_path(@published_edition)
-            click_link("Admin")
-
-            assert page.has_no_text?("Update content type")
-          end
-        end
-
-        context "content type is not retired, edition is the latest version of a publication" do
-          setup do
-            visit edition_path(@published_edition)
-            click_link("Admin")
-          end
-
-          should "show the 'Update content type' form" do
-            assert page.has_text?("Update content type")
-          end
-
-          should "show radio buttons for all content types excluding current one (answer)" do
-            assert page.has_no_selector?(".gem-c-radio input[value='answer']")
-            assert page.has_selector?(".gem-c-radio input[value='completed_transaction']")
-            assert page.has_selector?(".gem-c-radio input[value='guide']")
-            assert page.has_selector?(".gem-c-radio input[value='help_page']")
-            assert page.has_selector?(".gem-c-radio input[value='place']")
-            assert page.has_selector?(".gem-c-radio input[value='simple_smart_answer']")
-            assert page.has_selector?(".gem-c-radio input[value='transaction']")
-          end
-
-          should "show common explanatory text for all content types and not show explanatory text specific to Guides" do
-            assert page.has_text?("No content will be lost, but content in some fields might not make it into the new edition. If it can't be copied to a new content type it will still be available in the previous edition. Content in multiple fields might be combined into a single field.")
-            assert page.has_no_text?("All parts of Guide Editions will be copied across. If the format you are converting to doesn't have parts, the content of all the parts will be copied into the body, with the part title displayed as a top-level sub-heading.")
-          end
-        end
-      end
-
-      context "confirm delete" do
-        setup do
-          @draft_edition = FactoryBot.create(:edition, :draft)
-          visit edition_path(@draft_edition)
-          click_link("Admin")
-          click_link("Delete edition #{@draft_edition.version_number}")
-        end
-
-        should "show the delete edition confirmation page" do
-          assert page.has_text?(@draft_edition.title)
-          assert page.has_text?("Delete edition")
-          assert page.has_text?("If you delete this edition it cannot be undone.")
-          assert page.has_text?("Are you sure you want to delete this edition?")
-          assert page.has_link?("Cancel")
-          assert page.has_button?("Delete edition")
-        end
-
-        should "navigate to admin tab when 'Cancel' is clicked" do
-          click_link("Cancel")
-          assert_current_path admin_edition_path(@draft_edition.id)
-        end
-
-        should "navigate to root path when 'Delete edition' is clicked" do
-          click_button("Delete edition")
-          assert_current_path root_path
-        end
-
-        should "show success message when edition is successfully deleted" do
-          click_button("Delete edition")
-
-          assert_equal 0, Edition.where(id: @draft_edition.id).count
-          assert page.has_text?("Edition deleted")
-        end
-      end
-    end
-  end
-
   context "edit tab" do
     context "draft edition of a new publication" do
-      setup do
-        @draft_edition = FactoryBot.create(:edition,
-                                           :draft,
-                                           title: "Edit page title",
-                                           overview: "metatags",
-                                           in_beta: 1,
-                                           body: "The body")
-        visit edition_path(@draft_edition)
-      end
-
-      should "show 'Metadata' header and an update button" do
-        within :css, ".gem-c-heading h2" do
-          assert page.has_text?("Edit")
+      context "answer edition" do
+        setup do
+          @draft_edition = FactoryBot.create(:edition,
+                                             :draft,
+                                             title: "Edit page title",
+                                             overview: "metatags",
+                                             in_beta: 1,
+                                             body: "The body")
+          visit edition_path(@draft_edition)
         end
-        assert page.has_button?("Save")
+
+        should "show 'Metadata' header and an update button" do
+          within :css, ".gem-c-heading h2" do
+            assert page.has_text?("Edit")
+          end
+          assert page.has_button?("Save")
+        end
+
+        should "show 'Send to 2i' link" do
+          assert page.has_link?("Send to 2i")
+        end
+
+        should "show Preview link" do
+          assert page.has_link?("Preview (opens in new tab)")
+        end
+
+        should "show Title input box prefilled" do
+          assert page.has_text?("Title")
+          assert page.has_field?("edition[title]", with: "Edit page title")
+        end
+
+        should "show Meta tag input box prefilled" do
+          assert page.has_text?("Meta tag description")
+          assert page.has_text?("Some search engines will display this if they cannot find what they need in the main text")
+          assert page.has_field?("edition[overview]", with: "metatags")
+        end
+
+        should "show Beta content radios prechecked" do
+          assert page.has_text?("Is this beta content?")
+          assert find(".gem-c-radio input[value='0']")
+          assert find(".gem-c-radio input[value='1']").checked?
+        end
+
+        should "show Body text field prefilled" do
+          assert page.has_text?("Body")
+          assert page.has_text?("Refer to the Govspeak guidance (opens in new tab)")
+          assert page.has_field?("edition[body]", with: "The body")
+        end
+
+        should "not show Change Note field for an unpublished document" do
+          assert page.has_no_text?("Add a public change note")
+          assert page.has_no_text?("Telling users when published information has changed is important for transparency.")
+          assert page.has_no_field?("edition[change_note]")
+        end
+
+        should "update and show success message" do
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[overview]", with: "Changed Meta tag description"
+          choose("Yes")
+          fill_in "edition[body]", with: "Changed body"
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+          assert find(".gem-c-radio input[value='1']").checked?
+          assert page.has_field?("edition[body]", with: "Changed body")
+          assert page.has_text?("Edition updated successfully.")
+        end
+
+        context "user does not have editor permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Non Editor"))
+            visit edition_path(@draft_edition)
+          end
+
+          should "not show any editable components" do
+            assert page.has_no_css?(".govuk-textarea")
+            assert page.has_no_css?(".govuk-input")
+            assert page.has_no_css?(".govuk-radios")
+          end
+
+          should "not show the send to 2i button" do
+            assert page.has_no_link?("Send to 2i")
+          end
+
+          should "not show the Save button" do
+            assert page.has_no_button?("Save")
+          end
+
+          should "show the Preview link" do
+            assert page.has_link?("Preview (opens in new tab)")
+          end
+        end
       end
 
-      should "show 'Send to 2i' link" do
-        assert page.has_link?("Send to 2i")
+      context "place edition" do
+        setup do
+          @draft_place_edition = FactoryBot.create(:place_edition,
+                                                   :draft,
+                                                   title: "Edit page title",
+                                                   overview: "metatags",
+                                                   in_beta: 1,
+                                                   place_type: "The place type",
+                                                   introduction: "some intro",
+                                                   more_information: "some more info",
+                                                   need_to_know: "some need to know")
+          visit edition_path(@draft_place_edition)
+        end
+
+        should "show fields for place edition" do
+          assert page.has_field?("edition[title]", with: "Edit page title")
+          assert page.has_field?("edition[overview]", with: "metatags")
+
+          assert page.has_css?(".govuk-label", text: "Places Manager service identifier")
+          assert page.has_css?(".govuk-hint", text: "This is assigned in the Places Manager application")
+          assert page.has_field?("edition[place_type]", with: "The place type")
+
+          assert page.has_css?(".govuk-label", text: "Introduction")
+          assert page.has_css?(".govuk-hint", text: "Refer to the Govspeak guidance (opens in new tab)")
+          assert page.has_field?("edition[introduction]", with: "some intro")
+
+          assert page.has_css?(".govuk-label", text: "Further information (optional)")
+          assert page.has_field?("edition[more_information]", with: "some more info")
+
+          assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
+          assert page.has_field?("edition[need_to_know]", with: "some need to know")
+
+          assert find(".gem-c-radio input[value='1']").checked?
+        end
+
+        should "update place edition and show success message" do
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[overview]", with: "Changed Meta tag description"
+          fill_in "edition[place_type]", with: "Changed place type"
+          fill_in "edition[introduction]", with: "Changed intro"
+          fill_in "edition[more_information]", with: "Changed more info"
+          fill_in "edition[need_to_know]", with: "Changed need to know"
+          choose("Yes")
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+          assert page.has_field?("edition[place_type]", with: "Changed place type")
+          assert page.has_field?("edition[introduction]", with: "Changed intro")
+          assert page.has_field?("edition[more_information]", with: "Changed more info")
+          assert page.has_field?("edition[need_to_know]", with: "Changed need to know")
+          assert find(".gem-c-radio input[value='1']").checked?
+          assert page.has_text?("Edition updated successfully.")
+        end
       end
 
-      should "show Preview link" do
-        assert page.has_link?("Preview (opens in new tab)")
+      context "local transaction edition" do
+        setup do
+          local_service = FactoryBot.create(:local_service, lgsl_code: 9012, description: "Whatever", providing_tier: %w[district unitary county])
+          scotland_availability = FactoryBot.build(:scotland_availability, authority_type: "devolved_administration_service", alternative_url: "https://www.google.com")
+          wales_availability = FactoryBot.build(:wales_availability, authority_type: "unavailable")
+          draft_local_transaction_edition = FactoryBot.create(:local_transaction_edition, :draft, title: "Edit page title", in_beta: 1, lgsl_code: local_service.lgsl_code,
+                                                                                                  panopticon_id: FactoryBot.create(:artefact).id, lgil_code: 23, cta_text: "Find your local council", introduction: "Test introduction", more_information: "some more info",
+                                                                                                  need_to_know: "some need to know", before_results: "before results", after_results: "after results", scotland_availability:, wales_availability:)
+          visit edition_path(draft_local_transaction_edition)
+        end
+
+        should "show fields for local transaction edition" do
+          assert page.has_field?("edition[title]", with: "Edit page title")
+
+          assert page.has_css?(".govuk-label", text: "LGSL code")
+          assert page.has_text?("9012")
+
+          assert page.has_css?(".govuk-label", text: "LGIL code")
+          assert page.has_field?("edition[lgil_code]", with: "23")
+
+          assert page.has_css?(".govuk-label", text: "Button text (optional)")
+          assert page.has_css?(".govuk-hint", text: "If left blank, the default text ‘Find your local council’ will be used")
+          assert page.has_field?("edition[cta_text]", with: "Find your local council")
+
+          assert page.has_css?(".govuk-label", text: "Introduction")
+          assert page.has_css?(".govuk-hint", text: "Set the scene for the user. Explain that it’s the responsibility of the local council and that we’ll take you there. Read the Govspeak guidance (opens in new tab)")
+          assert page.has_field?("edition[introduction]", with: "Test introduction")
+
+          assert page.has_css?(".govuk-label", text: "Further information (optional)")
+          assert page.has_field?("edition[more_information]", with: "some more info")
+
+          assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
+          assert page.has_field?("edition[need_to_know]", with: "some need to know")
+
+          assert page.has_css?(".govuk-label", text: "Above results content (optional)")
+          assert page.has_field?("edition[before_results]", with: "before results")
+
+          assert page.has_css?(".govuk-label", text: "Below results content (optional)")
+          assert page.has_field?("edition[after_results]", with: "after results")
+
+          within all(".govuk-fieldset")[0] do
+            assert page.has_css?("legend", text: "Northern Ireland")
+            assert find(".gem-c-radio input[value='local_authority_service']").checked?
+          end
+
+          within all(".govuk-fieldset")[1] do
+            assert page.has_css?("legend", text: "Scotland")
+            assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
+
+            assert page.has_css?(".govuk-label", text: "URL of the devolved administration website page")
+            assert page.has_field?("edition[scotland_availability_attributes][alternative_url]", with: "https://www.google.com")
+          end
+
+          within all(".govuk-fieldset")[2] do
+            assert page.has_css?("legend", text: "Wales")
+            assert find(".gem-c-radio input[value='unavailable']").checked?
+          end
+
+          assert find(".gem-c-radio input[value='1']").checked?
+        end
+
+        should "update local transaction edition and show success message" do
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[lgil_code]", with: "25"
+          fill_in "edition[cta_text]", with: "Changed button text"
+          fill_in "edition[introduction]", with: "Changed intro"
+          fill_in "edition[more_information]", with: "Changed more info"
+          fill_in "edition[need_to_know]", with: "Changed need to know"
+          fill_in "edition[before_results]", with: "Changed above results"
+          fill_in "edition[after_results]", with: "Changed below results"
+
+          within all(".govuk-fieldset")[0] do
+            choose("Service not available")
+          end
+
+          within all(".govuk-fieldset")[1] do
+            choose("Service available from local council")
+          end
+
+          within all(".govuk-fieldset")[2] do
+            choose("Service available from devolved administration (or a similar service is available)")
+            fill_in "edition[wales_availability_attributes][alternative_url]", with: "https://www.google.com"
+          end
+
+          choose("Yes")
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[lgil_code]", with: "25")
+          assert page.has_field?("edition[cta_text]", with: "Changed button text")
+          assert page.has_field?("edition[introduction]", with: "Changed intro")
+          assert page.has_field?("edition[more_information]", with: "Changed more info")
+          assert page.has_field?("edition[need_to_know]", with: "Changed need to know")
+          assert page.has_field?("edition[before_results]", with: "Changed above results")
+          assert page.has_field?("edition[after_results]", with: "Changed below results")
+
+          within all(".govuk-fieldset")[0] do
+            assert page.has_css?("legend", text: "Northern Ireland")
+            assert find(".gem-c-radio input[value='unavailable']").checked?
+          end
+
+          within all(".govuk-fieldset")[1] do
+            assert page.has_css?("legend", text: "Scotland")
+            assert find(".gem-c-radio input[value='local_authority_service']").checked?
+          end
+
+          within all(".govuk-fieldset")[2] do
+            assert page.has_css?("legend", text: "Wales")
+            assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
+
+            assert page.has_css?(".govuk-label", text: "URL of the devolved administration website page")
+            assert page.has_field?("edition[wales_availability_attributes][alternative_url]", with: "https://www.google.com")
+          end
+
+          assert find(".gem-c-radio input[value='1']").checked?
+          assert page.has_text?("Edition updated successfully.")
+        end
+
+        should "should show an error message when URL of the devolved administration is blank" do
+          within all(".govuk-fieldset")[2] do
+            choose("Service available from devolved administration (or a similar service is available)")
+            fill_in "edition[wales_availability_attributes][alternative_url]", with: ""
+          end
+
+          click_button("Save")
+
+          within all(".govuk-fieldset")[2] do
+            assert page.has_css?("legend", text: "Wales")
+            assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
+
+            assert page.has_text?("Enter the URL of the devolved administration website page")
+          end
+        end
+
+        should "should show an error message when URL of the devolved administration is invalid" do
+          within all(".govuk-fieldset")[2] do
+            choose("Service available from devolved administration (or a similar service is available)")
+            fill_in "edition[wales_availability_attributes][alternative_url]", with: "some text"
+          end
+
+          click_button("Save")
+
+          within all(".govuk-fieldset")[2] do
+            assert page.has_css?("legend", text: "Wales")
+            assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
+
+            assert page.has_text?("Must be a full URL, starting with https://")
+          end
+        end
+
+        should "should show an error message when LGIL code is blank" do
+          fill_in "edition[lgil_code]", with: ""
+          click_button("Save")
+
+          assert page.has_text?("Enter a LGIL code")
+        end
+
+        should "should show an error message when LGIL code is invalid" do
+          fill_in "edition[lgil_code]", with: "some text"
+          click_button("Save")
+
+          assert page.has_text?("LGIL code can only be a whole number between 0 and 999")
+        end
       end
 
-      should "show Title input box prefilled" do
-        assert page.has_text?("Title")
-        assert page.has_field?("edition[title]", with: "Edit page title")
+      context "guide edition" do
+        setup do
+          @draft_guide_edition = FactoryBot.create(:guide_edition, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1)
+          visit edition_path(@draft_guide_edition)
+        end
+
+        context "user has editor permissions" do
+          should "show fields for guide edition" do
+            assert page.has_field?("edition[title]", with: "Edit page title")
+            assert page.has_field?("edition[overview]", with: "metatags")
+
+            assert page.has_css?(".govuk-heading-m", text: "Chapters")
+            assert page.has_css?(".govuk-button", text: "Add a new chapter")
+
+            within all(".govuk-fieldset")[0] do
+              assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+              assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
+
+            within all(".govuk-fieldset")[1] do
+              assert page.has_css?("legend", text: "Is this beta content?")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
+          end
+
+          should "show guide chapter list for guide edition if present" do
+            draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+            visit edition_path(draft_guide_edition_with_parts)
+
+            assert page.has_field?("edition[title]", with: "Edit page title")
+            assert page.has_field?("edition[overview]", with: "metatags")
+            assert page.has_css?(".govuk-heading-m", text: "Chapters")
+            assert page.has_css?(".govuk-summary-list__row", text: "PART !")
+            assert page.has_css?(".govuk-summary-list__row", text: "PART !!")
+            assert page.has_css?(".govuk-summary-list__actions", text: "Edit", minimum: 2)
+            assert page.has_css?(".govuk-button", text: "Add a new chapter")
+
+            within all(".govuk-fieldset")[0] do
+              assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+              assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
+
+            within all(".govuk-fieldset")[1] do
+              assert page.has_css?("legend", text: "Is this beta content?")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
+          end
+
+          should "update guide edition and show success message" do
+            fill_in "edition[title]", with: "Changed Title"
+            fill_in "edition[overview]", with: "Changed Meta tag description"
+
+            within all(".govuk-fieldset")[0] do
+              choose("Yes")
+            end
+
+            within all(".govuk-fieldset")[1] do
+              choose("Yes")
+            end
+
+            click_button("Save")
+
+            assert page.has_field?("edition[title]", with: "Changed Title")
+            assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+
+            within all(".govuk-fieldset")[0] do
+              assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+              assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
+
+            within all(".govuk-fieldset")[1] do
+              assert page.has_css?("legend", text: "Is this beta content?")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
+
+            assert page.has_text?("Edition updated successfully.")
+          end
+
+          should "show Add new chapter page when Add new chapter button is clicked" do
+            click_link("Add a new chapter")
+
+            assert page.has_content?("Add new chapter")
+            assert page.has_css?(".govuk-label", text: "Title")
+            assert page.has_css?(".govuk-label", text: "Slug")
+            assert page.has_css?(".govuk-label", text: "Body")
+          end
+
+          should "show Edit chapter page when Edit chapter link is clicked" do
+            draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+            visit edition_path(draft_guide_edition_with_parts)
+
+            within all(".govuk-summary-list__row").last do
+              click_link("Edit")
+            end
+
+            assert page.has_content?("Edit chapter")
+            assert page.has_field?("part[title]", with: "PART !!")
+            assert page.has_field?("part[slug]", with: "part-two")
+            assert page.has_field?("part[body]", with: "This is some more version text.")
+          end
+
+          should "not show 'Reorder chapters' button when no parts are present" do
+            assert page.has_no_link?("Reorder chapters")
+          end
+
+          should "not show 'Reorder chapters' button when 1 part is present" do
+            @draft_guide_edition.parts.build(
+              title: "PART !",
+              body: "This is some version text.",
+              slug: "part-one",
+              order: 1,
+            )
+            @draft_guide_edition.save!
+            @draft_guide_edition.reload
+
+            assert page.has_no_link?("Reorder chapters")
+          end
+
+          should "show an error if the user tries to directly access the reorder chapters page with less than two parts" do
+            visit reorder_edition_guide_parts_path(@draft_guide_edition)
+
+            assert current_path == edition_path(@draft_guide_edition)
+            assert page.has_content?("You can only reorder chapters when there are at least 2.")
+          end
+
+          should "show 'Reorder chapters' button when two parts are present" do
+            draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+            visit edition_path(draft_guide_edition_with_parts)
+
+            assert page.has_link?("Reorder chapters")
+          end
+
+          context "Add new chapter" do
+            setup do
+              click_link("Add a new chapter")
+            end
+
+            should "save and redirect to edit guide page when 'save and go to summary' button is clicked" do
+              fill_in "Title", with: "Part One"
+              fill_in "Slug", with: "part-one"
+              fill_in "Body", with: "body-text"
+
+              click_button("Save and go to summary")
+
+              assert_current_path edition_path(@draft_guide_edition)
+              assert page.has_content?("New chapter added successfully.")
+              assert page.has_css?(".govuk-summary-list__row", text: "Part One")
+            end
+
+            should "show validation error when Title is empty" do
+              fill_in "Title", with: ""
+              fill_in "Slug", with: "part-one"
+              fill_in "Body", with: "body-text"
+
+              click_button("Save and go to summary")
+
+              assert_current_path edition_guide_parts_path(@draft_guide_edition)
+              assert page.has_field?("part[title]", with: "")
+              assert page.has_field?("part[slug]", with: "part-one")
+              assert page.has_field?("part[body]", with: "body-text")
+              assert page.has_content?("Enter a title for Chapter 1")
+            end
+
+            should "show validation error when Slug is empty" do
+              fill_in "Title", with: "Part one"
+              fill_in "Slug", with: ""
+              fill_in "Body", with: "body-text"
+              click_button("Save and go to summary")
+
+              assert_current_path edition_guide_parts_path(@draft_guide_edition)
+              assert page.has_field?("part[title]", with: "Part one")
+              assert page.has_field?("part[slug]", with: "")
+              assert page.has_field?("part[body]", with: "body-text")
+              assert page.has_content?("Enter a slug for Chapter 1")
+            end
+
+            should "show validation error when Slug is invalid" do
+              fill_in "Title", with: "Part one"
+              fill_in "Slug", with: "@"
+              fill_in "Body", with: "body-text"
+              click_button("Save and go to summary")
+
+              assert_current_path edition_guide_parts_path(@draft_guide_edition)
+              assert page.has_field?("part[title]", with: "Part one")
+              assert page.has_field?("part[slug]", with: "@")
+              assert page.has_field?("part[body]", with: "body-text")
+              assert page.has_content?("Slug can only consist of lower case characters, numbers and hyphens")
+            end
+
+            should "redirect to guide edit page when back to summary link is clicked" do
+              click_link("Back to summary")
+
+              assert_current_path edition_path(@draft_guide_edition)
+              assert page.has_content?("Edit")
+            end
+
+            should "display the guide edit page when the 'Cancel and discard changes' link is clicked" do
+              click_link("Cancel and discard changes")
+
+              assert_current_path edition_path(@draft_guide_edition)
+              assert page.has_content?("Edit")
+            end
+          end
+
+          context "Reorder Chapters" do
+            setup do
+              @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+              visit edition_path(@draft_guide_edition_with_parts)
+              click_link("Reorder chapters")
+            end
+
+            should "reorder chapters and redirect to guide edit page when update order is clicked" do
+              within all(".gem-c-reorderable-list__item")[0] do
+                fill_in "Position", with: "2"
+              end
+              within all(".gem-c-reorderable-list__item")[1] do
+                fill_in "Position", with: "1"
+              end
+
+              click_button "Update order"
+
+              within all(".govuk-summary-list__row")[3] do
+                assert page.has_text?("PART !!")
+              end
+              within all(".govuk-summary-list__row")[4] do
+                assert page.has_text?("PART !")
+              end
+            end
+
+            should "not reorder chapters and redirect to guide edit page when cancel is clicked" do
+              within all(".gem-c-reorderable-list__item")[0] do
+                fill_in "Position", with: "2"
+              end
+              within all(".gem-c-reorderable-list__item")[1] do
+                fill_in "Position", with: "1"
+              end
+
+              click_link "Cancel"
+
+              within all(".govuk-summary-list__row")[3] do
+                assert page.has_text?("PART !")
+              end
+              within all(".govuk-summary-list__row")[4] do
+                assert page.has_text?("PART !!")
+              end
+            end
+          end
+
+          %i[scheduled_for_publishing published archived].each do |state|
+            context "when state is #{state}" do
+              setup do
+                @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, state, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+                visit edition_path(@draft_guide_edition_with_parts)
+              end
+
+              should "not show 'Add new chapter' button" do
+                assert_not page.has_css?(".govuk-button", text: "Add a new chapter")
+              end
+
+              should "not show 'Reorder chapters' button even with two parts present" do
+                assert page.has_no_link?("Reorder chapters")
+              end
+
+              should "not allow user to load reorder chapters page" do
+                visit reorder_edition_guide_parts_path(@draft_guide_edition_with_parts)
+
+                assert current_path == edition_path(@draft_guide_edition_with_parts)
+                assert page.has_content?("You are not allowed to perform this action in the current state.")
+              end
+            end
+          end
+
+          context "Edit chapter" do
+            setup do
+              @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+              @part_id = @draft_guide_edition_with_parts.parts.last.id
+              visit edition_path(@draft_guide_edition_with_parts)
+              within all(".govuk-summary-list__row").last do
+                click_link("Edit")
+              end
+            end
+
+            should "save and redirect to edit guide page when save and summary button is clicked" do
+              fill_in "Title", with: "PART !!!"
+              fill_in "Slug", with: "part-two"
+              fill_in "Body", with: "body-text"
+
+              click_button("Save and go to summary")
+
+              assert_current_path edition_path(@draft_guide_edition_with_parts)
+              assert page.has_content?("Chapter updated successfully.")
+              assert page.has_css?(".govuk-summary-list__row", text: "PART !!!")
+            end
+
+            should "show validation error when Title is empty" do
+              fill_in "Title", with: ""
+              fill_in "Slug", with: "part-two"
+              fill_in "Body", with: "body-text"
+
+              click_button("Save and go to summary")
+
+              assert_current_path edition_guide_part_path(@draft_guide_edition_with_parts, @part_id)
+              assert page.has_field?("part[title]", with: "")
+              assert page.has_field?("part[slug]", with: "part-two")
+              assert page.has_field?("part[body]", with: "body-text")
+              assert page.has_content?("Enter a title for Chapter 2")
+            end
+
+            should "show validation error when Slug is empty" do
+              fill_in "Title", with: "Part two"
+              fill_in "Slug", with: ""
+              fill_in "Body", with: "body-text"
+
+              click_button("Save and go to summary")
+
+              assert_current_path edition_guide_part_path(@draft_guide_edition_with_parts, @part_id)
+              assert page.has_field?("part[title]", with: "Part two")
+              assert page.has_field?("part[slug]", with: "")
+              assert page.has_field?("part[body]", with: "body-text")
+              assert page.has_content?("Enter a slug for Chapter 2")
+            end
+
+            should "show validation error when Slug is invalid" do
+              fill_in "Title", with: "Part two"
+              fill_in "Slug", with: "@"
+              fill_in "Body", with: "body-text"
+
+              click_button("Save and go to summary")
+
+              assert_current_path edition_guide_part_path(@draft_guide_edition_with_parts, @part_id)
+              assert page.has_field?("part[title]", with: "Part two")
+              assert page.has_field?("part[slug]", with: "@")
+              assert page.has_field?("part[body]", with: "body-text")
+              assert page.has_content?("Slug can only consist of lower case characters, numbers and hyphens")
+            end
+
+            should "redirect to guide edit page when back to summary link is clicked" do
+              click_link("Back to summary")
+
+              assert_current_path edition_path(@draft_guide_edition_with_parts)
+              assert page.has_content?("Edit")
+            end
+
+            should "display the Delete chapter confirmation page when the 'Delete chapter' link is clicked" do
+              click_link("Delete chapter")
+
+              assert_current_path confirm_destroy_edition_guide_part_path(@draft_guide_edition_with_parts, @part_id)
+              assert page.has_content?("Are you sure you want to delete this chapter?")
+            end
+          end
+        end
+
+        context "user has no editor permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Non Editor"))
+            @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+            visit edition_path(@draft_guide_edition_with_parts)
+          end
+
+          should "not show 'Add new chapter' button" do
+            assert_not page.has_css?(".govuk-button", text: "Add a new chapter")
+          end
+
+          should "not show 'Reorder chapters' button even with two parts present" do
+            assert page.has_no_link?("Reorder chapters")
+          end
+
+          should "not allow user to load reorder chapters page" do
+            visit reorder_edition_guide_parts_path(@draft_guide_edition_with_parts)
+
+            assert current_path == edition_path(@draft_guide_edition_with_parts)
+            assert page.has_content?("You do not have correct editor permissions for this action.")
+          end
+
+          should "not show the 'Delete chapter' button'" do
+            assert page.has_no_link?("Delete chapter")
+          end
+        end
+
+        context "Delete chapter confirmation" do
+          setup do
+            @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+            @part = @draft_guide_edition_with_parts.parts.last
+            visit confirm_destroy_edition_guide_part_path(@draft_guide_edition_with_parts, @part)
+          end
+
+          should "redirect to edit guide page and show a success message when the 'Delete chapter' button is clicked" do
+            click_button("Delete chapter")
+            @draft_guide_edition_with_parts.reload
+
+            assert_current_path edition_path(@draft_guide_edition_with_parts)
+            assert page.has_content?("Chapter deleted successfully")
+            assert @draft_guide_edition_with_parts.parts.exclude? @part
+          end
+
+          should "direct the user to the edit chapter page when the 'Cancel' button is clicked" do
+            click_link("Cancel")
+            assert_current_path edit_edition_guide_part_path(@draft_guide_edition_with_parts, @part)
+          end
+        end
       end
 
-      should "show Meta tag input box prefilled" do
-        assert page.has_text?("Meta tag description")
-        assert page.has_text?("Some search engines will display this if they cannot find what they need in the main text")
-        assert page.has_field?("edition[overview]", with: "metatags")
+      context "transaction edition" do
+        setup do
+          @transaction_edition = FactoryBot.create(
+            :transaction_edition,
+            :draft,
+            title: "Edit page title",
+            overview: "metatags",
+            in_beta: true,
+            introduction: "Transaction introduction",
+            more_information: "Transaction more information",
+            need_to_know: "Transaction need to",
+            link: "https://continue.com",
+            will_continue_on: "To be continued...",
+            alternate_methods: "Method A or B",
+            publish_at: nil,
+          )
+          visit edition_path(@transaction_edition)
+        end
+
+        should "show fields for transaction edition" do
+          assert page.has_field?("edition[title]", with: "Edit page title")
+          assert page.has_css?(".govuk-label", text: "Title")
+
+          assert page.has_field?("edition[overview]", with: "metatags")
+          assert page.has_css?(".govuk-label", text: "Meta tag description")
+          assert page.has_css?(".govuk-hint", text: "Some search engines will display this if they cannot find what they need in the main text")
+
+          assert page.has_field?("edition[introduction]", with: "Transaction introduction")
+          assert page.has_css?(".govuk-label", text: "Introduction")
+          assert page.has_css?(".govuk-hint", text: "Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Refer to the Govspeak guidance (opens in new tab)")
+
+          assert page.has_field?("edition[start_button_text]")
+          assert page.has_text?("Start button text")
+          assert find(".gem-c-radio input[value='Start now']").checked?
+
+          assert page.has_field?("edition[will_continue_on]", with: "To be continued...")
+          assert page.has_css?(".govuk-label", text: "Text below the start button (optional)")
+          assert page.has_css?(".govuk-hint", text: "Following ‘on’, for example “the HMRC website”")
+
+          assert page.has_field?("edition[link]", with: "https://continue.com")
+          assert page.has_css?(".govuk-label", text: "Link to start of transaction")
+          assert page.has_css?(".govuk-hint", text: "Link as deep as possible")
+
+          assert page.has_field?("edition[more_information]", with: "Transaction more information")
+          assert page.has_css?(".govuk-label", text: "More information (optional)")
+
+          assert page.has_field?("edition[alternate_methods]", with: "Method A or B")
+          assert page.has_css?(".govuk-label", text: "Other ways to apply (optional)")
+          assert page.has_css?(".govuk-hint", text: "Alternative ways of completing this transaction")
+
+          assert page.has_field?("edition[need_to_know]", with: "Transaction need to")
+          assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
+
+          assert page.has_field?("edition[in_beta]")
+          assert page.has_text?("Is this beta content?")
+          assert find(".gem-c-radio input[value='1']").checked?
+        end
+
+        should "update transaction edition and show success message" do
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[overview]", with: "Changed Meta tag description"
+          fill_in "edition[introduction]", with: "Changed intro"
+          choose("Sign in")
+          fill_in "edition[will_continue_on]", with: "Continue on changed"
+          fill_in "edition[link]", with: "https://changed.com"
+          fill_in "edition[more_information]", with: "Changed more info"
+          fill_in "edition[alternate_methods]", with: "Method C or D"
+          fill_in "edition[need_to_know]", with: "Changed need to"
+          choose("Yes")
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+          assert page.has_field?("edition[introduction]", with: "Changed intro")
+          assert find(".gem-c-radio input[value='Sign in']").checked?
+          assert page.has_field?("edition[will_continue_on]", with: "Continue on changed")
+          assert page.has_field?("edition[link]", with: "https://changed.com")
+          assert page.has_field?("edition[more_information]", with: "Changed more info")
+          assert page.has_field?("edition[alternate_methods]", with: "Method C or D")
+          assert page.has_field?("edition[need_to_know]", with: "Changed need to")
+          assert find(".gem-c-radio input[value='1']").checked?
+          assert page.has_text?("Edition updated successfully.")
+        end
       end
 
-      should "show Beta content radios prechecked" do
-        assert page.has_text?("Is this beta content?")
-        assert find(".gem-c-radio input[value='0']")
-        assert find(".gem-c-radio input[value='1']").checked?
+      context "completed transaction edition" do
+        should "show correct fields for no promotion" do
+          completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            :draft,
+            title: "Edit page title",
+            overview: "metatags",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
+          )
+
+          visit edition_path(completed_transaction_edition)
+
+          assert page.has_field?("edition[title]", with: "Edit page title")
+          assert page.has_css?(".govuk-label", text: "Title")
+          assert page.has_field?("edition[overview]", with: "metatags")
+          assert page.has_css?(".govuk-label", text: "Meta tag description")
+          assert page.has_css?(".govuk-hint", text: "Some search engines will display this if they cannot find what they need in the main text")
+          assert page.has_text?("Promotions")
+          assert page.has_css?(".govuk-hint", text: "Display a promotion above the satisfaction survey")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "none")
+          assert page.has_field?("edition[in_beta]")
+          assert page.has_text?("Is this beta content?")
+          assert page.has_checked_field?("edition[in_beta]", with: "1")
+        end
+
+        should "show correct fields for organ donation" do
+          completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            :draft,
+            presentation_toggles: { promotion_choice: { choice: "organ_donor", url: "https://example.com", opt_in_url: "https://opt-in.com", opt_out_url: "https://opt-out.com" } },
+          )
+
+          visit edition_path(completed_transaction_edition)
+
+          assert page.has_checked_field?("edition[promotion_choice]", with: "organ_donor")
+          assert page.has_css?(".govuk-label", text: "Promotion URL")
+          assert page.has_field?("edition[promotion_choice_url_organ_donor]", with: "https://example.com")
+          assert page.has_css?(".govuk-label", text: "Opt-in URL (optional)")
+          assert page.has_field?("edition[promotion_choice_opt_in_url]", with: "https://opt-in.com")
+          assert page.has_css?(".govuk-label", text: "Opt-out URL (optional)")
+          assert page.has_field?("edition[promotion_choice_opt_out_url]", with: "https://opt-out.com")
+        end
+
+        should "show correct fields for photo ID" do
+          completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            :draft,
+            presentation_toggles: { promotion_choice: { choice: "bring_id_to_vote", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
+          )
+
+          visit edition_path(completed_transaction_edition)
+
+          assert page.has_checked_field?("edition[promotion_choice]", with: "bring_id_to_vote")
+          assert page.has_css?(".govuk-label", text: "Promotion URL")
+          assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "https://example.com")
+        end
+
+        should "show correct fields for MOT reminder" do
+          completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            :draft,
+            presentation_toggles: { promotion_choice: { choice: "mot_reminder", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
+          )
+
+          visit edition_path(completed_transaction_edition)
+
+          assert page.has_checked_field?("edition[promotion_choice]", with: "mot_reminder")
+          assert page.has_css?(".govuk-label", text: "Promotion URL")
+          assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "https://example.com")
+        end
+
+        should "show correct fields for electric vehicles" do
+          completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            :draft,
+            presentation_toggles: { promotion_choice: { choice: "electric_vehicle", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
+          )
+
+          visit edition_path(completed_transaction_edition)
+
+          assert page.has_checked_field?("edition[promotion_choice]", with: "electric_vehicle")
+          assert page.has_css?(".govuk-label", text: "Promotion URL")
+          assert page.has_field?("edition[promotion_choice_url_electric_vehicle]", with: "https://example.com")
+        end
+
+        should "amend fields and show success message when edition is updated" do
+          completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            :draft,
+            presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
+          )
+
+          visit edition_path(completed_transaction_edition)
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[overview]", with: "Changed Meta tag description"
+          choose("Organ donation")
+          fill_in "edition[promotion_choice_url_organ_donor]", with: "https://organ.com"
+          fill_in "edition[promotion_choice_opt_in_url]", with: "https://organ_opt_in.com"
+          fill_in "edition[promotion_choice_opt_out_url]", with: "https://organ_opt_out.com"
+          choose("Yes")
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+          assert page.has_field?("edition[promotion_choice_url_organ_donor]", with: "https://organ.com")
+          assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "")
+          assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "")
+          assert page.has_field?("edition[promotion_choice_url_electric_vehicle]", with: "")
+          assert page.has_field?("edition[promotion_choice_opt_in_url]", with: "https://organ_opt_in.com")
+          assert page.has_field?("edition[promotion_choice_opt_out_url]", with: "https://organ_opt_out.com")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "organ_donor")
+          assert page.has_checked_field?("edition[in_beta]", with: "1")
+          assert page.has_text?("Edition updated successfully.")
+
+          choose("Bring photo ID to vote")
+          fill_in "edition[promotion_choice_url_bring_id_to_vote]", with: "https://photo.com"
+          click_button("Save")
+
+          assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "https://photo.com")
+          assert page.has_field?("edition[promotion_choice_url_organ_donor]", with: "")
+          assert page.has_field?("edition[promotion_choice_opt_in_url]", with: "")
+          assert page.has_field?("edition[promotion_choice_opt_out_url]", with: "")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "bring_id_to_vote")
+
+          choose("MOT reminders")
+          fill_in "edition[promotion_choice_url_mot_reminder]", with: "https://mot.com"
+          click_button("Save")
+
+          assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "")
+          assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "https://mot.com")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "mot_reminder")
+
+          choose("Electric vehicles")
+          fill_in "edition[promotion_choice_url_electric_vehicle]", with: "https://electric.com"
+          click_button("Save")
+
+          assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "")
+          assert page.has_field?("edition[promotion_choice_url_electric_vehicle]", with: "https://electric.com")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "electric_vehicle")
+        end
+
+        should "raise an error and not save changes if Promotion URL is not filled out" do
+          ["Organ donation", "Bring photo ID to vote", "MOT reminders", "Electric vehicles"].each do |promotion_choice|
+            completed_transaction_edition = FactoryBot.create(
+              :completed_transaction_edition,
+              :draft,
+              presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
+            )
+
+            visit edition_path(completed_transaction_edition)
+            choose(promotion_choice)
+            click_button("Save")
+
+            assert page.has_css?(".gem-c-error-summary__list-item", text: "Enter a promotion URL")
+            assert page.has_css?(".govuk-error-message", text: "Enter a promotion URL")
+            assert page.has_css?(".govuk-input--error")
+          end
+        end
       end
+    end
 
-      should "show Body text field prefilled" do
-        assert page.has_text?("Body")
-        assert page.has_text?("Refer to the Govspeak guidance (opens in new tab)")
-        assert page.has_field?("edition[body]", with: "The body")
-      end
+    context "in_review edition (sent to 2i)" do
+      context "user has the required permissions" do
+        context "current user is also the requester" do
+          setup do
+            login_as(@govuk_requester)
+            @in_review_edition = FactoryBot.create(:edition, :in_review, requester: @govuk_requester)
+            visit edition_path(@in_review_edition)
+          end
 
-      should "not show Change Note field for an unpublished document" do
-        assert page.has_no_text?("Add a public change note")
-        assert page.has_no_text?("Telling users when published information has changed is important for transparency.")
-        assert page.has_no_field?("edition[change_note]")
-      end
+          should "display Save button and preview link" do
+            assert page.has_button?("Save"), "No save button present"
+            assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
+          end
 
-      should "update and show success message" do
-        fill_in "edition[title]", with: "Changed Title"
-        fill_in "edition[overview]", with: "Changed Meta tag description"
-        choose("Yes")
-        fill_in "edition[body]", with: "Changed body"
-        click_button("Save")
+          should "indicate that the current user requested a review" do
+            assert page.has_text?("You've sent this edition to be reviewed")
+          end
 
-        assert page.has_field?("edition[title]", with: "Changed Title")
-        assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
-        assert find(".gem-c-radio input[value='1']").checked?
-        assert page.has_field?("edition[body]", with: "Changed body")
-        assert page.has_text?("Edition updated successfully.")
+          should "not show 'Send to 2i' link as edition already in 'in review' state" do
+            visit edition_path(@in_review_edition)
+            assert page.has_no_link?("Send to 2i")
+          end
+        end
+
+        context "current user is not the requester" do
+          setup do
+            login_as(@govuk_editor)
+            @in_review_edition = FactoryBot.create(:edition, :in_review, requester: @govuk_requester)
+            visit edition_path(@in_review_edition)
+          end
+
+          should "display Save button and preview link" do
+            assert page.has_button?("Save"), "No save button present"
+            assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
+          end
+
+          should "indicate which other user requested a review" do
+            assert page.has_text?("Stub requester sent this edition to be reviewed")
+          end
+        end
       end
 
       context "user does not have editor permissions" do
         setup do
           login_as(FactoryBot.create(:user, name: "Non Editor"))
-          visit edition_path(@draft_edition)
+          @in_review_edition = FactoryBot.create(:edition, :in_review)
+          visit edition_path(@in_review_edition)
         end
 
         should "not show any editable components" do
@@ -1892,890 +1199,12 @@ class EditionEditTest < IntegrationTest
           assert page.has_no_css?(".govuk-radios")
         end
 
-        should "not show the send to 2i button" do
-          assert page.has_no_link?("Send to 2i")
-        end
-
         should "not show the Save button" do
           assert page.has_no_button?("Save")
         end
 
         should "show the Preview link" do
           assert page.has_link?("Preview (opens in new tab)")
-        end
-      end
-    end
-
-    context "place edition" do
-      setup do
-        @draft_place_edition = FactoryBot.create(:place_edition,
-                                                 :draft,
-                                                 title: "Edit page title",
-                                                 overview: "metatags",
-                                                 in_beta: 1,
-                                                 place_type: "The place type",
-                                                 introduction: "some intro",
-                                                 more_information: "some more info",
-                                                 need_to_know: "some need to know")
-        visit edition_path(@draft_place_edition)
-      end
-
-      should "show fields for place edition" do
-        assert page.has_field?("edition[title]", with: "Edit page title")
-        assert page.has_field?("edition[overview]", with: "metatags")
-
-        assert page.has_css?(".govuk-label", text: "Places Manager service identifier")
-        assert page.has_css?(".govuk-hint", text: "This is assigned in the Places Manager application")
-        assert page.has_field?("edition[place_type]", with: "The place type")
-
-        assert page.has_css?(".govuk-label", text: "Introduction")
-        assert page.has_css?(".govuk-hint", text: "Refer to the Govspeak guidance (opens in new tab)")
-        assert page.has_field?("edition[introduction]", with: "some intro")
-
-        assert page.has_css?(".govuk-label", text: "Further information (optional)")
-        assert page.has_field?("edition[more_information]", with: "some more info")
-
-        assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
-        assert page.has_field?("edition[need_to_know]", with: "some need to know")
-
-        assert find(".gem-c-radio input[value='1']").checked?
-      end
-
-      should "update place edition and show success message" do
-        fill_in "edition[title]", with: "Changed Title"
-        fill_in "edition[overview]", with: "Changed Meta tag description"
-        fill_in "edition[place_type]", with: "Changed place type"
-        fill_in "edition[introduction]", with: "Changed intro"
-        fill_in "edition[more_information]", with: "Changed more info"
-        fill_in "edition[need_to_know]", with: "Changed need to know"
-        choose("Yes")
-        click_button("Save")
-
-        assert page.has_field?("edition[title]", with: "Changed Title")
-        assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
-        assert page.has_field?("edition[place_type]", with: "Changed place type")
-        assert page.has_field?("edition[introduction]", with: "Changed intro")
-        assert page.has_field?("edition[more_information]", with: "Changed more info")
-        assert page.has_field?("edition[need_to_know]", with: "Changed need to know")
-        assert find(".gem-c-radio input[value='1']").checked?
-        assert page.has_text?("Edition updated successfully.")
-      end
-    end
-
-    context "local transaction edition" do
-      setup do
-        local_service = FactoryBot.create(:local_service, lgsl_code: 9012, description: "Whatever", providing_tier: %w[district unitary county])
-        scotland_availability = FactoryBot.build(:scotland_availability, authority_type: "devolved_administration_service", alternative_url: "https://www.google.com")
-        wales_availability = FactoryBot.build(:wales_availability, authority_type: "unavailable")
-        draft_local_transaction_edition = FactoryBot.create(:local_transaction_edition, :draft, title: "Edit page title", in_beta: 1, lgsl_code: local_service.lgsl_code,
-                                                                                                panopticon_id: FactoryBot.create(:artefact).id, lgil_code: 23, cta_text: "Find your local council", introduction: "Test introduction", more_information: "some more info",
-                                                                                                need_to_know: "some need to know", before_results: "before results", after_results: "after results", scotland_availability:, wales_availability:)
-        visit edition_path(draft_local_transaction_edition)
-      end
-
-      should "show fields for local transaction edition" do
-        assert page.has_field?("edition[title]", with: "Edit page title")
-
-        assert page.has_css?(".govuk-label", text: "LGSL code")
-        assert page.has_text?("9012")
-
-        assert page.has_css?(".govuk-label", text: "LGIL code")
-        assert page.has_field?("edition[lgil_code]", with: "23")
-
-        assert page.has_css?(".govuk-label", text: "Button text (optional)")
-        assert page.has_css?(".govuk-hint", text: "If left blank, the default text ‘Find your local council’ will be used")
-        assert page.has_field?("edition[cta_text]", with: "Find your local council")
-
-        assert page.has_css?(".govuk-label", text: "Introduction")
-        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. Explain that it’s the responsibility of the local council and that we’ll take you there. Read the Govspeak guidance (opens in new tab)")
-        assert page.has_field?("edition[introduction]", with: "Test introduction")
-
-        assert page.has_css?(".govuk-label", text: "Further information (optional)")
-        assert page.has_field?("edition[more_information]", with: "some more info")
-
-        assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
-        assert page.has_field?("edition[need_to_know]", with: "some need to know")
-
-        assert page.has_css?(".govuk-label", text: "Above results content (optional)")
-        assert page.has_field?("edition[before_results]", with: "before results")
-
-        assert page.has_css?(".govuk-label", text: "Below results content (optional)")
-        assert page.has_field?("edition[after_results]", with: "after results")
-
-        within all(".govuk-fieldset")[0] do
-          assert page.has_css?("legend", text: "Northern Ireland")
-          assert find(".gem-c-radio input[value='local_authority_service']").checked?
-        end
-
-        within all(".govuk-fieldset")[1] do
-          assert page.has_css?("legend", text: "Scotland")
-          assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
-
-          assert page.has_css?(".govuk-label", text: "URL of the devolved administration website page")
-          assert page.has_field?("edition[scotland_availability_attributes][alternative_url]", with: "https://www.google.com")
-        end
-
-        within all(".govuk-fieldset")[2] do
-          assert page.has_css?("legend", text: "Wales")
-          assert find(".gem-c-radio input[value='unavailable']").checked?
-        end
-
-        assert find(".gem-c-radio input[value='1']").checked?
-      end
-
-      should "update local transaction edition and show success message" do
-        fill_in "edition[title]", with: "Changed Title"
-        fill_in "edition[lgil_code]", with: "25"
-        fill_in "edition[cta_text]", with: "Changed button text"
-        fill_in "edition[introduction]", with: "Changed intro"
-        fill_in "edition[more_information]", with: "Changed more info"
-        fill_in "edition[need_to_know]", with: "Changed need to know"
-        fill_in "edition[before_results]", with: "Changed above results"
-        fill_in "edition[after_results]", with: "Changed below results"
-
-        within all(".govuk-fieldset")[0] do
-          choose("Service not available")
-        end
-
-        within all(".govuk-fieldset")[1] do
-          choose("Service available from local council")
-        end
-
-        within all(".govuk-fieldset")[2] do
-          choose("Service available from devolved administration (or a similar service is available)")
-          fill_in "edition[wales_availability_attributes][alternative_url]", with: "https://www.google.com"
-        end
-
-        choose("Yes")
-        click_button("Save")
-
-        assert page.has_field?("edition[title]", with: "Changed Title")
-        assert page.has_field?("edition[lgil_code]", with: "25")
-        assert page.has_field?("edition[cta_text]", with: "Changed button text")
-        assert page.has_field?("edition[introduction]", with: "Changed intro")
-        assert page.has_field?("edition[more_information]", with: "Changed more info")
-        assert page.has_field?("edition[need_to_know]", with: "Changed need to know")
-        assert page.has_field?("edition[before_results]", with: "Changed above results")
-        assert page.has_field?("edition[after_results]", with: "Changed below results")
-
-        within all(".govuk-fieldset")[0] do
-          assert page.has_css?("legend", text: "Northern Ireland")
-          assert find(".gem-c-radio input[value='unavailable']").checked?
-        end
-
-        within all(".govuk-fieldset")[1] do
-          assert page.has_css?("legend", text: "Scotland")
-          assert find(".gem-c-radio input[value='local_authority_service']").checked?
-        end
-
-        within all(".govuk-fieldset")[2] do
-          assert page.has_css?("legend", text: "Wales")
-          assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
-
-          assert page.has_css?(".govuk-label", text: "URL of the devolved administration website page")
-          assert page.has_field?("edition[wales_availability_attributes][alternative_url]", with: "https://www.google.com")
-        end
-
-        assert find(".gem-c-radio input[value='1']").checked?
-        assert page.has_text?("Edition updated successfully.")
-      end
-
-      should "should show an error message when URL of the devolved administration is blank" do
-        within all(".govuk-fieldset")[2] do
-          choose("Service available from devolved administration (or a similar service is available)")
-          fill_in "edition[wales_availability_attributes][alternative_url]", with: ""
-        end
-
-        click_button("Save")
-
-        within all(".govuk-fieldset")[2] do
-          assert page.has_css?("legend", text: "Wales")
-          assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
-
-          assert page.has_text?("Enter the URL of the devolved administration website page")
-        end
-      end
-
-      should "should show an error message when URL of the devolved administration is invalid" do
-        within all(".govuk-fieldset")[2] do
-          choose("Service available from devolved administration (or a similar service is available)")
-          fill_in "edition[wales_availability_attributes][alternative_url]", with: "some text"
-        end
-
-        click_button("Save")
-
-        within all(".govuk-fieldset")[2] do
-          assert page.has_css?("legend", text: "Wales")
-          assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
-
-          assert page.has_text?("Must be a full URL, starting with https://")
-        end
-      end
-
-      should "should show an error message when LGIL code is blank" do
-        fill_in "edition[lgil_code]", with: ""
-        click_button("Save")
-
-        assert page.has_text?("Enter a LGIL code")
-      end
-
-      should "should show an error message when LGIL code is invalid" do
-        fill_in "edition[lgil_code]", with: "some text"
-        click_button("Save")
-
-        assert page.has_text?("LGIL code can only be a whole number between 0 and 999")
-      end
-    end
-
-    context "guide edition" do
-      setup do
-        @draft_guide_edition = FactoryBot.create(:guide_edition, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1)
-        visit edition_path(@draft_guide_edition)
-      end
-
-      context "user has editor permissions" do
-        should "show fields for guide edition" do
-          assert page.has_field?("edition[title]", with: "Edit page title")
-          assert page.has_field?("edition[overview]", with: "metatags")
-
-          assert page.has_css?(".govuk-heading-m", text: "Chapters")
-          assert page.has_css?(".govuk-button", text: "Add a new chapter")
-
-          within all(".govuk-fieldset")[0] do
-            assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
-            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-
-          within all(".govuk-fieldset")[1] do
-            assert page.has_css?("legend", text: "Is this beta content?")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-        end
-
-        should "show guide chapter list for guide edition if present" do
-          draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-          visit edition_path(draft_guide_edition_with_parts)
-
-          assert page.has_field?("edition[title]", with: "Edit page title")
-          assert page.has_field?("edition[overview]", with: "metatags")
-          assert page.has_css?(".govuk-heading-m", text: "Chapters")
-          assert page.has_css?(".govuk-summary-list__row", text: "PART !")
-          assert page.has_css?(".govuk-summary-list__row", text: "PART !!")
-          assert page.has_css?(".govuk-summary-list__actions", text: "Edit", minimum: 2)
-          assert page.has_css?(".govuk-button", text: "Add a new chapter")
-
-          within all(".govuk-fieldset")[0] do
-            assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
-            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-
-          within all(".govuk-fieldset")[1] do
-            assert page.has_css?("legend", text: "Is this beta content?")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-        end
-
-        should "update guide edition and show success message" do
-          fill_in "edition[title]", with: "Changed Title"
-          fill_in "edition[overview]", with: "Changed Meta tag description"
-
-          within all(".govuk-fieldset")[0] do
-            choose("Yes")
-          end
-
-          within all(".govuk-fieldset")[1] do
-            choose("Yes")
-          end
-
-          click_button("Save")
-
-          assert page.has_field?("edition[title]", with: "Changed Title")
-          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
-
-          within all(".govuk-fieldset")[0] do
-            assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
-            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-
-          within all(".govuk-fieldset")[1] do
-            assert page.has_css?("legend", text: "Is this beta content?")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-
-          assert page.has_text?("Edition updated successfully.")
-        end
-
-        should "show Add new chapter page when Add new chapter button is clicked" do
-          click_link("Add a new chapter")
-
-          assert page.has_content?("Add new chapter")
-          assert page.has_css?(".govuk-label", text: "Title")
-          assert page.has_css?(".govuk-label", text: "Slug")
-          assert page.has_css?(".govuk-label", text: "Body")
-        end
-
-        should "show Edit chapter page when Edit chapter link is clicked" do
-          draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-          visit edition_path(draft_guide_edition_with_parts)
-
-          within all(".govuk-summary-list__row").last do
-            click_link("Edit")
-          end
-
-          assert page.has_content?("Edit chapter")
-          assert page.has_field?("part[title]", with: "PART !!")
-          assert page.has_field?("part[slug]", with: "part-two")
-          assert page.has_field?("part[body]", with: "This is some more version text.")
-        end
-
-        should "not show 'Reorder chapters' button when no parts are present" do
-          assert page.has_no_link?("Reorder chapters")
-        end
-
-        should "not show 'Reorder chapters' button when 1 part is present" do
-          @draft_guide_edition.parts.build(
-            title: "PART !",
-            body: "This is some version text.",
-            slug: "part-one",
-            order: 1,
-          )
-          @draft_guide_edition.save!
-          @draft_guide_edition.reload
-
-          assert page.has_no_link?("Reorder chapters")
-        end
-
-        should "show an error if the user tries to directly access the reorder chapters page with less than two parts" do
-          visit reorder_edition_guide_parts_path(@draft_guide_edition)
-
-          assert current_path == edition_path(@draft_guide_edition)
-          assert page.has_content?("You can only reorder chapters when there are at least 2.")
-        end
-
-        should "show 'Reorder chapters' button when two parts are present" do
-          draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-          visit edition_path(draft_guide_edition_with_parts)
-
-          assert page.has_link?("Reorder chapters")
-        end
-
-        context "Add new chapter" do
-          setup do
-            click_link("Add a new chapter")
-          end
-
-          should "save and redirect to edit guide page when 'save and go to summary' button is clicked" do
-            fill_in "Title", with: "Part One"
-            fill_in "Slug", with: "part-one"
-            fill_in "Body", with: "body-text"
-
-            click_button("Save and go to summary")
-
-            assert_current_path edition_path(@draft_guide_edition)
-            assert page.has_content?("New chapter added successfully.")
-            assert page.has_css?(".govuk-summary-list__row", text: "Part One")
-          end
-
-          should "show validation error when Title is empty" do
-            fill_in "Title", with: ""
-            fill_in "Slug", with: "part-one"
-            fill_in "Body", with: "body-text"
-
-            click_button("Save and go to summary")
-
-            assert_current_path edition_guide_parts_path(@draft_guide_edition)
-            assert page.has_field?("part[title]", with: "")
-            assert page.has_field?("part[slug]", with: "part-one")
-            assert page.has_field?("part[body]", with: "body-text")
-            assert page.has_content?("Enter a title for Chapter 1")
-          end
-
-          should "show validation error when Slug is empty" do
-            fill_in "Title", with: "Part one"
-            fill_in "Slug", with: ""
-            fill_in "Body", with: "body-text"
-            click_button("Save and go to summary")
-
-            assert_current_path edition_guide_parts_path(@draft_guide_edition)
-            assert page.has_field?("part[title]", with: "Part one")
-            assert page.has_field?("part[slug]", with: "")
-            assert page.has_field?("part[body]", with: "body-text")
-            assert page.has_content?("Enter a slug for Chapter 1")
-          end
-
-          should "show validation error when Slug is invalid" do
-            fill_in "Title", with: "Part one"
-            fill_in "Slug", with: "@"
-            fill_in "Body", with: "body-text"
-            click_button("Save and go to summary")
-
-            assert_current_path edition_guide_parts_path(@draft_guide_edition)
-            assert page.has_field?("part[title]", with: "Part one")
-            assert page.has_field?("part[slug]", with: "@")
-            assert page.has_field?("part[body]", with: "body-text")
-            assert page.has_content?("Slug can only consist of lower case characters, numbers and hyphens")
-          end
-
-          should "redirect to guide edit page when back to summary link is clicked" do
-            click_link("Back to summary")
-
-            assert_current_path edition_path(@draft_guide_edition)
-            assert page.has_content?("Edit")
-          end
-
-          should "display the guide edit page when the 'Cancel and discard changes' link is clicked" do
-            click_link("Cancel and discard changes")
-
-            assert_current_path edition_path(@draft_guide_edition)
-            assert page.has_content?("Edit")
-          end
-        end
-
-        context "Reorder Chapters" do
-          setup do
-            @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-            visit edition_path(@draft_guide_edition_with_parts)
-            click_link("Reorder chapters")
-          end
-
-          should "reorder chapters and redirect to guide edit page when update order is clicked" do
-            within all(".gem-c-reorderable-list__item")[0] do
-              fill_in "Position", with: "2"
-            end
-            within all(".gem-c-reorderable-list__item")[1] do
-              fill_in "Position", with: "1"
-            end
-
-            click_button "Update order"
-
-            within all(".govuk-summary-list__row")[3] do
-              assert page.has_text?("PART !!")
-            end
-            within all(".govuk-summary-list__row")[4] do
-              assert page.has_text?("PART !")
-            end
-          end
-
-          should "not reorder chapters and redirect to guide edit page when cancel is clicked" do
-            within all(".gem-c-reorderable-list__item")[0] do
-              fill_in "Position", with: "2"
-            end
-            within all(".gem-c-reorderable-list__item")[1] do
-              fill_in "Position", with: "1"
-            end
-
-            click_link "Cancel"
-
-            within all(".govuk-summary-list__row")[3] do
-              assert page.has_text?("PART !")
-            end
-            within all(".govuk-summary-list__row")[4] do
-              assert page.has_text?("PART !!")
-            end
-          end
-        end
-
-        %i[scheduled_for_publishing published archived].each do |state|
-          context "when state is #{state}" do
-            setup do
-              @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, state, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-              visit edition_path(@draft_guide_edition_with_parts)
-            end
-
-            should "not show 'Add new chapter' button" do
-              assert_not page.has_css?(".govuk-button", text: "Add a new chapter")
-            end
-
-            should "not show 'Reorder chapters' button even with two parts present" do
-              assert page.has_no_link?("Reorder chapters")
-            end
-
-            should "not allow user to load reorder chapters page" do
-              visit reorder_edition_guide_parts_path(@draft_guide_edition_with_parts)
-
-              assert current_path == edition_path(@draft_guide_edition_with_parts)
-              assert page.has_content?("You are not allowed to perform this action in the current state.")
-            end
-          end
-        end
-
-        context "Edit chapter" do
-          setup do
-            @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-            @part_id = @draft_guide_edition_with_parts.parts.last.id
-            visit edition_path(@draft_guide_edition_with_parts)
-            within all(".govuk-summary-list__row").last do
-              click_link("Edit")
-            end
-          end
-
-          should "save and redirect to edit guide page when save and summary button is clicked" do
-            fill_in "Title", with: "PART !!!"
-            fill_in "Slug", with: "part-two"
-            fill_in "Body", with: "body-text"
-
-            click_button("Save and go to summary")
-
-            assert_current_path edition_path(@draft_guide_edition_with_parts)
-            assert page.has_content?("Chapter updated successfully.")
-            assert page.has_css?(".govuk-summary-list__row", text: "PART !!!")
-          end
-
-          should "show validation error when Title is empty" do
-            fill_in "Title", with: ""
-            fill_in "Slug", with: "part-two"
-            fill_in "Body", with: "body-text"
-
-            click_button("Save and go to summary")
-
-            assert_current_path edition_guide_part_path(@draft_guide_edition_with_parts, @part_id)
-            assert page.has_field?("part[title]", with: "")
-            assert page.has_field?("part[slug]", with: "part-two")
-            assert page.has_field?("part[body]", with: "body-text")
-            assert page.has_content?("Enter a title for Chapter 2")
-          end
-
-          should "show validation error when Slug is empty" do
-            fill_in "Title", with: "Part two"
-            fill_in "Slug", with: ""
-            fill_in "Body", with: "body-text"
-
-            click_button("Save and go to summary")
-
-            assert_current_path edition_guide_part_path(@draft_guide_edition_with_parts, @part_id)
-            assert page.has_field?("part[title]", with: "Part two")
-            assert page.has_field?("part[slug]", with: "")
-            assert page.has_field?("part[body]", with: "body-text")
-            assert page.has_content?("Enter a slug for Chapter 2")
-          end
-
-          should "show validation error when Slug is invalid" do
-            fill_in "Title", with: "Part two"
-            fill_in "Slug", with: "@"
-            fill_in "Body", with: "body-text"
-
-            click_button("Save and go to summary")
-
-            assert_current_path edition_guide_part_path(@draft_guide_edition_with_parts, @part_id)
-            assert page.has_field?("part[title]", with: "Part two")
-            assert page.has_field?("part[slug]", with: "@")
-            assert page.has_field?("part[body]", with: "body-text")
-            assert page.has_content?("Slug can only consist of lower case characters, numbers and hyphens")
-          end
-
-          should "redirect to guide edit page when back to summary link is clicked" do
-            click_link("Back to summary")
-
-            assert_current_path edition_path(@draft_guide_edition_with_parts)
-            assert page.has_content?("Edit")
-          end
-
-          should "display the Delete chapter confirmation page when the 'Delete chapter' link is clicked" do
-            click_link("Delete chapter")
-
-            assert_current_path confirm_destroy_edition_guide_part_path(@draft_guide_edition_with_parts, @part_id)
-            assert page.has_content?("Are you sure you want to delete this chapter?")
-          end
-        end
-      end
-
-      context "user has no editor permissions" do
-        setup do
-          login_as(FactoryBot.create(:user, name: "Non Editor"))
-          @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-          visit edition_path(@draft_guide_edition_with_parts)
-        end
-
-        should "not show 'Add new chapter' button" do
-          assert_not page.has_css?(".govuk-button", text: "Add a new chapter")
-        end
-
-        should "not show 'Reorder chapters' button even with two parts present" do
-          assert page.has_no_link?("Reorder chapters")
-        end
-
-        should "not allow user to load reorder chapters page" do
-          visit reorder_edition_guide_parts_path(@draft_guide_edition_with_parts)
-
-          assert current_path == edition_path(@draft_guide_edition_with_parts)
-          assert page.has_content?("You do not have correct editor permissions for this action.")
-        end
-
-        should "not show the 'Delete chapter' button'" do
-          assert page.has_no_link?("Delete chapter")
-        end
-      end
-
-      context "Delete chapter confirmation" do
-        setup do
-          @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-          @part = @draft_guide_edition_with_parts.parts.last
-          visit confirm_destroy_edition_guide_part_path(@draft_guide_edition_with_parts, @part)
-        end
-
-        should "redirect to edit guide page and show a success message when the 'Delete chapter' button is clicked" do
-          click_button("Delete chapter")
-          @draft_guide_edition_with_parts.reload
-
-          assert_current_path edition_path(@draft_guide_edition_with_parts)
-          assert page.has_content?("Chapter deleted successfully")
-          assert @draft_guide_edition_with_parts.parts.exclude? @part
-        end
-
-        should "direct the user to the edit chapter page when the 'Cancel' button is clicked" do
-          click_link("Cancel")
-          assert_current_path edit_edition_guide_part_path(@draft_guide_edition_with_parts, @part)
-        end
-      end
-    end
-
-    context "transaction edition" do
-      setup do
-        @transaction_edition = FactoryBot.create(
-          :transaction_edition,
-          :draft,
-          title: "Edit page title",
-          overview: "metatags",
-          in_beta: true,
-          introduction: "Transaction introduction",
-          more_information: "Transaction more information",
-          need_to_know: "Transaction need to",
-          link: "https://continue.com",
-          will_continue_on: "To be continued...",
-          alternate_methods: "Method A or B",
-          publish_at: nil,
-        )
-        visit edition_path(@transaction_edition)
-      end
-
-      should "show fields for transaction edition" do
-        assert page.has_field?("edition[title]", with: "Edit page title")
-        assert page.has_css?(".govuk-label", text: "Title")
-
-        assert page.has_field?("edition[overview]", with: "metatags")
-        assert page.has_css?(".govuk-label", text: "Meta tag description")
-        assert page.has_css?(".govuk-hint", text: "Some search engines will display this if they cannot find what they need in the main text")
-
-        assert page.has_field?("edition[introduction]", with: "Transaction introduction")
-        assert page.has_css?(".govuk-label", text: "Introduction")
-        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Refer to the Govspeak guidance (opens in new tab)")
-
-        assert page.has_field?("edition[start_button_text]")
-        assert page.has_text?("Start button text")
-        assert find(".gem-c-radio input[value='Start now']").checked?
-
-        assert page.has_field?("edition[will_continue_on]", with: "To be continued...")
-        assert page.has_css?(".govuk-label", text: "Text below the start button (optional)")
-        assert page.has_css?(".govuk-hint", text: "Following ‘on’, for example “the HMRC website”")
-
-        assert page.has_field?("edition[link]", with: "https://continue.com")
-        assert page.has_css?(".govuk-label", text: "Link to start of transaction")
-        assert page.has_css?(".govuk-hint", text: "Link as deep as possible")
-
-        assert page.has_field?("edition[more_information]", with: "Transaction more information")
-        assert page.has_css?(".govuk-label", text: "More information (optional)")
-
-        assert page.has_field?("edition[alternate_methods]", with: "Method A or B")
-        assert page.has_css?(".govuk-label", text: "Other ways to apply (optional)")
-        assert page.has_css?(".govuk-hint", text: "Alternative ways of completing this transaction")
-
-        assert page.has_field?("edition[need_to_know]", with: "Transaction need to")
-        assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
-
-        assert page.has_field?("edition[in_beta]")
-        assert page.has_text?("Is this beta content?")
-        assert find(".gem-c-radio input[value='1']").checked?
-      end
-
-      should "update transaction edition and show success message" do
-        fill_in "edition[title]", with: "Changed Title"
-        fill_in "edition[overview]", with: "Changed Meta tag description"
-        fill_in "edition[introduction]", with: "Changed intro"
-        choose("Sign in")
-        fill_in "edition[will_continue_on]", with: "Continue on changed"
-        fill_in "edition[link]", with: "https://changed.com"
-        fill_in "edition[more_information]", with: "Changed more info"
-        fill_in "edition[alternate_methods]", with: "Method C or D"
-        fill_in "edition[need_to_know]", with: "Changed need to"
-        choose("Yes")
-        click_button("Save")
-
-        assert page.has_field?("edition[title]", with: "Changed Title")
-        assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
-        assert page.has_field?("edition[introduction]", with: "Changed intro")
-        assert find(".gem-c-radio input[value='Sign in']").checked?
-        assert page.has_field?("edition[will_continue_on]", with: "Continue on changed")
-        assert page.has_field?("edition[link]", with: "https://changed.com")
-        assert page.has_field?("edition[more_information]", with: "Changed more info")
-        assert page.has_field?("edition[alternate_methods]", with: "Method C or D")
-        assert page.has_field?("edition[need_to_know]", with: "Changed need to")
-        assert find(".gem-c-radio input[value='1']").checked?
-        assert page.has_text?("Edition updated successfully.")
-      end
-    end
-
-    context "completed transaction edition" do
-      should "show correct fields for no promotion" do
-        completed_transaction_edition = FactoryBot.create(
-          :completed_transaction_edition,
-          :draft,
-          title: "Edit page title",
-          overview: "metatags",
-          body: "completed transaction body",
-          presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
-          in_beta: true,
-          publish_at: nil,
-        )
-
-        visit edition_path(completed_transaction_edition)
-
-        assert page.has_field?("edition[title]", with: "Edit page title")
-        assert page.has_css?(".govuk-label", text: "Title")
-        assert page.has_field?("edition[overview]", with: "metatags")
-        assert page.has_css?(".govuk-label", text: "Meta tag description")
-        assert page.has_css?(".govuk-hint", text: "Some search engines will display this if they cannot find what they need in the main text")
-        assert page.has_text?("Promotions")
-        assert page.has_css?(".govuk-hint", text: "Display a promotion above the satisfaction survey")
-        assert page.has_checked_field?("edition[promotion_choice]", with: "none")
-        assert page.has_field?("edition[in_beta]")
-        assert page.has_text?("Is this beta content?")
-        assert page.has_checked_field?("edition[in_beta]", with: "1")
-      end
-
-      should "show correct fields for organ donation" do
-        completed_transaction_edition = FactoryBot.create(
-          :completed_transaction_edition,
-          :draft,
-          presentation_toggles: { promotion_choice: { choice: "organ_donor", url: "https://example.com", opt_in_url: "https://opt-in.com", opt_out_url: "https://opt-out.com" } },
-        )
-
-        visit edition_path(completed_transaction_edition)
-
-        assert page.has_checked_field?("edition[promotion_choice]", with: "organ_donor")
-        assert page.has_css?(".govuk-label", text: "Promotion URL")
-        assert page.has_field?("edition[promotion_choice_url_organ_donor]", with: "https://example.com")
-        assert page.has_css?(".govuk-label", text: "Opt-in URL (optional)")
-        assert page.has_field?("edition[promotion_choice_opt_in_url]", with: "https://opt-in.com")
-        assert page.has_css?(".govuk-label", text: "Opt-out URL (optional)")
-        assert page.has_field?("edition[promotion_choice_opt_out_url]", with: "https://opt-out.com")
-      end
-
-      should "show correct fields for photo ID" do
-        completed_transaction_edition = FactoryBot.create(
-          :completed_transaction_edition,
-          :draft,
-          presentation_toggles: { promotion_choice: { choice: "bring_id_to_vote", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
-        )
-
-        visit edition_path(completed_transaction_edition)
-
-        assert page.has_checked_field?("edition[promotion_choice]", with: "bring_id_to_vote")
-        assert page.has_css?(".govuk-label", text: "Promotion URL")
-        assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "https://example.com")
-      end
-
-      should "show correct fields for MOT reminder" do
-        completed_transaction_edition = FactoryBot.create(
-          :completed_transaction_edition,
-          :draft,
-          presentation_toggles: { promotion_choice: { choice: "mot_reminder", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
-        )
-
-        visit edition_path(completed_transaction_edition)
-
-        assert page.has_checked_field?("edition[promotion_choice]", with: "mot_reminder")
-        assert page.has_css?(".govuk-label", text: "Promotion URL")
-        assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "https://example.com")
-      end
-
-      should "show correct fields for electric vehicles" do
-        completed_transaction_edition = FactoryBot.create(
-          :completed_transaction_edition,
-          :draft,
-          presentation_toggles: { promotion_choice: { choice: "electric_vehicle", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
-        )
-
-        visit edition_path(completed_transaction_edition)
-
-        assert page.has_checked_field?("edition[promotion_choice]", with: "electric_vehicle")
-        assert page.has_css?(".govuk-label", text: "Promotion URL")
-        assert page.has_field?("edition[promotion_choice_url_electric_vehicle]", with: "https://example.com")
-      end
-
-      should "amend fields and show success message when edition is updated" do
-        completed_transaction_edition = FactoryBot.create(
-          :completed_transaction_edition,
-          :draft,
-          presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
-        )
-
-        visit edition_path(completed_transaction_edition)
-        fill_in "edition[title]", with: "Changed Title"
-        fill_in "edition[overview]", with: "Changed Meta tag description"
-        choose("Organ donation")
-        fill_in "edition[promotion_choice_url_organ_donor]", with: "https://organ.com"
-        fill_in "edition[promotion_choice_opt_in_url]", with: "https://organ_opt_in.com"
-        fill_in "edition[promotion_choice_opt_out_url]", with: "https://organ_opt_out.com"
-        choose("Yes")
-        click_button("Save")
-
-        assert page.has_field?("edition[title]", with: "Changed Title")
-        assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
-        assert page.has_field?("edition[promotion_choice_url_organ_donor]", with: "https://organ.com")
-        assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "")
-        assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "")
-        assert page.has_field?("edition[promotion_choice_url_electric_vehicle]", with: "")
-        assert page.has_field?("edition[promotion_choice_opt_in_url]", with: "https://organ_opt_in.com")
-        assert page.has_field?("edition[promotion_choice_opt_out_url]", with: "https://organ_opt_out.com")
-        assert page.has_checked_field?("edition[promotion_choice]", with: "organ_donor")
-        assert page.has_checked_field?("edition[in_beta]", with: "1")
-        assert page.has_text?("Edition updated successfully.")
-
-        choose("Bring photo ID to vote")
-        fill_in "edition[promotion_choice_url_bring_id_to_vote]", with: "https://photo.com"
-        click_button("Save")
-
-        assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "https://photo.com")
-        assert page.has_field?("edition[promotion_choice_url_organ_donor]", with: "")
-        assert page.has_field?("edition[promotion_choice_opt_in_url]", with: "")
-        assert page.has_field?("edition[promotion_choice_opt_out_url]", with: "")
-        assert page.has_checked_field?("edition[promotion_choice]", with: "bring_id_to_vote")
-
-        choose("MOT reminders")
-        fill_in "edition[promotion_choice_url_mot_reminder]", with: "https://mot.com"
-        click_button("Save")
-
-        assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "")
-        assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "https://mot.com")
-        assert page.has_checked_field?("edition[promotion_choice]", with: "mot_reminder")
-
-        choose("Electric vehicles")
-        fill_in "edition[promotion_choice_url_electric_vehicle]", with: "https://electric.com"
-        click_button("Save")
-
-        assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "")
-        assert page.has_field?("edition[promotion_choice_url_electric_vehicle]", with: "https://electric.com")
-        assert page.has_checked_field?("edition[promotion_choice]", with: "electric_vehicle")
-      end
-
-      should "raise an error and not save changes if Promotion URL is not filled out" do
-        ["Organ donation", "Bring photo ID to vote", "MOT reminders", "Electric vehicles"].each do |promotion_choice|
-          completed_transaction_edition = FactoryBot.create(
-            :completed_transaction_edition,
-            :draft,
-            presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
-          )
-
-          visit edition_path(completed_transaction_edition)
-          choose(promotion_choice)
-          click_button("Save")
-
-          assert page.has_css?(".gem-c-error-summary__list-item", text: "Enter a promotion URL")
-          assert page.has_css?(".govuk-error-message", text: "Enter a promotion URL")
-          assert page.has_css?(".govuk-input--error")
         end
       end
     end
@@ -2913,72 +1342,6 @@ class EditionEditTest < IntegrationTest
         should "show the Preview link" do
           assert page.has_link?("Preview (opens in new tab)")
         end
-      end
-    end
-
-    context "Schedule page" do
-      setup do
-        @ready_edition = FactoryBot.create(:answer_edition, :ready)
-        visit schedule_page_edition_path(@ready_edition.id)
-      end
-
-      should "render the 'Schedule' page" do
-        within :css, ".gem-c-heading" do
-          assert page.has_css?("h1", text: "Schedule publication")
-          assert page.has_css?(".gem-c-heading__context", text: @ready_edition.title)
-        end
-
-        within :css, ".gem-c-textarea" do
-          assert page.has_css?("label", text: "Comment (optional)")
-          assert page.has_css?("textarea")
-        end
-
-        within all(".govuk-fieldset")[0] do
-          assert page.has_css?("legend", text: "Publication date")
-          assert page.has_css?(".govuk-label", text: "Day")
-          assert page.has_css?("input[name='publish_at_3i']")
-          assert page.has_css?(".govuk-label", text: "Month")
-          assert page.has_css?("input[name='publish_at_2i']")
-          assert page.has_css?(".govuk-label", text: "Year")
-          assert page.has_css?("input[name='publish_at_1i']")
-        end
-
-        within all(".govuk-fieldset")[1] do
-          assert page.has_css?("legend", text: "Publication time")
-          assert page.has_css?(".govuk-label", text: "Hour")
-          assert page.has_css?("input[name='publish_at_4i'][value='00']")
-          assert page.has_css?(".govuk-label", text: "Minute")
-          assert page.has_css?("input[name='publish_at_5i'][value='01']")
-        end
-
-        assert page.has_button?("Schedule")
-        assert page.has_link?("Cancel")
-      end
-
-      should "generate a date hint test 3 months in the future" do
-        travel_to Time.zone.local(2025, 10, 1, 0, 0, 0)
-        visit schedule_page_edition_path(@ready_edition.id)
-
-        assert page.has_css?(".govuk-hint", text: "For example, 1 1 2026")
-      end
-
-      should "redirect to edit tab when Cancel button is pressed on Send to 2i page" do
-        click_link("Cancel")
-        assert_current_path edition_path(@ready_edition.id)
-      end
-
-      should "show success message and redirect back to the edit tab on submit" do
-        date = 1.day.from_now
-
-        fill_in "Day", with: date.day
-        fill_in "Month", with: date.month
-        fill_in "Year", with: date.year
-        fill_in "Hour", with: date.hour
-        fill_in "Minute", with: date.min
-        click_button "Schedule"
-
-        assert_current_path edition_path(@ready_edition.id)
-        assert page.has_text?("Scheduled to publish at #{date.to_fs(:govuk_date)}")
       end
     end
 
@@ -4543,116 +2906,1819 @@ class EditionEditTest < IntegrationTest
         end
       end
     end
+  end
 
-    context "Related external links tab" do
+  context "tagging tab" do
+    context "No tagging is set" do
+      setup do
+        @draft_edition = FactoryBot.create(:edition, :draft)
+        visit edition_path(@draft_edition)
+        click_link("Tagging")
+      end
+
+      should "show 'Tagging' header" do
+        within :css, ".gem-c-heading h2" do
+          assert page.has_text?("Tagging")
+        end
+      end
+
+      should "show empty 'GOV.UK breadcrumb' summary in first position" do
+        within all(".govuk-summary-card")[0] do
+          assert page.has_text?("GOV.UK breadcrumb")
+          assert page.has_text?("No breadcrumb set")
+          assert page.has_link?("Set GOV.UK breadcrumb")
+        end
+      end
+
+      should "show empty 'Mainstream browse pages' summary in second position" do
+        within all(".govuk-summary-card")[1] do
+          assert page.has_text?("Mainstream browse pages")
+          assert page.has_text?("Not tagged to any browse pages")
+          assert page.has_link?("Tag to a browse page")
+        end
+      end
+
+      should "show empty 'Organisations' summary in third position" do
+        within all(".govuk-summary-card")[2] do
+          assert page.has_text?("Organisations")
+          assert page.has_text?("Not tagged to any organisations")
+          assert page.has_link?("Tag to an organisation")
+        end
+      end
+
+      should "show empty 'Related content' summary in fourth position" do
+        within all(".govuk-summary-card")[3] do
+          assert page.has_text?("Related content")
+          assert page.has_text?("Not tagged to any related content")
+          assert page.has_link?("Tag to related content")
+        end
+      end
+
+      should "not show 'Reorder' button in 'Related Content' when no related content items are present" do
+        within all(".govuk-summary-card")[3] do
+          assert page.has_no_text?("Reorder")
+        end
+      end
+
+      context "User does not have correct permissions" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+          visit edition_path(@draft_edition)
+          click_link("Tagging")
+        end
+
+        should "not show the 'Tag to a browse page' link" do
+          within all(".govuk-summary-card")[1] do
+            assert page.has_no_link?("Tag to a browse page")
+          end
+        end
+
+        should "not show the 'Tag to organisations page' link" do
+          within all(".govuk-summary-card")[2] do
+            assert page.has_no_link?("Tag to an organisation")
+          end
+        end
+
+        should "not show the 'Tag to related content' link" do
+          within all(".govuk-summary-card")[3] do
+            assert page.has_no_link?("Tag to related content")
+          end
+        end
+      end
+    end
+
+    context "Tagging is set" do
+      setup do
+        stub_linkables_with_data
+        @draft_edition = FactoryBot.create(:edition, :draft)
+        visit edition_path(@draft_edition)
+        click_link("Tagging")
+      end
+
+      should "show 'GOV.UK breadcrumb' summary card in first position" do
+        within all(".gem-c-summary-card")[0] do
+          assert page.has_text?("GOV.UK breadcrumb")
+          assert page.has_css?("dt", text: "Breadcrumb")
+          assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
+        end
+      end
+
+      should "show 'Mainstream browse pages' summary card in second position" do
+        within all(".gem-c-summary-card")[1] do
+          assert page.has_text?("Mainstream browse pages")
+
+          within all(".govuk-summary-list__row")[0] do
+            assert page.has_css?("dt", text: "Browse page 1")
+            assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
+          end
+
+          within all(".govuk-summary-list__row")[1] do
+            assert page.has_css?("dt", text: "Browse page 2")
+            assert page.has_css?("dt", text: "Tax > RTI (draft)")
+          end
+
+          within all(".govuk-summary-list__row")[2] do
+            assert page.has_css?("dt", text: "Browse page 3")
+            assert page.has_css?("dt", text: "Tax > VAT")
+          end
+        end
+      end
+
+      should "show 'Organisations' summary card in third position" do
+        within all(".gem-c-summary-card")[2] do
+          assert page.has_text?("Organisations")
+
+          within all(".govuk-summary-list__row")[0] do
+            assert page.has_css?("dt", text: "Organisation")
+            assert page.has_css?("dt", text: "Student Loans Company")
+          end
+        end
+      end
+
+      should "show 'Related content' summary card in fourth position" do
+        within all(".gem-c-summary-card")[3] do
+          assert page.has_text?("Related content")
+          assert page.has_no_link?("Tag to related content")
+
+          within all(".govuk-summary-list__row")[0] do
+            assert page.has_css?("dt", text: "Related content 1")
+            assert page.has_css?("dt", text: "/company-tax-returns")
+          end
+
+          within all(".govuk-summary-list__row")[1] do
+            assert page.has_css?("dt", text: "Related content 2")
+            assert page.has_css?("dt", text: "/prepare-file-annual-accounts-for-limited-company")
+          end
+
+          within all(".govuk-summary-list__row")[2] do
+            assert page.has_css?("dt", text: "Related content 3")
+            assert page.has_css?("dt", text: "/corporation-tax")
+          end
+
+          within all(".govuk-summary-list__row")[3] do
+            assert page.has_css?("dt", text: "Related content 4")
+            assert page.has_css?("dt", text: "/tax-help")
+          end
+        end
+      end
+
+      context "User has permissions" do
+        should "show 'Edit' link on 'GOV.UK breadcrumb' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[0] do
+            assert page.has_link?("Edit")
+          end
+        end
+
+        should "navigate to the 'Set GOV.UK breadcrumb' page when the 'Edit' link is clicked" do
+          within all(".gem-c-summary-card")[0] do
+            click_link("Edit")
+            assert_current_path tagging_breadcrumb_page_edition_path(@draft_edition)
+          end
+        end
+
+        should "show 'Remove' link on 'GOV.UK breadcrumb' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[0] do
+            assert page.has_link?("Remove")
+          end
+        end
+
+        should "navigate to the remove breadcrumb page when the 'Remove' link is clicked" do
+          within all(".gem-c-summary-card")[0] do
+            click_link("Remove")
+            assert_current_path tagging_remove_breadcrumb_page_edition_path(@draft_edition)
+          end
+        end
+
+        should "show 'Edit' link on 'Mainstream browse pages' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[1] do
+            assert page.has_link?("Edit")
+          end
+        end
+
+        should "navigate to the 'Tag browse pages' page when the 'Edit' link is clicked" do
+          within all(".gem-c-summary-card")[1] do
+            click_link("Edit")
+            assert_current_path tagging_mainstream_browse_pages_page_edition_path(@draft_edition)
+          end
+        end
+
+        should "show 'Edit' link on 'Organisations' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[2] do
+            assert page.has_link?("Edit")
+          end
+        end
+
+        should "navigate to the 'Tag organisations' page when the 'Edit' link is clicked" do
+          within all(".gem-c-summary-card")[2] do
+            click_link("Edit")
+            assert_current_path tagging_organisations_page_edition_path(@draft_edition)
+          end
+        end
+
+        should "show 'Edit' link on 'Related content' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_link?("Edit")
+          end
+        end
+
+        should "navigate to the 'Tag related content' page when the 'Edit' link is clicked" do
+          within all(".gem-c-summary-card")[3] do
+            click_link("Edit")
+            assert_current_path tagging_related_content_page_edition_path(@draft_edition)
+          end
+        end
+
+        should "show 'Reorder' link on 'Related content' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_link?("Reorder")
+          end
+        end
+
+        should "navigate to the 'Reorder related content' page when the 'Reorder' link is clicked" do
+          within all(".gem-c-summary-card")[3] do
+            click_link("Reorder")
+            assert_current_path tagging_reorder_related_content_page_edition_path(@draft_edition)
+          end
+        end
+      end
+
+      context "User does not have permissions" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+          visit edition_path(@draft_edition)
+          click_link("Tagging")
+        end
+
+        should "not show 'Edit' link on 'Mainstream browse pages' summary card when user does not have permissions" do
+          within all(".gem-c-summary-card")[1] do
+            assert page.has_no_link?("Edit")
+          end
+        end
+
+        should "not show 'Edit' link on 'Organisations' summary card when user does not have permissions" do
+          within all(".gem-c-summary-card")[2] do
+            assert page.has_no_link?("Edit")
+          end
+        end
+
+        should "not show 'Edit' link on 'Related content' summary card when user does not have permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_no_link?("Edit")
+          end
+        end
+
+        should "not show 'Reorder' link on 'Related content' summary card when user does not have permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_no_link?("Reorder")
+          end
+        end
+      end
+    end
+
+    context "minimal tagging is present" do
+      should "not show 'Reorder' link on 'Related content' summary card when only one related content item is present" do
+        stub_linkables_with_single_related_item
+        draft_edition = FactoryBot.create(:edition, :draft)
+
+        visit edition_path(draft_edition)
+        click_link("Tagging")
+
+        within all(".gem-c-summary-card")[3] do
+          assert page.has_link?("Edit")
+          assert page.has_no_link?("Reorder")
+        end
+      end
+    end
+  end
+
+  context "Breadcrumb page" do
+    setup do
+      @draft_edition = FactoryBot.create(:edition, :draft)
+    end
+
+    context "Setting a breadcrumb" do
+      setup do
+        visit edition_path(@draft_edition)
+        click_link("Tagging")
+        click_link("Set GOV.UK breadcrumb")
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "show the 'Set GOV.UK breadcrumb' page" do
+        assert page.has_text?(@draft_edition.title)
+        assert page.has_text?("Set GOV.UK breadcrumb")
+        assert page.has_text?("Select the browse page you want to appear in the breadcrumb")
+        assert page.has_element?("legend", text: "Tax")
+        assert page.has_unchecked_field?("Capital Gains Tax")
+        assert page.has_unchecked_field?("RTI (draft)")
+        assert page.has_unchecked_field?("VAT")
+        assert page.has_element?("legend", text: "Benefits")
+        assert page.has_unchecked_field?("Benefits and financial support for families")
+        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
+        assert page.has_text?("Options")
+        assert page.has_button?("Save")
+        assert page.has_link?("Cancel")
+      end
+
+      should "save the selected breadcrumb when the form is submitted" do
+        choose("Capital Gains Tax")
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": [],
+                                            "mainstream_browse_pages": [],
+                                            "ordered_related_items": [],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("GOV.UK breadcrumbs updated")
+      end
+    end
+
+    context "Editing a breadcrumb" do
+      setup do
+        stub_linkables_with_data
+        visit edition_path(@draft_edition)
+        click_link("Tagging")
+        within all(".gem-c-summary-card")[0] do
+          click_link("Edit")
+        end
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "show the 'Set GOV.UK breadcrumb' page with preselected radio" do
+        assert page.has_text?(@draft_edition.title)
+        assert page.has_text?("Set GOV.UK breadcrumb")
+        assert page.has_text?("Select the browse page you want to appear in the breadcrumb")
+        assert page.has_element?("legend", text: "Tax")
+        assert page.has_checked_field?("Capital Gains Tax")
+        assert page.has_unchecked_field?("RTI (draft)")
+        assert page.has_unchecked_field?("VAT")
+        assert page.has_element?("legend", text: "Benefits")
+        assert page.has_unchecked_field?("Benefits and financial support for families")
+        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
+        assert page.has_text?("Options")
+        assert page.has_button?("Save")
+        assert page.has_link?("Cancel")
+      end
+
+      should "update the breadcrumb when the form is submitted" do
+        choose("VAT")
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-VAT] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("GOV.UK breadcrumbs updated")
+      end
+    end
+
+    context "Removing a breadcrumb" do
+      setup do
+        stub_linkables_with_data
+        visit edition_path(@draft_edition)
+        click_link("Tagging")
+        within all(".gem-c-summary-card")[0] do
+          click_link("Remove")
+        end
+      end
+
+      should "show the remove breadcrumb page " do
+        assert page.has_text?(@draft_edition.title)
+        assert page.has_text?("Are you sure you want to remove the breadcumb?")
+        assert page.has_text?("Breadcrumbs are displayed at the top of the page and help users to navigate. There may be some situations where you do not need a breadcrumb to display (for example, on Welsh translation pages).")
+        assert page.has_unchecked_field?("Yes, remove the breadcrumb")
+        assert page.has_unchecked_field?("No, keep the breadcrumb")
+        assert page.has_button?("Save")
+        assert page.has_link?("Cancel")
+      end
+
+      should "remove the breadcrumb when the form is submitted if the user selects 'Yes'" do
+        choose("Yes, remove the breadcrumb")
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": [] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("GOV.UK breadcrumb removed")
+      end
+
+      should "retain the breadcrumb when the form is submitted if the user selects 'No'" do
+        choose("No, keep the breadcrumb")
+        click_button("Save")
+
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        within all(".govuk-summary-card")[0] do
+          assert page.has_text?("GOV.UK breadcrumb")
+          assert page.has_css?("dt", text: "Breadcrumb")
+          assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
+        end
+      end
+
+      should "display an error if the user tries to save with no option selected" do
+        click_button("Save")
+        assert page.has_text?("Select an option")
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+    end
+  end
+
+  context "Mainstream browse pages page" do
+    setup do
+      @draft_edition = FactoryBot.create(:edition, :draft)
+      visit edition_path(@draft_edition)
+      click_link("Tagging")
+    end
+
+    context "Adding Tags to a browse page" do
+      setup do
+        click_link("Tag to a browse page")
+      end
+
+      should "show the 'Tag to a browse page' page" do
+        assert page.has_text?(@draft_edition.title)
+        assert page.has_text?("Tag browse pages")
+        assert page.has_text?("Select all that apply")
+        assert page.has_element?("legend", text: "Tax")
+        assert page.has_unchecked_field?("Capital Gains Tax")
+        assert page.has_unchecked_field?("RTI (draft)")
+        assert page.has_unchecked_field?("VAT")
+        assert page.has_element?("legend", text: "Benefits")
+        assert page.has_unchecked_field?("Benefits and financial support for families")
+        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
+        assert page.has_text?("Options")
+        assert page.has_button?("Save")
+        assert page.has_link?("Cancel")
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "save the selected tags to the browse page when the form is submitted" do
+        check("Capital Gains Tax")
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": [],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL],
+                                            "ordered_related_items": [],
+                                            "parent": [] },
+                                 "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Mainstream browse pages updated")
+      end
+    end
+
+    context "Editing tags for a browse page" do
+      setup do
+        stub_linkables_with_data
+        visit edition_path(@draft_edition)
+        click_link("Tagging")
+        within all(".gem-c-summary-card")[1] do
+          click_link("Edit")
+        end
+      end
+
+      should "show the 'Tag to a browse page' page with preselected options" do
+        assert page.has_text?(@draft_edition.title)
+        assert page.has_text?("Tag browse pages")
+        assert page.has_text?("Select all that apply")
+        assert page.has_element?("legend", text: "Tax")
+        assert page.has_checked_field?("Capital Gains Tax")
+        assert page.has_checked_field?("RTI (draft)")
+        assert page.has_checked_field?("VAT")
+        assert page.has_element?("legend", text: "Benefits")
+        assert page.has_unchecked_field?("Benefits and financial support for families")
+        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
+        assert page.has_button?("Save")
+        assert page.has_link?("Cancel")
+      end
+
+      should "update the tags for the browse page when the form is submitted" do
+        uncheck("RTI (draft)")
+        uncheck("VAT")
+        check("Benefits and financial support for families")
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-FAMILIES CONTENT-ID-CAPITAL],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Mainstream browse pages updated")
+      end
+    end
+  end
+
+  context "Tag organisations page" do
+    setup do
+      @draft_edition = FactoryBot.create(:edition, :draft)
+      visit tagging_organisations_page_edition_path(@draft_edition)
+    end
+
+    should "render the 'Tag organisations' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Tag organisations")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Tagging a page to an organisation makes it appear in searches filtered by that organisation.")
+      assert page.has_text?("For example, a search for documents published by HMRC.")
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    should "redirect to tagging tab when Cancel link is clicked" do
+      click_link("Cancel")
+      assert_current_path tagging_edition_path(@draft_edition.id)
+    end
+
+    context "Adding tags for an organisations page" do
+      should "render an empty Organisations form" do
+        within :css, ".gem-c-select-with-search" do
+          assert page.has_css?("label", text: "Organisations")
+          assert page.has_css?("select")
+        end
+      end
+
+      should "save the added 'Organisations' tags when the form is submitted" do
+        select "Student Loans Company", from: "Organisations"
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": [],
+                                            "ordered_related_items": [],
+                                            "parent": [] },
+                                 "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Organisations updated")
+      end
+    end
+
+    context "Editing tags for an organisations page" do
+      setup do
+        stub_linkables_with_data
+        visit tagging_organisations_page_edition_path(@draft_edition)
+      end
+
+      should "render a pre-populated Organisations form" do
+        within :css, "select" do
+          assert find("option[value='9a9111aa-1db8-4025-8dd2-e08ec3175e72']").selected?
+        end
+      end
+
+      should "delete 'Organisations' tags when the form is submitted" do
+        page.unselect "Student Loans Company", from: "Organisations"
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": [],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Organisations updated")
+      end
+
+      should "add 'Organisations' tags when the form is submitted" do
+        page.select "Department for Education", from: "Organisations"
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[ebd15ade-73b2-4eaf-b1c3-43034a42eb37 9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Organisations updated")
+      end
+    end
+  end
+
+  context "Tag related content page" do
+    setup do
+      @draft_edition = FactoryBot.create(:edition, :draft)
+      visit tagging_related_content_page_edition_path(@draft_edition)
+    end
+
+    should "render the 'Tag related content' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Tag related content")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Related content items are displayed in the sidebar.")
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    context "Adding tags for a related content page" do
+      should "render an empty Add Another form" do
+        within :css, ".gem-c-add-another" do
+          assert page.has_css?("legend", text: "Related content 1")
+          assert page.has_css?("label", text: "URL or path")
+          assert page.has_css?(".gem-c-hint", text: "For example, /pay-vat")
+          assert page.has_css?(".govuk-input", count: 2)
+          assert page.has_css?(".govuk-input[value='']", count: 2)
+        end
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "display an error when the form is submitted if a value entered is not a valid path" do
+        Services.publishing_api.stubs(:lookup_content_ids).returns({ "/company-tax-returns" => "830e403b-7d81-45f1-8862-81dcd55b4ec7", "/prepare-file-annual-accounts-for-limited-company" => "5cb58486-0b00-4da8-8076-382e474b4f03" })
+
+        within all(".js-add-another__fieldset")[0] do
+          fill_in "URL or path", with: "/invalid-path"
+        end
+
+        click_button("Save")
+
+        assert_current_path update_related_content_edition_path(@draft_edition.id)
+        assert page.has_text?("/invalid-path is not a known URL on GOV.UK, check URL or path is correctly entered.")
+      end
+
+      should "save the added 'Related content' tags when the form is submitted" do
+        within all(".js-add-another__fieldset")[0] do
+          fill_in "URL or path", with: "/company-tax-returns"
+        end
+
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": [],
+                                            "mainstream_browse_pages": [],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7],
+                                            "parent": [] },
+                                 "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Related content updated")
+      end
+    end
+
+    context "Editing tags for a related content page" do
+      setup do
+        stub_linkables_with_data
+        visit tagging_related_content_page_edition_path(@draft_edition)
+      end
+
+      should "render a pre-populated Add Another form" do
+        within :css, ".gem-c-add-another" do
+          assert page.has_css?("legend", text: "Related content 1")
+          assert page.has_css?("label", text: "URL or path")
+          assert page.has_css?(".gem-c-hint", text: "For example, /pay-vat")
+          assert page.has_css?(".govuk-input", count: 5)
+          assert page.has_css?("input[value='/company-tax-returns']")
+          assert page.has_css?("input[value='/prepare-file-annual-accounts-for-limited-company']")
+          assert page.has_css?("input[value='/corporation-tax']")
+          assert page.has_css?("input[value='/tax-help']")
+        end
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "save deleted 'Related content' tags when the form is submitted" do
+        within all(".js-add-another__fieldset")[1] do
+          check("Delete")
+        end
+        within all(".js-add-another__fieldset")[3] do
+          check("Delete")
+        end
+
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 853feaf2-152c-4aa5-8edb-ba84a88860bf],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Related content updated")
+      end
+
+      should "save edited 'Related content' tags when the form is submitted" do
+        within all(".js-add-another__fieldset")[0] do
+          fill_in "URL or path", with: "/tax-help"
+        end
+        within all(".js-add-another__fieldset")[1] do
+          fill_in "URL or path", with: "/corporation-tax"
+        end
+        within all(".js-add-another__fieldset")[2] do
+          fill_in "URL or path", with: "/company-tax-returns"
+        end
+        within all(".js-add-another__fieldset")[3] do
+          fill_in "URL or path", with: "/prepare-file-annual-accounts-for-limited-company"
+        end
+
+        click_button("Save")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[91fef6f6-3a59-42ab-a14d-42c4e5eee1a1 853feaf2-152c-4aa5-8edb-ba84a88860bf 830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Related content updated")
+      end
+    end
+
+    context "Reordering tags for a related content page" do
+      setup do
+        stub_linkables_with_data
+        visit tagging_reorder_related_content_page_edition_path(@draft_edition)
+      end
+
+      should "submit original tags when the form is submitted with no changes" do
+        click_button("Update order")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Related content order updated")
+      end
+
+      should "submit reordered tags when the form is submitted with changes" do
+        within all(".gem-c-reorderable-list__item")[0] do
+          fill_in "Position", with: "2"
+        end
+        within all(".gem-c-reorderable-list__item")[1] do
+          fill_in "Position", with: "1"
+        end
+        within all(".gem-c-reorderable-list__item")[2] do
+          fill_in "Position", with: "4"
+        end
+        within all(".gem-c-reorderable-list__item")[3] do
+          fill_in "Position", with: "3"
+        end
+
+        click_button("Update order")
+
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[5cb58486-0b00-4da8-8076-382e474b4f03 830e403b-7d81-45f1-8862-81dcd55b4ec7 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1 853feaf2-152c-4aa5-8edb-ba84a88860bf],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Related content order updated")
+      end
+    end
+  end
+
+  context "metadata tab" do
+    context "when state is 'draft' and user has govuk editor permissions" do
+      setup do
+        @draft_edition = FactoryBot.create(:edition, :draft)
+        visit edition_path(@draft_edition)
+        click_link("Metadata")
+      end
+
+      should "show 'Metadata' header and an update button" do
+        within :css, ".gem-c-heading h2" do
+          assert page.has_text?("Metadata")
+        end
+        assert page.has_button?("Update")
+      end
+
+      should "show slug input box prefilled" do
+        assert page.has_text?("Slug")
+        assert page.has_text?("If you change the slug of a published page, the old slug will automatically redirect to the new one.")
+        assert page.has_field?("artefact[slug]", with: /slug/)
+      end
+
+      should "update and show success message" do
+        fill_in "artefact[slug]", with: "changed-slug"
+        choose("Welsh")
+        click_button("Update")
+
+        assert find(".gem-c-radio input[value='cy']").checked?
+        assert page.has_text?("Metadata has successfully updated")
+        assert page.has_field?("artefact[slug]", with: "changed-slug")
+      end
+    end
+
+    context "when user has welsh editor permissions" do
+      should "show read-only values and no 'Update' button for welsh edition" do
+        @artefact = FactoryBot.create(:artefact, slug: "welsh-language-edition-test", language: "cy")
+        @welsh_edition = FactoryBot.create(
+          :edition,
+          :welsh,
+          :ready,
+          panopticon_id: @artefact.id,
+          slug: "welsh-language-edition-test",
+        )
+        login_as_welsh_editor
+
+        visit edition_path(@welsh_edition)
+        click_link("Metadata")
+
+        assert @user.has_editor_permissions?(@welsh_edition)
+        assert page.has_no_field?("artefact[slug]")
+        assert page.has_no_field?("artefact[language]")
+        assert page.has_text?("Slug")
+        assert page.has_text?(/welsh-language-edition-test/)
+        assert page.has_text?("Language")
+        assert page.has_text?(/Welsh/)
+        assert page.has_no_button?("Update")
+      end
+
+      should "show read-only values and no 'Update' button for a non-welsh edition" do
+        draft_edition = FactoryBot.create(:edition, :draft)
+        login_as_welsh_editor
+
+        visit edition_path(draft_edition)
+        click_link("Metadata")
+
+        assert_not @user.has_editor_permissions?(draft_edition)
+        assert page.has_no_field?("artefact[slug]")
+        assert page.has_no_field?("artefact[language]")
+        assert page.has_text?("Slug")
+        assert page.has_text?("Language")
+        assert page.has_no_button?("Update")
+      end
+    end
+
+    context "when user has no permissions" do
+      should "show read-only values and no 'Update' button" do
+        user = FactoryBot.create(:user, name: "Stub User")
+        draft_edition = FactoryBot.create(:edition, :draft)
+        login_as(user)
+
+        visit edition_path(draft_edition)
+        click_link("Metadata")
+
+        assert_not user.has_editor_permissions?(draft_edition)
+        assert page.has_no_button?("Update")
+      end
+    end
+
+    context "when state is not 'draft'" do
+      setup do
+        @artefact = FactoryBot.create(:artefact, slug: "can-i-get-a-driving-licence")
+        @published_edition = FactoryBot.create(:edition, :published, slug: "can-i-get-a-driving-licence", panopticon_id: @artefact.id)
+        visit edition_path(@published_edition)
+        click_link("Metadata")
+      end
+
+      should "show read-only values and no 'Update' button" do
+        assert page.has_no_field?("artefact[slug]")
+        assert page.has_no_field?("artefact[language]")
+        assert page.has_text?("Slug")
+        assert page.has_text?(/can-i-get-a-driving-licence/)
+        assert page.has_text?("Language")
+        assert page.has_text?(/English/)
+        assert page.has_no_button?("Update")
+      end
+    end
+  end
+
+  context "History and notes tab" do
+    setup do
+      @draft_edition = FactoryBot.create(:edition, :draft)
+      visit edition_path(@draft_edition)
+      click_link("History and notes")
+    end
+
+    should "show a heading" do
+      assert page.has_css?("h2", text: "History and notes")
+    end
+
+    should "show inset text" do
+      within :css, ".gem-c-inset-text" do
+        assert page.has_text?("Send fact check responses to #{@draft_edition.fact_check_email_address} and include [#{@draft_edition.id}] in the subject line.")
+      end
+    end
+
+    should "show an 'Add edition note' button" do
+      assert page.has_link?("Add edition note")
+    end
+
+    should "navigate to the 'Add edition note' page when the button is clicked" do
+      click_link("Add edition note")
+      assert_current_path history_add_edition_note_edition_path(@draft_edition.id)
+    end
+
+    should "display the accordion section headers" do
+      assert page.has_css?(".govuk-accordion__section-header h2", text: "Edition 1")
+    end
+
+    should "show an 'Update important note' button" do
+      assert page.has_link?("Update important note")
+    end
+
+    should "navigate to the 'Update important note' page when the button is clicked" do
+      click_link("Update important note")
+      assert_current_path history_update_important_note_edition_path(@draft_edition.id)
+    end
+
+    context "show a Preview or a view on GOV.UK link" do
+      should "show a Preview button when the edition is draft" do
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a Preview button when the edition is in review" do
+        @in_review_edition = FactoryBot.create(:edition, :in_review)
+        visit edition_path(@in_review_edition)
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a Preview button when the edition is out for fact check" do
+        @fact_check_edition = FactoryBot.create(:edition, :fact_check)
+        visit edition_path(@fact_check_edition)
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a Preview button when the edition is ready" do
+        @ready_edition = FactoryBot.create(:answer_edition, :ready)
+        visit edition_path(@ready_edition)
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a Preview button when the edition is scheduled for publishing" do
+        @scheduled_for_publishing_edition = FactoryBot.create(:edition, :scheduled_for_publishing)
+        visit edition_path(@scheduled_for_publishing_edition)
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a View on GOV.UK button when the edition is published" do
+        @published_edition = FactoryBot.create(:edition, :published)
+        visit edition_path(@published_edition)
+        click_link("History and notes")
+
+        assert page.has_link?("View on GOV.UK (opens in new tab)")
+      end
+
+      should "show a View on GOV.UK button when the edition is archived" do
+        @archived_edition = FactoryBot.create(:edition, :archived)
+        visit edition_path(@archived_edition)
+        click_link("History and notes")
+
+        assert page.has_link?("View on GOV.UK (opens in new tab)")
+      end
+
+      should "still show the conditional preview/view link when the user does not have editor permissions" do
+        @stub_user = FactoryBot.create(:user, name: "Stub user")
+        login_as(@stub_user)
+
+        visit edition_path(@draft_edition)
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+    end
+
+    context "when the user has no permissions" do
+      should "hide the note action buttons from the user" do
+        user = FactoryBot.create(:user, name: "Stub User")
+        login_as(user)
+
+        visit edition_path(@draft_edition)
+        click_link("History and notes")
+
+        assert_not user.has_editor_permissions?(@draft_edition)
+        assert_not page.has_content?("Add edition note")
+        assert_not page.has_content?("Update important note")
+      end
+    end
+
+    context "when the user has welsh editor permissions" do
+      setup do
+        @user = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
+        @user_welsh = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
+        login_as(@user)
+      end
+
+      should "hide the note action buttons from the user on a non welsh document" do
+        visit edition_path(@draft_edition)
+        login_as(@user_welsh)
+
+        click_link("History and notes")
+
+        assert_not @user_welsh.has_editor_permissions?(@draft_edition)
+        assert_not page.has_content?("Add edition note")
+        assert_not page.has_content?("Update important note")
+      end
+
+      should "show the note action buttons for the user on a welsh document" do
+        edition = @user.create_edition(:answer, panopticon_id: FactoryBot.create(:artefact, language: "cy").id, title: "My Title", slug: "my-title")
+        edition.state = "fact_check"
+        edition.save!
+        login_as(@user_welsh)
+
+        visit edition_path(edition)
+        click_link("History and notes")
+
+        assert @user_welsh.has_editor_permissions?(edition)
+        assert page.has_content?("Add edition note")
+        assert page.has_content?("Update important note")
+      end
+    end
+
+    context "Edition displays the correct data for actions" do
+      setup do
+        @edition = FactoryBot.create(:edition, created_at: "2024-01-23")
+      end
+
+      should "display 'Assign' action" do
+        user = FactoryBot.create(:user, name: "Steve Ogrizovic")
+        @edition.actions.create! request_type: Action::ASSIGN, requester_id: user.id, created_at: "2024-02-24 15:41:00", comment: "Assigned to me"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--assign__heading" do
+          assert page.has_css?("time", text: "3:41pm, 24 February 2024")
+          assert page.has_text?("Assign by Steve Ogrizovic")
+        end
+
+        within :css, ".history__action--assign__content" do
+          assert page.has_text?("Assigned to me")
+        end
+      end
+
+      should "display 'Note' action" do
+        user = FactoryBot.create(:user, name: "David Phillips")
+        @edition.actions.create! request_type: Action::NOTE, requester_id: user.id, created_at: "2024-03-01 10:30:00", comment: "This is a note"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--note__heading" do
+          assert page.has_css?("time", text: "10:30am, 1 March 2024")
+          assert page.has_text?("Note by David Phillips")
+        end
+
+        within :css, ".history__action--note__content" do
+          assert page.has_text?("This is a note")
+        end
+      end
+
+      should "display 'Request review' action" do
+        user = FactoryBot.create(:user, name: "Greg Downs")
+        @edition.actions.create! request_type: Action::REQUEST_REVIEW, requester_id: user.id, created_at: "2024-04-02 17:23:00", comment: "Requesting review"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--request_review__heading" do
+          assert page.has_css?("time", text: "5:23pm, 2 April 2024")
+          assert page.has_text?("Request review by Greg Downs")
+        end
+
+        within :css, ".history__action--request_review__content" do
+          assert page.has_text?("Requesting review")
+        end
+      end
+
+      should "display 'Send fact check' action" do
+        user = FactoryBot.create(:user, name: "Lloyd McGrath")
+        @edition.actions.create! request_type: Action::SEND_FACT_CHECK, requester_id: user.id, created_at: "2024-05-16 18:12:00", comment: "Fact check requested"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--send_fact_check__heading" do
+          assert page.has_css?("time", text: "6:12pm, 16 May 2024")
+          assert page.has_text?("Send fact check by Lloyd McGrath")
+        end
+
+        within :css, ".history__action--send_fact_check__content" do
+          assert page.has_text?("Fact check requested")
+        end
+      end
+
+      should "display 'Receive fact check' action" do
+        @edition.actions.create! request_type: Action::RECEIVE_FACT_CHECK, created_at: "2024-06-06 8:32:00", comment: "We’re happy for you to publish. -----Original Message----- Reply and confirm the content is correct.", comment_sanitized: true
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--receive_fact_check__heading" do
+          assert page.has_css?("time", text: "8:32am, 6 June 2024")
+          assert page.has_text?("Receive fact check by GOV.UK Bot")
+        end
+
+        within :css, ".history__action--receive_fact_check__content" do
+          assert page.has_text?("We’re happy for you to publish.")
+          assert page.has_css?("div.js-earlier", text: "Reply and confirm the content is correct.")
+          assert page.has_text?("We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.")
+        end
+      end
+
+      should "display 'Request amendments' action" do
+        user = FactoryBot.create(:user, name: "Brian Kilcline")
+        @edition.actions.create! request_type: Action::REQUEST_AMENDMENTS, requester_id: user.id, created_at: "2024-06-27 10:56:00", comment: "Requesting amendments"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--request_amendments__heading" do
+          assert page.has_css?("time", text: "10:56am, 27 June 2024")
+          assert page.has_text?("Request amendments by Brian Kilcline")
+        end
+
+        within :css, ".history__action--request_amendments__content" do
+          assert page.has_text?("Requesting amendments")
+        end
+      end
+
+      should "display 'Approve review' action" do
+        user = FactoryBot.create(:user, name: "Trevor Peake")
+        @edition.actions.create! request_type: Action::APPROVE_REVIEW, requester_id: user.id, created_at: "2024-07-05 19:31:00", comment: "Review approved"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--approve_review__heading" do
+          assert page.has_css?("time", text: "7:31pm, 5 July 2024")
+          assert page.has_text?("Approve review by Trevor Peake")
+        end
+
+        within :css, ".history__action--approve_review__content" do
+          assert page.has_text?("Review approved")
+        end
+      end
+
+      should "display 'Content block update' action on Published and In Progress Editions" do
+        user = FactoryBot.create(:user, :govuk_editor, name: "Dave Bennett")
+        event = create_content_update_event(updated_by_user_uid: user["uid"])
+
+        stub_events_for_all_content_ids(events: [event])
+        stub_users_from_signon_api([user.uid], [user])
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--content_block_update__heading" do
+          assert page.has_css?("time", text: "11:26am, 7 August 2024")
+          assert page.has_text?("Content block updated by Dave Bennett")
+        end
+
+        within :css, ".history__action--content_block_update__content" do
+          assert page.has_text?("Email address updated")
+          assert page.has_link?("View in Content Block Manager")
+        end
+
+        published_edition = FactoryBot.create(
+          :edition,
+          :published,
+          created_at: Time.zone.parse(event["created_at"]).to_date - 1.day,
+        )
+
+        published_edition.actions.create!(
+          request_type: Action::PUBLISH,
+          requester: user,
+        )
+
+        visit edition_path(published_edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--content_block_update__heading" do
+          assert page.has_css?("time", text: "11:26am, 7 August 2024")
+          assert page.has_text?("Content block updated by Dave Bennett")
+        end
+
+        within :css, ".history__action--content_block_update__content" do
+          assert page.has_text?("Email address updated")
+          assert page.has_link?("View in Content Block Manager")
+        end
+      end
+
+      should "does not display 'Content block update' action on Editions archived before the update" do
+        user = FactoryBot.create(:user, :govuk_editor, name: "Dave Bennett")
+        archived_edition = FactoryBot.create(:edition, :archived)
+        event = create_content_update_event(updated_by_user_uid: user["uid"])
+        stub_events_for_all_content_ids(events: [event])
+        stub_users_from_signon_api([user.uid], [user])
+
+        visit edition_path(archived_edition)
+        click_link("History and notes")
+
+        assert page.has_no_css?(".history__action--content_block_update__heading")
+        assert page.has_no_css?(".history__action--content_block_update__content")
+      end
+    end
+
+    context "when there are previous editions" do
+      should "display a link to compare editions" do
+        edition_one = FactoryBot.create(:answer_edition, :published)
+        edition_two = FactoryBot.create(
+          :answer_edition,
+          :published,
+          panopticon_id: edition_one.panopticon_id,
+          title: "Second edition title",
+        )
+
+        visit history_edition_path(edition_two)
+        page.find("a", text: "Compare with Edition 1").click
+
+        page.find("h1", text: "Compare edition 1 and 2")
+        assert page.has_css?("h1", text: "Compare edition 1 and 2")
+        assert page.has_content?(edition_two.title)
+      end
+    end
+
+    context "when there are not previous editions" do
+      should "not display a link to compare editions" do
+        edition_one = FactoryBot.create(:answer_edition, :published)
+        visit history_edition_path(edition_one)
+
+        assert page.has_css?("h2", text: "History and notes")
+        assert page.has_no_css?("a", text: "Compare with Edition")
+      end
+    end
+  end
+
+  context "Add edition note page" do
+    should "render the 'Add edition note' page" do
+      draft_edition = FactoryBot.create(:edition, :draft, title: "Example title")
+
+      visit edition_path(draft_edition)
+      click_link("History and notes")
+      click_link("Add edition note")
+
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Add edition note")
+        assert page.has_css?(".gem-c-heading__context", text: draft_edition.title)
+      end
+
+      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Jira card. You can also add an edition note when you send the edition for 2i review. Read guidance on writing good change notes (opens in new tab).")
+
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("label", text: "Edition note")
+        assert page.has_css?("textarea")
+      end
+
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+  end
+
+  context "Update important note page" do
+    setup do
+      @draft_edition = FactoryBot.create(:edition, :draft)
+    end
+
+    should "render the 'Update important note' page" do
+      visit history_update_important_note_edition_path(@draft_edition)
+
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Update important note")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.”.")
+      assert page.has_text?("Each edition can have only one important note at a time.")
+      assert page.has_text?("To delete the important note, clear any comments and select ‘Save’.")
+
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("label", text: "Important note")
+        assert page.has_css?("textarea")
+      end
+
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    should "pre-populate with the existing note" do
+      note_text = "This is really really urgent!"
+      create_important_note_for_edition(@draft_edition, note_text)
+
+      visit history_update_important_note_edition_path(@draft_edition)
+
+      assert page.has_field?("Important note", with: note_text)
+    end
+
+    should "not show important notes in edition history" do
+      note_text = "This is really really urgent!"
+      note_text_2 = "Another note"
+      note_text_3 = "Yet another note"
+      create_important_note_for_edition(@draft_edition, note_text)
+      create_important_note_for_edition(@draft_edition, note_text_2)
+      create_important_note_for_edition(@draft_edition, note_text_3)
+
+      visit edition_path(@draft_edition)
+      click_link("History and notes")
+
+      within :css, ".history__actions" do
+        assert page.has_no_text?("Important note updated by #{@govuk_editor.name}")
+        assert page.has_no_text?("This is really really urgent!")
+        assert page.has_no_text?("Another note")
+        assert page.has_no_text?("Yet another note")
+      end
+    end
+
+    should "not be carried forward to new editions" do
+      published_edition = FactoryBot.create(:edition, :published)
+      note_text = "This important note should not appear on a new edition."
+      create_important_note_for_edition(published_edition, note_text)
+
+      visit edition_path(published_edition)
+
+      assert page.has_content? note_text
+
+      click_on "Create new edition"
+      assert page.has_no_text?("Important note")
+    end
+  end
+
+  context "admin tab" do
+    context "user does not have required permissions" do
+      setup do
+        @draft_edition = FactoryBot.create(:edition, :draft)
+      end
+
+      should "not show when user is not govuk editor or welsh editor" do
+        login_as(FactoryBot.create(:user, name: "Stub User"))
+        visit edition_path(@draft_edition)
+
+        assert page.has_no_text?("Admin")
+      end
+
+      should "not show when user is welsh editor and edition is not welsh" do
+        login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+        visit edition_path(@draft_edition)
+
+        assert page.has_no_text?("Admin")
+      end
+    end
+
+    context "user has required permissions" do
+      %i[draft amends_needed in_review fact_check_received ready archived scheduled_for_publishing].each do |state|
+        context "when state is '#{state}'" do
+          should "not show the 'Update content type' form" do
+            edition = FactoryBot.create(:edition, state)
+
+            visit edition_path(edition)
+            click_link("Admin")
+
+            assert page.has_no_text?("Update content type")
+          end
+        end
+      end
+
+      %i[published archived scheduled_for_publishing].each do |state|
+        context "when state is '#{state}'" do
+          setup do
+            edition = FactoryBot.create(:edition, state)
+            visit edition_path(edition)
+            click_link("Admin")
+          end
+
+          should "show 'Admin' header and not show 'Skip fact check' button" do
+            within :css, ".gem-c-heading h2" do
+              assert page.has_text?("Admin")
+            end
+            assert page.has_no_button?("Skip fact check")
+          end
+
+          should "not show link to delete edition" do
+            assert page.has_no_link?("Delete edition")
+          end
+        end
+      end
+
+      %i[draft amends_needed in_review fact_check_received ready].each do |state|
+        context "when state is '#{state}'" do
+          setup do
+            edition = FactoryBot.create(:edition, state)
+            visit edition_path(edition)
+            click_link("Admin")
+          end
+
+          should "show 'Admin' header and not show 'Skip fact check' button" do
+            within :css, ".gem-c-heading h2" do
+              assert page.has_text?("Admin")
+            end
+            assert page.has_no_button?("Skip fact check")
+          end
+
+          should "show link to delete edition" do
+            assert page.has_link?("Delete edition")
+          end
+        end
+      end
+
+      context "when state is 'fact_check'" do
+        setup do
+          @fact_check_edition = FactoryBot.create(:edition, :fact_check)
+          visit edition_path(@fact_check_edition)
+          click_link("Admin")
+        end
+
+        should "show 'Admin' tab when user is welsh editor and edition is welsh edition" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          welsh_edition = FactoryBot.create(:edition, :fact_check, :welsh)
+
+          visit edition_path(welsh_edition)
+
+          assert page.has_text?("Admin")
+        end
+
+        should "show 'Admin' header and an 'Skip fact check' button" do
+          within :css, ".gem-c-heading h2" do
+            assert page.has_text?("Admin")
+          end
+          assert page.has_button?("Skip fact check")
+        end
+
+        should "show link to delete edition" do
+          assert page.has_link?("Delete edition")
+        end
+
+        should "show success message when fact check skipped successfully" do
+          click_button("Skip fact check")
+          @fact_check_edition.reload
+
+          assert_equal "ready", @fact_check_edition.state
+          assert page.has_text?("The fact check has been skipped for this publication.")
+        end
+
+        should "show error message when skip fact check gives an error" do
+          User.any_instance.stubs(:progress).returns(false)
+
+          click_button("Skip fact check")
+          @fact_check_edition.reload
+
+          assert_equal "fact_check", @fact_check_edition.state
+          assert page.has_text?("Could not skip fact check for this publication.")
+        end
+      end
+
+      context "when state is 'published'" do
+        setup do
+          @published_edition = FactoryBot.create(:edition, :published)
+        end
+
+        context "edition is not the latest version of a publication" do
+          should "not show the 'Update content type' form" do
+            FactoryBot.create(:edition, :draft, panopticon_id: @published_edition.artefact.id)
+
+            visit edition_path(@published_edition)
+            click_link("Admin")
+
+            assert page.has_no_text?("Update content type")
+          end
+        end
+
+        context "content type is not retired, edition is the latest version of a publication" do
+          setup do
+            visit edition_path(@published_edition)
+            click_link("Admin")
+          end
+
+          should "show the 'Update content type' form" do
+            assert page.has_text?("Update content type")
+          end
+
+          should "show radio buttons for all content types excluding current one (answer)" do
+            assert page.has_no_selector?(".gem-c-radio input[value='answer']")
+            assert page.has_selector?(".gem-c-radio input[value='completed_transaction']")
+            assert page.has_selector?(".gem-c-radio input[value='guide']")
+            assert page.has_selector?(".gem-c-radio input[value='help_page']")
+            assert page.has_selector?(".gem-c-radio input[value='place']")
+            assert page.has_selector?(".gem-c-radio input[value='simple_smart_answer']")
+            assert page.has_selector?(".gem-c-radio input[value='transaction']")
+          end
+
+          should "show common explanatory text for all content types and not show explanatory text specific to Guides" do
+            assert page.has_text?("No content will be lost, but content in some fields might not make it into the new edition. If it can't be copied to a new content type it will still be available in the previous edition. Content in multiple fields might be combined into a single field.")
+            assert page.has_no_text?("All parts of Guide Editions will be copied across. If the format you are converting to doesn't have parts, the content of all the parts will be copied into the body, with the part title displayed as a top-level sub-heading.")
+          end
+        end
+      end
+
+      context "confirm delete" do
+        setup do
+          @draft_edition = FactoryBot.create(:edition, :draft)
+          visit edition_path(@draft_edition)
+          click_link("Admin")
+          click_link("Delete edition #{@draft_edition.version_number}")
+        end
+
+        should "show the delete edition confirmation page" do
+          assert page.has_text?(@draft_edition.title)
+          assert page.has_text?("Delete edition")
+          assert page.has_text?("If you delete this edition it cannot be undone.")
+          assert page.has_text?("Are you sure you want to delete this edition?")
+          assert page.has_link?("Cancel")
+          assert page.has_button?("Delete edition")
+        end
+
+        should "navigate to admin tab when 'Cancel' is clicked" do
+          click_link("Cancel")
+          assert_current_path admin_edition_path(@draft_edition.id)
+        end
+
+        should "navigate to root path when 'Delete edition' is clicked" do
+          click_button("Delete edition")
+          assert_current_path root_path
+        end
+
+        should "show success message when edition is successfully deleted" do
+          click_button("Delete edition")
+
+          assert_equal 0, Edition.where(id: @draft_edition.id).count
+          assert page.has_text?("Edition deleted")
+        end
+      end
+    end
+  end
+
+  context "Related external links tab" do
+    setup do
+      @draft_edition = FactoryBot.create(:edition, :draft)
+      visit edition_path(@draft_edition)
+      click_link "Related external links"
+    end
+
+    should "render 'Related external links' header, inset text and save button" do
+      assert page.has_css?("h2", text: "Related external links")
+      assert page.has_css?("div.gem-c-inset-text", text: "After saving, changes to related external links will be visible on the site the next time this publication is published.")
+      assert page.has_css?("button.gem-c-button", text: "Save")
+    end
+
+    context "Document has no external links when page loads" do
       setup do
         @draft_edition = FactoryBot.create(:edition, :draft)
         visit edition_path(@draft_edition)
         click_link "Related external links"
       end
 
-      should "render 'Related external links' header, inset text and save button" do
-        assert page.has_css?("h2", text: "Related external links")
-        assert page.has_css?("div.gem-c-inset-text", text: "After saving, changes to related external links will be visible on the site the next time this publication is published.")
-        assert page.has_css?("button.gem-c-button", text: "Save")
+      should "render an empty 'Add another' form" do
+        assert page.has_css?("legend", text: "Link 1")
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+      end
+    end
+
+    context "Document already has external links when page loads" do
+      setup do
+        @draft_edition = FactoryBot.create(:edition, :draft)
+        @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
+        visit edition_path(@draft_edition)
+        click_link "Related external links"
       end
 
-      context "Document has no external links when page loads" do
-        setup do
-          @draft_edition = FactoryBot.create(:edition, :draft)
-          visit edition_path(@draft_edition)
-          click_link "Related external links"
-        end
+      should "render a pre-populated 'Add another' form" do
+        # Link 1
+        assert page.has_css?("legend", text: "Link 1")
+        assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+        assert_equal "Link One", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+        assert_equal "https://gov.uk", page.find("input[name='artefact[external_links_attributes][0][url]']").value
 
-        should "render an empty 'Add another' form" do
-          assert page.has_css?("legend", text: "Link 1")
-          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
-          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
-          assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
-          assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
-        end
+        # Link 2 (empty fields)
+        assert page.has_css?("legend", text: "Link 2")
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
+      end
+    end
+
+    context "User adds a new external link and saves" do
+      setup do
+        @draft_edition = FactoryBot.create(:edition, :draft)
+        visit edition_path(@draft_edition)
+        click_link "Related external links"
       end
 
-      context "Document already has external links when page loads" do
-        setup do
-          @draft_edition = FactoryBot.create(:edition, :draft)
-          @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
-          visit edition_path(@draft_edition)
-          click_link "Related external links"
+      should "render a pre-populated 'Add another' form" do
+        within :css, ".gem-c-add-another .js-add-another__empty" do
+          fill_in "Title", with: "A new external link"
+          fill_in "URL", with: "https://foo.com"
         end
 
-        should "render a pre-populated 'Add another' form" do
-          # Link 1
-          assert page.has_css?("legend", text: "Link 1")
-          assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
-          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
-          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
-          assert_equal "Link One", page.find("input[name='artefact[external_links_attributes][0][title]']").value
-          assert_equal "https://gov.uk", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+        click_button("Save")
 
-          # Link 2 (empty fields)
-          assert page.has_css?("legend", text: "Link 2")
-          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
-          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
-          assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
-          assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
-        end
+        # Link 1
+        assert page.has_css?("legend", text: "Link 1")
+        assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+        assert_equal "A new external link", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+        assert_equal "https://foo.com", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+
+        # Link 2 (empty fields)
+        assert page.has_css?("legend", text: "Link 2")
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
+      end
+    end
+
+    context "User deletes an external link and saves" do
+      setup do
+        @draft_edition = FactoryBot.create(:edition, :draft)
+        @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
+        visit edition_path(@draft_edition)
+        click_link "Related external links"
       end
 
-      context "User adds a new external link and saves" do
-        setup do
-          @draft_edition = FactoryBot.create(:edition, :draft)
-          visit edition_path(@draft_edition)
-          click_link "Related external links"
+      should "render an empty 'Add another' form" do
+        within :css, ".gem-c-add-another .js-add-another__fieldset:first-of-type" do
+          check("Delete")
         end
 
-        should "render a pre-populated 'Add another' form" do
-          within :css, ".gem-c-add-another .js-add-another__empty" do
-            fill_in "Title", with: "A new external link"
-            fill_in "URL", with: "https://foo.com"
+        click_button("Save")
+
+        assert page.has_css?("legend", text: "Link 1")
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+      end
+    end
+  end
+
+  context "unpublish tab" do
+    context "user does not have required permissions" do
+      should "not show unpublish tab when user is not govuk editor" do
+        login_as(FactoryBot.create(:user, name: "Stub User"))
+        draft_edition = FactoryBot.create(:edition, :draft)
+
+        visit edition_path(draft_edition)
+
+        assert page.has_no_text?("Unpublish")
+      end
+    end
+
+    context "user has required permissions" do
+      context "when state is 'published'" do
+        setup do
+          @published_edition = FactoryBot.create(:edition, :published)
+          visit edition_path(@published_edition)
+          click_link("Unpublish")
+        end
+
+        should "show 'Unpublish' header and 'Continue' button" do
+          within :css, ".gem-c-heading h2" do
+            assert page.has_text?("Unpublish")
           end
+          assert page.has_button?("Continue")
+        end
 
-          click_button("Save")
+        should "show 'cannot be undone' banner" do
+          assert page.has_text?("If you unpublish a page from GOV.UK it cannot be undone.")
+        end
 
-          # Link 1
-          assert page.has_css?("legend", text: "Link 1")
-          assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
-          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
-          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
-          assert_equal "A new external link", page.find("input[name='artefact[external_links_attributes][0][title]']").value
-          assert_equal "https://foo.com", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+        should "show 'Redirect to URL' text, input box and example text" do
+          assert page.has_text?("Redirect to URL")
+          assert page.has_text?("For example: https://www.gov.uk/redirect-to-replacement-page")
+          assert page.has_css?(".govuk-input", count: 1)
+        end
 
-          # Link 2 (empty fields)
-          assert page.has_css?("legend", text: "Link 2")
-          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
-          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
-          assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
-          assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
+        should "navigate to 'confirm-unpublish' page when 'Continue' button is clicked" do
+          click_button("Continue")
+          assert_equal(page.current_path, "/editions/#{@published_edition.id}/unpublish/confirm-unpublish")
         end
       end
 
-      context "User deletes an external link and saves" do
-        setup do
-          @draft_edition = FactoryBot.create(:edition, :draft)
-          @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
-          visit edition_path(@draft_edition)
-          click_link "Related external links"
-        end
+      context "when state is not 'published'" do
+        should "not show unpublish tab" do
+          draft_edition = FactoryBot.create(:edition, :draft)
+          visit edition_path(draft_edition)
 
-        should "render an empty 'Add another' form" do
-          within :css, ".gem-c-add-another .js-add-another__fieldset:first-of-type" do
-            check("Delete")
-          end
-
-          click_button("Save")
-
-          assert page.has_css?("legend", text: "Link 1")
-          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
-          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
-          assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
-          assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+          assert page.has_no_text?("Unpublish")
         end
       end
+    end
+  end
+
+  context "Schedule page" do
+    setup do
+      @ready_edition = FactoryBot.create(:answer_edition, :ready)
+      visit schedule_page_edition_path(@ready_edition.id)
+    end
+
+    should "render the 'Schedule' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Schedule publication")
+        assert page.has_css?(".gem-c-heading__context", text: @ready_edition.title)
+      end
+
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("label", text: "Comment (optional)")
+        assert page.has_css?("textarea")
+      end
+
+      within all(".govuk-fieldset")[0] do
+        assert page.has_css?("legend", text: "Publication date")
+        assert page.has_css?(".govuk-label", text: "Day")
+        assert page.has_css?("input[name='publish_at_3i']")
+        assert page.has_css?(".govuk-label", text: "Month")
+        assert page.has_css?("input[name='publish_at_2i']")
+        assert page.has_css?(".govuk-label", text: "Year")
+        assert page.has_css?("input[name='publish_at_1i']")
+      end
+
+      within all(".govuk-fieldset")[1] do
+        assert page.has_css?("legend", text: "Publication time")
+        assert page.has_css?(".govuk-label", text: "Hour")
+        assert page.has_css?("input[name='publish_at_4i'][value='00']")
+        assert page.has_css?(".govuk-label", text: "Minute")
+        assert page.has_css?("input[name='publish_at_5i'][value='01']")
+      end
+
+      assert page.has_button?("Schedule")
+      assert page.has_link?("Cancel")
+    end
+
+    should "generate a date hint test 3 months in the future" do
+      travel_to Time.zone.local(2025, 10, 1, 0, 0, 0)
+      visit schedule_page_edition_path(@ready_edition.id)
+
+      assert page.has_css?(".govuk-hint", text: "For example, 1 1 2026")
+    end
+
+    should "redirect to edit tab when Cancel button is pressed on Send to 2i page" do
+      click_link("Cancel")
+      assert_current_path edition_path(@ready_edition.id)
+    end
+
+    should "show success message and redirect back to the edit tab on submit" do
+      date = 1.day.from_now
+
+      fill_in "Day", with: date.day
+      fill_in "Month", with: date.month
+      fill_in "Year", with: date.year
+      fill_in "Hour", with: date.hour
+      fill_in "Minute", with: date.min
+      click_button "Schedule"
+
+      assert_current_path edition_path(@ready_edition.id)
+      assert page.has_text?("Scheduled to publish at #{date.to_fs(:govuk_date)}")
     end
   end
 
@@ -4892,71 +4958,6 @@ class EditionEditTest < IntegrationTest
 
       assert_current_path edition_path(@draft_edition.id)
       assert page.has_text?("Sent to 2i")
-    end
-  end
-
-  context "in_review edition (sent to 2i)" do
-    context "user has the required permissions" do
-      context "current user is also the requester" do
-        setup do
-          login_as(@govuk_requester)
-          @in_review_edition = FactoryBot.create(:edition, :in_review, requester: @govuk_requester)
-          visit edition_path(@in_review_edition)
-        end
-
-        should "display Save button and preview link" do
-          assert page.has_button?("Save"), "No save button present"
-          assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
-        end
-
-        should "indicate that the current user requested a review" do
-          assert page.has_text?("You've sent this edition to be reviewed")
-        end
-
-        should "not show 'Send to 2i' link as edition already in 'in review' state" do
-          visit edition_path(@in_review_edition)
-          assert page.has_no_link?("Send to 2i")
-        end
-      end
-
-      context "current user is not the requester" do
-        setup do
-          login_as(@govuk_editor)
-          @in_review_edition = FactoryBot.create(:edition, :in_review, requester: @govuk_requester)
-          visit edition_path(@in_review_edition)
-        end
-
-        should "display Save button and preview link" do
-          assert page.has_button?("Save"), "No save button present"
-          assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
-        end
-
-        should "indicate which other user requested a review" do
-          assert page.has_text?("Stub requester sent this edition to be reviewed")
-        end
-      end
-    end
-
-    context "user does not have editor permissions" do
-      setup do
-        login_as(FactoryBot.create(:user, name: "Non Editor"))
-        @in_review_edition = FactoryBot.create(:edition, :in_review)
-        visit edition_path(@in_review_edition)
-      end
-
-      should "not show any editable components" do
-        assert page.has_no_css?(".govuk-textarea")
-        assert page.has_no_css?(".govuk-input")
-        assert page.has_no_css?(".govuk-radios")
-      end
-
-      should "not show the Save button" do
-        assert page.has_no_button?("Save")
-      end
-
-      should "show the Preview link" do
-        assert page.has_link?("Preview (opens in new tab)")
-      end
     end
   end
 
