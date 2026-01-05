@@ -18,16 +18,20 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   }
 
   Ga4IndexSectionSetup.prototype.indexElements = function (module) {
+    var indexableElements = []
+
     // Find instances of these form elements:
     // select, textarea, fieldset, input (except hidden), input(not in fieldset), radio
-    var indexableElements = []
     var elements = module.querySelectorAll(
       'select, textarea, fieldset, input:not([type="hidden"], [type="radio"])'
     )
 
     Array.from(elements).forEach(function (element) {
       if (element.type === 'fieldset' || element.closest('fieldset') == null) {
-        indexableElements.push(element)
+        // Exclude empty fieldsets in "Add another" components
+        if (!element.parentNode.classList.contains('js-add-another__empty')) {
+          indexableElements.push(element)
+        }
       }
     })
 
