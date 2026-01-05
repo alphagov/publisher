@@ -1,6 +1,6 @@
 <% environment = GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment %>
 
-<% data_module_main = ga4_form_tracking? ? "ga4-link-tracker ga4-form-setup ga4-index-section-setup" : "ga4-link-tracker" %>
+<% data_module_main = ga4_form_tracking? ? "ga4-link-tracker ga4-form-setup ga4-index-section-setup ga4-event-tracker" : "ga4-link-tracker" %>
 
 <% content_for :head do %>
   <meta name="govuk:components_gem_version" content="<%= GovukPublishingComponents::VERSION %>">
