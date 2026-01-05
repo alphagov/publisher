@@ -233,4 +233,93 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "edit", event_data[1]["type"]
     end
   end
+
+  context "Tag to related content page" do
+    setup do
+      stub_linkables
+      visit tagging_related_content_page_edition_path(@edition)
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when events are triggered" do
+      within all(".js-add-another__fieldset")[0] do
+        fill_in "URL or path", with: "/pay-vat"
+      end
+      click_button "Add another related content item"
+      within all(".js-add-another__fieldset")[1] do
+        fill_in "URL or path", with: "/universal-credit"
+      end
+      click_button "Add another related content item"
+      within all(".js-add-another__fieldset")[2] do
+        fill_in "URL or path", with: "/company-tax-returns"
+      end
+      within all(".js-add-another__fieldset")[0] do
+        click_button "Delete"
+      end
+      click_button "Save"
+
+      event_data = get_event_data
+
+      # fill in value for "Related content 1"
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "URL or path", event_data[0]["section"]
+      assert_equal "8", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+      # click "Add another related content item"
+      assert_equal "added", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "Tag related content", event_data[1]["section"]
+      assert_equal "Add another related content item", event_data[1]["text"]
+      assert_equal "1", event_data[1]["index"]["index_section"]
+      assert_equal "1", event_data[1]["index"]["index_section_count"]
+
+      # fill in value for "Related content 2"
+      assert_equal "select", event_data[2]["action"]
+      assert_equal "select_content", event_data[2]["event_name"]
+      assert_equal "URL or path", event_data[2]["section"]
+      assert_equal "17", event_data[2]["text"]
+      # TODO: Confirm expected values for these
+      # assert_equal "1", event_data[2]["index"]["index_section"]
+      # assert_equal "1", event_data[2]["index"]["index_section_count"]
+ 
+      # click "Add another related content item"
+      assert_equal "added", event_data[3]["action"]
+      assert_equal "select_content", event_data[3]["event_name"]
+      assert_equal "Tag related content", event_data[3]["section"]
+      assert_equal "Add another related content item", event_data[3]["text"]
+      assert_equal "2", event_data[3]["index"]["index_section"]
+      assert_equal "2", event_data[3]["index"]["index_section_count"]
+
+      # fill in value for "Related content 3"
+      assert_equal "select", event_data[4]["action"]
+      assert_equal "select_content", event_data[4]["event_name"]
+      assert_equal "URL or path", event_data[4]["section"]
+      assert_equal "20", event_data[4]["text"]
+      # TODO: Confirm expected values for these
+      # assert_equal "1", event_data[4]["index"]["index_section"]
+      # assert_equal "1", event_data[4]["index"]["index_section_count"]
+
+      # click "Delete" for "Related content 1"
+      assert_equal "deleted", event_data[5]["action"]
+      assert_equal "select_content", event_data[5]["event_name"]
+      assert_equal "Tag related content", event_data[5]["section"]
+      assert_equal "Delete", event_data[5]["text"]
+      assert_equal "add another", event_data[5]["type"]
+      assert_equal "1", event_data[5]["index"]["index_section"]
+      assert_equal "3", event_data[5]["index"]["index_section_count"]
+
+      # Submit form
+      assert_equal "Save", event_data[6]["action"]
+      assert_equal "form_response", event_data[6]["event_name"]
+      assert_equal "Tag related content", event_data[6]["section"]
+      # TODO: Confirm expected values for this
+      # assert_equal "{\"Related content 1\":\"/universal-credit\",\"Related content 2\":\"/company-tax-returns\"}", event_data[6]["text"]
+      assert_equal "Answer", event_data[6]["tool_name"]
+      # TODO: Confirm expected values for this
+      # assert_equal "new", event_data[6]["type"]
+   end
+  end
 end
