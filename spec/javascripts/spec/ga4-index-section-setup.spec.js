@@ -17,6 +17,12 @@ describe('GA4IndexSectionSetup', function () {
             <input type="radio" name="radio_1">
             <input type="radio" name="radio_1">
           </fieldset>
+          <div class="js-add-another__fieldset">
+            <fieldset id="input_5"></fieldset>
+          </div>
+          <div class="js-add-another__empty">
+            <fieldset id="input_6"></fieldset>
+          </div>
         </form>
       </div>`
 
@@ -37,22 +43,27 @@ describe('GA4IndexSectionSetup', function () {
       // input [type="text"]
       var input1 = module.querySelector('#input_1')
       expect(JSON.parse(input1.dataset.ga4Index).index_section).toBe(1)
-      expect(JSON.parse(input1.dataset.ga4Index).index_section_count).toBe(4)
+      expect(JSON.parse(input1.dataset.ga4Index).index_section_count).toBe(5)
 
       // textarea
       var input2 = module.querySelector('#input_2')
       expect(JSON.parse(input2.dataset.ga4Index).index_section).toBe(2)
-      expect(JSON.parse(input2.dataset.ga4Index).index_section_count).toBe(4)
+      expect(JSON.parse(input2.dataset.ga4Index).index_section_count).toBe(5)
 
       // fieldset with inputs
       var input3 = module.querySelector('#input_3')
       expect(JSON.parse(input3.dataset.ga4Index).index_section).toBe(3)
-      expect(JSON.parse(input3.dataset.ga4Index).index_section_count).toBe(4)
+      expect(JSON.parse(input3.dataset.ga4Index).index_section_count).toBe(5)
 
       // fieldset with radios
       var input4 = module.querySelector('#input_4')
       expect(JSON.parse(input4.dataset.ga4Index).index_section).toBe(4)
-      expect(JSON.parse(input4.dataset.ga4Index).index_section_count).toBe(4)
-    })
+      expect(JSON.parse(input4.dataset.ga4Index).index_section_count).toBe(5)
+
+      // fieldset within "Add another" component
+      var input5 = module.querySelector('#input_5')
+      expect(JSON.parse(input5.dataset.ga4Index).index_section).toBe(5)
+      expect(JSON.parse(input4.dataset.ga4Index).index_section_count).toBe(5)
+   })
   })
 })
