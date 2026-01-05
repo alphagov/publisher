@@ -268,10 +268,12 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # "Related content 1" field completed
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
+      # Requires change in Ga4-form-change-tracker to retrieve this value
       # assert_equal "Related content 1 - URL or path", event_data[0]["section"]
       assert_equal "8", event_data[0]["text"]
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "1", event_data[0]["index"]["index_section_count"]
+      # Requires change in Ga4-form-change-tracker to retrieve this value
       # assert_equal "add another", event_data[0]["type"]
 
       # "Add another related content item" clicked
@@ -286,10 +288,12 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # "Related content 2" field completed
       assert_equal "select", event_data[2]["action"]
       assert_equal "select_content", event_data[2]["event_name"]
+      # Requires change in Ga4-form-change-tracker to retrieve this value
       # assert_equal "Related content 2 - URL or path", event_data[2]["section"]
       assert_equal "17", event_data[2]["text"]
       assert_equal "1", event_data[2]["index"]["index_section"]
       assert_equal "1", event_data[2]["index"]["index_section_count"]
+      # Requires change in Ga4-form-change-tracker to retrieve this value
       # assert_equal "add another", event_data[2]["type"]
 
       # "Add another related content item" clicked
@@ -297,6 +301,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "select_content", event_data[3]["event_name"]
       assert_equal "Tag related content", event_data[3]["section"]
       assert_equal "Add another related content item", event_data[3]["text"]
+      # Requires change in add-another.js to retrieve these values
       # assert_equal "1", event_data[3]["index"]["index_section"]
       # assert_equal "1", event_data[3]["index"]["index_section_count"]
       assert_equal "add another", event_data[3]["type"]
@@ -304,10 +309,12 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # "Related content 3" field completed
       assert_equal "select", event_data[4]["action"]
       assert_equal "select_content", event_data[4]["event_name"]
-      # assert_equal "Related content 2 - URL or path", event_data[4]["section"]
+      # Requires change in Ga4-form-change-tracker to retrieve this value
+      # assert_equal "Related content 3 - URL or path", event_data[4]["section"]
       assert_equal "20", event_data[4]["text"]
       assert_equal "1", event_data[4]["index"]["index_section"]
       assert_equal "1", event_data[4]["index"]["index_section_count"]
+      # Requires change in Ga4-form-change-tracker to retrieve this value
       # assert_equal "add another", event_data[4]["type"]
 
       # "Delete" for "Related content 1" clicked
@@ -315,7 +322,8 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "select_content", event_data[5]["event_name"]
       assert_equal "Tag related content", event_data[5]["section"]
       assert_equal "Delete", event_data[5]["text"]
-      assert_equal "1", event_data[5]["index"]["index_section"]
+      # Requires change in add-another.js to retrieve these values
+      # assert_equal "1", event_data[5]["index"]["index_section"]
       # assert_equal "1", event_data[5]["index"]["index_section_count"]
       assert_equal "add another", event_data[5]["type"]
 
@@ -323,6 +331,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "Save", event_data[6]["action"]
       assert_equal "form_response", event_data[6]["event_name"]
       assert_equal "Tag related content", event_data[6]["section"]
+      # Requires change in add-another.js to retrieve this value
       # assert_equal "{\"Tag related content\":\"17,20\"}", event_data[6]["text"]
       assert_equal "Answer", event_data[6]["tool_name"]
       assert_equal "edit", event_data[6]["type"]
