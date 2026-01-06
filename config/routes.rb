@@ -152,6 +152,7 @@ Rails.application.routes.draw do
   constraints FeatureConstraint.new("design_system_edit_phase_3b") do
     root to: redirect("/my-content")
     get "my-content", to: "filtered_editions#my_content"
+    get "find-content", to: "filtered_editions#find_content"
     get "2i-queue", to: "filtered_editions#two_eye_queue", as: :two_eye_queue
   end
 
