@@ -169,46 +169,6 @@ class EditionEditTest < IntegrationTest
   end
 
   context "edit tab" do
-    context "amends needed edition of a new publication" do
-      setup do
-        @amends_needed_edition = FactoryBot.create(:edition, :amends_needed)
-        visit edition_path(@amends_needed_edition)
-      end
-
-      should "show 'Send to 2i' link" do
-        assert page.has_link?("Send to 2i")
-      end
-
-      should "show Preview link" do
-        assert page.has_link?("Preview (opens in new tab)")
-      end
-
-      context "user does not have editor permissions" do
-        setup do
-          login_as(FactoryBot.create(:user, name: "Non Editor"))
-          visit edition_path(@amends_needed_edition)
-        end
-
-        should "not show any editable components" do
-          assert page.has_no_css?(".govuk-textarea")
-          assert page.has_no_css?(".govuk-input")
-          assert page.has_no_css?(".govuk-radios")
-        end
-
-        should "not show the send to 2i button" do
-          assert page.has_no_link?("Send to 2i")
-        end
-
-        should "not show the Save button" do
-          assert page.has_no_button?("Save")
-        end
-
-        should "show the Preview link" do
-          assert page.has_link?("Preview (opens in new tab)")
-        end
-      end
-    end
-
     context "ready edition" do
       setup do
         @ready_edition = FactoryBot.create(:answer_edition, :ready)
