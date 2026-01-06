@@ -20,13 +20,17 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
-    should "push the correct values to the dataLayer when events are triggered" do
+    should "add breadcrumb selection events to the dataLayer" do
+      # Select an option
       find("label", text: "Benefits and financial support for families (draft)").click
+      # Select a different option
       find("label", text: "Capital Gains Tax").click
+      # Save selection
       click_button "Save"
 
       event_data = get_event_data
 
+      # "Benefits and financial support for families (draft)" selected
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "Benefits", event_data[0]["section"]
@@ -34,6 +38,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "2", event_data[0]["index"]["index_section_count"]
 
+      # "Benefits and financial support for families (draft)" deselected, "Capital Gains Tax" selected
       assert_equal "select", event_data[1]["action"]
       assert_equal "select_content", event_data[1]["event_name"]
       assert_equal "Tax", event_data[1]["section"]
@@ -41,6 +46,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "2", event_data[1]["index"]["index_section"]
       assert_equal "2", event_data[1]["index"]["index_section_count"]
 
+      # Form submitted with "Capital Gains Tax" selected
       assert_equal "Save", event_data[2]["action"]
       assert_equal "form_response", event_data[2]["event_name"]
       assert_equal "Set GOV.UK breadcrumb", event_data[2]["section"]
@@ -57,13 +63,17 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
-    should "push the correct values to the dataLayer when events are triggered" do
+    should "add breadcrumb removal events to the dataLayer" do
+      # Select an option
       find("label", text: "Yes, remove the breadcrumb").click
+      # Select a different option
       find("label", text: "No, keep the breadcrumb").click
+      # Save selection
       click_button "Save"
 
       event_data = get_event_data
 
+      # "Yes, remove the breadcrumb" selected
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "Are you sure you want to remove the breadcumb?", event_data[0]["section"]
@@ -71,6 +81,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "1", event_data[0]["index"]["index_section_count"]
 
+      # "Yes, remove the breadcrumb" deselected, "No, keep the breadcrumb" selected
       assert_equal "select", event_data[1]["action"]
       assert_equal "select_content", event_data[1]["event_name"]
       assert_equal "Are you sure you want to remove the breadcumb?", event_data[1]["section"]
@@ -78,6 +89,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "1", event_data[1]["index"]["index_section"]
       assert_equal "1", event_data[1]["index"]["index_section_count"]
 
+      # Form submitted with "No, keep the breadcrumb" selected
       assert_equal "Save", event_data[2]["action"]
       assert_equal "form_response", event_data[2]["event_name"]
       assert_equal "Are you sure you want to remove the breadcumb?", event_data[2]["section"]
@@ -94,18 +106,18 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
-    should "push the correct values to the dataLayer when events are triggered" do
-      # Select options
+    should "add browse pages selection events to the dataLayer" do
+      # Select three options
       find("label", text: "Benefits and financial support for families").click
       find("label", text: "VAT").click
       find("label", text: "Capital Gains Tax").click
-      # Deselect a selected option
+      # Deselect one selected option
       find("label", text: "VAT").click
       click_button "Save"
 
       event_data = get_event_data
 
-      # Select "Benefits and financial support for families (draft)"
+      # "Benefits and financial support for families (draft)" selected
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "Benefits", event_data[0]["section"]
@@ -113,7 +125,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "2", event_data[0]["index"]["index_section_count"]
 
-      # Select "VAT"
+      # "VAT" selected
       assert_equal "select", event_data[1]["action"]
       assert_equal "select_content", event_data[1]["event_name"]
       assert_equal "Tax", event_data[1]["section"]
@@ -121,7 +133,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "2", event_data[1]["index"]["index_section"]
       assert_equal "2", event_data[1]["index"]["index_section_count"]
 
-      # Select "Capital Gains Tax"
+      # "Capital Gains Tax" selected
       assert_equal "select", event_data[2]["action"]
       assert_equal "select_content", event_data[2]["event_name"]
       assert_equal "Tax", event_data[2]["section"]
@@ -129,7 +141,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "2", event_data[2]["index"]["index_section"]
       assert_equal "2", event_data[2]["index"]["index_section_count"]
 
-      # Deselect "VAT"
+      # "VAT" deselected
       assert_equal "remove", event_data[3]["action"]
       assert_equal "select_content", event_data[3]["event_name"]
       assert_equal "Tax", event_data[3]["section"]
@@ -137,13 +149,88 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "2", event_data[3]["index"]["index_section"]
       assert_equal "2", event_data[3]["index"]["index_section_count"]
 
-      # Save selections
+      # Form submitted with "Benefits and financial support for families (draft)" and "Capital Gains Tax" selected
       assert_equal "Save", event_data[4]["action"]
       assert_equal "form_response", event_data[4]["event_name"]
       assert_equal "Tag browse pages", event_data[4]["section"]
       assert_equal "{\"Benefits\":\"Benefits and financial support for families (draft)\",\"Tax\":\"Capital Gains Tax\"}", event_data[4]["text"]
       assert_equal "Answer", event_data[4]["tool_name"]
       assert_equal "edit", event_data[4]["type"]
+    end
+  end
+
+  context "Tag to an organisation page" do
+    setup do
+      stub_linkables
+      visit tagging_organisations_page_edition_path(@edition)
+      disable_form_submit
+      # Activate search with select so we can interact with it
+      find(".gem-c-select-with-search").click
+    end
+
+    should "add multiple organisation selection events to the dataLayer" do
+      # Select two options
+      within(".choices__list--dropdown .choices__list") do
+        div = find_all("div")
+        div[0].click
+        div[1].click
+      end
+
+      click_button "Save"
+
+      event_data = get_event_data
+
+      # "Department for Education" selected
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Organisations", event_data[0]["section"]
+      assert_equal "Department for Education", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+      # "Student Loans Company" selected
+      assert_equal "select", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "Organisations", event_data[1]["section"]
+      assert_equal "Student Loans Company", event_data[1]["text"]
+      assert_equal "1", event_data[1]["index"]["index_section"]
+      assert_equal "1", event_data[1]["index"]["index_section_count"]
+
+      # Form submitted with "Department for Education" and "Student Loans Company" selected
+      assert_equal "Save", event_data[2]["action"]
+      assert_equal "form_response", event_data[2]["event_name"]
+      assert_equal "Tag organisations", event_data[2]["section"]
+      assert_equal "{\"Organisations\":\"2\"}", event_data[2]["text"]
+      assert_equal "Answer", event_data[2]["tool_name"]
+      assert_equal "edit", event_data[2]["type"]
+    end
+
+    should "add single organisation selection events to the dataLayer" do
+      # Select one organisation
+      within(".choices__list--dropdown .choices__list") do
+        div = find_all("div")
+        div[1].click
+      end
+
+      click_button "Save"
+
+      event_data = get_event_data
+
+      # "Student Loans Company" selected
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Organisations", event_data[0]["section"]
+      assert_equal "Student Loans Company", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+      # Form submitted with "Student Loans Company" selected
+      assert_equal "Save", event_data[1]["action"]
+      assert_equal "form_response", event_data[1]["event_name"]
+      assert_equal "Tag organisations", event_data[1]["section"]
+      assert_equal "{\"Organisations\":\"Student Loans Company\"}", event_data[1]["text"]
+      assert_equal "Answer", event_data[1]["tool_name"]
+      assert_equal "edit", event_data[1]["type"]
     end
   end
 end
