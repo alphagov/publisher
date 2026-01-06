@@ -1,851 +1,504 @@
-require "legacy_integration_test_helper"
-require "gds_api/test_helpers/calendars"
+require "integration_test_helper"
 
-class EditionWorkflowTest < LegacyJavascriptIntegrationTest
-  include GdsApi::TestHelpers::Calendars
-  attr_reader :alice, :bob, :guide
-
+class EditionWorkflowTest < IntegrationTest
   setup do
-    stub_linkables
+    @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
+    @govuk_requester = FactoryBot.create(:user, :govuk_editor, name: "Stub requester")
+    login_as(@govuk_editor)
+    @test_strategy = Flipflop::FeatureSet.current.test!
+    @test_strategy.switch!(:design_system_edit_phase_3a, true)
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
-
-    @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
-    @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")
-    @welsh_editor = FactoryBot.create(:user, :welsh_editor, name: "WelshEditor")
-
-    @guide = FactoryBot.create(:guide_edition)
-    login_as "Alice"
   end
 
-  teardown do
-    GDS::SSO.test_user = nil
-  end
+  context "unpublish tab" do
+    context "user does not have required permissions" do
+      should "not show unpublish tab when user is not govuk editor" do
+        login_as(FactoryBot.create(:user, name: "Stub User"))
+        draft_edition = FactoryBot.create(:edition, :draft)
 
-  test "should show and update a guide's assigned person" do
-    assert_nil guide.assigned_to
+        visit edition_path(draft_edition)
 
-    visit_edition guide
-    select2 "Bob", from: "Assigned to"
-    save_edition_and_assert_success
-    guide.reload
+        assert page.has_no_text?("Unpublish")
+      end
+    end
 
-    assert_equal guide.assigned_to, bob
-  end
+    context "user has required permissions" do
+      context "when state is 'published'" do
+        setup do
+          @published_edition = FactoryBot.create(:edition, :published)
+          visit edition_path(@published_edition)
+          click_link("Unpublish")
+        end
 
-  test "doesn't show disabled users in 'Assigned to' select box" do
-    disabled_user = FactoryBot.create(:disabled_user)
+        should "show 'Unpublish' header and 'Continue' button" do
+          within :css, ".gem-c-heading h2" do
+            assert page.has_text?("Unpublish")
+          end
+          assert page.has_button?("Continue")
+        end
 
-    visit_edition guide
+        should "show 'cannot be undone' banner" do
+          assert page.has_text?("If you unpublish a page from GOV.UK it cannot be undone.")
+        end
 
-    assert page.has_no_xpath?("//select[@id='edition_assigned_to_id']/option[text() = '#{disabled_user.name}']")
-  end
+        should "show 'Redirect to URL' text, input box and example text" do
+          assert page.has_text?("Redirect to URL")
+          assert page.has_text?("For example: https://www.gov.uk/redirect-to-replacement-page")
+          assert page.has_css?(".govuk-input", count: 1)
+        end
 
-  test "the customised message for fact-check is pre-loaded with a 5 working days deadline message" do
-    today = Date.parse("2017-04-28")
-    stub_calendars_has_a_bank_holiday_on(Date.parse("2017-05-01"), in_division: "england-and-wales")
+        should "navigate to 'confirm-unpublish' page when 'Continue' button is clicked" do
+          click_button("Continue")
+          assert_equal(page.current_path, "/editions/#{@published_edition.id}/unpublish/confirm-unpublish")
+        end
+      end
 
-    Timecop.freeze(today) do
-      guide.update!(state: "ready")
-      visit_edition guide
+      context "when state is not 'published'" do
+        should "not show unpublish tab" do
+          draft_edition = FactoryBot.create(:edition, :draft)
+          visit edition_path(draft_edition)
 
-      click_link("Fact check")
-
-      within "#send_fact_check_form" do
-        customised_message = page.find_field("Customised message")
-        assert customised_message
-        assert customised_message.value.include? "Deadline: 8 May 2017 (5 working days from today - 28 April 2017)"
+          assert page.has_no_text?("Unpublish")
+        end
       end
     end
   end
 
-  test "fact-check email has ID in it" do
-    guide.update!(state: "ready")
-    visit_edition guide
-
-    click_link("Fact check")
-
-    ActionMailer::Base.deliveries.clear
-
-    within "#send_fact_check_form" do
-      fill_in "Email address", with: "user@example.com"
-      click_on "Send to Fact check"
-    end
-    assert page.has_content?("Guide updated")
-
-    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
-    assert fact_check_email
-    assert_match(/Do not remove \[.+?\] from the subject line/, fact_check_email.body.to_s)
-  end
-
-  test "fact-check email has reply-to address in it" do
-    guide.update!(state: "ready")
-    visit_edition guide
-
-    click_link("Fact check")
-
-    ActionMailer::Base.deliveries.clear
-
-    within "#send_fact_check_form" do
-      fill_in "Email address", with: "user@example.com"
-      click_on "Send to Fact check"
-    end
-    assert page.has_content?("Guide updated")
-
-    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
-    assert fact_check_email
-    assert_match(/reply is being sent to #{Regexp.escape guide.fact_check_email_address}\./, fact_check_email.body.to_s)
-  end
-
-  test "can send guide to fact-check when in ready state" do
-    guide.update!(state: "ready")
-    visit_edition guide
-
-    click_link("Fact check")
-
-    ActionMailer::Base.deliveries.clear
-
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user@example.com"
-      click_on "Send"
+  context "Schedule page" do
+    setup do
+      @ready_edition = FactoryBot.create(:answer_edition, :ready)
+      visit schedule_page_edition_path(@ready_edition.id)
     end
 
-    assert page.has_css?(".label", text: "Fact check")
-
-    click_on "History and notes"
-    assert page.has_content? "Send fact check by Alice"
-    assert page.has_content? "Request sent to user@example.com"
-
-    guide.reload
-    assert guide.fact_check?
-
-    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
-    assert fact_check_email
-    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email.subject)
-    assert_equal "Blah", fact_check_email.body.to_s
-  end
-
-  test "can send guide to several fact-check recipients with comma separated emails" do
-    guide.update!(state: "ready")
-    visit_edition guide
-
-    click_link("Fact check")
-
-    ActionMailer::Base.deliveries.clear
-
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user1@example.com, user2@example.com"
-      click_on "Send"
-    end
-
-    assert page.has_css?(".label", text: "Fact check")
-    guide.reload
-    assert guide.fact_check?
-
-    fact_check_email1 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
-    assert fact_check_email1
-    fact_check_email2 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user2@example.com" }.last
-    assert fact_check_email2
-    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email1.subject)
-    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email2.subject)
-    assert_equal "Blah", fact_check_email1.body.to_s
-    assert_equal "Blah", fact_check_email2.body.to_s
-  end
-
-  test "the fact-check form validates emails and won't send if they are mangled" do
-    guide.update!(state: "ready")
-    visit_edition guide
-
-    click_link("Fact check")
-
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user1"
-      click_on "Send"
-    end
-
-    assert page.has_content? "The email addresses you entered appear to be invalid."
-    guide.reload
-    assert_not guide.fact_check?
-
-    click_link("Fact check")
-
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user1@example.com user2@example.com"
-      click_on "Send"
-    end
-
-    assert page.has_content? "The email addresses you entered appear to be invalid."
-    guide.reload
-    assert_not guide.fact_check?
-
-    click_link("Fact check")
-
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user1, user2@example.com"
-      click_on "Send"
-    end
-
-    assert page.has_content? "The email addresses you entered appear to be invalid."
-    guide.reload
-    assert_not guide.fact_check?
-  end
-
-  test "a guide in the ready state can be requested to make more amendments" do
-    guide.update!(state: "ready")
-
-    visit_edition guide
-    send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
-    assert page.has_content?("updated")
-
-    filter_for_all_users
-    view_filtered_list "Amends needed"
-
-    assert page.has_content? guide.title
-  end
-
-  test "a guide in the fact-check state can be requested to make more amendments" do
-    guide.update!(state: "fact_check")
-
-    visit_edition guide
-    send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
-    assert page.has_content?("updated")
-
-    filter_for_all_users
-    view_filtered_list "Amends needed"
-
-    assert page.has_content? guide.title
-  end
-
-  test "a guide in the fact-check state can resend the email" do
-    guide.update!(state: "ready")
-    visit_edition guide
-
-    click_link("Fact check")
-
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah blah fact check message"
-      fill_in "Email address", with: "user-to-ask-for-fact-check@example.com"
-      click_on "Send"
-    end
-
-    ActionMailer::Base.deliveries.clear
-
-    visit_edition guide
-    send_for_generic_action guide, "Resend fact check email" do
-      assert page.has_content? "Blah blah fact check message"
-      assert page.has_content? "user-to-ask-for-fact-check@example.com"
-      click_on "Resend"
-    end
-    assert page.has_content?("updated")
-
-    visit_edition guide
-    click_on "History and notes"
-    assert page.has_content? "Resend fact check by Alice"
-
-    resent_fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user-to-ask-for-fact-check@example.com" }.last
-    assert resent_fact_check_email
-    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, resent_fact_check_email.subject)
-    assert_equal "Blah blah fact check message", resent_fact_check_email.body.to_s
-  end
-
-  test "sending a fact check email to a non-permitted address will return an error" do
-    raises_exception = lambda { |_request, _params|
-      response = Minitest::Mock.new
-      response.expect :code, 400
-      response.expect :body, "Can't send to this recipient using a team-only API key"
-      raise Notifications::Client::BadRequestError, response
-    }
-
-    EventMailer.stub(:request_fact_check, raises_exception) do
-      guide.update!(state: "ready")
-      visit_edition guide
-
-      click_link("Fact check")
-
-      within "#send_fact_check_form" do
-        fill_in "Customised message", with: "Blah blah fact check message"
-        fill_in "Email address", with: "user-to-ask-for-fact-check@example.com"
-        click_on "Send"
+    should "render the 'Schedule' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Schedule publication")
+        assert page.has_css?(".gem-c-heading__context", text: @ready_edition.title)
       end
 
-      assert page.has_content? "Error: One or more recipients not in GOV.UK Notify team (code: 400).\nThis error will not occur in Production."
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("label", text: "Comment (optional)")
+        assert page.has_css?("textarea")
+      end
+
+      within all(".govuk-fieldset")[0] do
+        assert page.has_css?("legend", text: "Publication date")
+        assert page.has_css?(".govuk-label", text: "Day")
+        assert page.has_css?("input[name='publish_at_3i']")
+        assert page.has_css?(".govuk-label", text: "Month")
+        assert page.has_css?("input[name='publish_at_2i']")
+        assert page.has_css?(".govuk-label", text: "Year")
+        assert page.has_css?("input[name='publish_at_1i']")
+      end
+
+      within all(".govuk-fieldset")[1] do
+        assert page.has_css?("legend", text: "Publication time")
+        assert page.has_css?(".govuk-label", text: "Hour")
+        assert page.has_css?("input[name='publish_at_4i'][value='00']")
+        assert page.has_css?(".govuk-label", text: "Minute")
+        assert page.has_css?("input[name='publish_at_5i'][value='01']")
+      end
+
+      assert page.has_button?("Schedule")
+      assert page.has_link?("Cancel")
+    end
+
+    should "generate a date hint test 3 months in the future" do
+      travel_to Time.zone.local(2025, 10, 1, 0, 0, 0)
+      visit schedule_page_edition_path(@ready_edition.id)
+
+      assert page.has_css?(".govuk-hint", text: "For example, 1 1 2026")
+    end
+
+    should "redirect to edit tab when Cancel button is pressed on Send to 2i page" do
+      click_link("Cancel")
+      assert_current_path edition_path(@ready_edition.id)
+    end
+
+    should "show success message and redirect back to the edit tab on submit" do
+      date = 1.day.from_now
+
+      fill_in "Day", with: date.day
+      fill_in "Month", with: date.month
+      fill_in "Year", with: date.year
+      fill_in "Hour", with: date.hour
+      fill_in "Minute", with: date.min
+      click_button "Schedule"
+
+      assert_current_path edition_path(@ready_edition.id)
+      assert page.has_text?("Scheduled to publish at #{date.to_fs(:govuk_date)}")
     end
   end
 
-  test "can flag guide for review" do
-    guide.assigned_to = bob
-
-    visit_edition guide
-    send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
-    assert page.has_content?("updated")
-
-    filter_for_all_users
-    view_filtered_list "In review"
-
-    assert page.has_content? guide.title
-  end
-
-  test "cannot review own guide" do
-    guide.assigned_to = alice
-
-    visit_edition guide
-    send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
-    assert page.has_content?("updated")
-
-    assert page.has_selector?(".alert-info")
-    assert has_no_link? "No changes needed"
-  end
-
-  test "cannot be the guide reviewer and assignee" do
-    guide.assigned_to = bob
-    guide.state = "in_review"
-    guide.save!(validate: false)
-
-    visit_edition guide
-    select2 "Bob", css: "#s2id_edition_reviewer"
-    save_edition_and_assert_error("can't be the assignee", "#edition_reviewer")
-  end
-
-  test "can deselect the guide reviewer" do
-    guide.assigned_to = bob
-
-    visit_edition guide
-    send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
-    assert page.has_content?("updated")
-
-    select2_clear css: "#s2id_edition_reviewer"
-    save_edition_and_assert_success
-  end
-
-  test "can unassign the guide" do
-    guide.assigned_to = bob
-
-    visit_edition guide
-    select2_clear css: "#s2id_edition_assigned_to_id"
-    save_edition_and_assert_success
-    guide.reload
-
-    assert_nil guide.assignee
-    page.assert_selector("select#edition_assigned_to_id", text: "", visible: false)
-  end
-
-  test "can become the guide reviewer" do
-    guide.assigned_to = bob
-
-    send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
-    assert page.has_content?("updated")
-
-    visit_edition guide
-
-    select2 "Alice", css: "#s2id_edition_reviewer"
-    save_edition_and_assert_success
-  end
-
-  test "can review another's guide" do
-    guide.state = "in_review"
-    guide.save!(validate: false)
-    guide.assigned_to = bob
-
-    visit_edition guide
-    assert page.has_selector?(".alert-info")
-    assert has_link? "Needs more work"
-    assert has_link? "No changes needed"
-  end
-
-  test "review failed" do
-    guide.state = "in_review"
-    guide.save!(validate: false)
-    guide.assigned_to = bob
-
-    visit_edition guide
-    send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
-    assert page.has_content?("updated")
-
-    filter_for_all_users
-    view_filtered_list "Amends needed"
-
-    assert page.has_content? guide.title
-  end
-
-  test "review passed" do
-    guide.state = "in_review"
-    guide.save!(validate: false)
-
-    visit_edition guide
-    send_action guide, "No changes needed", "No changes needed", "Yup, looks good"
-    assert page.has_content?("updated")
-
-    filter_for_all_users
-    view_filtered_list "Ready"
-    assert page.has_content? guide.title
-  end
-
-  test "can skip fact-check" do
-    guide.update!(state: "fact_check")
-
-    visit_edition guide
-
-    click_on "Admin"
-    click_on "Skip fact check"
-
-    # This information is not quite correct but it is the current behaviour.
-    # Adding this test as an aid to future improvements
-    assert page.has_content? "Fact check was skipped for this edition."
-    filter_for_all_users
-    view_filtered_list "Ready"
-    assert page.has_content? guide.title
-
-    visit_edition guide
-    assert page.has_content? "Request this edition to be amended further."
-    assert page.has_content? "Needs more work"
-  end
-
-  test "can progress from fact-check" do
-    guide.update!(state: "fact_check_received")
-
-    visit_edition guide
-    send_action guide, "No more work needed", "Approve fact check", "Hurrah!"
-    assert page.has_content?("updated")
-
-    filter_for_all_users
-    view_filtered_list "Ready"
-
-    assert page.has_content? guide.title
-  end
-
-  test "can go back to fact-check from fact-check received" do
-    guide.update!(state: "fact_check_received")
-
-    visit_edition guide
-    send_for_fact_check guide
-    visit_edition guide
-
-    assert page.has_css?(".label", text: "Fact check")
-  end
-
-  test "can create a new edition from the listings screens" do
-    guide.update!(state: "published")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-
-    assert page.has_content? "New edition created"
-  end
-
-  test "Welsh editors cannot create a new edition from the listings screen" do
-    guide.update!(state: "published")
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    assert page.has_no_content? "Create new edition"
-  end
-
-  test "Welsh editors can create a new Welsh edition from the listings screen" do
-    guide.update!(state: "published")
-    guide.artefact.update!(language: "cy")
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-
-    assert page.has_content? "New edition created"
-  end
-
-  test "Welsh editors cannot edit a newer edition from the listings screen" do
-    guide.update!(state: "published")
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-    assert page.has_content? "New edition created"
-
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-
-    assert page.has_no_content? "Edit newer edition"
-  end
-
-  test "Welsh editors can edit a newer Welsh edition from the listings screen" do
-    guide.update!(state: "published")
-    guide.artefact.update!(language: "cy")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-
-    click_on "Edit newer edition"
-
-    assert_equal page.current_path, edition_path(guide.artefact.latest_edition)
-  end
-
-  test "Welsh editors cannot create new editions from the edition page" do
-    guide.update!(state: "published")
-    login_as("WelshEditor")
-
-    visit edition_path(guide)
-    assert page.has_no_content? "Create new edition"
-  end
-
-  test "Welsh editors can create new Welsh editions from the edition page" do
-    guide.update!(state: "published")
-    guide.artefact.update!(language: "cy")
-    login_as("WelshEditor")
-
-    visit edition_path(guide)
-    click_on "Create new edition"
-
-    assert page.has_content? "New edition created"
-  end
-
-  test "Welsh editors cannot edit existing newer editions from the edition page" do
-    guide.update!(state: "published")
-    visit edition_path(guide)
-    click_on "Create new edition"
-
-    login_as("WelshEditor")
-    visit edition_path(guide)
-
-    assert page.has_no_content? "Edit existing newer edition"
-  end
-
-  test "Welsh editors can edit existing newer Welsh editions from the edition page" do
-    guide.update!(state: "published")
-    guide.artefact.update!(language: "cy")
-
-    visit edition_path(guide)
-    click_on "Create new edition"
-
-    login_as("WelshEditor")
-    visit edition_path(guide)
-
-    click_on "Edit existing newer edition"
-
-    assert_equal page.current_path, edition_path(guide.artefact.latest_edition)
-  end
-
-  test "Welsh editors cannot update editions" do
-    login_as("WelshEditor")
-    visit edition_path(guide)
-
-    assert page.has_no_content? "Save"
-  end
-
-  test "Welsh editors can update Welsh editions" do
-    guide.artefact.update!(language: "cy")
-
-    login_as("WelshEditor")
-    visit edition_path(guide)
-
-    fill_in "Title", with: "Updated Welsh Title"
-
-    save_edition_and_assert_success
-  end
-
-  test "Welsh editors can assign users to Welsh editions" do
-    guide.artefact.update!(language: "cy")
-
-    login_as("WelshEditor")
-    visit edition_path(guide)
-
-    select2 "Bob", from: "Assigned to"
-    save_edition_and_assert_success
-    guide.reload
-
-    assert_equal bob, guide.assigned_to
-
-    save_edition_and_assert_success
-  end
-
-  test "Welsh editors cannot assign users to non-Welsh editions" do
-    login_as("WelshEditor")
-    visit edition_path(guide)
-
-    assert page.has_no_content? "Assigned to"
-  end
-
-  test "Welsh editors may not see buttons to respond to fact checks" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check_received)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert page.has_content?("We have received a fact check response for this edition")
-    assert_not page.has_css?(".btn.btn-info", text: "Needs more work")
-    assert_not page.has_css?(".btn.btn-info", text: "No more work needed")
-  end
-
-  test "Welsh editors may see buttons to respond to fact checks for Welsh editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check_received, :welsh)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert page.has_content?("We have received a fact check response for this edition")
-    assert page.has_css?(".btn.btn-info", text: "Needs more work")
-    assert page.has_css?(".btn.btn-info", text: "No more work needed")
-  end
-
-  test "Welsh editors may not request more work for fact checked edition" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert page.has_content?("We’re awaiting a response")
-    assert_not page.has_css?(".btn.btn-info", text: "Needs more work")
-  end
-
-  test "Welsh editors may request more work for fact checked Welsh edition" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check, :welsh)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert page.has_content?("We’re awaiting a response")
-    assert page.has_css?(".btn.btn-info", text: "Needs more work")
-  end
-
-  test "Welsh editors may not request more work for 'ready' non-Welsh editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :ready)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert_not page.has_content?("Request this edition to be amended further.")
-    assert_not page.has_css?(".btn.btn-info", text: "Needs more work")
-  end
-
-  test "Welsh editors may request more work for 'ready' Welsh editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :ready, :welsh)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert page.has_content?("Request this edition to be amended further.")
-    assert page.has_css?(".btn.btn-info", text: "Needs more work")
-  end
-
-  test "Welsh editors cannot see publishing buttons for non-Welsh 'ready' editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :ready, panopticon_id: FactoryBot.create(:artefact).id)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert_not page.has_css?(".btn.btn-large.btn-warning", text: "Schedule")
-    assert_not page.has_css?(".btn.btn-large.btn-primary", text: "Publish")
-  end
-
-  test "Welsh editors can see publishing buttons for Welsh 'ready' editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :ready, :welsh)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert page.has_css?(".btn.btn-large.btn-warning", text: "Schedule")
-    assert page.has_css?(".btn.btn-large.btn-primary", text: "Publish")
-  end
-
-  test "Welsh editors cannot see publishing buttons for non-Welsh 'scheduled' editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, panopticon_id: FactoryBot.create(:artefact).id)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert_not page.has_css?(".btn.btn-large.btn-warning", text: "Cancel scheduled publishing")
-    assert_not page.has_css?(".btn.btn-large.btn-primary", text: "Publish now")
-  end
-
-  test "Welsh editors can see publishing buttons for Welsh 'scheduled' editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, :welsh)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert page.has_css?(".btn.btn-large.btn-danger", text: "Cancel scheduled publishing")
-    assert page.has_css?(".btn.btn-large.btn-primary", text: "Publish now")
-  end
-
-  test "Welsh editors cannot see review buttons for non-Welsh editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert_not page.has_link?("Needs more work", href: "#request_amendments_form")
-    assert_not page.has_link?("No changes needed", href: "#approve_review_form")
-  end
-
-  test "Welsh editors can see review buttons for Welsh editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :in_review, :welsh)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert page.has_link?("Needs more work", href: "#request_amendments_form")
-    assert page.has_link?("No changes needed", href: "#approve_review_form")
-  end
-
-  test "Welsh editors cannot see buttons to request a review for non-Welsh editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :draft, panopticon_id: FactoryBot.create(:artefact).id)
-    login_as("WelshEditor")
-
-    visit_edition edition
-
-    assert_not page.has_link?("2nd pair of eyes", href: "#request_review_form")
-  end
-
-  test "Welsh editors can see buttons to request a review for Welsh editions" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, :draft, :welsh)
-    login_as("WelshEditor")
-
-    visit_edition edition
-    find_link("2nd pair of eyes", href: "#request_review_form").click
-
-    assert page.has_button?("Send to 2nd pair of eyes", type: "submit")
-  end
-
-  test "can preview a draft article on draft-origin" do
-    guide.update!(state: "draft")
-
-    visit_edition guide
-    assert page.has_text?("Preview")
-  end
-
-  test "can view a published article on the live site" do
-    guide.update!(state: "published")
-
-    visit_edition guide
-    assert page.has_text?("View this on the GOV.UK website")
-  end
-
-  test "cannot preview an archived article" do
-    guide.update!(state: "archived")
-
-    visit_edition guide
-    assert page.has_css?("#edit div div.navbar.navbar-inverse.navbar-fixed-bottom.text-center div div div a:nth-child(2)", text: "Preview")
-  end
-
-  test "should link to a newer sibling" do
-    artefact = FactoryBot.create(:artefact)
-    old_edition = FactoryBot.create(
-      :guide_edition,
-      panopticon_id: artefact.id,
-      state: "published",
-      version_number: 1,
-    )
-    new_edition = FactoryBot.create(
-      :guide_edition,
-      panopticon_id: artefact.id,
-      state: "draft",
-      version_number: 2,
-    )
-    visit_edition old_edition
-    assert page.has_link?(
-      "Edit existing newer edition",
-      href: edition_path(new_edition),
-    ),
-           "Page should have edit link"
-  end
-
-  test "should show an alert if another person has created a newer edition" do
-    guide.update!(state: "published")
-
-    filter_for_all_users
-    view_filtered_list "Published"
-
-    # Simulate that someone has clicked on 'Create new edition'
-    # while current user has been viewing the list of published editions
-    new_edition = guide.build_clone(GuideEdition)
-    new_edition.save!
-
-    # Current user now decides to click the button
-    click_on "Create new edition"
-
-    assert page.has_content?("Another person has created a newer edition")
-    assert page.has_css?(".label", text: "Published")
-  end
-
-  def send_for_generic_action(guide, button_text, &block)
-    visit_edition guide
-    action_button = page.find_link button_text
-    action_element_id = "##{path_segment(action_button['href'])}"
-
-    click_on button_text
-
-    # Forces the driver to wait for any async javascript to complete
-    page.has_css?(".modal-header")
-
-    within :css, action_element_id, &block
-
-    guide.reload
-  end
-
-  def send_for_fact_check(guide)
-    button_text = "Fact check"
-    email = "test@example.com"
-    message = "Let us know what you think"
-
-    send_for_generic_action(guide, button_text) do
-      fill_in "Email", with: email
-      fill_in "Customised message", with: message
-      click_on "Send to Fact check"
+  context "Resend fact check email page" do
+    should "render the 'Resend fact check email' page" do
+      fact_check_edition = FactoryBot.create(:edition, :fact_check)
+      FactoryBot.create(
+        :action,
+        requester: @govuk_editor,
+        request_type: Action::SEND_FACT_CHECK,
+        edition: fact_check_edition,
+        email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+        customised_message: "The customised message",
+      )
+
+      visit resend_fact_check_email_page_edition_path(fact_check_edition)
+
+      assert page.has_content?(fact_check_edition.title)
+      assert page.has_content?("Resend fact check email")
+      assert page.has_content?("Email addresses")
+      assert page.has_content?("fact-checker-one@example.com, fact-checker-two@example.com")
+      assert page.has_content?("Customised message")
+      assert page.has_content?("The customised message")
+      assert page.has_button?("Resend fact check email")
+      assert page.has_link?("Cancel")
     end
-    assert page.has_content?("updated")
   end
 
-  def send_action(guide, button_text, modal_button_text, message)
-    send_for_generic_action(guide, button_text) do
-      fill_in "Comment", with: message
-      within :css, ".modal-footer" do
-        click_on modal_button_text
+  context "Request amendments page" do
+    setup do
+      @in_review_edition = FactoryBot.create(:edition, :in_review)
+      visit request_amendments_page_edition_path(@in_review_edition)
+    end
+
+    should "save comment to edition history" do
+      fill_in "Amendment details (optional)", with: "Please make these changes"
+      click_on "Request amendments"
+      click_on "History and notes"
+
+      assert page.has_content?("Request amendments by")
+      assert page.has_content?("Please make these changes")
+    end
+
+    should "show success message and redirect back to the edit tab on submit" do
+      click_on "Request amendments"
+
+      assert_current_path edition_path(@in_review_edition.id)
+      assert page.has_text?("Amendments requested")
+    end
+
+    context "current user is also the requester" do
+      should "populate comment box with submitted comment when there is an error" do
+        login_as(@in_review_edition.latest_status_action.requester)
+
+        visit request_amendments_page_edition_path(@in_review_edition)
+        fill_in "Amendment details (optional)", with: "Please make these changes"
+        click_on "Request amendments"
+
+        assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("Please make these changes")
       end
     end
   end
 
-  def path_segment(url)
-    url.split("#").last
-  end
-
-  def filter_for_all_users
-    visit "/"
-    within :css, ".user-filter-form" do
-      select2 "All", from: "ASSIGNEE"
-      click_on "Filter publications"
+  context "No changes needed page" do
+    setup do
+      @in_review_edition = FactoryBot.create(:edition, :in_review)
     end
-    assert page.has_content?("Publications")
+
+    should "save comment to edition history" do
+      visit no_changes_needed_page_edition_path(@in_review_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Approve 2i"
+      click_on "History and notes"
+
+      assert page.has_content?("Approve review by")
+      assert page.has_content?("Looks great")
+    end
+
+    should "show success message and redirect back to the edit tab on submit" do
+      visit no_changes_needed_page_edition_path(@in_review_edition)
+      click_button "Approve 2i"
+
+      assert_current_path edition_path(@in_review_edition.id)
+      assert page.has_text?("2i approved")
+    end
+
+    context "current user is also the requester" do
+      should "populate comment box with submitted comment when there is an error" do
+        login_as(@in_review_edition.latest_status_action.requester)
+
+        visit no_changes_needed_page_edition_path(@in_review_edition)
+        fill_in "Comment (optional)", with: "Great job!"
+        click_on "Approve 2i"
+
+        assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("Great job!")
+      end
+    end
   end
 
-  def view_filtered_list(filter_label)
-    visit "/"
-    filter_link = find(:xpath, "//a[contains(., '#{filter_label}')]")
-    assert_not filter_link.nil?, "Tab link #{filter_label} not found"
-    assert_not filter_link["href"].nil?, "Tab link #{filter_label} has no target"
+  context "Approve fact check page" do
+    setup do
+      @fact_check_received_edition = FactoryBot.create(:edition, :fact_check_received, title: "Edit page title")
+    end
 
-    filter_link.click
+    should "save comment to edition history" do
+      FactoryBot.create(
+        :action,
+        requester: @govuk_editor,
+        request_type: Action::SEND_FACT_CHECK,
+        edition: @fact_check_received_edition,
+        email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+        customised_message: "The customised message",
+      )
 
-    assert page.has_content?(filter_label)
+      visit approve_fact_check_page_edition_path(@fact_check_received_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Approve fact check"
+      click_on "History and notes"
+
+      assert page.has_content?("Approve fact check by")
+      assert page.has_content?("Looks great")
+    end
+
+    should "show success message and redirect back to the edit tab on submit" do
+      visit approve_fact_check_page_edition_path(@fact_check_received_edition)
+      click_button "Approve fact check"
+
+      assert_current_path edition_path(@fact_check_received_edition.id)
+      assert page.has_text?("Fact check approved")
+    end
+
+    context "current user is also the requester" do
+      setup do
+        login_as(@govuk_requester)
+      end
+
+      should "populate comment box with submitted comment when there is an error" do
+        visit approve_fact_check_page_edition_path(@fact_check_received_edition)
+
+        @fact_check_received_edition.state = "ready"
+        @fact_check_received_edition.save!
+
+        fill_in "Comment (optional)", with: "Great job!"
+        click_on "Approve fact check"
+
+        assert page.has_content?("Edition is not in a state where fact check can be approved")
+        assert page.has_content?("Great job!")
+      end
+    end
+  end
+
+  context "Skip review page" do
+    context "current user may skip review" do
+      setup do
+        login_as(@govuk_requester)
+        @govuk_requester.permissions << "skip_review"
+        @in_review_edition = FactoryBot.create(:edition, :in_review, requester: @govuk_requester)
+        visit skip_review_page_edition_path(@in_review_edition)
+      end
+
+      should "render the 'Skip review' page" do
+        assert page.has_content?("Skip review")
+        assert page.has_content?(@in_review_edition.title)
+        assert page.has_content?("You should only skip review in exceptional circumstances")
+        assert page.has_content?("Comment (optional)")
+        assert page.has_button?("Skip review")
+        assert page.has_link?("Cancel")
+      end
+
+      should "save comment to edition history" do
+        fill_in "Comment (optional)", with: "Looks great"
+        click_on "Skip review"
+        click_on "History and notes"
+
+        assert page.has_content?("Skip review by Stub requester")
+        assert page.has_content?("Looks great")
+      end
+
+      should "show success message and redirect back to the edit tab on submit" do
+        click_button "Skip review"
+
+        assert_current_path edition_path(@in_review_edition.id)
+        assert page.has_text?("2i review skipped")
+      end
+    end
+
+    context "current user is not the requester" do
+      setup do
+        @govuk_editor.permissions << "skip_review"
+      end
+
+      should "populate comment box with submitted comment when there is an error" do
+        @in_review_edition = FactoryBot.create(:edition, :in_review)
+
+        visit skip_review_page_edition_path(@in_review_edition)
+        fill_in "Comment (optional)", with: "No review required"
+        click_on "Skip review"
+
+        assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("No review required")
+      end
+    end
+  end
+
+  context "Send to 2i page" do
+    setup do
+      @draft_edition = FactoryBot.create(:edition, :draft)
+      visit send_to_2i_page_edition_path(@draft_edition)
+    end
+
+    should "render the 'Send to 2i' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Send to 2i")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Jira card. If you’ve added a change note already, you do not need to add another one.")
+      assert page.has_link?("Read guidance on writing good change notes (opens in new tab)", href: "https://gov-uk.atlassian.net/l/cp/dwn06raQ")
+
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("textarea")
+      end
+
+      assert page.has_button?("Send to 2i")
+      assert page.has_link?("Cancel")
+    end
+
+    should "redirect to edit tab when Cancel button is pressed on Send to 2i page" do
+      click_link("Cancel")
+      assert_current_path edition_path(@draft_edition.id)
+    end
+
+    should "show success message and redirect back to the edit tab on submit" do
+      click_button "Send to 2i"
+
+      assert_current_path edition_path(@draft_edition.id)
+      assert page.has_text?("Sent to 2i")
+    end
+  end
+
+  context "Send to Fact check page" do
+    setup do
+      @ready_edition = FactoryBot.create(:answer_edition, :ready)
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+    end
+
+    should "render the page" do
+      assert page.has_text?(@ready_edition.title)
+      assert page.has_text?("Send to fact check")
+      assert page.has_text?("Email addresses")
+      assert page.has_css?(".gem-c-hint", text: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com")
+      assert page.has_text?("Customised message")
+      assert page.has_text?("The GOV.UK Content Team made the changes because")
+      assert page.has_button?("Send to fact check")
+      assert page.has_link?("Cancel")
+    end
+
+    should "redirect to edit tab when Cancel button is pressed on Send to Fact check page" do
+      click_link("Cancel")
+      assert_current_path edition_path(@ready_edition.id)
+    end
+
+    should "redirect back to the edit tab on submit and show success message" do
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Customised message", with: "Please check this"
+      click_button "Send to fact check"
+
+      assert_current_path edition_path(@ready_edition.id)
+      assert page.has_text?("Sent to fact check")
+    end
+
+    should "redirect back to the edit tab and show success message when pre-filled customised message is used" do
+      assert page.has_text?("The GOV.UK Content Team made the changes because")
+
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      click_button "Send to fact check"
+
+      assert_current_path edition_path(@ready_edition.id)
+      assert page.has_text?("Sent to fact check")
+    end
+
+    should "display an error message if an email address is invalid" do
+      fill_in "Email addresses", with: "fact-checker-one.com"
+      fill_in "Customised message", with: "Please check this"
+      click_button "Send to fact check"
+
+      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert page.has_text?("Enter email addresses and/or customised message")
+    end
+
+    should "display an error message if customised message is empty" do
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Customised message", with: ""
+      click_button "Send to fact check"
+
+      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert page.has_text?("Enter email addresses and/or customised message")
+    end
+
+    should "keep user inputs when there is an error" do
+      fill_in "Email addresses", with: "fact-checker-one.com"
+      fill_in "Customised message", with: "Please check this"
+      click_button "Send to fact check"
+
+      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert page.has_text?("Enter email addresses and/or customised message")
+      assert page.has_css?("input[value='fact-checker-one.com']")
+      assert page.has_text?("Please check this")
+    end
+  end
+
+  context "Send to publish page" do
+    should "save comment to edition history" do
+      scheduled_for_publishing_edition = FactoryBot.create(:edition, :scheduled_for_publishing)
+
+      visit send_to_publish_page_edition_path(scheduled_for_publishing_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Send to publish"
+      click_on "History and notes"
+
+      assert page.has_content?("Publish by")
+      assert page.has_content?("Looks great")
+    end
+
+    should "populate comment box with submitted comment when there is an error" do
+      draft_edition = FactoryBot.create(:edition, :draft)
+
+      visit send_to_publish_page_edition_path(draft_edition)
+      fill_in "Comment (optional)", with: "Publish a go-go!"
+      click_on "Send to publish"
+
+      assert page.has_content?("Edition is not in a state where it can be published")
+      assert page.has_content?("Publish a go-go")
+    end
+
+    should "show an error when the edition is not in a state that can be published from" do
+      draft_edition = FactoryBot.create(:edition, :draft)
+
+      visit send_to_publish_page_edition_path(draft_edition)
+      click_on "Send to publish"
+
+      assert page.has_content?("Edition is not in a state where it can be published")
+    end
+  end
+
+  context "Cancel scheduled publishing page" do
+    should "save comment to edition history" do
+      scheduled_for_publishing_edition = FactoryBot.create(:edition, :scheduled_for_publishing)
+
+      visit cancel_scheduled_publishing_page_edition_path(scheduled_for_publishing_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Cancel scheduled publishing"
+      click_on "History and notes"
+
+      assert page.has_content?("Cancel scheduled publishing by")
+      assert page.has_content?("Looks great")
+    end
+
+    should "populate comment box with submitted comment when there is an error" do
+      draft_edition = FactoryBot.create(:edition, :draft)
+
+      visit cancel_scheduled_publishing_page_edition_path(draft_edition)
+      fill_in "Comment (optional)", with: "Forget about it"
+      click_on "Cancel scheduled publishing"
+
+      assert page.has_content?("Edition is not in a state where scheduling can be cancelled")
+      assert page.has_content?("Forget about it")
+    end
   end
 end
