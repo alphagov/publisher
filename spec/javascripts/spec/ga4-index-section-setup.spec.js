@@ -20,6 +20,16 @@ describe('GA4IndexSectionSetup', function () {
           <div class="gem-c-add-another" id="input_5">
             <fieldset id="input_6"></fieldset>
           </div>
+          <ol class="gem-c-reorderable-list">
+            <li>
+              <button data-ga4-event='{"index_section":0,"index_section_count":2}' id="input_7">Up</button>
+              <button data-ga4-event='{"index_section":0,"index_section_count":2}' id="input_8">Down</button>
+            </li>
+            <li>
+              <button data-ga4-event='{"index_section":1,"index_section_count":2}' id="input_9">Up</button>
+              <button data-ga4-event='{"index_section":1,"index_section_count":2}' id="input_10">Down</button>
+            </li>
+          </ol>
         </form>
       </div>`
 
@@ -65,6 +75,12 @@ describe('GA4IndexSectionSetup', function () {
       // fieldset within an "Add another" component
       var input6 = module.querySelector('#input_6')
       expect(input6.dataset.ga4Index).toBe(undefined)
+      expect(JSON.parse(input4.dataset.ga4Index).index_section_count).toBe(5)
+
+      // Button within a "Reorderable list" component
+      var input7 = module.querySelector('#input_7')
+      expect(JSON.parse(input7.dataset.ga4Event).index_section).toBe(1)
+      expect(JSON.parse(input7.dataset.ga4Event).index_section_count).toBe(2)
     })
   })
 })
