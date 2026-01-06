@@ -241,26 +241,33 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
-    should "push the correct values to the dataLayer when events are triggered" do
+    should "add related content selection events to the dataLayer" do
+      # Fill in value for Related content 1
       within all(".js-add-another__fieldset")[0] do
         fill_in "URL or path", with: "/pay-vat"
       end
+      # Click "Add another related content item"
       click_button "Add another related content item"
+      # Fill in value for Related content 2
       within all(".js-add-another__fieldset")[1] do
         fill_in "URL or path", with: "/universal-credit"
       end
+      # Click "Add another related content item"
       click_button "Add another related content item"
+      # Fill in value for Related content 3
       within all(".js-add-another__fieldset")[2] do
         fill_in "URL or path", with: "/company-tax-returns"
       end
+      # Delete Related content 1
       within all(".js-add-another__fieldset")[0] do
         click_button "Delete"
       end
+      # Save values
       click_button "Save"
 
       event_data = get_event_data
 
-      # fill in value for "Related content 1"
+      # "Related content 1" field completed
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "URL or path", event_data[0]["section"]
@@ -268,7 +275,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "1", event_data[0]["index"]["index_section_count"]
 
-      # click "Add another related content item"
+      # "Add another related content item" clicked
       assert_equal "added", event_data[1]["action"]
       assert_equal "select_content", event_data[1]["event_name"]
       assert_equal "Tag related content", event_data[1]["section"]
@@ -276,7 +283,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "1", event_data[1]["index"]["index_section"]
       assert_equal "1", event_data[1]["index"]["index_section_count"]
 
-      # fill in value for "Related content 2"
+      # "Related content 2" field completed
       assert_equal "select", event_data[2]["action"]
       assert_equal "select_content", event_data[2]["event_name"]
       assert_equal "URL or path", event_data[2]["section"]
@@ -285,7 +292,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # assert_equal "1", event_data[2]["index"]["index_section"]
       # assert_equal "1", event_data[2]["index"]["index_section_count"]
  
-      # click "Add another related content item"
+      # "Add another related content item" clicked
       assert_equal "added", event_data[3]["action"]
       assert_equal "select_content", event_data[3]["event_name"]
       assert_equal "Tag related content", event_data[3]["section"]
@@ -293,7 +300,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "2", event_data[3]["index"]["index_section"]
       assert_equal "2", event_data[3]["index"]["index_section_count"]
 
-      # fill in value for "Related content 3"
+      # "Related content 3" field completed
       assert_equal "select", event_data[4]["action"]
       assert_equal "select_content", event_data[4]["event_name"]
       assert_equal "URL or path", event_data[4]["section"]
@@ -302,7 +309,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # assert_equal "1", event_data[4]["index"]["index_section"]
       # assert_equal "1", event_data[4]["index"]["index_section_count"]
 
-      # click "Delete" for "Related content 1"
+      # "Delete" for "Related content 1" clicked
       assert_equal "deleted", event_data[5]["action"]
       assert_equal "select_content", event_data[5]["event_name"]
       assert_equal "Tag related content", event_data[5]["section"]
@@ -311,7 +318,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "1", event_data[5]["index"]["index_section"]
       assert_equal "3", event_data[5]["index"]["index_section_count"]
 
-      # Submit form
+      # form submitted with "/universal-credit" and "/company-tax-returns" selected
       assert_equal "Save", event_data[6]["action"]
       assert_equal "form_response", event_data[6]["event_name"]
       assert_equal "Tag related content", event_data[6]["section"]
