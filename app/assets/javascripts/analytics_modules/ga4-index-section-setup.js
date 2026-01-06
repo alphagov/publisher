@@ -35,6 +35,22 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     indexableElements.forEach((element, index) => {
       element.dataset.ga4Index = '{"index_section": ' + (index + 1).toString() + ', "index_section_count": ' + indexableElements.length + '}'
     })
+
+    // By default the "Reorderable list" component indexes from 0
+    // For tracking on Pubisher we require indexing from 1
+    var reorderableList = module.querySelector('.gem-c-reorderable-list') || null
+
+    if (reorderableList) {
+      var indexSections = reorderableList.querySelectorAll('[data-ga4-event]')
+
+      Array.from(indexSections).forEach(function (section) {
+        var ga4Event = JSON.parse(section.dataset.ga4Event)
+        var index = ga4Event.index_section
+
+        ga4Event.index_section = index + 1
+        section.dataset.ga4Event = JSON.stringify(ga4Event)
+      })
+    }
   }
 
   Modules.Ga4IndexSectionSetup = Ga4IndexSectionSetup
