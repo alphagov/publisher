@@ -2241,8 +2241,8 @@ class EditionEditTest < IntegrationTest
       context "Request amendments link" do
         context "edition is not in review" do
           should "not show the link for a draft edition" do
-            @draft_edition = FactoryBot.create(:edition, :draft)
-            visit edition_path(@draft_edition)
+            draft_edition = FactoryBot.create(:edition, :draft)
+            visit edition_path(draft_edition)
 
             assert page.has_no_link?("Request amendments")
           end
@@ -2468,8 +2468,8 @@ class EditionEditTest < IntegrationTest
       context "No changes needed link (in_review state)" do
         context "edition is not in review" do
           should "not show the link" do
-            @draft_edition = FactoryBot.create(:edition, :draft)
-            visit edition_path(@draft_edition)
+            draft_edition = FactoryBot.create(:edition, :draft)
+            visit edition_path(draft_edition)
 
             assert page.has_no_link?("No changes needed")
           end
@@ -2796,8 +2796,8 @@ class EditionEditTest < IntegrationTest
               end
 
               should "not show a 'none' option when there is no assigned reviewer" do
-                @edition_no_reviewer = FactoryBot.create(:edition, :in_review, reviewer: nil)
-                visit edit_reviewer_edition_path(@edition_no_reviewer)
+                edition_no_reviewer = FactoryBot.create(:edition, :in_review, reviewer: nil)
+                visit edit_reviewer_edition_path(edition_no_reviewer)
 
                 within :css, ".govuk-radios" do
                   assert page.has_no_css?("input[value='none']")
@@ -3757,20 +3757,20 @@ class EditionEditTest < IntegrationTest
 
     context "when user has welsh editor permissions" do
       should "show read-only values and no 'Update' button for welsh edition" do
-        @artefact = FactoryBot.create(:artefact, slug: "welsh-language-edition-test", language: "cy")
-        @welsh_edition = FactoryBot.create(
+        artefact = FactoryBot.create(:artefact, slug: "welsh-language-edition-test", language: "cy")
+        welsh_edition = FactoryBot.create(
           :edition,
           :welsh,
           :ready,
-          panopticon_id: @artefact.id,
+          panopticon_id: artefact.id,
           slug: "welsh-language-edition-test",
         )
         login_as_welsh_editor
 
-        visit edition_path(@welsh_edition)
+        visit edition_path(welsh_edition)
         click_link("Metadata")
 
-        assert @user.has_editor_permissions?(@welsh_edition)
+        assert @user.has_editor_permissions?(welsh_edition)
         assert page.has_no_field?("artefact[slug]")
         assert page.has_no_field?("artefact[language]")
         assert page.has_text?("Slug")
@@ -3875,56 +3875,56 @@ class EditionEditTest < IntegrationTest
       end
 
       should "show a Preview button when the edition is in review" do
-        @in_review_edition = FactoryBot.create(:edition, :in_review)
-        visit edition_path(@in_review_edition)
+        in_review_edition = FactoryBot.create(:edition, :in_review)
+        visit edition_path(in_review_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a Preview button when the edition is out for fact check" do
-        @fact_check_edition = FactoryBot.create(:edition, :fact_check)
-        visit edition_path(@fact_check_edition)
+        fact_check_edition = FactoryBot.create(:edition, :fact_check)
+        visit edition_path(fact_check_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a Preview button when the edition is ready" do
-        @ready_edition = FactoryBot.create(:answer_edition, :ready)
-        visit edition_path(@ready_edition)
+        ready_edition = FactoryBot.create(:answer_edition, :ready)
+        visit edition_path(ready_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a Preview button when the edition is scheduled for publishing" do
-        @scheduled_for_publishing_edition = FactoryBot.create(:edition, :scheduled_for_publishing)
-        visit edition_path(@scheduled_for_publishing_edition)
+        scheduled_for_publishing_edition = FactoryBot.create(:edition, :scheduled_for_publishing)
+        visit edition_path(scheduled_for_publishing_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a View on GOV.UK button when the edition is published" do
-        @published_edition = FactoryBot.create(:edition, :published)
-        visit edition_path(@published_edition)
+        published_edition = FactoryBot.create(:edition, :published)
+        visit edition_path(published_edition)
         click_link("History and notes")
 
         assert page.has_link?("View on GOV.UK (opens in new tab)")
       end
 
       should "show a View on GOV.UK button when the edition is archived" do
-        @archived_edition = FactoryBot.create(:edition, :archived)
-        visit edition_path(@archived_edition)
+        archived_edition = FactoryBot.create(:edition, :archived)
+        visit edition_path(archived_edition)
         click_link("History and notes")
 
         assert page.has_link?("View on GOV.UK (opens in new tab)")
       end
 
       should "still show the conditional preview/view link when the user does not have editor permissions" do
-        @stub_user = FactoryBot.create(:user, name: "Stub user")
-        login_as(@stub_user)
+        stub_user = FactoryBot.create(:user, name: "Stub user")
+        login_as(stub_user)
 
         visit edition_path(@draft_edition)
         click_link("History and notes")
