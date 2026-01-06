@@ -17,6 +17,16 @@ describe('GA4IndexSectionSetup', function () {
             <input type="radio" name="radio_1">
             <input type="radio" name="radio_1">
           </fieldset>
+          <ol class="gem-c-reorderable-list">
+            <li>
+              <button data-ga4-event='{"index_section":0,"index_section_count":2}' id="input_5">Up</button>
+              <button data-ga4-event='{"index_section":0,"index_section_count":2}' id="input_6">Down</button>
+            </li>
+            <li>
+              <button data-ga4-event='{"index_section":1,"index_section_count":2}' id="input_7">Up</button>
+              <button data-ga4-event='{"index_section":1,"index_section_count":2}' id="input_8">Down</button>
+            </li>
+          </ol>
         </form>
       </div>`
 
@@ -53,6 +63,11 @@ describe('GA4IndexSectionSetup', function () {
       var input4 = module.querySelector('#input_4')
       expect(JSON.parse(input4.dataset.ga4Index).index_section).toBe(4)
       expect(JSON.parse(input4.dataset.ga4Index).index_section_count).toBe(4)
+
+      // Button within a "Reorderable list" component
+      var input5 = module.querySelector('#input_5')
+      expect(JSON.parse(input5.dataset.ga4Event).index_section).toBe(1)
+      expect(JSON.parse(input5.dataset.ga4Event).index_section_count).toBe(2)
     })
   })
 })
