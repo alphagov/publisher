@@ -133,3 +133,37 @@ $width: 40;
     }
   }
 }
+
+.find-content {
+  .item-count {
+    color: $govuk-secondary-text-colour;
+    @include govuk-font(19, "regular");
+  }
+
+  .govuk-hint {
+    @include govuk-font(16);
+  }
+
+  thead tr {
+    // Title
+    :nth-child(1) {
+      width: 40%;
+    }
+    // Status
+    :nth-child(2) {
+      width: 20%;
+    }
+    // Updated
+    :nth-child(3) {
+      width: 15%;
+    }
+    // Assigned to
+    :nth-child(4) {
+      width: 15%;
+    }
+    // Content type
+    :nth-child(5) {
+      width: 10%;
+    }
+  }
+}
