@@ -133,3 +133,12 @@ $width: 40;
     }
   }
 }
+
+.find-content {
+  .item-count {
+    color: $govuk-secondary-text-colour;
+    font-size: 19px;
+    font-weight: normal;
+    vertical-align: middle;
+  }
+}
