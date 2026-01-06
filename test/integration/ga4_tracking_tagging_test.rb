@@ -233,4 +233,29 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "edit", event_data[1]["type"]
     end
   end
+
+  context "Reorder related content page" do
+    setup do
+      stub_linkables_with_data
+      visit tagging_reorder_related_content_page_edition_path(@edition)
+      disable_form_submit
+    end
+
+    should "add reorder related selection events to the dataLayer" do
+      # Move first item down
+      within all('.gem-c-reorderable-list__item')[0] do
+        click_button "Down"
+      end
+
+      event_data = get_event_data
+
+      # "Student Loans Company" selected
+      assert_equal "Down", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "/company-tax-returns", event_data[0]["section"]
+      assert_equal "Down", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "4", event_data[0]["index"]["index_section_count"]
+    end
+  end
 end
