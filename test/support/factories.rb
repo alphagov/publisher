@@ -187,8 +187,12 @@ FactoryBot.define do
     end
 
     trait :fact_check do
+      transient do
+        requester { FactoryBot.create(:user, :govuk_editor) }
+      end
+
       state { "fact_check" }
-      actions { [FactoryBot.build(:action, request_type: Action::SEND_FACT_CHECK)] }
+      actions { [FactoryBot.build(:action, request_type: Action::SEND_FACT_CHECK, customised_message: "Example customised message", requester:)] }
     end
 
     trait :fact_check_received do
@@ -196,7 +200,12 @@ FactoryBot.define do
     end
 
     trait :in_review do
+      transient do
+        requester { FactoryBot.create(:user, :govuk_editor) }
+      end
+
       state { "in_review" }
+      actions { [FactoryBot.build(:action, request_type: Action::REQUEST_REVIEW, requester:)] }
       review_requested_at { Time.zone.now }
     end
 
