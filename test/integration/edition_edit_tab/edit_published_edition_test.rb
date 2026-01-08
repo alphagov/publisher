@@ -276,6 +276,28 @@ class EditPublishedEditionTest < IntegrationTest
         assert page.has_css?("p", text: "None added", count: 2)
       end
     end
+
+    context "Reorder chapters" do
+      setup do
+        @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :published)
+        visit edition_path(@draft_guide_edition_with_parts)
+      end
+
+      should "not show 'Add new chapter' button" do
+        assert_not page.has_css?(".govuk-button", text: "Add a new chapter")
+      end
+
+      should "not show 'Reorder chapters' button even with two parts present" do
+        assert page.has_no_link?("Reorder chapters")
+      end
+
+      should "not allow user to load reorder chapters page" do
+        visit reorder_edition_guide_parts_path(@draft_guide_edition_with_parts)
+
+        assert current_path == edition_path(@draft_guide_edition_with_parts)
+        assert page.has_content?("You are not allowed to perform this action in the current state.")
+      end
+    end
   end
 
   context "transaction edition" do

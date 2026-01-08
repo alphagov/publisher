@@ -594,30 +594,6 @@ class EditDraftEditionTest < IntegrationTest
           end
         end
 
-        %i[scheduled_for_publishing published archived].each do |state|
-          context "when state is #{state}" do
-            setup do
-              @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, state, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-              visit edition_path(@draft_guide_edition_with_parts)
-            end
-
-            should "not show 'Add new chapter' button" do
-              assert_not page.has_css?(".govuk-button", text: "Add a new chapter")
-            end
-
-            should "not show 'Reorder chapters' button even with two parts present" do
-              assert page.has_no_link?("Reorder chapters")
-            end
-
-            should "not allow user to load reorder chapters page" do
-              visit reorder_edition_guide_parts_path(@draft_guide_edition_with_parts)
-
-              assert current_path == edition_path(@draft_guide_edition_with_parts)
-              assert page.has_content?("You are not allowed to perform this action in the current state.")
-            end
-          end
-        end
-
         context "Edit chapter" do
           setup do
             @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft, title: "Edit page title", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
