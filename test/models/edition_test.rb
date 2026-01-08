@@ -282,6 +282,7 @@ class EditionTest < ActiveSupport::TestCase
       panopticon_id: @artefact.id,
       version_number: 1,
       overview: "I am a test overview",
+      title: "I am a title",
       video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ",
     )
     new_edition = edition.build_clone AnswerEdition
@@ -291,6 +292,22 @@ class EditionTest < ActiveSupport::TestCase
     assert_equal @artefact.id.to_s, new_edition.panopticon_id
     assert_equal "draft", new_edition.state
     assert_equal "I am a test overview", new_edition.overview
+    assert_equal "I am a title", new_edition.title
+    assert_equal edition.whole_body, new_edition.whole_body
+  end
+
+  test "Cloning GuideEdition parts into AnswerEdition" do
+    edition = FactoryBot.create(
+      :guide_edition,
+      state: "published",
+    )
+    edition.parts.build(title: "Some Part Title!", body: "This is some **version** text.", slug: "part-one")
+    edition.parts.build(title: "Another Part Title", body: "This is [link](http://example.net/) text.", slug: "part-two")
+    edition.save!
+    new_edition = edition.build_clone AnswerEdition
+
+    assert_equal AnswerEdition, new_edition.editionable.class
+    assert_equal "# Some Part Title!\n\nThis is some **version** text.\n\n# Another Part Title\n\nThis is [link](http://example.net/) text.", edition.whole_body
     assert_equal edition.whole_body, new_edition.whole_body
   end
 
@@ -397,14 +414,19 @@ class EditionTest < ActiveSupport::TestCase
       panopticon_id: @artefact.id,
       version_number: 1,
       overview: "I am a test overview",
+      title: "I am a title",
+      body: "I am a body",
     )
     new_edition = edition.build_clone GuideEdition
+    new_edition.save!
 
     assert_equal GuideEdition, new_edition.editionable.class
     assert_equal 2, new_edition.version_number
     assert_equal @artefact.id.to_s, new_edition.panopticon_id
     assert_equal "draft", new_edition.state
     assert_equal "I am a test overview", new_edition.overview
+    assert_equal "I am a title", new_edition.title
+    assert_equal "# Part One\n\nI am a body", new_edition.whole_body
   end
 
   test "knows the common fields of two edition subclasses" do
