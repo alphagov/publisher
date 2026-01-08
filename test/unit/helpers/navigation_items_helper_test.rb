@@ -66,6 +66,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
       should "include editor-only links when user is an editor" do
         assert_equal [
           { text: "My content", href: my_content_path, active: false },
+          { text: "Find content", href: find_content_path, active: false },
           { text: "2i queue", href: two_eye_queue_path, active: false },
           { text: "Add artefact", href: new_artefact_path, active: false },
           { text: "Sign out", href: "/auth/gds/sign_out" },
@@ -75,6 +76,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
       should "not include editor-only links when user is not an editor" do
         assert_equal [
           { text: "My content", href: my_content_path, active: false },
+          { text: "Find content", href: find_content_path, active: false },
           { text: "2i queue", href: two_eye_queue_path, active: false },
           { text: "Sign out", href: "/auth/gds/sign_out" },
         ], navigation_items(is_editor: false)
@@ -83,6 +85,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
       should "include user name link if user has name" do
         assert_equal [
           { text: "My content", href: my_content_path, active: false },
+          { text: "Find content", href: find_content_path, active: false },
           { text: "2i queue", href: two_eye_queue_path, active: false },
           { text: "Name", href: Plek.new.external_url_for("signon") },
           { text: "Sign out", href: "/auth/gds/sign_out" },
