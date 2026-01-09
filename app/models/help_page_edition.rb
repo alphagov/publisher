@@ -6,4 +6,8 @@ class HelpPageEdition < ApplicationRecord
   def whole_body
     body
   end
+
+  def slug_prefix
+    "help/"
+  end
 end

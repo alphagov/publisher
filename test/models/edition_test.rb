@@ -378,6 +378,54 @@ class EditionTest < ActiveSupport::TestCase
       assert_equal "# Part One\n\nI am a body", new_edition.whole_body
     end
 
+    should "add a 'done/' prefix to slugs when cloning into a CompletedTransactionEdition" do
+      edition = FactoryBot.create(:answer_edition, :published, slug: "test-slug")
+      new_edition = edition.build_clone CompletedTransactionEdition
+      assert_equal "done/test-slug", new_edition.slug
+    end
+
+    should "remove the 'done/' prefix when cloning from a CompletedTransactionEdition into another edition type" do
+      edition = FactoryBot.create(:completed_transaction_edition, :published, slug: "done/test-slug")
+      new_edition = edition.build_clone AnswerEdition
+      assert_equal "test-slug", new_edition.slug
+    end
+
+    should "not update the prefix when cloning a CompletedTransactionEdition into a CompletedTransactionEdition" do
+      edition = FactoryBot.create(:completed_transaction_edition, :published, slug: "done/test-slug")
+      new_edition = edition.build_clone
+      assert_equal "done/test-slug", new_edition.slug
+    end
+
+    should "add a 'help/' prefix to slugs when cloning into a HelpPageEdition" do
+      edition = FactoryBot.create(:answer_edition, :published, slug: "test-slug")
+      new_edition = edition.build_clone HelpPageEdition
+      assert_equal "help/test-slug", new_edition.slug
+    end
+
+    should "remove the 'help/' prefix when cloning from a HelpPageEdition into another edition type" do
+      edition = FactoryBot.create(:help_page_edition, :published, slug: "help/test-slug")
+      new_edition = edition.build_clone AnswerEdition
+      assert_equal "test-slug", new_edition.slug
+    end
+
+    should "not update the prefix when cloning a HelpPageEdition into a HelpPageEdition" do
+      edition = FactoryBot.create(:help_page_edition, :published, slug: "help/test-slug")
+      new_edition = edition.build_clone
+      assert_equal "help/test-slug", new_edition.slug
+    end
+
+    should "update the prefix when cloning a HelpPageEdition into a CompletedTransactionEdition" do
+      edition = FactoryBot.create(:help_page_edition, :published, slug: "help/test-slug")
+      new_edition = edition.build_clone CompletedTransactionEdition
+      assert_equal "done/test-slug", new_edition.slug
+    end
+
+    should "update the prefix when cloning a CompletedTransactionEdition into a HelpPageEdition" do
+      edition = FactoryBot.create(:completed_transaction_edition, :published, slug: "done/test-slug")
+      new_edition = edition.build_clone HelpPageEdition
+      assert_equal "help/test-slug", new_edition.slug
+    end
+
     should "create a clone with an empty list of actions" do
       edition = FactoryBot.create(:guide_edition, :published)
       new_edition = edition.build_clone

@@ -7,4 +7,8 @@ class CompletedTransactionEdition < ApplicationRecord
   def whole_body
     body
   end
+
+  def slug_prefix
+    "done/"
+  end
 end

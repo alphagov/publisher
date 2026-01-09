@@ -6,4 +6,8 @@ class PlaceEdition < ApplicationRecord
   def whole_body
     introduction
   end
+
+  def slug_prefix
+    ""
+  end
 end

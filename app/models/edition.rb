@@ -282,18 +282,16 @@ class Edition < ApplicationRecord
   end
 
   def build_clone(target_class = nil)
-    target_class_attributes = []
-    edition_attributes = []
     unless state == "published"
       raise "Cloning of non published edition not allowed"
     end
-
     unless can_create_new_edition?
       raise "Cloning of a published edition when an in-progress edition exists is not allowed"
     end
 
+    target_class_attributes = []
+    edition_attributes = []
     target_class ||= editionable.class
-
     fields_to_copy(target_class).each do |attr|
       attribute = []
       attribute << attr.to_sym
@@ -326,6 +324,10 @@ class Edition < ApplicationRecord
     if self.editionable.respond_to?(:copy_to)
       new_edition = self.editionable.copy_to(new_edition)
     end
+
+    new_edition.slug = new_edition.slug
+                                  &.delete_prefix(self.editionable.slug_prefix)
+                                  &.prepend(new_edition.editionable.slug_prefix)
 
     new_edition
   end

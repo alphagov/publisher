@@ -15,4 +15,8 @@ class GuideEdition < ApplicationRecord
   def safe_to_preview?
     super && parts.any? && parts.first.slug.present?
   end
+
+  def slug_prefix
+    ""
+  end
 end

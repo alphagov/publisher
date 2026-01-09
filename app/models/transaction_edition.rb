@@ -16,4 +16,8 @@ class TransactionEdition < ApplicationRecord
   def whole_body
     [link, introduction, more_information, alternate_methods].join("\n\n")
   end
+
+  def slug_prefix
+    ""
+  end
 end

@@ -25,6 +25,10 @@ class SimpleSmartAnswerEdition < ApplicationRecord
     parts.join("\n\n\n")
   end
 
+  def slug_prefix
+    ""
+  end
+
   def copy_to(new_edition)
     if new_edition.editionable.is_a?(SimpleSmartAnswerEdition)
       new_edition.editionable.nodes = nodes.map do |node|

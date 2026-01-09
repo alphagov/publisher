@@ -6,4 +6,8 @@ class AnswerEdition < ApplicationRecord
   def whole_body
     body
   end
+
+  def slug_prefix
+    ""
+  end
 end
