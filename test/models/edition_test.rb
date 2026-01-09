@@ -228,16 +228,16 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     # test cloning into different edition types
-    Edition.subclasses.permutation(2).each do |source_class, destination_class|
-      next if source_class.instance_of?(PopularLinksEdition.class) || destination_class.instance_of?(PopularLinksEdition.class)
+    Edition.delegated_types.map(&:constantize).permutation(2).each do |source_class, destination_class|
+      next if [source_class, destination_class].include?(PopularLinksEdition)
 
-      should "clone from a #{source_class} into a #{destination_class}" do
+      should "clone a #{source_class} into a #{destination_class}" do
         # Note that the new edition won't necessarily be valid - for example the
         # new type might have required fields that the old just doesn't have.
         # This is OK because when Publisher saves the clone, it already skips
         # validations. The user will then be required to populate those values
         # before they save the edition again.
-        source_edition = FactoryBot.create(:edition, :published, _type: source_class.to_s)
+        source_edition = FactoryBot.create(source_class.to_s.underscore.to_sym, :published)
 
         assert_nothing_raised do
           source_edition.build_clone(destination_class)
