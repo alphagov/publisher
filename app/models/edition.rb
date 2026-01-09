@@ -289,8 +289,7 @@ class Edition < ApplicationRecord
     end
 
     unless can_create_new_edition?
-      raise "Cloning of a published edition when an in-progress edition exists
-             is not allowed"
+      raise "Cloning of a published edition when an in-progress edition exists is not allowed"
     end
 
     target_class ||= editionable.class

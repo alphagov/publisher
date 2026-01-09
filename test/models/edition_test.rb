@@ -174,237 +174,226 @@ class EditionTest < ActiveSupport::TestCase
     assert edition.errors.key?(:reviewer)
   end
 
-  test "it should build a clone" do
-    edition = FactoryBot.create(
-      :guide_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-      overview: "I am a test overview",
-      in_beta: true,
-      owning_org_content_ids: %w[org-1],
-    )
-    clone_edition = edition.build_clone
-    assert_equal "I am a test overview", clone_edition.overview
-    assert_equal true, clone_edition.in_beta
-    assert_equal 2, clone_edition.version_number
-    assert_equal %w[org-1], clone_edition.owning_org_content_ids
-  end
+  context "#build_clone" do
+    should "clone common edition fields" do
+      edition = FactoryBot.create(
+        :edition,
+        :published,
+        overview: "I am a test overview",
+        title: "I am a test title",
+        in_beta: true,
+        owning_org_content_ids: %w[org-1],
+      )
+      clone_edition = edition.build_clone
 
-  test "cloning can only occur from a published edition" do
-    edition = FactoryBot.create(
-      :guide_edition,
-      panopticon_id: @artefact.id,
-      version_number: 1,
-    )
-    assert_raise(RuntimeError) do
-      edition.build_clone
+      assert_equal edition.editionable.class, clone_edition.editionable.class
+      assert_equal edition.panopticon_id, clone_edition.panopticon_id
+      assert_equal edition.overview, clone_edition.overview
+      assert_equal edition.title, clone_edition.title
+      assert_equal edition.in_beta, clone_edition.in_beta
+      assert_equal edition.slug, clone_edition.slug
+      assert_equal edition.owning_org_content_ids, clone_edition.owning_org_content_ids
     end
-  end
 
-  test "cloning can only occur from a published edition with no subsequent in progress siblings" do
-    edition = FactoryBot.create(
-      :guide_edition,
-      panopticon_id: @artefact.id,
-      state: "published",
-      version_number: 1,
-    )
+    should "should not copy the mongo_id" do
+      edition = FactoryBot.create(:guide_edition, :published, mongo_id: "12345mongo")
+      clone_edition = edition.build_clone
 
-    FactoryBot.create(
-      :guide_edition,
-      panopticon_id: @artefact.id,
-      state: "draft",
-      version_number: 2,
-    )
-
-    assert_raise(RuntimeError) do
-      edition.build_clone
+      assert_nil clone_edition.mongo_id
     end
-  end
 
-  test "cloning from an earlier edition should give you a safe version number" do
-    edition = FactoryBot.create(
-      :guide_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-    )
-    FactoryBot.create(
-      :guide_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 2,
-    )
+    should "increment the version number" do
+      edition = FactoryBot.create(:guide_edition, :published)
+      new_edition = edition.build_clone
+      assert_equal edition.version_number + 1, new_edition.version_number
+    end
 
-    clone1 = edition.build_clone
-    assert_equal 3, clone1.version_number
-  end
+    should "prevent cloning from a non-published edition" do
+      edition = FactoryBot.create(:guide_edition)
 
-  test "cloning an edition should not copy the mongo_id from the previous edition" do
-    edition = FactoryBot.create(
-      :guide_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-      title: "Dolly the sheep",
-      overview: "To be cloned",
-      in_beta: true,
-      owning_org_content_ids: %w[org-1],
-      mongo_id: "12345mongo",
-    )
-    clone_edition = edition.build_clone
+      error = assert_raise(RuntimeError) do
+        edition.build_clone
+      end
+      assert_equal "Cloning of non published edition not allowed", error.message
+    end
 
-    assert_nil clone_edition.mongo_id
-  end
+    should "prevent cloning from a published edition with a subsequent in-progress sibling" do
+      edition = FactoryBot.create(:guide_edition, :published)
+      FactoryBot.create(:guide_edition, panopticon_id: edition.panopticon_id)
 
-  # test cloning into different edition types
-  Edition.subclasses.permutation(2).each do |source_class, destination_class|
-    next if source_class.instance_of?(PopularLinksEdition.class) || destination_class.instance_of?(PopularLinksEdition.class)
+      error = assert_raise(RuntimeError) do
+        edition.build_clone
+      end
+      assert_equal "Cloning of a published edition when an in-progress edition exists is not allowed", error.message
+    end
 
-    test "it should be possible to clone from a #{source_class} to a #{destination_class}" do
-      # Note that the new edition won't necessarily be valid - for example the
-      # new type might have required fields that the old just doesn't have.
-      # This is OK because when Publisher saves the clone, it already skips
-      # validations. The user will then be required to populate those values
-      # before they save the edition again.
-      source_edition = FactoryBot.create(:edition, _type: source_class.to_s, state: "published")
+    # test cloning into different edition types
+    Edition.delegated_types.map(&:constantize).permutation(2).each do |source_class, destination_class|
+      next if [source_class, destination_class].include?(PopularLinksEdition)
 
-      assert_nothing_raised do
-        source_edition.build_clone(destination_class)
+      should "clone a #{source_class} into a #{destination_class}" do
+        # Note that the new edition won't necessarily be valid - for example the
+        # new type might have required fields that the old just doesn't have.
+        # This is OK because when Publisher saves the clone, it already skips
+        # validations. The user will then be required to populate those values
+        # before they save the edition again.
+        source_edition = FactoryBot.create(source_class.to_s.underscore.to_sym, :published)
+
+        assert_nothing_raised do
+          source_edition.build_clone(destination_class)
+        end
       end
     end
-  end
 
-  test "Cloning from GuideEdition into AnswerEdition" do
-    edition = FactoryBot.create(
-      :guide_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-      overview: "I am a test overview",
-      video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    )
-    new_edition = edition.build_clone AnswerEdition
+    should "clone from a GuideEdition into an AnswerEdition" do
+      edition = FactoryBot.create(
+        :guide_edition,
+        :published,
+        overview: "I am a test overview",
+        title: "I am a title",
+        video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      )
+      new_edition = edition.build_clone AnswerEdition
 
-    assert_equal AnswerEdition, new_edition.editionable.class
-    assert_equal 2, new_edition.version_number
-    assert_equal @artefact.id.to_s, new_edition.panopticon_id
-    assert_equal "draft", new_edition.state
-    assert_equal "I am a test overview", new_edition.overview
-    assert_equal edition.whole_body, new_edition.whole_body
-  end
+      assert_equal AnswerEdition, new_edition.editionable.class
+      assert_equal 2, new_edition.version_number
+      assert_equal edition.panopticon_id, new_edition.panopticon_id
+      assert_equal "draft", new_edition.state
+      assert_equal "I am a test overview", new_edition.overview
+      assert_equal "I am a title", new_edition.title
+      assert_equal edition.whole_body, new_edition.whole_body
+    end
 
-  test "Cloning from TransactionEdition into AnswerEdition" do
-    edition = FactoryBot.create(
-      :transaction_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-      overview: "I am a test overview",
-      more_information: "More information",
-      alternate_methods: "Alternate methods",
-    )
-    new_edition = edition.build_clone AnswerEdition
+    should "clone GuideEdition parts into an AnswerEdition" do
+      edition = FactoryBot.create(:guide_edition, :published)
+      edition.parts.build(title: "Some Part Title!", body: "This is some **version** text.", slug: "part-one")
+      edition.parts.build(title: "Another Part Title", body: "This is [link](http://example.net/) text.", slug: "part-two")
+      edition.save!
+      new_edition = edition.build_clone AnswerEdition
 
-    assert_equal AnswerEdition, new_edition.editionable.class
-    assert_equal 2, new_edition.version_number
-    assert_equal @artefact.id.to_s, new_edition.panopticon_id
-    assert_equal "draft", new_edition.state
-    assert_equal "I am a test overview", new_edition.overview
-    assert_equal edition.whole_body, new_edition.whole_body
-  end
+      assert_equal AnswerEdition, new_edition.editionable.class
+      assert_equal "# Some Part Title!\n\nThis is some **version** text.\n\n# Another Part Title\n\nThis is [link](http://example.net/) text.", edition.whole_body
+      assert_equal edition.whole_body, new_edition.whole_body
+    end
 
-  test "Cloning from SimpleSmartAnswerEdition into AnswerEdition" do
-    edition = FactoryBot.create(
-      :simple_smart_answer_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-      overview: "I am a test overview",
-    )
+    should "clone from a TransactionEdition into an AnswerEdition" do
+      edition = FactoryBot.create(
+        :transaction_edition,
+        :published,
+        overview: "I am a test overview",
+        more_information: "More information",
+        alternate_methods: "Alternate methods",
+      )
+      new_edition = edition.build_clone AnswerEdition
 
-    new_edition = edition.build_clone AnswerEdition
+      assert_equal AnswerEdition, new_edition.editionable.class
+      assert_equal 2, new_edition.version_number
+      assert_equal edition.panopticon_id, new_edition.panopticon_id
+      assert_equal "draft", new_edition.state
+      assert_equal "I am a test overview", new_edition.overview
+      assert_equal edition.whole_body, new_edition.whole_body
+    end
 
-    assert_equal AnswerEdition, new_edition.editionable.class
-    assert_equal 2, new_edition.version_number
-    assert_equal @artefact.id.to_s, new_edition.panopticon_id
-    assert_equal "draft", new_edition.state
-    assert_equal "I am a test overview", new_edition.overview
-    assert_equal edition.whole_body, new_edition.whole_body
-  end
+    should "clone from a SimpleSmartAnswerEdition into an AnswerEdition" do
+      edition = FactoryBot.create(:simple_smart_answer_edition, :published, overview: "I am a test overview")
 
-  test "Cloning from AnswerEdition into TransactionEdition" do
-    edition = FactoryBot.create(
-      :answer_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-      overview: "I am a test overview",
-      body: "Test body",
-    )
-    new_edition = edition.build_clone TransactionEdition
+      new_edition = edition.build_clone AnswerEdition
 
-    assert_equal TransactionEdition, new_edition.editionable.class
-    assert_equal 2, new_edition.version_number
-    assert_equal @artefact.id.to_s, new_edition.panopticon_id
-    assert_equal "draft", new_edition.state
-    assert_equal "I am a test overview", new_edition.overview
-    assert_equal "Test body", new_edition.more_information
-  end
+      assert_equal AnswerEdition, new_edition.editionable.class
+      assert_equal 2, new_edition.version_number
+      assert_equal edition.panopticon_id, new_edition.panopticon_id
+      assert_equal "draft", new_edition.state
+      assert_equal "I am a test overview", new_edition.overview
+      assert_equal edition.whole_body, new_edition.whole_body
+    end
 
-  test "Cloning from AnswerEdition into SimpleSmartAnswerEdition" do
-    edition = FactoryBot.create(
-      :answer_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-      overview: "I am a test overview",
-      body: "Test body",
-    )
-    new_edition = edition.build_clone SimpleSmartAnswerEdition
+    should "clone from an AnswerEdition into a TransactionEdition" do
+      edition = FactoryBot.create(
+        :answer_edition,
+        :published,
+        overview: "I am a test overview",
+        body: "Test body",
+      )
+      new_edition = edition.build_clone TransactionEdition
 
-    assert_equal SimpleSmartAnswerEdition, new_edition.editionable.class
-    assert_equal 2, new_edition.version_number
-    assert_equal @artefact.id.to_s, new_edition.panopticon_id
-    assert_equal "draft", new_edition.state
-    assert_equal "I am a test overview", new_edition.overview
-    assert_equal "Test body", new_edition.body
-  end
+      assert_equal TransactionEdition, new_edition.editionable.class
+      assert_equal 2, new_edition.version_number
+      assert_equal edition.panopticon_id, new_edition.panopticon_id
+      assert_equal "draft", new_edition.state
+      assert_equal "I am a test overview", new_edition.overview
+      assert_equal "Test body", new_edition.more_information
+    end
 
-  test "Cloning from GuideEdition into TransactionEdition" do
-    edition = FactoryBot.create(
-      :guide_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-      overview: "I am a test overview",
-      video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    )
-    new_edition = edition.build_clone TransactionEdition
+    should "clone from an AnswerEdition into a SimpleSmartAnswerEdition" do
+      edition = FactoryBot.create(
+        :answer_edition,
+        :published,
+        overview: "I am a test overview",
+        body: "Test body",
+      )
+      new_edition = edition.build_clone SimpleSmartAnswerEdition
 
-    assert_equal TransactionEdition, new_edition.editionable.class
-    assert_equal 2, new_edition.version_number
-    assert_equal @artefact.id.to_s, new_edition.panopticon_id
-    assert_equal "draft", new_edition.state
-    assert_equal "I am a test overview", new_edition.overview
-    assert_equal edition.whole_body, new_edition.more_information
-  end
+      assert_equal SimpleSmartAnswerEdition, new_edition.editionable.class
+      assert_equal 2, new_edition.version_number
+      assert_equal edition.panopticon_id, new_edition.panopticon_id
+      assert_equal "draft", new_edition.state
+      assert_equal "I am a test overview", new_edition.overview
+      assert_equal "Test body", new_edition.body
+    end
 
-  test "Cloning from AnswerEdition into GuideEdition" do
-    edition = FactoryBot.create(
-      :answer_edition,
-      state: "published",
-      panopticon_id: @artefact.id,
-      version_number: 1,
-      overview: "I am a test overview",
-    )
-    new_edition = edition.build_clone GuideEdition
+    should "clone from a GuideEdition into a TransactionEdition" do
+      edition = FactoryBot.create(
+        :guide_edition,
+        :published,
+        overview: "I am a test overview",
+        video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      )
+      new_edition = edition.build_clone TransactionEdition
 
-    assert_equal GuideEdition, new_edition.editionable.class
-    assert_equal 2, new_edition.version_number
-    assert_equal @artefact.id.to_s, new_edition.panopticon_id
-    assert_equal "draft", new_edition.state
-    assert_equal "I am a test overview", new_edition.overview
+      assert_equal TransactionEdition, new_edition.editionable.class
+      assert_equal 2, new_edition.version_number
+      assert_equal edition.panopticon_id, new_edition.panopticon_id
+      assert_equal "draft", new_edition.state
+      assert_equal "I am a test overview", new_edition.overview
+      assert_equal edition.whole_body, new_edition.more_information
+    end
+
+    should "clone from an AnswerEdition into a GuideEdition" do
+      edition = FactoryBot.create(
+        :answer_edition,
+        :published,
+        overview: "I am a test overview",
+        title: "I am a title",
+        body: "I am a body",
+      )
+      new_edition = edition.build_clone GuideEdition
+      new_edition.save!
+
+      assert_equal GuideEdition, new_edition.editionable.class
+      assert_equal 2, new_edition.version_number
+      assert_equal edition.panopticon_id, new_edition.panopticon_id
+      assert_equal "draft", new_edition.state
+      assert_equal "I am a test overview", new_edition.overview
+      assert_equal "I am a title", new_edition.title
+      assert_equal "# Part One\n\nI am a body", new_edition.whole_body
+    end
+
+    should "create a clone with an empty list of actions" do
+      edition = FactoryBot.create(:guide_edition, :published)
+      new_edition = edition.build_clone
+      assert_equal [], new_edition.actions
+    end
+
+    should "create a clone whose fields are independent of the original edition" do
+      edition = FactoryBot.create(:guide_edition_with_two_parts, :published)
+
+      new_edition = edition.build_clone
+      new_edition.parts.first.body = "Some other version text"
+
+      original_text = edition.parts.map(&:body).join(" ")
+      new_text = new_edition.parts.map(&:body).join(" ")
+      assert_not_equal original_text, new_text
+    end
   end
 
   test "knows the common fields of two edition subclasses" do
@@ -695,35 +684,6 @@ class EditionTest < ActiveSupport::TestCase
     assert_nil edition.assigned_to
   end
 
-  test "new edition should have an incremented version number" do
-    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
-    new_edition = edition.build_clone
-    assert_equal edition.version_number + 1, new_edition.version_number
-  end
-
-  test "new edition should have an empty list of actions" do
-    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
-    new_edition = edition.build_clone
-    assert_equal [], new_edition.actions
-  end
-
-  test "new editions should have the same text when created" do
-    edition = FactoryBot.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "published")
-    new_edition = edition.build_clone
-    original_text = edition.parts.map(&:body).join(" ")
-    new_text = new_edition.parts.map(&:body).join(" ")
-    assert_equal original_text, new_text
-  end
-
-  test "changing text in a new edition should not change text in old edition" do
-    edition = FactoryBot.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "published")
-    new_edition = edition.build_clone
-    new_edition.parts.first.body = "Some other version text"
-    original_text = edition.parts.map(&:body).join(" ")
-    new_text = new_edition.parts.map(&:body).join(" ")
-    assert_not_equal original_text, new_text
-  end
-
   test "a new guide has no published edition" do
     guide = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     assert_nil Edition.where(state: "published", panopticon_id: guide.panopticon_id).first
@@ -1001,23 +961,6 @@ class EditionTest < ActiveSupport::TestCase
         klass.new.whole_body
       end
     end
-  end
-
-  test "should convert a GuideEdition to an AnswerEdition" do
-    guide_edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
-    answer_edition = guide_edition.build_clone(AnswerEdition)
-
-    assert_equal guide_edition.whole_body, answer_edition.whole_body
-  end
-
-  test "should convert an AnswerEdition to a GuideEdition" do
-    answer_edition = template_published_answer
-    guide_edition = answer_edition.build_clone(GuideEdition)
-    guide_edition.save!
-
-    expected = "# Part One\n\n#{answer_edition.whole_body}"
-
-    assert_equal expected, guide_edition.whole_body
   end
 
   test "should not allow any changes to an edition with an archived artefact" do

@@ -400,8 +400,6 @@ FactoryBot.define do
   factory :local_transaction_edition, class: "Edition" do
     title { "New Title" }
     transient do
-      lgil_code { "" }
-      lgsl_code { "" }
       cta_text { "Find your local council" }
       introduction { "Test introduction" }
       more_information { "This is more information" }
@@ -418,18 +416,20 @@ FactoryBot.define do
     end
 
     panopticon_id do
-      a = build(:artefact)
+      a = create(:artefact)
       a.id if a
     end
+
+    lgsl_code do
+      local_service = create(:local_service)
+      local_service.lgsl_code
+    end
+    lgil_code { 1 }
 
     sequence(:version_number)
   end
 
   factory :create_local_transaction, class: "LocalTransactionEdition" do
-    lgsl_code do
-      local_service = FactoryBot.build(:local_service)
-      local_service.lgsl_code
-    end
   end
 
   factory :devolved_administration_availability, class: "DevolvedAdministrationAvailability" do
