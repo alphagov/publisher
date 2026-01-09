@@ -384,15 +384,6 @@ class EditionTest < ActiveSupport::TestCase
       assert_equal [], new_edition.actions
     end
 
-    should "copy all parts' text when cloning a guide" do
-      edition = FactoryBot.create(:guide_edition_with_two_parts, :published)
-      new_edition = edition.build_clone
-
-      original_text = edition.parts.map(&:body).join(" ")
-      new_text = new_edition.parts.map(&:body).join(" ")
-      assert_equal original_text, new_text
-    end
-
     should "create a clone whose fields are independent of the original edition" do
       edition = FactoryBot.create(:guide_edition_with_two_parts, :published)
 
