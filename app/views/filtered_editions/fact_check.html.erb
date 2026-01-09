@@ -1,0 +1,40 @@
+<% content_for :page_title, "Fact check" %>
+<% content_for :title, "Fact check" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full fact-check">
+    <%= render "govuk_publishing_components/components/tabs", {
+      panel_border: false,
+      tabs: [
+        {
+          id: "received",
+          label: "Returned",
+          content: render(partial: "fact_check_received_table", locals: { editions: @fact_check_received_editions }),
+          tab_data_attributes: {
+            ga4_event: {
+              event_name: "select_content",
+              type: "tabs",
+              text: "Returned",
+              index_section: 1,
+              index_section_count: 2,
+            },
+          },
+        },
+        {
+          id: "sent_out",
+          label: "Awaiting response",
+          content: render(partial: "fact_check_sent_out_table", locals: { editions: @fact_check_sent_editions }),
+          tab_data_attributes: {
+            ga4_event: {
+              event_name: "select_content",
+              type: "tabs",
+              text: "Awaiting response",
+              index_section: 2,
+              index_section_count: 2,
+            },
+          },
+        },
+      ],
+    } %>
+  </div>
+</div>
