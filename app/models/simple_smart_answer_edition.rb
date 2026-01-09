@@ -25,9 +25,9 @@ class SimpleSmartAnswerEdition < ApplicationRecord
     parts.join("\n\n\n")
   end
 
-  def copy_to(new_edition)
-    if new_edition.editionable.is_a?(SimpleSmartAnswerEdition)
-      new_edition.editionable.nodes = nodes.map do |node|
+  def copy_to(other)
+    if other.is_a?(SimpleSmartAnswerEdition)
+      other.nodes = nodes.map do |node|
         new_node = node.dup
         new_node.mongo_id = nil
         new_node.options = node.options.map do |option|
@@ -40,7 +40,6 @@ class SimpleSmartAnswerEdition < ApplicationRecord
         new_node
       end
     end
-    new_edition
   end
 
   # Workaround mongoid conflicting mods error

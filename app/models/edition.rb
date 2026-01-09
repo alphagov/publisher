@@ -324,7 +324,7 @@ class Edition < ApplicationRecord
     end
 
     if self.editionable.respond_to?(:copy_to)
-      new_edition = self.editionable.copy_to(new_edition)
+      self.editionable.copy_to(new_edition.editionable)
     end
 
     new_edition
