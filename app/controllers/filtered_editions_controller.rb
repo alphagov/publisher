@@ -17,4 +17,20 @@ class FilteredEditionsController < ApplicationController
 
     @welsh_editions, @english_editions = presenter.editions.partition { |edition| edition.artefact.welsh? }
   end
+
+  def find_content
+    filter_params_hash = filter_params.to_h
+    @presenter = FilteredEditionsPresenter.new(
+      current_user,
+      states_filter: Edition.state_names.excluding(:archived),
+      paginate: true,
+      page: filter_params_hash[:page],
+    )
+  end
+
+private
+
+  def filter_params
+    params.permit(:page)
+  end
 end
