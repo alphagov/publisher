@@ -121,7 +121,7 @@ class FilteredEditionsControllerTest < ActionController::TestCase
       assert_select "section.govuk-tabs__panel#welsh"
     end
 
-    should 'render publications that are in the "in_review" state' do
+    should "render publications that are in the 'in_review' state" do
       FactoryBot.create(:edition, :in_review, title: "English edition assigned to user", assigned_to: @user)
       FactoryBot.create(:edition, :in_review, title: "English edition assigned to other user", assigned_to: @other_user)
       FactoryBot.create(:edition, :in_review, :welsh, title: "Welsh edition assigned to user", assigned_to: @user)
@@ -294,6 +294,62 @@ class FilteredEditionsControllerTest < ActionController::TestCase
       assert_response :ok
       assert_select ".item-count", "#{FilteredEditionsPresenter::ITEMS_PER_PAGE + 1} items"
       assert_select "tbody tr.govuk-table__row", 1
+    end
+  end
+
+  context "#fact_check" do
+    should "render fact_check template" do
+      get :fact_check
+
+      assert_response :ok
+      assert_template "filtered_editions/fact_check"
+    end
+
+    should "render the 'Returned' and 'Awaiting response' tabs" do
+      get :fact_check
+
+      assert_response :ok
+      assert_select "section.govuk-tabs__panel#received"
+      assert_select "section.govuk-tabs__panel#sent_out"
+    end
+
+    should "render publications that are in the 'fact_check_received' state" do
+      FactoryBot.create(:edition, :fact_check_received, title: "Returned edition", assigned_to: @user, received_at: 1.day.ago)
+      FactoryBot.create(:edition, :fact_check_received, title: "Other User's edition", assigned_to: @other_user, received_at: 1.month.ago)
+
+      get :fact_check
+
+      assert_response :ok
+      assert_select "section.govuk-tabs__panel#received" do
+        assert_select "th.govuk-table__header a", "Returned edition"
+        assert_select "th.govuk-table__header a", "Other User's edition"
+      end
+    end
+
+    should "render publications that are in the 'fact_check' state" do
+      FactoryBot.create(:edition, :fact_check, title: "Awaiting response edition", assigned_to: @user, sent_out_at: 1.day.ago)
+      FactoryBot.create(:edition, :fact_check, title: "Other User's edition", assigned_to: @other_user, sent_out_at: 1.month.ago)
+
+      get :fact_check
+
+      assert_response :ok
+      assert_select "section.govuk-tabs__panel#sent_out" do
+        assert_select "th.govuk-table__header a", "Awaiting response edition"
+        assert_select "th.govuk-table__header a", "Other User's edition"
+      end
+    end
+
+    %i[draft amends_needed ready in_review scheduled_for_publishing archived published].each do |state|
+      should "not render publications that are in the #{state} state" do
+        FactoryBot.create(:edition, state, title: state.to_s, assigned_to: @user)
+
+        get :fact_check
+
+        assert_response :ok
+        assert_select "span.item-count", "0 items"
+        assert_not_select "tbody"
+        assert_not_select "th.govuk-table__header a", state.to_s
+      end
     end
   end
 end
