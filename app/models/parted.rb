@@ -11,18 +11,16 @@ module Parted
     klass.after_validation :merge_embedded_parts_errors
   end
 
-  def copy_to(new_edition)
+  def copy_to(other)
     # If the new edition is of the same type or another type that has parts,
     # copy over the parts from this edition
-    if new_edition.editionable.respond_to?(:parts)
-      new_edition.editionable.parts = parts.map do |part|
+    if other.respond_to?(:parts)
+      other.parts = parts.map do |part|
         part_copy = part.dup
         part_copy.mongo_id = nil
         part_copy
       end
     end
-
-    new_edition
   end
 
   def order_parts
