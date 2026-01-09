@@ -196,4 +196,53 @@ class PublicationsPageTest < IntegrationTest
       end
     end
   end
+
+  context "fact-check page" do
+    setup do
+      @returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Returned edition", assigned_to: @user, received_at: 1.day.ago)
+      @other_user_returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Other User's edition", assigned_to: @other_user, received_at: 1.month.ago)
+      @awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Awaiting response edition", assigned_to: @user, sent_out_at: 1.week.ago)
+      @other_user_awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Other User's edition", assigned_to: @other_user, sent_out_at: 1.month.ago)
+
+      visit "/fact-check"
+    end
+
+    should "display all publications in the 'fact_check_received' state" do
+      within find("section#received") do
+        within find(".govuk-table__row", text: "Returned edition") do
+          assert_link "Returned edition", href: edition_path(@returned_edition)
+          assert_link "View response", href: history_edition_path(@returned_edition, anchor: "edition-#{@returned_edition.history.first.version_number}")
+          assert_text "1 day ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Other User's edition") do
+          assert_link "Other User's edition", href: edition_path(@other_user_returned_edition)
+          assert_link "View response", href: history_edition_path(@other_user_returned_edition, anchor: "edition-#{@other_user_returned_edition.history.first.version_number}")
+          assert_text "1 month ago"
+          assert_text "Other User"
+          assert_text "Answer"
+        end
+      end
+    end
+
+    should 'display all publications in the "fact_check" state' do
+      within find("section#sent_out") do
+        within find(".govuk-table__row", text: "Awaiting response edition") do
+          assert_link "Awaiting response edition", href: edition_path(@awaiting_response_edition)
+          assert_text "7 days ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Other User's edition") do
+          assert_link "Other User's edition", href: edition_path(@other_user_awaiting_response_edition)
+          assert_text "1 month ago"
+          assert_text "Other User"
+          assert_text "Answer"
+        end
+      end
+    end
+  end
 end
