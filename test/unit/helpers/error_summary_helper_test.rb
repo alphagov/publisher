@@ -58,7 +58,7 @@ class ErrorSummaryHelperTest < ActionView::TestCase
 
   context "An Edition without nested fields" do
     should "For an Edition without nested fields, errors_to_display returns useful error messages and correct hrefs for invalid fields" do
-      invalid_edition = FactoryBot.build(:local_transaction_edition, title: "", panopticon_id: "Some_id", lgil_code: 1.11)
+      invalid_edition = FactoryBot.build(:local_transaction_edition, title: "", panopticon_id: "Some_id", lgsl_code: "", lgil_code: 1.11)
 
       invalid_edition.valid?
 
