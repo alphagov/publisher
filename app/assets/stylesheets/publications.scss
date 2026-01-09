@@ -61,6 +61,27 @@ $width: 40;
   }
 }
 
+.fact-check {
+  .item-count {
+    color: $govuk-secondary-text-colour;
+    font-size: 19px;
+    font-weight: normal;
+    margin-left: govuk-spacing(3);
+    vertical-align: middle;
+  }
+
+  thead tr {
+    // Title
+    :nth-child(1) {
+      width: 40%;
+    }
+    // Response/Sent out
+    :nth-child(2) {
+      width: 20%;
+    }
+  }
+}
+
 .my-content {
   thead tr {
     // Title

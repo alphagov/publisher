@@ -9,6 +9,23 @@ class FilteredEditionsController < ApplicationController
     )
   end
 
+  def fact_check
+    presenter = FilteredEditionsPresenter.new(
+      current_user,
+      states_filter: %i[fact_check_received fact_check],
+    )
+
+    @fact_check_received_editions = presenter.editions
+                                             .select { it.state == "fact_check_received" }
+                                             .sort_by { it.most_recent_action { it.request_type == "receive_fact_check" }.created_at }
+                                             .reverse!
+
+    @fact_check_sent_editions = presenter.editions
+                                         .select { it.state == "fact_check" }
+                                         .sort_by(&:last_fact_checked_at)
+                                         .reverse!
+  end
+
   def two_eye_queue
     presenter = FilteredEditionsPresenter.new(
       current_user,

@@ -16,10 +16,12 @@
           "toggle-show-text": "Show earlier messages",
           "toggle-hide-text": "Hide earlier messages",
         },
+        anchor_navigation: true,
         items: @resource.history.map do |edition|
           {
             heading: {
               text: "Edition #{edition.version_number}",
+              id: "edition-#{edition.version_number}",
             },
             content: {
               html: (render "editions/secondary_nav_tabs/history_edition_item", {

@@ -67,6 +67,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
         assert_equal [
           { text: "My content", href: my_content_path, active: false },
           { text: "2i queue", href: two_eye_queue_path, active: false },
+          { text: "Fact check", href: fact_check_path, active: false },
           { text: "Add artefact", href: new_artefact_path, active: false },
           { text: "Sign out", href: "/auth/gds/sign_out" },
         ], navigation_items(is_editor: true)
@@ -76,6 +77,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
         assert_equal [
           { text: "My content", href: my_content_path, active: false },
           { text: "2i queue", href: two_eye_queue_path, active: false },
+          { text: "Fact check", href: fact_check_path, active: false },
           { text: "Sign out", href: "/auth/gds/sign_out" },
         ], navigation_items(is_editor: false)
       end
@@ -84,6 +86,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
         assert_equal [
           { text: "My content", href: my_content_path, active: false },
           { text: "2i queue", href: two_eye_queue_path, active: false },
+          { text: "Fact check", href: fact_check_path, active: false },
           { text: "Name", href: Plek.new.external_url_for("signon") },
           { text: "Sign out", href: "/auth/gds/sign_out" },
         ], navigation_items(is_editor: false, user_name: "Name")
@@ -93,6 +96,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
         paths = [
           my_content_path,
           two_eye_queue_path,
+          fact_check_path,
           new_artefact_path,
         ]
 
