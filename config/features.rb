@@ -10,7 +10,7 @@ Flipflop.configure do
   end
 
   feature :design_system_edit_phase_3a,
-          default: false,
+          default: true,
           description: "Update the publications edit page for Guide content type to use the GOV.UK Design System"
 
   feature :design_system_edit_phase_3b,
