@@ -136,7 +136,7 @@ class PublicationsPageTest < IntegrationTest
       visit "/2i-queue"
     end
 
-    should 'display all English publications in the "in_review" state' do
+    should "display all English publications in the 'in_review' state" do
       within find("section#english") do
         within find(".govuk-table__row", text: "Claimed edition") do
           assert_link "Claimed edition", href: edition_path(@claimed_edition)
@@ -161,7 +161,7 @@ class PublicationsPageTest < IntegrationTest
       end
     end
 
-    should 'display all Welsh publications in the "in_review" state' do
+    should "display all Welsh publications in the 'in_review' state" do
       within find("section#welsh") do
         within find(".govuk-table__row", text: "Welsh edition") do
           assert_link "Welsh edition", href: edition_path(@welsh_edition)
@@ -316,7 +316,7 @@ class PublicationsPageTest < IntegrationTest
       end
     end
 
-    should 'display all publications in the "fact_check" state' do
+    should "display all publications in the 'fact_check' state" do
       within find("section#sent_out") do
         within find(".govuk-table__row", text: "Awaiting response edition") do
           assert_link "Awaiting response edition", href: edition_path(@awaiting_response_edition)

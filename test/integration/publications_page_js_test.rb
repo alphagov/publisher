@@ -25,7 +25,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
         assert_selector("caption", text: "English 3 items")
       end
 
-      should 'display all English publications in the "in_review" state' do
+      should "display all English publications in the 'in_review' state" do
         within find(".govuk-table__row", text: "Claimed edition") do
           assert_link "Claimed edition", href: edition_path(@claimed_edition)
           assert_text "Answer"
@@ -94,7 +94,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
         assert_selector("caption", text: "Welsh 3 items")
       end
 
-      should 'display all Welsh publications in the "in_review" state' do
+      should "display all Welsh publications in the 'in_review' state" do
         within find(".govuk-table__row", text: "Claimed edition") do
           assert_link "Claimed edition", href: edition_path(@claimed_edition)
           assert_text "Answer"
@@ -164,7 +164,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
         assert_selector("caption", text: "Returned 3 items")
       end
 
-      should 'display all publications in the "fact_check_received" state' do
+      should "display all publications in the 'fact_check_received' state" do
         within find(".govuk-table__row", text: "Returned edition") do
           assert_link "Returned edition", href: edition_path(@returned_edition)
           assert_link "View response", href: history_edition_path(@returned_edition, anchor: "edition-#{@returned_edition.history.first.version_number}")
@@ -190,7 +190,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
         end
       end
 
-      should 'not display publications in the "fact_check" state' do
+      should "not display publications in the 'fact_check' state" do
         assert_no_link "Awaiting response edition", href: edition_path(@awaiting_response_edition)
       end
 
@@ -226,7 +226,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
         assert_selector("caption", text: "Awaiting response 3 items")
       end
 
-      should 'display all publications in the "fact_check" state' do
+      should "display all publications in the 'fact_check' state" do
         within find(".govuk-table__row", text: "Awaiting response edition") do
           assert_link "Awaiting response edition", href: edition_path(@awaiting_response_edition)
           assert_text "1 day ago"
@@ -249,7 +249,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
         end
       end
 
-      should 'not display publications in the "fact_check_received" state' do
+      should "not display publications in the 'fact_check_received' state" do
         assert_no_link "Returned edition", href: edition_path(@returned_edition)
       end
 

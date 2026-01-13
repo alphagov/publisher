@@ -142,7 +142,7 @@ class FilteredEditionsControllerTest < ActionController::TestCase
     end
 
     %i[draft amends_needed ready fact_check fact_check_received scheduled_for_publishing archived published].each do |state|
-      should "not render publications that are in the #{state} state" do
+      should "not render publications that are in the '#{state}' state" do
         FactoryBot.create(:edition, state, title: state.to_s, assigned_to: @user)
 
         get :two_eye_queue
@@ -340,7 +340,7 @@ class FilteredEditionsControllerTest < ActionController::TestCase
     end
 
     %i[draft amends_needed ready in_review scheduled_for_publishing archived published].each do |state|
-      should "not render publications that are in the #{state} state" do
+      should "not render publications that are in the '#{state}' state" do
         FactoryBot.create(:edition, state, title: state.to_s, assigned_to: @user)
 
         get :fact_check
