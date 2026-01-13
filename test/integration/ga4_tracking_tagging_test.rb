@@ -76,7 +76,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # "Yes, remove the breadcrumb" selected
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
-      assert_equal "Are you sure you want to remove the breadcumb?", event_data[0]["section"]
+      assert_equal "Are you sure you want to remove the breadcrumb?", event_data[0]["section"]
       assert_equal "Yes, remove the breadcrumb", event_data[0]["text"]
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "1", event_data[0]["index"]["index_section_count"]
@@ -84,7 +84,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # "Yes, remove the breadcrumb" deselected, "No, keep the breadcrumb" selected
       assert_equal "select", event_data[1]["action"]
       assert_equal "select_content", event_data[1]["event_name"]
-      assert_equal "Are you sure you want to remove the breadcumb?", event_data[1]["section"]
+      assert_equal "Are you sure you want to remove the breadcrumb?", event_data[1]["section"]
       assert_equal "No, keep the breadcrumb", event_data[1]["text"]
       assert_equal "1", event_data[1]["index"]["index_section"]
       assert_equal "1", event_data[1]["index"]["index_section_count"]
@@ -92,8 +92,8 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # Form submitted with "No, keep the breadcrumb" selected
       assert_equal "Save", event_data[2]["action"]
       assert_equal "form_response", event_data[2]["event_name"]
-      assert_equal "Are you sure you want to remove the breadcumb?", event_data[2]["section"]
-      assert_equal "{\"Are you sure you want to remove the breadcumb?\":\"No, keep the breadcrumb\"}", event_data[2]["text"]
+      assert_equal "Are you sure you want to remove the breadcrumb?", event_data[2]["section"]
+      assert_equal "{\"Are you sure you want to remove the breadcrumb?\":\"No, keep the breadcrumb\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]
     end
