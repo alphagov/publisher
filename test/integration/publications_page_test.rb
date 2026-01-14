@@ -129,8 +129,13 @@ class PublicationsPageTest < IntegrationTest
   context "2i-queue page" do
     setup do
       @claimed_edition = FactoryBot.create(:answer_edition, :in_review, title: "Claimed edition", assigned_to: @user, review_requested_at: 1.day.ago, reviewer: @other_user)
-      @unclaimed_edition = FactoryBot.create(:answer_edition, :in_review, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 1.month.ago)
-      @other_user_edition = FactoryBot.create(:guide_edition, :in_review, title: "Other User's edition (English)", assigned_to: @other_user, review_requested_at: 1.week.ago)
+      @unclaimed_edition = FactoryBot.create(:guide_edition, :in_review, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 1.month.ago)
+      @other_user_edition = FactoryBot.create(:answer_edition,
+                                              :in_review,
+                                              title: "Other User's edition (English)",
+                                              assigned_to: @other_user,
+                                              review_requested_at: 1.week.ago,
+                                              actions: [FactoryBot.create(:action, request_type: Action::REQUEST_REVIEW)])
       @welsh_edition = FactoryBot.create(:answer_edition, :in_review, :welsh, title: "Welsh edition", assigned_to: @user, review_requested_at: 1.day.ago, reviewer: @other_user)
       @other_user_welsh_edition = FactoryBot.create(:answer_edition, :in_review, :welsh, title: "Other User's edition (Welsh)", assigned_to: @user, review_requested_at: 1.week.ago)
       @important_note = FactoryBot.create(:action, comment: "This is an important note", edition: @claimed_edition)
@@ -148,14 +153,14 @@ class PublicationsPageTest < IntegrationTest
 
         within find(".govuk-table__row", text: "Unclaimed edition") do
           assert_link "Unclaimed edition", href: edition_path(@unclaimed_edition)
-          assert_text "Answer"
+          assert_text "Guide"
           assert_text "Stub User"
           assert_text "1 month"
         end
 
         within find(".govuk-table__row", text: "Other User's edition (English)") do
-          assert_link "Other User's edition", href: edition_path(@other_user_edition)
-          assert_text "Guide"
+          assert_link "Other User's edition (English)", href: edition_path(@other_user_edition)
+          assert_text "Answer"
           assert_text "Other User"
           assert_text "7 days"
         end
@@ -172,7 +177,7 @@ class PublicationsPageTest < IntegrationTest
         end
 
         within find(".govuk-table__row", text: "Other User's edition (Welsh)") do
-          assert_link "Other User's edition", href: edition_path(@other_user_welsh_edition)
+          assert_link "Other User's edition (Welsh)", href: edition_path(@other_user_welsh_edition)
           assert_text "Answer"
           assert_text "Stub User"
           assert_text "7 days"
@@ -229,6 +234,18 @@ class PublicationsPageTest < IntegrationTest
     should "display claimed editions assigned to other users with the 'Claim 2i' button" do
       within find(".govuk-table__row", text: "Other User's edition (English)") do
         assert_button "Claim 2i"
+      end
+    end
+
+    should "allow user to claim an edition via the 'Claim 2i' button" do
+      within find(".govuk-table__row", text: "Other User's edition (English)") do
+        click_button "Claim 2i"
+      end
+
+      assert_current_path edition_path(@other_user_edition)
+      assert_text "You are the reviewer of this answer."
+      within find(".govuk-summary-list__row", text: "2i reviewer") do
+        assert_selector(".govuk-summary-list__value", text: @user.name)
       end
     end
   end
