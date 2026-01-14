@@ -28,6 +28,7 @@ module NavigationItemsHelper
       { text: "My content", href: my_content_path, active: path.end_with?(my_content_path) },
       { text: "Find content", href: find_content_path, active: path.end_with?(find_content_path) },
       { text: "2i queue", href: two_eye_queue_path, active: path.end_with?(two_eye_queue_path) },
+      { text: "Fact check", href: fact_check_path, active: path.end_with?(fact_check_path) },
     ]
 
     if is_editor

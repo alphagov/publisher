@@ -136,7 +136,7 @@ class PublicationsPageTest < IntegrationTest
       visit "/2i-queue"
     end
 
-    should 'display all English publications in the "in_review" state' do
+    should "display all English publications in the 'in_review' state" do
       within find("section#english") do
         within find(".govuk-table__row", text: "Claimed edition") do
           assert_link "Claimed edition", href: edition_path(@claimed_edition)
@@ -161,7 +161,7 @@ class PublicationsPageTest < IntegrationTest
       end
     end
 
-    should 'display all Welsh publications in the "in_review" state' do
+    should "display all Welsh publications in the 'in_review' state" do
       within find("section#welsh") do
         within find(".govuk-table__row", text: "Welsh edition") do
           assert_link "Welsh edition", href: edition_path(@welsh_edition)
@@ -257,6 +257,104 @@ class PublicationsPageTest < IntegrationTest
       visit find_content_path
 
       assert_no_link "Archived edition"
+    end
+  end
+
+  context "fact-check page" do
+    setup do
+      @returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Returned edition", assigned_to: @user, received_at: 1.day.ago)
+      @other_user_returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Other User's edition", assigned_to: @other_user, received_at: 1.month.ago)
+      @recent_returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Recent returned edition", assigned_to: @user, received_at: 1.hour.ago)
+      @awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Awaiting response edition", assigned_to: @user, sent_out_at: 1.week.ago)
+      @other_user_awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Other User's edition", assigned_to: @other_user, sent_out_at: 1.month.ago)
+      @recent_awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Recent awaiting response edition", assigned_to: @user, sent_out_at: 1.hour.ago)
+
+      visit "/fact-check"
+    end
+
+    should "display all publications in the 'fact_check_received' state" do
+      within find("section#received") do
+        within find(".govuk-table__row", text: "Returned edition") do
+          assert_link "Returned edition", href: edition_path(@returned_edition)
+          assert_link "View response", href: history_edition_path(@returned_edition, anchor: "edition-#{@returned_edition.history.first.version_number}")
+          assert_text "1 day ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Other User's edition") do
+          assert_link "Other User's edition", href: edition_path(@other_user_returned_edition)
+          assert_link "View response", href: history_edition_path(@other_user_returned_edition, anchor: "edition-#{@other_user_returned_edition.history.first.version_number}")
+          assert_text "1 month ago"
+          assert_text "Other User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Recent returned edition") do
+          assert_link "Recent returned edition", href: edition_path(@recent_returned_edition)
+          assert_link "View response", href: history_edition_path(@recent_returned_edition, anchor: "edition-#{@recent_returned_edition.history.first.version_number}")
+          assert_text "1 hour ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+      end
+    end
+
+    should "display 'fact_check_received' publications ordered by the 'receive_fact_check' action creation date (most recent first)" do
+      within find("section#received") do
+        within find_all(".govuk-table__row")[1] do
+          assert_link "Recent returned edition", href: edition_path(@recent_returned_edition)
+        end
+
+        within find_all(".govuk-table__row")[2] do
+          assert_link "Returned edition", href: edition_path(@returned_edition)
+        end
+
+        within find_all(".govuk-table__row")[3] do
+          assert_link "Other User's edition", href: edition_path(@other_user_returned_edition)
+        end
+      end
+    end
+
+    should "display all publications in the 'fact_check' state" do
+      within find("section#sent_out") do
+        within find(".govuk-table__row", text: "Awaiting response edition") do
+          assert_link "Awaiting response edition", href: edition_path(@awaiting_response_edition)
+          assert_text "7 days ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Other User's edition") do
+          assert_link "Other User's edition", href: edition_path(@other_user_awaiting_response_edition)
+          assert_text "1 month ago"
+          assert_text "Other User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Recent awaiting response edition") do
+          assert_link "Recent awaiting response edition", href: edition_path(@recent_awaiting_response_edition)
+          assert_text "1 hour ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+      end
+    end
+
+    should "display 'fact_check' publications ordered by 'last_fact_checked_at' (most recent first)" do
+      within find("section#sent_out") do
+        within find_all(".govuk-table__row")[1] do
+          assert_link "Recent awaiting response edition", href: edition_path(@recent_awaiting_response_edition)
+        end
+
+        within find_all(".govuk-table__row")[2] do
+          assert_link "Awaiting response edition", href: edition_path(@awaiting_response_edition)
+        end
+
+        within find_all(".govuk-table__row")[3] do
+          assert_link "Other User's edition", href: edition_path(@other_user_awaiting_response_edition)
+        end
+      end
     end
   end
 end
