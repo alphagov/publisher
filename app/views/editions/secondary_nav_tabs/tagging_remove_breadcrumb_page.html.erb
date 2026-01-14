@@ -1,7 +1,7 @@
 <% @edition = @resource %>
 <% content_for :title_context, @edition.title %>
-<% content_for :title, "Are you sure you want to remove the breadcumb?" %>
-<% content_for :page_title, "Are you sure you want to remove the breadcumb?" %>
+<% content_for :title, "Are you sure you want to remove the breadcrumb?" %>
+<% content_for :page_title, "Are you sure you want to remove the breadcrumb?" %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -25,7 +25,7 @@
 
       <%= render "govuk_publishing_components/components/radio", {
         name: "#{f.object_name}[remove_parent]",
-        heading: "Are you sure you want to remove the breadcumb?",
+        heading: "Are you sure you want to remove the breadcrumb?",
         heading_level: 0,
         visually_hidden_heading: true,
         id: "remove_parent",

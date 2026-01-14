@@ -404,7 +404,7 @@ class EditionTaggingTest < IntegrationTest
 
       should "show the remove breadcrumb page " do
         assert page.has_text?(@draft_edition.title)
-        assert page.has_text?("Are you sure you want to remove the breadcumb?")
+        assert page.has_text?("Are you sure you want to remove the breadcrumb?")
         assert page.has_text?("Breadcrumbs are displayed at the top of the page and help users to navigate. There may be some situations where you do not need a breadcrumb to display (for example, on Welsh translation pages).")
         assert page.has_unchecked_field?("Yes, remove the breadcrumb")
         assert page.has_unchecked_field?("No, keep the breadcrumb")
