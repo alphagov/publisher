@@ -205,4 +205,95 @@ class FilteredEditionsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "#find_content" do
+    should "render find_content template" do
+      get :find_content
+
+      assert_response :ok
+      assert_template "filtered_editions/find_content"
+    end
+
+    should "display publications data on find content page" do
+      FactoryBot.create(:edition, :draft, title: "Draft edition", assigned_to: @user)
+      FactoryBot.create(:edition, :amends_needed, title: "Amends needed edition", assigned_to: @user)
+      FactoryBot.create(:edition, :in_review, title: "In review edition", assigned_to: @user)
+      FactoryBot.create(:edition, :ready, title: "Ready edition", assigned_to: @other_user)
+      FactoryBot.create(:edition, :fact_check, title: "Fact check edition", assigned_to: @user)
+      FactoryBot.create(:edition, :fact_check_received, title: "Fact check received edition", assigned_to: @user)
+      FactoryBot.create(:edition, :scheduled_for_publishing, title: "Scheduled for publishing edition", assigned_to: @other_user)
+
+      get :find_content
+
+      assert_response :ok
+      assert_select "tbody tr.govuk-table__row", count: 7
+      assert_select "th.govuk-table__header a", "Draft edition"
+      assert_select "th.govuk-table__header a", "Amends needed edition"
+      assert_select "th.govuk-table__header a", "In review edition"
+      assert_select "th.govuk-table__header a", "Ready edition"
+      assert_select "th.govuk-table__header a", "Fact check edition"
+      assert_select "th.govuk-table__header a", "Fact check received edition"
+      assert_select "th.govuk-table__header a", "Scheduled for publishing edition"
+    end
+
+    should "not display publications that are in an archived state" do
+      FactoryBot.create(:edition, :archived, title: "Archived edition", assigned_to: @user)
+
+      get :find_content
+
+      assert_response :ok
+      assert_not_select "th.govuk-table__header a", "Archived edition"
+    end
+
+    should "display the correct hint text with title" do
+      FactoryBot.create(:edition, :draft, title: "Draft edition", assigned_to: @user)
+
+      get :find_content
+
+      assert_response :ok
+      assert_select "th.govuk-table__header a", "Draft edition"
+      assert_select "th.govuk-table__header .govuk-hint", "/slug-1"
+    end
+
+    should "display the total count of editions" do
+      FactoryBot.create(:edition, :draft, title: "Draft edition1", assigned_to: @user)
+      FactoryBot.create(:edition, :draft, title: "Draft edition2", assigned_to: @user)
+
+      get :find_content
+
+      assert_response :ok
+      assert_select ".item-count", "2 items"
+    end
+
+    should "display the total count as zero when no edition is present" do
+      get :find_content
+
+      assert_response :ok
+      assert_select ".govuk-body", "0 items"
+    end
+
+    should "show the first page of find content when no page is specified" do
+      FactoryBot.create_list(
+        :edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, assigned_to: @user
+      )
+
+      get :find_content
+
+      assert_response :ok
+      assert_select ".item-count", "#{FilteredEditionsPresenter::ITEMS_PER_PAGE + 1} items"
+      assert_select "th.govuk-table__header a", FilteredEditionsPresenter::ITEMS_PER_PAGE
+    end
+
+    should "show the specified page of find content" do
+      FactoryBot.create_list(
+        :edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, assigned_to: @user
+      )
+
+      get :find_content, params: { page: 2 }
+
+      assert_response :ok
+      assert_select ".item-count", "#{FilteredEditionsPresenter::ITEMS_PER_PAGE + 1} items"
+      assert_select "tbody tr.govuk-table__row", 1
+    end
+  end
 end
