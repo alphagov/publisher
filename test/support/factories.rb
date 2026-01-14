@@ -241,7 +241,7 @@ FactoryBot.define do
     end
 
     panopticon_id do
-      a = create(:artefact)
+      a = create(:artefact, kind: "answer")
       a.id if a
     end
   end
@@ -263,7 +263,7 @@ FactoryBot.define do
     end
 
     panopticon_id do
-      a = create(:artefact)
+      a = create(:artefact, kind: "help_page", slug:)
       a.id
     end
 
@@ -275,7 +275,7 @@ FactoryBot.define do
   end
 
   factory :completed_transaction_edition, class: "Edition" do
-    sequence(:slug) { |n| "help/slug-#{n}" }
+    sequence(:slug) { |n| "done/slug-#{n}" }
     sequence(:version_number)
 
     title { "New Title" }
@@ -289,7 +289,7 @@ FactoryBot.define do
     end
 
     panopticon_id do
-      a = create(:artefact)
+      a = create(:artefact, kind: "completed_transaction", slug:)
       a.id
     end
   end
@@ -422,7 +422,7 @@ FactoryBot.define do
     end
 
     panopticon_id do
-      a = create(:artefact)
+      a = create(:artefact, kind: "local_transaction")
       a.id if a
     end
 
