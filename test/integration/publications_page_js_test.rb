@@ -12,7 +12,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
     context "English tab" do
       setup do
         @claimed_edition = FactoryBot.create(:answer_edition, :in_review, title: "Claimed edition", assigned_to: @user, review_requested_at: 1.day.ago, reviewer: @other_user)
-        @unclaimed_edition = FactoryBot.create(:answer_edition, :in_review, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 1.day.ago)
+        @unclaimed_edition = FactoryBot.create(:answer_edition, :in_review, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 1.month.ago)
         @other_user_edition = FactoryBot.create(:guide_edition, :in_review, title: "Other User's edition", assigned_to: @other_user, review_requested_at: 1.week.ago)
         @welsh_edition = FactoryBot.create(:answer_edition, :in_review, :welsh, title: "Welsh edition", assigned_to: @user, review_requested_at: 1.day.ago, reviewer: @other_user)
         @important_note = FactoryBot.create(:action, comment: "This is an important note", edition: @claimed_edition)
@@ -37,7 +37,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
           assert_link "Unclaimed edition", href: edition_path(@unclaimed_edition)
           assert_text "Answer"
           assert_text "Stub User"
-          assert_text "1 day"
+          assert_text "1 month"
         end
 
         within find(".govuk-table__row", text: "Other User's edition") do
@@ -45,6 +45,20 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
           assert_text "Guide"
           assert_text "Other User"
           assert_text "7 days"
+        end
+      end
+
+      should "display publications ordered by 'review_requested_at' (earliest first)" do
+        within find_all(".govuk-table__row")[1] do
+          assert_link "Unclaimed edition", href: edition_path(@unclaimed_edition)
+        end
+
+        within find_all(".govuk-table__row")[2] do
+          assert_link "Other User's edition", href: edition_path(@other_user_edition)
+        end
+
+        within find_all(".govuk-table__row")[3] do
+          assert_link "Claimed edition", href: edition_path(@claimed_edition)
         end
       end
 
@@ -80,7 +94,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
     context "Welsh tab" do
       setup do
         @claimed_edition = FactoryBot.create(:answer_edition, :in_review, :welsh, title: "Claimed edition", assigned_to: @user, review_requested_at: 1.day.ago, reviewer: @other_user)
-        @unclaimed_edition = FactoryBot.create(:answer_edition, :in_review, :welsh, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 1.day.ago)
+        @unclaimed_edition = FactoryBot.create(:answer_edition, :in_review, :welsh, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 1.month.ago)
         @other_user_edition = FactoryBot.create(:guide_edition, :in_review, :welsh, title: "Other User's edition", assigned_to: @other_user, review_requested_at: 1.week.ago)
         @english_edition = FactoryBot.create(:answer_edition, :in_review, title: "English edition", assigned_to: @user, review_requested_at: 1.day.ago, reviewer: @other_user)
         @important_note = FactoryBot.create(:action, comment: "This is an important note", edition: @claimed_edition)
@@ -106,7 +120,7 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
           assert_link "Unclaimed edition", href: edition_path(@unclaimed_edition)
           assert_text "Answer"
           assert_text "Stub User"
-          assert_text "1 day"
+          assert_text "1 month"
         end
 
         within find(".govuk-table__row", text: "Other User's edition") do
@@ -114,6 +128,20 @@ class PublicationsPageJSTest < JavascriptIntegrationTest
           assert_text "Guide"
           assert_text "Other User"
           assert_text "7 days"
+        end
+      end
+
+      should "display publications ordered by 'review_requested_at' (earliest first)" do
+        within find_all(".govuk-table__row")[1] do
+          assert_link "Unclaimed edition", href: edition_path(@unclaimed_edition)
+        end
+
+        within find_all(".govuk-table__row")[2] do
+          assert_link "Other User's edition", href: edition_path(@other_user_edition)
+        end
+
+        within find_all(".govuk-table__row")[3] do
+          assert_link "Claimed edition", href: edition_path(@claimed_edition)
         end
       end
 

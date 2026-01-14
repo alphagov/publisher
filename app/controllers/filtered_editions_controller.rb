@@ -32,7 +32,7 @@ class FilteredEditionsController < ApplicationController
       states_filter: %i[in_review],
     )
 
-    @welsh_editions, @english_editions = presenter.editions.partition { |edition| edition.artefact.welsh? }
+    @welsh_editions, @english_editions = presenter.editions.sort_by(&:review_requested_at).partition { |edition| edition.artefact.welsh? }
   end
 
   def find_content
