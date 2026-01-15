@@ -393,6 +393,21 @@ class EditDraftEditionTest < IntegrationTest
           end
         end
 
+        should "order guide chapter list by part order attribute" do
+          draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :draft)
+          draft_guide_edition_with_parts.parts.min_by(&:order).update!(order: 5)
+
+          visit edition_path(draft_guide_edition_with_parts)
+
+          within all(".govuk-summary-list__row")[3] do
+            assert_text "PART !!"
+          end
+
+          within all(".govuk-summary-list__row")[4] do
+            assert_text "PART !"
+          end
+        end
+
         should "update guide edition and show success message" do
           fill_in "edition[title]", with: "Changed Title"
           fill_in "edition[overview]", with: "Changed Meta tag description"

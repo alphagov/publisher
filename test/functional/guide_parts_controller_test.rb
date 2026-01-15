@@ -32,26 +32,101 @@ class GuidePartsControllerTest < ActionController::TestCase
       end
     end
 
-    context "when user has editor permissions and edition is published" do
+    context "when user has editor permissions" do
       setup do
-        @edition = FactoryBot.create(:guide_edition, :published)
         login_as_govuk_editor
       end
 
-      should "prevent a new chapter being added" do
-        post :create, params: {
-          edition_id: @edition.id,
-        }
+      context "when the edition is published" do
+        setup do
+          @edition = FactoryBot.create(:guide_edition, :published)
+        end
 
-        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+        should "prevent a new chapter being added" do
+          post :create, params: {
+            edition_id: @edition.id,
+          }
+
+          assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+        end
+
+        should "prevent the 'add new chapter' page from being displayed" do
+          get :new, params: {
+            edition_id: @edition.id,
+          }
+
+          assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+        end
       end
 
-      should "prevent the 'add new chapter' page from being displayed" do
-        get :new, params: {
-          edition_id: @edition.id,
-        }
+      context "when the edition is a draft" do
+        should "allow a new chapter to be added" do
+          edition = FactoryBot.create(:guide_edition, :draft)
 
-        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+          post :create, params: {
+            edition_id: edition.id,
+            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+            save: "save and summary",
+          }
+
+          assert_redirected_to edition_path(edition.id)
+          assert_equal "New chapter added successfully.", flash[:success]
+        end
+
+        should "create a part with the correct details when guide has no parts" do
+          edition = FactoryBot.create(:guide_edition, :draft)
+
+          post :create, params: {
+            edition_id: edition.id,
+            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+            save: "save and summary",
+          }
+
+          edition.reload
+          created_part = edition.parts.max_by(&:created_at)
+
+          assert_equal 1, edition.parts.count
+          assert_equal 1, created_part.order
+          assert_equal "test body", created_part.body
+          assert_equal "test-slug", created_part.slug
+          assert_equal "test title", created_part.title
+        end
+
+        should "create a part with the correct details when guide has parts" do
+          edition = FactoryBot.create(:guide_edition_with_two_parts, :draft)
+
+          post :create, params: {
+            edition_id: edition.id,
+            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+            save: "save and summary",
+          }
+
+          edition.reload
+          created_part = edition.parts.max_by(&:created_at)
+
+          assert_equal 3, edition.parts.count
+          assert_equal 3, created_part.order
+          assert_equal "test body", created_part.body
+          assert_equal "test-slug", created_part.slug
+          assert_equal "test title", created_part.title
+        end
+
+        should "create a part with the correct order number when the last order number is greater than the number of parts" do
+          edition = FactoryBot.create(:guide_edition_with_two_parts, :draft)
+          edition.parts.last.update!(order: 3)
+
+          post :create, params: {
+            edition_id: edition.id,
+            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+            save: "save and summary",
+          }
+
+          edition.reload
+          created_part = edition.parts.max_by(&:created_at)
+
+          assert_equal 3, edition.parts.count
+          assert_equal 3, created_part.order
+        end
       end
     end
   end
