@@ -2,7 +2,11 @@
 <% content_for :page_title, @edition.title %>
 <% content_for :title, @edition.title %>
 
-<%= render partial: "guide_parts/common_items", locals: { edition: @resource, reviewer: @reviewer } %>
+<%= render partial: "document_summary", locals: { edition: @edition, reviewer: @reviewer } %>
+
+<%= render partial: "/secondary_navigation" %>
+
+<%= render partial: "back_link", locals: { edition: @edition } %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
