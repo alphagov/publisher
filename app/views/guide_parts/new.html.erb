@@ -2,15 +2,15 @@
 <% content_for :page_title, @edition.title %>
 <% content_for :title, @edition.title %>
 
-<% unless @edition.errors.empty? %>
+<% if !@edition.errors.empty? || !@part.errors.empty? %>
   <% content_for :error_summary do %>
     <%= render("govuk_publishing_components/components/error_summary", {
       id: "error-summary",
       title: "There is a problem",
-      items: errors_to_display(@edition).map do |error_message, href|
+      items: @part.errors.map do |error|
         {
-          text: error_message,
-          href: "#{href}",
+          text: error.message,
+          href: "##{error.attribute.to_s}",
         }
       end,
     }) %>
@@ -32,14 +32,13 @@
 </div>
 
 <%= form_with url: edition_guide_parts_path(@edition), data: { module: "unsaved-changes-prompt" } do %>
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <%= render "govuk_publishing_components/components/input", {
         label: {
           text: "Title",
         },
-        id: "edition_parts_attributes_#{@edition.parts.find_index(@part) || @edition.parts.size}_title",
+        id: "title",
         name: "part[title]",
         value: @part.title,
         heading_size: "s",
@@ -50,13 +49,14 @@
         label: {
           text: "Slug",
         },
-        id: "edition_parts_attributes_#{@edition.parts.find_index(@part) || @edition.parts.size}_slug",
+        id: "slug",
         name: "part[slug]",
         value: @part.slug,
         heading_size: "s",
         hint: "For example, title-of-chapter (no spaces, apostrophes or acronyms)",
         error_items: errors_for(@part.errors, :slug, use_full_message: false),
       } %>
+
       <%= render "govuk_publishing_components/components/textarea", {
         label: {
           heading_size: "s",
