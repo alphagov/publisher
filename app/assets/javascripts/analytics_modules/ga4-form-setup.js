@@ -54,6 +54,11 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
 
     // If the form contains date-input components add ga4-form-section data-attributes
     var dateInputs = form.querySelectorAll('.govuk-date-input') || null
+    // TEST: if the for contains radio inputs add data-attributes to the containing fieldset
+    var radioInputs = form.querySelector('input[type="radio"]') || null
+
+    radioInputs.closest('fieldset').setAttribute('data-ga4-redact', true)
+    radioInputs.closest('fieldset').setAttribute('data-ga4-redact-permit', "none, 3")
 
     if (dateInputs) {
       Array.from(dateInputs).forEach(function (dateInput) {
