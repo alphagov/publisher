@@ -17,10 +17,7 @@ describe('GA4IndexSectionSetup', function () {
             <input type="radio" name="radio_1">
             <input type="radio" name="radio_1">
           </fieldset>
-          <div class="js-add-another__fieldset">
-            <fieldset id="input_5"></fieldset>
-          </div>
-          <div class="js-add-another__empty">
+          <div class="gem-c-add-another" id="input_5">
             <fieldset id="input_6"></fieldset>
           </div>
         </form>
@@ -60,10 +57,14 @@ describe('GA4IndexSectionSetup', function () {
       expect(JSON.parse(input4.dataset.ga4Index).index_section).toBe(4)
       expect(JSON.parse(input4.dataset.ga4Index).index_section_count).toBe(5)
 
-      // fieldset within "Add another" component
+      // "Add another" component
       var input5 = module.querySelector('#input_5')
       expect(JSON.parse(input5.dataset.ga4Index).index_section).toBe(5)
-      expect(JSON.parse(input4.dataset.ga4Index).index_section_count).toBe(5)
+      expect(JSON.parse(input5.dataset.ga4Index).index_section_count).toBe(5)
+
+      // fieldset within an "Add another" component
+      var input6 = module.querySelector('#input_6')
+      expect(input6.dataset.ga4Index).toBe(undefined)
    })
   })
 })
