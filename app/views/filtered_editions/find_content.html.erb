@@ -21,7 +21,7 @@
           [
             { text: link_to(edition.title, edit_edition_path(edition), class: "govuk-link govuk-link--no-visited-state") +
               (render("govuk_publishing_components/components/hint", { text: "/#{edition.slug}", margin_bottom: 0 }) ) },
-            { text: render("govuk_publishing_components/components/tag", { text: edition.state.humanize, colour: edition_status_tag_colour(edition) }) },
+            { text: render("govuk_publishing_components/components/tag", { text: edition.human_state_name, colour: edition_status_tag_colour(edition) }) },
             { text: "#{time_ago_in_words(edition.updated_at).capitalize} ago" },
             {
               text: edition.assignee,

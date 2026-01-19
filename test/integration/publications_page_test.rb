@@ -6,8 +6,8 @@ class PublicationsPageTest < IntegrationTest
   setup do
     @other_user = FactoryBot.create(:user, name: "Other User")
     login_as_govuk_editor
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_3b, true)
+    @test_strategy = Flipflop::FeatureSet.current.test!
+    @test_strategy.switch!(:design_system_edit_phase_3b, true)
   end
 
   context "my_content page" do
@@ -17,40 +17,48 @@ class PublicationsPageTest < IntegrationTest
       assert_current_path my_content_path
     end
 
-    should "display publications assigned to the current user" do
-      @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
-      @amends_needed_edition = FactoryBot.create(:guide_edition, :amends_needed, title: "Amends needed edition", updated_at: 2.days.ago, assigned_to: @user)
-      @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
-      @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @user)
+    [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
+      context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+        setup do
+          @test_strategy.switch!(:rename_edition_states, toggle_value)
+        end
 
-      visit my_content_path
+        should "display publications assigned to the current user" do
+          @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+          @amends_needed_edition = FactoryBot.create(:guide_edition, :amends_needed, title: "Amends needed edition", updated_at: 2.days.ago, assigned_to: @user)
+          @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
+          @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @user)
 
-      within find(".govuk-table__row", text: "Draft edition") do
-        assert_link "Draft edition", href: edition_path(@draft_edition)
-        assert_css ".govuk-tag--yellow", text: "Draft"
-        assert_text "1 day ago"
-        assert_text "Answer"
-      end
+          visit my_content_path
 
-      within find(".govuk-table__row", text: "Amends needed edition") do
-        assert_link "Amends needed edition", href: edition_path(@amends_needed_edition)
-        assert page.has_css?(".govuk-tag--red", text: "Amends needed")
-        assert_text "2 days ago"
-        assert_text "Guide"
-      end
+          within find(".govuk-table__row", text: "Draft edition") do
+            assert_link "Draft edition", href: edition_path(@draft_edition)
+            assert_css ".govuk-tag--yellow", text: "Draft"
+            assert_text "1 day ago"
+            assert_text "Answer"
+          end
 
-      within find(".govuk-table__row", text: "In review edition") do
-        assert_link "In review edition", href: edition_path(@in_review_edition)
-        assert page.has_css?(".govuk-tag--grey", text: "In review")
-        assert_text "3 days ago"
-        assert_text "Help page"
-      end
+          within find(".govuk-table__row", text: "Amends needed edition") do
+            assert_link "Amends needed edition", href: edition_path(@amends_needed_edition)
+            assert page.has_css?(".govuk-tag--red", text: "Amends needed")
+            assert_text "2 days ago"
+            assert_text "Guide"
+          end
 
-      within find(".govuk-table__row", text: "Ready edition") do
-        assert_link "Ready edition", href: edition_path(@ready_edition)
-        assert page.has_css?(".govuk-tag--green", text: "Ready")
-        assert_text "4 days ago"
-        assert_text "Transaction"
+          within find(".govuk-table__row", text: "In review edition") do
+            assert_link "In review edition", href: edition_path(@in_review_edition)
+            assert page.has_css?(".govuk-tag--grey", text: in_review_state_label)
+            assert_text "3 days ago"
+            assert_text "Help page"
+          end
+
+          within find(".govuk-table__row", text: "Ready edition") do
+            assert_link "Ready edition", href: edition_path(@ready_edition)
+            assert page.has_css?(".govuk-tag--green", text: "Ready")
+            assert_text "4 days ago"
+            assert_text "Transaction"
+          end
+        end
       end
     end
 
@@ -257,40 +265,45 @@ class PublicationsPageTest < IntegrationTest
       assert_current_path find_content_path
     end
 
-    should "display publications data for find content page" do
-      @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
-      @amends_needed_edition = FactoryBot.create(:guide_edition, :amends_needed, title: "Amends needed edition", updated_at: 2.days.ago, assigned_to: @other_user)
-      @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
-      @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+    [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
+      context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+        should "display publications data for find content page" do
+          @test_strategy.switch!(:rename_edition_states, toggle_value)
+          @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+          @amends_needed_edition = FactoryBot.create(:guide_edition, :amends_needed, title: "Amends needed edition", updated_at: 2.days.ago, assigned_to: @other_user)
+          @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
+          @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
 
-      visit find_content_path
+          visit find_content_path
 
-      within find(".govuk-table__row", text: "Draft edition") do
-        assert_link "Draft edition", href: edition_path(@draft_edition)
-        assert_css ".govuk-tag--yellow", text: "Draft"
-        assert_text "1 day ago"
-        assert_text "Answer"
-      end
+          within find(".govuk-table__row", text: "Draft edition") do
+            assert_link "Draft edition", href: edition_path(@draft_edition)
+            assert_css ".govuk-tag--yellow", text: "Draft"
+            assert_text "1 day ago"
+            assert_text "Answer"
+          end
 
-      within find(".govuk-table__row", text: "Amends needed edition") do
-        assert_link "Amends needed edition", href: edition_path(@amends_needed_edition)
-        assert page.has_css?(".govuk-tag--red", text: "Amends needed")
-        assert_text "2 days ago"
-        assert_text "Guide"
-      end
+          within find(".govuk-table__row", text: "Amends needed edition") do
+            assert_link "Amends needed edition", href: edition_path(@amends_needed_edition)
+            assert page.has_css?(".govuk-tag--red", text: "Amends needed")
+            assert_text "2 days ago"
+            assert_text "Guide"
+          end
 
-      within find(".govuk-table__row", text: "In review edition") do
-        assert_link "In review edition", href: edition_path(@in_review_edition)
-        assert page.has_css?(".govuk-tag--grey", text: "In review")
-        assert_text "3 days ago"
-        assert_text "Help page"
-      end
+          within find(".govuk-table__row", text: "In review edition") do
+            assert_link "In review edition", href: edition_path(@in_review_edition)
+            assert page.has_css?(".govuk-tag--grey", text: in_review_state_label)
+            assert_text "3 days ago"
+            assert_text "Help page"
+          end
 
-      within find(".govuk-table__row", text: "Ready edition") do
-        assert_link "Ready edition", href: edition_path(@ready_edition)
-        assert page.has_css?(".govuk-tag--green", text: "Ready")
-        assert_text "4 days ago"
-        assert_text "Transaction"
+          within find(".govuk-table__row", text: "Ready edition") do
+            assert_link "Ready edition", href: edition_path(@ready_edition)
+            assert page.has_css?(".govuk-tag--green", text: "Ready")
+            assert_text "4 days ago"
+            assert_text "Transaction"
+          end
+        end
       end
     end
 
