@@ -32,13 +32,12 @@ class FilteredEditionsPresenter
   end
 
   def edition_states
-    states = []
-
+    states = [{ text: "All active statuses", value: "" }]
     state_names.map do |scope, status_label|
       states << if @states_filter.include? scope.to_s
-                  { label: status_label, value: scope, checked: "true" }
+                  { text: status_label, value: scope, selected: "true" }
                 else
-                  { label: status_label, value: scope }
+                  { text: status_label, value: scope }
                 end
     end
 
@@ -106,7 +105,7 @@ private
   end
 
   def content_type_filter_selection_options
-    [%w[All all]] +
+    [["All types", "all"]] +
       Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].map do |format_name|
         displayed_format_name = format_name.humanize
         displayed_format_name += " (Retired)" if Artefact::RETIRED_FORMATS.include?(format_name)
@@ -120,10 +119,10 @@ private
     Edition.where(editionable_type: "#{content_type_filter.camelcase}Edition")
   end
 
-  def apply_states_filter(editions)
-    return editions if states_filter.empty?
+  def apply_states_filter(edition)
+    return edition.where.not(state: "archived") if states_filter.empty?
 
-    editions.where(state: states_filter)
+    edition.where(state: states_filter)
   end
 
   def apply_assigned_to_filter(editions)

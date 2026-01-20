@@ -1,6 +1,8 @@
 <% content_for :page_title, "Find content" %>
 <% content_for :title, "Find content" %>
 
+<%= render partial: "filtered_editions/find_content_filter" %>
+
 <% caption = sanitize("<span class='govuk-visually-hidden'>Find content</span><span class='item-count'>#{pluralize(number_with_delimiter(@presenter.editions.total_count), 'item' )}</span>") %>
 
 <div class="govuk-grid-row">

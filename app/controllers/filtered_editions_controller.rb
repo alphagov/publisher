@@ -36,18 +36,26 @@ class FilteredEditionsController < ApplicationController
   end
 
   def find_content
-    filter_params_hash = filter_params.to_h
     @presenter = FilteredEditionsPresenter.new(
       current_user,
-      states_filter: Edition.state_names.excluding(:archived),
+      states_filter: Array(filter_params[:states_filter]).presence,
+      assigned_to_filter: filter_params[:assignee_filter],
+      content_type_filter: filter_params[:content_type_filter],
+      search_text: filter_params[:search_text],
       paginate: true,
-      page: filter_params_hash[:page],
+      page: filter_params[:page],
     )
   end
+
+  def show_clear_filters_link?
+    filter_params.keys.intersect? %w[assignee_filter content_type_filter states_filter search_text]
+  end
+
+  helper_method :show_clear_filters_link?
 
 private
 
   def filter_params
-    params.permit(:page)
+    params.permit(:page, :assignee_filter, :content_type_filter, :search_text, :states_filter).compact_blank
   end
 end
