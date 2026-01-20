@@ -58,10 +58,10 @@ module GovukContentModels
     private
 
       def notify_about_event(new_action, action_name)
-        EventNotifierService.any_action(new_action).map(&:deliver_now)
-        EventNotifierService.request_fact_check(new_action).map(&:deliver_now) if action_name.to_s == "send_fact_check"
-        EventNotifierService.resend_fact_check(new_action).map(&:deliver_now) if action_name.to_s == "resend_fact_check"
-        EventNotifierService.skip_review(new_action).map(&:deliver_now) if action_name.to_s == "skip_review"
+        EventNotifierService.any_action(new_action)
+        EventNotifierService.request_fact_check(new_action) if action_name.to_s == "send_fact_check"
+        EventNotifierService.resend_fact_check(new_action) if action_name.to_s == "resend_fact_check"
+        EventNotifierService.skip_review(new_action) if action_name.to_s == "skip_review"
       end
     end
   end
