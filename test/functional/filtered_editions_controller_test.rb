@@ -295,6 +295,70 @@ class FilteredEditionsControllerTest < ActionController::TestCase
       assert_select ".item-count", "#{FilteredEditionsPresenter::ITEMS_PER_PAGE + 1} items"
       assert_select "tbody tr.govuk-table__row", 1
     end
+
+    context "find content filter" do
+      should "show filter fields on find content page when loaded" do
+        get :find_content
+
+        assert_response :ok
+        assert_select ".govuk-input[name='search_text']"
+        assert_select ".govuk-select#states_filter"
+        assert_select ".govuk-select#assignee_filter"
+        assert_select ".govuk-select#content_type_filter"
+        assert_select ".govuk-button", text: "Apply filters"
+        assert_not_select ".govuk-link", text: "Clear filters"
+      end
+
+      should "filter publications data by state" do
+        FactoryBot.create(:guide_edition, state: "draft", assigned_to: @user)
+        FactoryBot.create(:guide_edition, state: "draft", assigned_to: @user)
+        FactoryBot.create(:edition, state: "ready", assigned_to: @user)
+
+        get :find_content, params: { states_filter: "draft" }
+
+        assert_response :ok
+        assert_select ".govuk-link", text: "Clear filters"
+        assert_select "tbody tr.govuk-table__row", count: 2
+        assert_select ".govuk-table__cell", "Draft"
+        assert_select ".govuk-table__cell", "Draft"
+      end
+
+      should "filter publications data by content type" do
+        FactoryBot.create(:guide_edition, assigned_to: @user)
+        FactoryBot.create(:completed_transaction_edition, assigned_to: @user)
+
+        get :find_content, params: { content_type_filter: "guide" }
+
+        assert_response :ok
+        assert_select ".govuk-link", text: "Clear filters"
+        assert_select "tbody tr.govuk-table__row", count: 1
+        assert_select ".govuk-table__cell", "Guide"
+      end
+
+      should "filter publications data by title text" do
+        FactoryBot.create(:guide_edition, title: "How to train your dragon", assigned_to: @user)
+        FactoryBot.create(:guide_edition, title: "What to do in the event of a zombie apocalypse", assigned_to: @user)
+
+        get :find_content, params: { search_text: "zombie" }
+
+        assert_response :ok
+        assert_select ".govuk-link", text: "Clear filters"
+        assert_select "tbody tr.govuk-table__row", count: 1
+        assert_select ".govuk-link", /What to do in the event of a zombie apocalypse/
+      end
+
+      should "filter publications data by assignee" do
+        anna = FactoryBot.create(:user, name: "Anna")
+        FactoryBot.create(:guide_edition, assigned_to: anna)
+        FactoryBot.create(:guide_edition)
+
+        get :find_content, params: { assignee_filter: anna.id }
+
+        assert_response :ok
+        assert_select "tbody tr.govuk-table__row", count: 1
+        assert_select "td.govuk-table__cell", "Anna"
+      end
+    end
   end
 
   context "#fact_check" do
