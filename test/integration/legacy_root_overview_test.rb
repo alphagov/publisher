@@ -126,170 +126,178 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
     assert page.has_no_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
   end
 
-  test "Publications in review are ordered correctly" do
-    FactoryBot.create(:user, :govuk_editor)
-    FactoryBot.create(
-      :guide_edition,
-      title: "XXX",
-      slug: "xxx",
-      state: "in_review",
-      review_requested_at: 4.days.ago,
-    )
-    FactoryBot.create(
-      :guide_edition,
-      title: "YYY",
-      slug: "yyy",
-      state: "in_review",
-      review_requested_at: 2.days.ago,
-    )
-    FactoryBot.create(
-      :guide_edition,
-      title: "ZZZ",
-      slug: "zzz",
-      state: "in_review",
-      review_requested_at: 20.minutes.ago,
-    )
+  [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
+    context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+      setup do
+        @test_strategy.switch!(:rename_edition_states, toggle_value)
+      end
 
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
+      should "order 'in_review' publications correctly" do
+        FactoryBot.create(:user, :govuk_editor)
+        FactoryBot.create(
+          :guide_edition,
+          title: "XXX",
+          slug: "xxx",
+          state: "in_review",
+          review_requested_at: 4.days.ago,
+        )
+        FactoryBot.create(
+          :guide_edition,
+          title: "YYY",
+          slug: "yyy",
+          state: "in_review",
+          review_requested_at: 2.days.ago,
+        )
+        FactoryBot.create(
+          :guide_edition,
+          title: "ZZZ",
+          slug: "zzz",
+          state: "in_review",
+          review_requested_at: 20.minutes.ago,
+        )
 
-    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "4 days")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "20 minutes")
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_state_label
 
-    click_on "Awaiting review"
+        assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "4 days")
+        assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
+        assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "20 minutes")
 
-    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "20 minutes")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "4 days")
-  end
+        click_on "Awaiting review"
 
-  test "Shows link to Collections Publisher when reviewing in review documents" do
-    FactoryBot.create(:user, :govuk_editor)
+        assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "20 minutes")
+        assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
+        assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "4 days")
+      end
 
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
+      should "show links to Collections Publisher when reviewing 'in_review' documents" do
+        FactoryBot.create(:user, :govuk_editor)
 
-    assert page.has_link?("Check Collections publisher", href: "#{Plek.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at")
-  end
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_state_label
 
-  test "allows a user to claim 2i" do
-    stub_linkables
+        assert page.has_link?("Check Collections publisher", href: "#{Plek.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at")
+      end
 
-    user = FactoryBot.create(:user, :govuk_editor)
-    assignee = FactoryBot.create(:user, :govuk_editor)
-    edition = FactoryBot.create(
-      :guide_edition,
-      title: "XXX",
-      state: "in_review",
-      review_requested_at: Time.zone.now,
-      assigned_to: assignee,
-    )
+      should "allow a user to claim 2i" do
+        stub_linkables
 
-    visit "/"
-    filter_by_user("All")
+        user = FactoryBot.create(:user, :govuk_editor)
+        assignee = FactoryBot.create(:user, :govuk_editor)
+        edition = FactoryBot.create(
+          :guide_edition,
+          title: "XXX",
+          state: "in_review",
+          review_requested_at: Time.zone.now,
+          assigned_to: assignee,
+        )
 
-    click_on "In review"
+        visit "/"
+        filter_by_user("All")
 
-    within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
-      find_button("Claim 2i").click
+        click_on in_review_state_label
+
+        within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
+          find_button("Claim 2i").click
+        end
+
+        assert edition_url(edition), current_url
+        assert page.has_content?("You are the reviewer of this guide.")
+        assert page.has_select?("Reviewer", selected: user.name)
+        assert page.has_select?("Assigned to", selected: assignee.name)
+      end
+
+      should "prevent claiming 2i when already claimed" do
+        stub_linkables
+
+        FactoryBot.create(:user, :govuk_editor)
+
+        assignee = FactoryBot.create(:user, :govuk_editor)
+        another_user = FactoryBot.create(:user, :govuk_editor, name: "Another McPerson")
+        edition = FactoryBot.create(
+          :guide_edition,
+          title: "XXX",
+          state: "in_review",
+          review_requested_at: Time.zone.now,
+          assigned_to: assignee,
+        )
+
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_state_label
+
+        edition.reviewer = another_user.name
+        edition.save!
+
+        within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
+          find_button("Claim 2i").click
+        end
+
+        assert edition_url(edition), current_url
+        assert page.has_content?("Another McPerson has already claimed this 2i")
+        assert page.has_select?("Reviewer", selected: another_user.name)
+        assert page.has_select?("Assigned to", selected: assignee.name)
+
+        select("", from: "Reviewer")
+        click_on "Save"
+
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_state_label
+
+        within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
+          click_on "Claim 2i"
+        end
+
+        assert page.has_content?("You are the reviewer of this guide.")
+      end
+
+      should "prevent the assignee from claiming 2i" do
+        user = FactoryBot.create(:user, :govuk_editor)
+        FactoryBot.create(
+          :guide_edition,
+          title: "XXX",
+          state: "in_review",
+          review_requested_at: Time.zone.now,
+          assigned_to: user,
+        )
+
+        visit "/"
+        filter_by_user("All")
+
+        click_on in_review_state_label
+
+        assert page.has_css?("#publication-list-container tbody tr:first-child td:nth-child(6)", text: "")
+      end
+
+      should "display 'Claim 2i' button to Welsh editors viewing Welsh editions" do
+        stub_linkables
+        FactoryBot.create(:guide_edition, :in_review, :welsh)
+        welsh_editor = FactoryBot.create(:user, :welsh_editor)
+
+        login_as(welsh_editor)
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_state_label
+
+        assert page.has_button?("Claim 2i")
+      end
+
+      should "not display 'Claim 2i' button to Welsh editors viewing non-Welsh editions" do
+        stub_linkables
+        FactoryBot.create(:guide_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
+        welsh_editor = FactoryBot.create(:user, :welsh_editor)
+
+        login_as(welsh_editor)
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_state_label
+
+        assert_not page.has_button?("Claim 2i")
+      end
     end
-
-    assert edition_url(edition), current_url
-    assert page.has_content?("You are the reviewer of this guide.")
-    assert page.has_select?("Reviewer", selected: user.name)
-    assert page.has_select?("Assigned to", selected: assignee.name)
-  end
-
-  test "prevents claiming 2i when someone else has" do
-    stub_linkables
-
-    FactoryBot.create(:user, :govuk_editor)
-
-    assignee = FactoryBot.create(:user, :govuk_editor)
-    another_user = FactoryBot.create(:user, :govuk_editor, name: "Another McPerson")
-    edition = FactoryBot.create(
-      :guide_edition,
-      title: "XXX",
-      state: "in_review",
-      review_requested_at: Time.zone.now,
-      assigned_to: assignee,
-    )
-
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
-
-    edition.reviewer = another_user.name
-    edition.save!
-
-    within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
-      find_button("Claim 2i").click
-    end
-
-    assert edition_url(edition), current_url
-    assert page.has_content?("Another McPerson has already claimed this 2i")
-    assert page.has_select?("Reviewer", selected: another_user.name)
-    assert page.has_select?("Assigned to", selected: assignee.name)
-
-    select("", from: "Reviewer")
-    click_on "Save"
-
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
-
-    within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
-      click_on "Claim 2i"
-    end
-
-    assert page.has_content?("You are the reviewer of this guide.")
-  end
-
-  test "prevents the assignee claiming 2i" do
-    user = FactoryBot.create(:user, :govuk_editor)
-    FactoryBot.create(
-      :guide_edition,
-      title: "XXX",
-      state: "in_review",
-      review_requested_at: Time.zone.now,
-      assigned_to: user,
-    )
-
-    visit "/"
-    filter_by_user("All")
-
-    click_on "In review"
-
-    assert page.has_css?("#publication-list-container tbody tr:first-child td:nth-child(6)", text: "")
-  end
-
-  test "Welsh editors can see claim 2i button in Welsh editions" do
-    stub_linkables
-    FactoryBot.create(:guide_edition, :in_review, :welsh)
-    welsh_editor = FactoryBot.create(:user, :welsh_editor)
-
-    login_as(welsh_editor)
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
-
-    assert page.has_button?("Claim 2i")
-  end
-
-  test "Welsh editors cannot see claim 2i button in non-Welsh editions" do
-    stub_linkables
-    FactoryBot.create(:guide_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
-    welsh_editor = FactoryBot.create(:user, :welsh_editor)
-
-    login_as(welsh_editor)
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
-
-    assert_not page.has_button?("Claim 2i")
   end
 
   test "filtering by published should show a table with an edition with a slug as a link" do

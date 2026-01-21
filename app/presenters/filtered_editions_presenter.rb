@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FilteredEditionsPresenter
+  include BaseHelper
+
   ITEMS_PER_PAGE = 20
 
   attr_reader :search_text
@@ -92,7 +94,7 @@ private
   def state_names
     {
       draft: "Draft",
-      in_review: "In review",
+      in_review: humanize_state("in_review"),
       amends_needed: "Amends needed",
       fact_check: "Out for fact check",
       fact_check_received: "Fact check received",

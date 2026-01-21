@@ -540,6 +540,12 @@ class Edition < ApplicationRecord
     !scheduled_for_publishing? && !published? && !archived? && user.has_editor_permissions?(self)
   end
 
+  def human_state_name
+    return "in 2i" if state == "in_review" && Flipflop.enabled?(:rename_edition_states)
+
+    super
+  end
+
 private
 
   def base_field_keys

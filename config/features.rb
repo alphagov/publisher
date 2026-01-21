@@ -28,4 +28,8 @@ Flipflop.configure do
   feature :ga4_form_tracking,
           default: false,
           description: "Add tracking to forms across publisher"
+
+  feature :rename_edition_states,
+          default: false,
+          description: "Changes the 'In review' edition state label to 'In 2i'"
 end
