@@ -25,6 +25,10 @@ Flipflop.configure do
           default: false,
           description: "Add tracking to forms across publisher"
 
+  feature :fact_check_manager_api,
+          default: false,
+          description: "Experimental: enables in-development fact-check-manager API features for testing"
+
   feature :rename_edition_states,
           default: false,
           description: "Changes the following edition state labels: 'In review' to 'In 2i', 'Fact check'/'Out for fact check' to 'Fact check sent', and 'Scheduled for publishing' to 'Scheduled'"
