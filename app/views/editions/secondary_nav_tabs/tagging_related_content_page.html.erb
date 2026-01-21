@@ -46,12 +46,28 @@
 
       <%= f.hidden_field :previous_version %>
 
+      <!-- Added to test Add another -->
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "What is your name?"
+        },
+        name: "name"
+      } %>
+
       <%= render "govuk_publishing_components/components/add_another", {
         fieldset_legend: "Related content",
         add_button_text: "Add another related content item",
         empty_fields: false,
         items: items,
         empty: empty,
+      } %>
+
+      <!-- Added to test Add another -->
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "What is your age?"
+        },
+        name: "age"
       } %>
 
       <div class="govuk-button-group govuk-!-margin-top-6">
