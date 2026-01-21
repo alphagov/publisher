@@ -94,7 +94,7 @@ private
     items = []
     unless edition.assignee.nil?
       items << { value: edition.assigned_to_id, text: edition.assignee, checked: true }
-      items << { value: "none", text: "None" }
+      items << { value: "none", text: "None", data_attributes: { "ga4-redact-permit": true } }
       items << :or
     end
     User.enabled.order([:name]).each do |user|

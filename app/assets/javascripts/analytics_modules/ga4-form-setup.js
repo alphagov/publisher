@@ -58,7 +58,7 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     var radioInputs = form.querySelector('input[type="radio"]') || null
 
     radioInputs.closest('fieldset').setAttribute('data-ga4-redact', true)
-    radioInputs.closest('fieldset').setAttribute('data-ga4-redact-permit', "none, 3")
+    // radioInputs.closest('fieldset').setAttribute('data-ga4-redact-permit', "none, 3")
 
     if (dateInputs) {
       Array.from(dateInputs).forEach(function (dateInput) {
