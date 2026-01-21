@@ -279,17 +279,25 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     end
   end
 
-  test "can flag guide for review" do
-    guide.assigned_to = bob
+  [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
+    context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+      setup do
+        @test_strategy.switch!(:rename_edition_states, toggle_value)
+      end
 
-    visit_edition guide
-    send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
-    assert page.has_content?("updated")
+      should "be able to send guide for review" do
+        guide.assigned_to = bob
 
-    filter_for_all_users
-    view_filtered_list "In review"
+        visit_edition guide
+        send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+        assert page.has_content?("updated")
 
-    assert page.has_content? guide.title
+        filter_for_all_users
+        click_link in_review_state_label
+
+        assert page.has_content? guide.title
+      end
+    end
   end
 
   test "cannot review own guide" do

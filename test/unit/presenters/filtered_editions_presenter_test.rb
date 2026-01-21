@@ -30,27 +30,36 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
   end
 
   context "#edition_states" do
-    should "return states with none checked when no state filter has been specified" do
-      states = FilteredEditionsPresenter.new(a_gds_user).edition_states
+    [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
+      context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+        setup do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:rename_edition_states, toggle_value)
+        end
 
-      assert_equal(9, states.count)
-      assert_includes(states, { label: "Draft", value: :draft })
-      assert_includes(states, { label: "In review", value: :in_review })
-      assert_includes(states, { label: "Amends needed", value: :amends_needed })
-      assert_includes(states, { label: "Out for fact check", value: :fact_check })
-      assert_includes(states, { label: "Fact check received", value: :fact_check_received })
-      assert_includes(states, { label: "Ready", value: :ready })
-      assert_includes(states, { label: "Scheduled", value: :scheduled_for_publishing })
-      assert_includes(states, { label: "Published", value: :published })
-      assert_includes(states, { label: "Archived", value: :archived })
-    end
+        should "return states with none checked when no state filter has been specified" do
+          states = FilteredEditionsPresenter.new(a_gds_user).edition_states
 
-    should "mark the relevant states as checked when a state filter has been specified" do
-      states = FilteredEditionsPresenter.new(a_gds_user, states_filter: %w[in_review ready]).edition_states
+          assert_equal(9, states.count)
+          assert_includes(states, { label: "Draft", value: :draft })
+          assert_includes(states, { label: in_review_state_label, value: :in_review })
+          assert_includes(states, { label: "Amends needed", value: :amends_needed })
+          assert_includes(states, { label: "Out for fact check", value: :fact_check })
+          assert_includes(states, { label: "Fact check received", value: :fact_check_received })
+          assert_includes(states, { label: "Ready", value: :ready })
+          assert_includes(states, { label: "Scheduled", value: :scheduled_for_publishing })
+          assert_includes(states, { label: "Published", value: :published })
+          assert_includes(states, { label: "Archived", value: :archived })
+        end
 
-      assert_includes(states, { label: "In review", value: :in_review, checked: "true" })
-      assert_includes(states, { label: "Ready", value: :ready, checked: "true" })
-      assert_includes(states, { label: "Published", value: :published }) # Not checked
+        should "mark the relevant states as checked when a state filter has been specified" do
+          states = FilteredEditionsPresenter.new(a_gds_user, states_filter: %w[in_review ready]).edition_states
+
+          assert_includes(states, { label: in_review_state_label, value: :in_review, checked: "true" })
+          assert_includes(states, { label: "Ready", value: :ready, checked: "true" })
+          assert_includes(states, { label: "Published", value: :published }) # Not checked
+        end
+      end
     end
   end
 
