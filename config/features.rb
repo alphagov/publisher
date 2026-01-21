@@ -28,4 +28,8 @@ Flipflop.configure do
   feature :ga4_form_tracking,
           default: false,
           description: "Add tracking to forms across publisher"
+
+  feature :fact_check_manager_api,
+          default: false,
+          description: "Experimental: enables in-development fact-check-manager API features for testing"
 end
