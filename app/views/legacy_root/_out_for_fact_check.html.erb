@@ -1,4 +1,4 @@
-<table class="table table-striped table-bordered table-condensed" summary="List of &ldquo;Fact Check Requested&rdquo; content">
+<table class="table table-striped table-bordered table-condensed" summary="List of &ldquo;<%= Flipflop.enabled?(:rename_edition_states) ? "Fact Check Sent" : "Fact Check Requested" %>&rdquo; content">
   <thead>
     <tr class="table-header">
       <th scope="col"><%= sortable "format" %></th>
