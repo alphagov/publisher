@@ -31,5 +31,5 @@ Flipflop.configure do
 
   feature :rename_edition_states,
           default: false,
-          description: "Changes the 'In review' edition state label to 'In 2i'"
+          description: "Changes the 'In review' edition state label to 'In 2i' and the 'Fact check'/'Out for fact check' edition state label to 'Fact check sent'"
 end
