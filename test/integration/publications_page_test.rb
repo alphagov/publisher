@@ -324,6 +324,119 @@ class PublicationsPageTest < IntegrationTest
 
       assert_no_link "Archived edition"
     end
+
+    context "find_content_filter" do
+      should "filter publications data by state" do
+        @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+        visit find_content_path
+
+        select "Draft", from: "Status"
+
+        click_button("Apply filters")
+
+        assert_link "Clear filters"
+        assert page.has_css?(".govuk-table__cell", text: "Draft")
+        assert_not page.has_css?(".govuk-table__cell", text: "Ready")
+      end
+
+      should "filter publications data by content type" do
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+        visit find_content_path
+
+        select "Guide", from: "Content type"
+
+        click_button("Apply filters")
+
+        assert_link "Clear filters"
+        assert page.has_css?(".govuk-table__cell", text: "Guide")
+        assert_not page.has_css?(".govuk-table__cell", text: "Transaction")
+      end
+
+      should "filter publications data by title text" do
+        @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+        visit find_content_path
+
+        fill_in "search_text", with: "Draft edition"
+
+        click_button("Apply filters")
+
+        assert page.has_field?("search_text", with: "Draft edition")
+        assert_link "Clear filters"
+
+        within find(".govuk-table__row", text: "Draft edition") do
+          assert_link "Draft edition", href: edition_path(@draft_edition)
+          assert_css ".govuk-tag--yellow", text: "Draft"
+          assert_text "1 day ago"
+          assert_text "Answer"
+        end
+        assert_not page.has_css?(".govuk-table__cell", text: "Transaction")
+      end
+
+      should "filter publications data by assignee" do
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+        visit find_content_path
+
+        select @user.name, from: "Assigned to"
+
+        click_button("Apply filters")
+
+        assert_link "Clear filters"
+        assert page.has_css?(".govuk-table__cell", text: @user.name)
+        assert_not page.has_css?(".govuk-table__cell", text: @other_user.name)
+      end
+
+      should "return 0 items when no editions match the filter criteria" do
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+        visit find_content_path
+
+        select "Published", from: "Status"
+
+        click_button("Apply filters")
+
+        assert_link "Clear filters"
+        assert page.has_css?("p", text: "0 items")
+      end
+
+      should "reset all filter fields when clear filter link is clicked" do
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition1", updated_at: 1.day.ago, assigned_to: @user)
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition2", updated_at: 1.day.ago, assigned_to: @user)
+        @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition3", updated_at: 1.day.ago, assigned_to: @other_user)
+
+        visit find_content_path
+
+        fill_in "search_text", with: "Draft edition1"
+        select "Draft", from: "Status"
+        select "Guide", from: "Content type"
+        select @user.name, from: "Assigned to"
+
+        click_button("Apply filters")
+
+        assert_link "Clear filters"
+
+        click_link("Clear filters")
+
+        assert_field("Title or slug")
+        assert_nil find_field("Title or slug").value
+        assert_select("Status", selected: nil)
+        assert_select("Assigned to", selected: nil)
+        assert_select("Content type", selected: nil)
+        assert_button "Apply filters"
+        assert_no_link "Clear filters"
+
+        assert page.has_css?(".govuk-table__cell", text: "Guide")
+        assert page.has_css?(".govuk-table__cell", text: "Guide")
+        assert page.has_css?(".govuk-table__cell", text: "Answer")
+      end
+    end
   end
 
   context "fact-check page" do
