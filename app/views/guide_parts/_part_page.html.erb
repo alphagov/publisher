@@ -37,7 +37,7 @@
   </div>
 </div>
 
-<%= form_with url: form_url, method: form_method, data: { module: "unsaved-changes-prompt" } do %>
+<%= form_with url: form_url, method: form_method, data: { module: "chapter-slug-autofill unsaved-changes-prompt" } do %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <%= render "govuk_publishing_components/components/input", {
@@ -51,6 +51,7 @@
         error_items: errors_for(part.errors, :title, use_full_message: false),
       } %>
 
+      <% slug_data = { "accepts-generated-value": "true" } if edition.version_number == 1 %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
           text: "Slug",
@@ -61,6 +62,7 @@
         heading_size: "s",
         hint: "For example, title-of-chapter (no spaces, apostrophes or acronyms)",
         error_items: errors_for(part.errors, :slug, use_full_message: false),
+        data: slug_data,
       } %>
 
       <%= render "govuk_publishing_components/components/textarea", {
