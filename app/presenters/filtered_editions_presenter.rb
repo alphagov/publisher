@@ -59,7 +59,7 @@ private
     result = apply_states_filter(result)
     result = apply_assigned_to_filter(result)
     result = apply_search_text(result)
-    result = result.accessible_to(user)
+    result = result.accessible_to(@user)
     result = result.order(updated_at: :desc)
     apply_pagination(result)
   end
@@ -114,6 +114,4 @@ private
 
     editions.page(@page).per(ITEMS_PER_PAGE)
   end
-
-  attr_reader :user, :states_filter, :assigned_to_filter, :content_type_filter, :page
 end
