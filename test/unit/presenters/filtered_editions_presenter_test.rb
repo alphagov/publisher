@@ -5,27 +5,27 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
   end
 
-  context "#content_types" do
-    should "return content types with none selected when no content type filter has been specified" do
-      content_types = FilteredEditionsPresenter.new(a_gds_user).content_types
+  context "#content_type_options" do
+    should "return content type options with 'All types' selected when no content type filter has been specified" do
+      content_types_options = FilteredEditionsPresenter.new(a_gds_user).content_type_options
 
-      assert_equal(9, content_types.count)
-      assert_includes(content_types, { text: "All types", value: "all" })
-      assert_includes(content_types, { text: "Answer", value: "answer" })
-      assert_includes(content_types, { text: "Completed transaction", value: "completed_transaction" })
-      assert_includes(content_types, { text: "Guide", value: "guide" })
-      assert_includes(content_types, { text: "Help page", value: "help_page" })
-      assert_includes(content_types, { text: "Local transaction", value: "local_transaction" })
-      assert_includes(content_types, { text: "Place", value: "place" })
-      assert_includes(content_types, { text: "Simple smart answer", value: "simple_smart_answer" })
-      assert_includes(content_types, { text: "Transaction", value: "transaction" })
+      assert_equal(9, content_types_options.count)
+      assert_includes(content_types_options, { text: "All types", value: "", selected: true })
+      assert_includes(content_types_options, { text: "Answer", value: "answer", selected: false })
+      assert_includes(content_types_options, { text: "Completed transaction", value: "completed_transaction", selected: false })
+      assert_includes(content_types_options, { text: "Guide", value: "guide", selected: false })
+      assert_includes(content_types_options, { text: "Help page", value: "help_page", selected: false })
+      assert_includes(content_types_options, { text: "Local transaction", value: "local_transaction", selected: false })
+      assert_includes(content_types_options, { text: "Place", value: "place", selected: false })
+      assert_includes(content_types_options, { text: "Simple smart answer", value: "simple_smart_answer", selected: false })
+      assert_includes(content_types_options, { text: "Transaction", value: "transaction", selected: false })
     end
 
-    should "mark the relevant content type as selected when a content type filter has been specified" do
-      content_types = FilteredEditionsPresenter.new(a_gds_user, content_type_filter: "answer").content_types
+    should "mark the relevant content type option as selected when a content type filter has been specified" do
+      content_types_options = FilteredEditionsPresenter.new(a_gds_user, content_type_filter: "answer").content_type_options
 
-      assert_includes(content_types, { text: "Answer", value: "answer", selected: "true" })
-      assert_includes(content_types, { text: "Place", value: "place" }) # Not selected
+      assert_includes(content_types_options, { text: "Answer", value: "answer", selected: true })
+      assert_includes(content_types_options, { text: "Place", value: "place", selected: false }) # Not selected
     end
   end
 
@@ -115,7 +115,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_equal(2, filtered_editions.count)
     end
 
-    should "filter by format" do
+    should "filter by content type" do
       guide = FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
@@ -124,11 +124,11 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_equal([guide], filtered_editions.to_a)
     end
 
-    should "return all formats when specified by the format filter" do
+    should "return all content type when no content type filter" do
       FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, content_type_filter: "all").editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
 
       assert_equal(2, filtered_editions.count)
     end

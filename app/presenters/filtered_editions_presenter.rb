@@ -17,18 +17,14 @@ class FilteredEditionsPresenter
     @page = page
   end
 
-  def content_types
-    types = []
+  def content_type_options
+    options = [{ text: "All types", value: "", selected: @content_type_filter.blank? }]
 
-    content_type_filter_selection_options.map do |content_type|
-      types << if content_type[1] == @content_type_filter
-                 { text: content_type[0], value: content_type[1], selected: "true" }
-               else
-                 { text: content_type[0], value: content_type[1] }
-               end
+    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].each do |format_name|
+      options << { text: format_name.humanize, value: format_name, selected: @content_type_filter == format_name }
     end
 
-    types
+    options
   end
 
   def edition_states
@@ -81,7 +77,6 @@ private
     result = apply_assigned_to_filter(result)
     result = apply_search_text(result)
     result = result.accessible_to(user)
-    result = result.where.not(editionable_type: "PopularLinksEdition")
     result = result.order(updated_at: :desc)
     apply_pagination(result)
   end
@@ -104,19 +99,10 @@ private
     }
   end
 
-  def content_type_filter_selection_options
-    [["All types", "all"]] +
-      Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].map do |format_name|
-        displayed_format_name = format_name.humanize
-        displayed_format_name += " (Retired)" if Artefact::RETIRED_FORMATS.include?(format_name)
-        [displayed_format_name, format_name]
-      end
-  end
-
   def editions_by_content_type
-    return Edition.all unless content_type_filter && content_type_filter != "all"
+    return Edition.where.not(editionable_type: "PopularLinksEdition") if @content_type_filter.blank?
 
-    Edition.where(editionable_type: "#{content_type_filter.camelcase}Edition")
+    Edition.where(editionable_type: "#{@content_type_filter.camelcase}Edition")
   end
 
   def apply_states_filter(edition)
