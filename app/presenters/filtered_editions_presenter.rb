@@ -37,16 +37,15 @@ class FilteredEditionsPresenter
     options
   end
 
-  def assignees
-    users = [{ text: "All assignees", value: "" }]
-    users << create_assignee_list_item(@user)
+  def assignee_options
+    options = [{ text: "All assignees", value: "", selected: @assigned_to_filter.blank? }]
+    options << { text: "#{@user.name} (You)", value: @user.id, selected: @assigned_to_filter == @user.id.to_s }
 
-    available_users.map do |user|
-      next if user == @user
-
-      users << create_assignee_list_item(user)
+    User.enabled.excluding(@user).alphabetized.each do |assignee|
+      options << { text: assignee.name, value: assignee.id, selected: @assigned_to_filter == assignee.id.to_s }
     end
-    users
+
+    options
   end
 
   def editions
@@ -54,19 +53,6 @@ class FilteredEditionsPresenter
   end
 
 private
-
-  def create_assignee_list_item(user)
-    user_name = if user == @user
-                  "#{user.name} (You)"
-                else
-                  user.name
-                end
-    if user.id.to_s == @assigned_to_filter
-      { text: user_name, value: user.id, selected: "true" }
-    else
-      { text: user_name, value: user.id }
-    end
-  end
 
   def query_editions
     result = editions_by_content_type
@@ -76,10 +62,6 @@ private
     result = result.accessible_to(user)
     result = result.order(updated_at: :desc)
     apply_pagination(result)
-  end
-
-  def available_users
-    User.enabled.alphabetized
   end
 
   def state_names
@@ -109,18 +91,15 @@ private
   end
 
   def apply_assigned_to_filter(editions)
-    return editions unless assigned_to_filter
+    return editions if @assigned_to_filter.blank?
 
-    if assigned_to_filter == "nobody"
-      editions = editions.assigned_to(nil)
-    else
-      begin
-        assigned_user = User.find(assigned_to_filter)
-        editions = editions.assigned_to(assigned_user) if assigned_user
-      rescue ActiveRecord::RecordNotFound
-        Rails.logger.warn "An attempt was made to filter by an unknown user ID: '#{assigned_to_filter}'"
-      end
+    begin
+      assigned_user = User.find(@assigned_to_filter)
+      editions = editions.assigned_to(assigned_user) if assigned_user
+    rescue ActiveRecord::RecordNotFound
+      Rails.logger.warn "An attempt was made to filter by an unknown user ID: '#{@assigned_to_filter}'"
     end
+
     editions
   end
 

@@ -95,16 +95,6 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_equal([assigned_to_anna], filtered_editions.to_a)
     end
 
-    should "filter by 'not assigned'" do
-      anna = FactoryBot.create(:user, name: "Anna")
-      FactoryBot.create(:guide_edition, assigned_to: anna)
-      not_assigned = FactoryBot.create(:guide_edition)
-
-      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: "nobody").editions
-
-      assert_equal([not_assigned], filtered_editions.to_a)
-    end
-
     should "ignore invalid 'assigned to'" do
       anna = FactoryBot.create(:user, name: "Anna")
       FactoryBot.create(:guide_edition, assigned_to: anna)
@@ -236,50 +226,50 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     end
   end
 
-  context "#assignees" do
+  context "#assignee_options" do
     should "return an 'all assignees' item" do
-      assignees = FilteredEditionsPresenter.new(a_gds_user).assignees
+      assignee_options = FilteredEditionsPresenter.new(a_gds_user).assignee_options
 
-      assert_includes(assignees, { text: "All assignees", value: "" })
+      assert_includes(assignee_options, { text: "All assignees", value: "", selected: true })
     end
 
     should "return the current user after the 'All assignees' item" do
       current_user = FactoryBot.create(:user, name: "River Tam", id: 123)
-      assignees = FilteredEditionsPresenter.new(current_user).assignees
+      assignee_options = FilteredEditionsPresenter.new(current_user).assignee_options
 
-      assert_equal("#{current_user.name} (You)", assignees[1][:text])
-      assert_equal(current_user.id, assignees[1][:value])
+      assert_equal("#{current_user.name} (You)", assignee_options[1][:text])
+      assert_equal(current_user.id, assignee_options[1][:value])
     end
 
     should "only return the current user once" do
       current_user = FactoryBot.create(:user, name: "River Tam", id: 123)
       bob = FactoryBot.create(:user, name: "Bob")
-      assignees = FilteredEditionsPresenter.new(current_user).assignees
+      assignee_options = FilteredEditionsPresenter.new(current_user).assignee_options
 
-      assert_equal(1, assignees.count { |user| user[:text] == "#{current_user.name} (You)" })
-      assert_equal(bob.name, assignees[2][:text])
-      assert_not_includes assignees.map { |user| user[:text] }, current_user.name
+      assert_equal(1, assignee_options.count { |user| user[:text] == "#{current_user.name} (You)" })
+      assert_equal(bob.name, assignee_options[2][:text])
+      assert_not_includes assignee_options.map { |user| user[:text] }, current_user.name
     end
 
     should "return users who are not the assignee as unselected" do
       anna = FactoryBot.create(:user, name: "Anna")
-      assignees = FilteredEditionsPresenter.new(a_gds_user).assignees
+      assignee_options = FilteredEditionsPresenter.new(a_gds_user).assignee_options
 
-      assert_includes(assignees, { text: anna.name, value: anna.id })
+      assert_includes(assignee_options, { text: anna.name, value: anna.id, selected: false })
     end
 
     should "return the assignee as selected (when the assignee is the current user)" do
       a_user = a_gds_user
-      assignees = FilteredEditionsPresenter.new(a_user, assigned_to_filter: a_user.id.to_s).assignees
+      assignee_options = FilteredEditionsPresenter.new(a_user, assigned_to_filter: a_user.id.to_s).assignee_options
 
-      assert_includes(assignees, { text: "#{a_user.name} (You)", value: a_user.id, selected: "true" })
+      assert_includes(assignee_options, { text: "#{a_user.name} (You)", value: a_user.id, selected: true })
     end
 
     should "return the assignee as selected (when the assignee is not the current user)" do
       anna = FactoryBot.create(:user, name: "Anna")
-      assignees = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: anna.id.to_s).assignees
+      assignee_options = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: anna.id.to_s).assignee_options
 
-      assert_includes(assignees, { text: anna.name, value: anna.id, selected: "true" })
+      assert_includes(assignee_options, { text: anna.name, value: anna.id, selected: true })
     end
 
     should "return users in alphabetical order" do
@@ -287,23 +277,23 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       charlie = FactoryBot.create(:user, name: "Charlie")
       anna = FactoryBot.create(:user, name: "Anna")
 
-      assignees = FilteredEditionsPresenter.new(a_gds_user).assignees
+      assignee_options = FilteredEditionsPresenter.new(a_gds_user).assignee_options
 
       # First two items are 'All assignees' and the current user
-      assert_equal(anna.name, assignees[2][:text])
-      assert_equal(bob.name, assignees[3][:text])
-      assert_equal(charlie.name, assignees[4][:text])
+      assert_equal(anna.name, assignee_options[2][:text])
+      assert_equal(bob.name, assignee_options[3][:text])
+      assert_equal(charlie.name, assignee_options[4][:text])
     end
 
     should "not include disabled users" do
       disabled_user = FactoryBot.create(:user, name: "disabled user", disabled: true)
       a_user = a_gds_user
 
-      users = FilteredEditionsPresenter.new(a_user).assignees
+      assignee_options = FilteredEditionsPresenter.new(a_user).assignee_options
 
-      assert_equal(2, users.count)
-      assert_equal("All assignees", users[0][:text])
-      assert_not_includes users.map { |user| user[:text] }, disabled_user.name
+      assert_equal(2, assignee_options.count)
+      assert_equal("All assignees", assignee_options[0][:text])
+      assert_not_includes assignee_options.map { |user| user[:text] }, disabled_user.name
     end
   end
 end
