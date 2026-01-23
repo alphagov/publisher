@@ -9,7 +9,7 @@ class FilteredEditionsPresenter
 
   def initialize(user, states_filter: [], assigned_to_filter: nil, content_type_filter: nil, search_text: nil, paginate: false, page: nil)
     @user = user
-    @states_filter = states_filter || []
+    @states_filter = states_filter
     @assigned_to_filter = assigned_to_filter
     @content_type_filter = content_type_filter
     @search_text = search_text
@@ -27,17 +27,14 @@ class FilteredEditionsPresenter
     options
   end
 
-  def edition_states
-    states = [{ text: "All active statuses", value: "" }]
-    state_names.map do |scope, status_label|
-      states << if @states_filter.include? scope.to_s
-                  { text: status_label, value: scope, selected: "true" }
-                else
-                  { text: status_label, value: scope }
-                end
+  def state_options
+    options = [{ text: "All active statuses", value: "", selected: @states_filter.blank? }]
+
+    state_names.each do |state, label|
+      options << { text: label, value: state, selected: @states_filter.first == state.to_s }
     end
 
-    states
+    options
   end
 
   def assignees
@@ -90,7 +87,7 @@ private
       draft: "Draft",
       in_review: humanize_state("in_review"),
       amends_needed: "Amends needed",
-      fact_check: "Out for fact check",
+      fact_check: humanize_state("out_for_fact_check"),
       fact_check_received: "Fact check received",
       ready: "Ready",
       scheduled_for_publishing: "Scheduled",
@@ -105,10 +102,10 @@ private
     Edition.where(editionable_type: "#{@content_type_filter.camelcase}Edition")
   end
 
-  def apply_states_filter(edition)
-    return edition.where.not(state: "archived") if states_filter.empty?
+  def apply_states_filter(editions)
+    return editions.where.not(state: "archived") if @states_filter.empty?
 
-    edition.where(state: states_filter)
+    editions.where(state: @states_filter)
   end
 
   def apply_assigned_to_filter(editions)

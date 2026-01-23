@@ -311,15 +311,13 @@ class FilteredEditionsControllerTest < ActionController::TestCase
 
       should "filter publications data by state" do
         FactoryBot.create(:guide_edition, state: "draft", assigned_to: @user)
-        FactoryBot.create(:guide_edition, state: "draft", assigned_to: @user)
         FactoryBot.create(:edition, state: "ready", assigned_to: @user)
 
         get :find_content, params: { states_filter: "draft" }
 
         assert_response :ok
         assert_select ".govuk-link", text: "Clear filters"
-        assert_select "tbody tr.govuk-table__row", count: 2
-        assert_select ".govuk-table__cell", "Draft"
+        assert_select "tbody tr.govuk-table__row", count: 1
         assert_select ".govuk-table__cell", "Draft"
       end
 

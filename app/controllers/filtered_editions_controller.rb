@@ -38,7 +38,7 @@ class FilteredEditionsController < ApplicationController
   def find_content
     @presenter = FilteredEditionsPresenter.new(
       current_user,
-      states_filter: Array(filter_params[:states_filter]).presence,
+      states_filter: Array(filter_params[:states_filter]).compact,
       assigned_to_filter: filter_params[:assignee_filter],
       content_type_filter: filter_params[:content_type_filter],
       search_text: filter_params[:search_text],

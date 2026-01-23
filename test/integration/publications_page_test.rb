@@ -331,9 +331,7 @@ class PublicationsPageTest < IntegrationTest
         @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
 
         visit find_content_path
-
         select "Draft", from: "Status"
-
         click_button("Apply filters")
 
         assert_link "Clear filters"
@@ -397,7 +395,6 @@ class PublicationsPageTest < IntegrationTest
         visit find_content_path
 
         select "Published", from: "Status"
-
         click_button("Apply filters")
 
         assert_link "Clear filters"
@@ -424,7 +421,7 @@ class PublicationsPageTest < IntegrationTest
 
         assert_field("Title or slug")
         assert_nil find_field("Title or slug").value
-        assert_select("Status", selected: nil)
+        assert_select("Status", selected: "All active statuses")
         assert_select("Assigned to", selected: nil)
         assert_select("Content type", selected: "All types")
         assert_button "Apply filters"
