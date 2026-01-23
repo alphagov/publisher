@@ -66,7 +66,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[5]["action"]
       assert_equal "form_response", event_data[5]["event_name"]
-      assert_equal "Answer edition", event_data[5]["section"]
+      assert_equal "Edit", event_data[5]["section"]
       assert_equal "{\"Title\":\"9\",\"Meta tag description\":\"24\",\"Body\":\"13\",\"Is this beta content?\":\"No\"}", event_data[5]["text"]
       assert_equal "Answer", event_data[5]["tool_name"]
       assert_equal "edit", event_data[5]["type"]
