@@ -11,6 +11,11 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   include CapybaraSelect2::Helpers
   include Warden::Test::Helpers
 
+  setup do
+    @test_strategy = Flipflop::FeatureSet.current.test!
+    @test_strategy.switch!(:fact_check_manager_api, false)
+  end
+
   teardown do
     Capybara.reset_sessions! # Forget the (simulated) browser state
     Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver

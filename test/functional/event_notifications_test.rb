@@ -38,19 +38,19 @@ class EventNotificationsTest < ActiveSupport::TestCase
       assert_equal stubbed_fact_check_mail, mail
     end
 
-    should "return a NoMail instance if the edition is not in fact check state" do
+    should "Logs the error if the edition is not in fact check state" do
       EventNotifierService.expects(:request_fact_check).never
       resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
+      Rails.logger.expects(:info).with("Asked to resend fact check for #{@edition.content_id}, but its most recent status action is not a fact check, it's a #{@edition.latest_status_action.request_type}")
 
-      mail = EventNotifierService.resend_fact_check(resend_fact_check_action)
-      assert mail.is_a? EventMailer::NoMail
+      EventNotifierService.resend_fact_check(resend_fact_check_action)
     end
 
-    should "return a NoMail instance if the supplied action is not a resend fact check one" do
+    should "logs the error if the supplied action is not a resend fact check one" do
       EventNotifierService.expects(:request_fact_check).never
+      Rails.logger.expects(:info).with("Asked to resend fact check for #{@edition.content_id}, but its most recent status action is not a fact check, it's a #{@edition.latest_status_action.request_type}")
 
-      mail = EventNotifierService.resend_fact_check(@edition.latest_status_action)
-      assert mail.is_a? EventMailer::NoMail
+      EventNotifierService.resend_fact_check(@edition.latest_status_action)
     end
   end
 
