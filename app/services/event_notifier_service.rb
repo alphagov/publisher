@@ -19,6 +19,7 @@ class EventNotifierService
     emails.map(&:deliver_now)
   end
 
+  # TODO: when we migrate fully to the new fact check manager, delete this method.
   def self.request_fact_check(action, mailer: EventMailer)
     emails = action.email_addresses.split(/,\s*/).map do |recipient_email|
       mailer.request_fact_check(action, recipient_email)
