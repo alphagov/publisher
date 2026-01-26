@@ -79,7 +79,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
-    should "push the correct values to the dataLayer when events are triggered" do
+    should "add 'Assign person' tracking events to the dataLayer when person is first assigned" do
       find("label", text: "Test User").click
       click_button "Save"
 
@@ -88,14 +88,14 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "Choose a person to assign", event_data[0]["section"]
-      assert_equal "Test User", event_data[0]["text"]
+      assert_equal "[REDACTED]", event_data[0]["text"]
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "1", event_data[0]["index"]["index_section_count"]
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
       assert_equal "Assign person", event_data[1]["section"]
-      assert_equal "{\"Choose a person to assign\":\"Test User\"}", event_data[1]["text"]
+      assert_equal "{\"Choose a person to assign\":\"[REDACTED]\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
     end
