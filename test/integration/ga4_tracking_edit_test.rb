@@ -6,7 +6,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
   setup do
     FactoryBot.create(:user, :govuk_editor, name: "Test User")
-    @govuk_requester = FactoryBot.create(:user, :govuk_editor, :skip_review)
+    @govuk_requester = FactoryBot.create(:user, :govuk_editor, :skip_review, name: "Test requester")
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
 
     test_strategy = Flipflop::FeatureSet.current.test!
@@ -74,10 +74,10 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
   end
 
   context "Edit assignee page" do
-    setup do
-      visit edit_assignee_edition_path(@edition)
-      disable_form_submit
-    end
+    # setup do
+    #   visit edit_assignee_edition_path(@edition)
+    #   disable_form_submit
+    # end
 
     should "add 'Assign person' tracking events to the dataLayer when person is first assigned" do
       find("label", text: "Test User").click
@@ -98,6 +98,36 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "{\"Choose a person to assign\":\"[REDACTED]\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
+    end
+
+    context "Person already assigned" do
+      setup do
+        @edition.assignee = "Test requester" # @govuk_requester # "Assigned person"
+        @edition.reload
+        visit edit_assignee_edition_path(@edition)
+        disable_form_submit
+      end
+
+      should "add 'Assign person' tracking events to the dataLayer when editing assignee and 'None' is selected" do
+        find("label", text: "None").click
+        click_button "Save"
+
+        event_data = get_event_data
+
+        assert_equal "select", event_data[0]["action"]
+        assert_equal "select_content", event_data[0]["event_name"]
+        assert_equal "Choose a person to assign", event_data[0]["section"]
+        assert_equal "None", event_data[0]["text"]
+        assert_equal "1", event_data[0]["index"]["index_section"]
+        assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+        assert_equal "Save", event_data[1]["action"]
+        assert_equal "form_response", event_data[1]["event_name"]
+        assert_equal "Assign person", event_data[1]["section"]
+        assert_equal "{\"Choose a person to assign\":\"None\"}", event_data[1]["text"]
+        assert_equal "Answer", event_data[1]["tool_name"]
+        assert_equal "edit", event_data[1]["type"]
+      end
     end
   end
 
