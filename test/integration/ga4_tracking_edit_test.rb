@@ -75,12 +75,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
   context "Edit assignee page" do
     setup do
-      visit edition_path(@edition)
-
-      within all(".govuk-summary-list__row")[0] do
-        click_link("Edit")
-      end
-
+      visit edit_assignee_edition_path(@edition)
       disable_form_submit
     end
 
