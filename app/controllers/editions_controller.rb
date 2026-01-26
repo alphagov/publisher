@@ -234,7 +234,8 @@ class EditionsController < InheritedResources::Base
     begin
       comment = "Sent to fact check"
       if !send_to_fact_check_params_valid?
-        flash.now[:danger] = "Enter email addresses and/or customised message"
+        error_message  = Flipflop.enabled?(:fact_check_manager_api) ? "Enter email addresses" : "Enter email addresses and/or customised message"
+        flash.now[:danger] = error_message
         render "secondary_nav_tabs/send_to_fact_check_page"
         return
       elsif send_to_fact_check_for_edition(@resource, params[:email_addresses], params[:customised_message], comment)
@@ -242,7 +243,7 @@ class EditionsController < InheritedResources::Base
         redirect_to edition_path(resource)
         return
       end
-    rescue StandardError => e
+    rescue StandardError, Gdsapi::HTTPError => e
       Rails.logger.error "Error #{e.class} #{e.message}"
     end
     flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
@@ -490,7 +491,7 @@ private
     progress_edition(resource, { request_type: "request_review", comment: comment })
   end
 
-  def send_to_fact_check_for_edition(resource, email_addresses, customised_message, comment)
+  def send_to_fact_check_for_edition(resource, email_addresses, customised_message = "", comment)
     progress_edition(resource, { request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
   end
 
@@ -522,7 +523,11 @@ private
   end
 
   def send_to_fact_check_params_valid?
-    params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses]) && params[:customised_message].present?
+    if Flipflop.enabled?(:fact_check_manager_api)
+      params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses])
+    else
+      params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses]) && params[:customised_message].present?
+    end
   end
 
   def invalid_email_addresses?(addresses)

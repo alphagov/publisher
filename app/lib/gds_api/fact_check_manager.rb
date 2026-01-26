@@ -13,23 +13,17 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # @option [string] previous_published_edition String containing HTML content of previous edition to check against
   #
   #
-  # @return [GdsApi::Response] Basic response with status code
-  def post_fact_check(edition_id, edition_title, requester_name, requester_email, recipients, current_content, deadline, previous_published_edition, mock, success)
-    if mock
-      # Temporary logic used while in development
-      mock_response(success)
-    else
+  # @return [GdsApi::Response] Basic response with code
+  def post_fact_check(edition_id, edition_title, requester_name, requester_email, current_content, previous_published_edition, deadline, recipients)
       post_json(
-        "#{endpoint}",
+        "#{endpoint}/api/requests",
         edition_id:,
-        edition_title:,
         requester_name:,
         requester_email:,
-        recipients:,
         current_content:,
         previous_published_edition:,
         deadline:,
+        recipients:,
       )
-    end
   end
 end
