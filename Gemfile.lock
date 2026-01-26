@@ -265,7 +265,7 @@ GEM
       jquery-rails (~> 4.3)
       plek (>= 2.1)
       rails (>= 6)
-    govuk_app_config (9.23.2)
+    govuk_app_config (9.23.4)
       connection_pool (< 3)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.32)
@@ -650,7 +650,7 @@ GEM
       date
       stringio
     public_suffix (6.0.2)
-    puma (7.1.0)
+    puma (7.2.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.4)
@@ -925,7 +925,7 @@ DEPENDENCIES
   google-apis-gmail_v1
   govspeak
   govuk_admin_template
-  govuk_app_config (~> 9.23.2)
+  govuk_app_config (~> 9.23.4)
   govuk_publishing_components
   govuk_schemas
   govuk_sidekiq
