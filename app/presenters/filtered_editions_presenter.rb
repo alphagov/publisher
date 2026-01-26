@@ -9,7 +9,7 @@ class FilteredEditionsPresenter
 
   def initialize(user, states_filter: [], assigned_to_filter: nil, content_type_filter: nil, search_text: nil, paginate: false, page: nil)
     @user = user
-    @states_filter = states_filter || []
+    @states_filter = states_filter
     @assigned_to_filter = assigned_to_filter
     @content_type_filter = content_type_filter
     @search_text = search_text
@@ -17,44 +17,35 @@ class FilteredEditionsPresenter
     @page = page
   end
 
-  def content_types
-    types = []
+  def content_type_options
+    options = [{ text: "All types", value: "", selected: @content_type_filter.blank? }]
 
-    content_type_filter_selection_options.map do |content_type|
-      types << if content_type[1] == @content_type_filter
-                 { text: content_type[0], value: content_type[1], selected: "true" }
-               else
-                 { text: content_type[0], value: content_type[1] }
-               end
+    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].each do |format_name|
+      options << { text: format_name.humanize, value: format_name, selected: @content_type_filter == format_name }
     end
 
-    types
+    options
   end
 
-  def edition_states
-    states = []
+  def state_options
+    options = [{ text: "All active statuses", value: "", selected: @states_filter.blank? }]
 
-    state_names.map do |scope, status_label|
-      states << if @states_filter.include? scope.to_s
-                  { label: status_label, value: scope, checked: "true" }
-                else
-                  { label: status_label, value: scope }
-                end
+    state_names.each do |state, label|
+      options << { text: label, value: state, selected: @states_filter.first == state.to_s }
     end
 
-    states
+    options
   end
 
-  def assignees
-    users = [{ text: "All assignees", value: "" }]
-    users << create_assignee_list_item(@user)
+  def assignee_options
+    options = [{ text: "All assignees", value: "", selected: @assigned_to_filter.blank? }]
+    options << { text: "#{@user.name} (You)", value: @user.id, selected: @assigned_to_filter == @user.id.to_s }
 
-    available_users.map do |user|
-      next if user == @user
-
-      users << create_assignee_list_item(user)
+    User.enabled.excluding(@user).alphabetized.each do |assignee|
+      options << { text: assignee.name, value: assignee.id, selected: @assigned_to_filter == assignee.id.to_s }
     end
-    users
+
+    options
   end
 
   def editions
@@ -63,32 +54,14 @@ class FilteredEditionsPresenter
 
 private
 
-  def create_assignee_list_item(user)
-    user_name = if user == @user
-                  "#{user.name} (You)"
-                else
-                  user.name
-                end
-    if user.id.to_s == @assigned_to_filter
-      { text: user_name, value: user.id, selected: "true" }
-    else
-      { text: user_name, value: user.id }
-    end
-  end
-
   def query_editions
     result = editions_by_content_type
     result = apply_states_filter(result)
     result = apply_assigned_to_filter(result)
     result = apply_search_text(result)
-    result = result.accessible_to(user)
-    result = result.where.not(editionable_type: "PopularLinksEdition")
+    result = result.accessible_to(@user)
     result = result.order(updated_at: :desc)
     apply_pagination(result)
-  end
-
-  def available_users
-    User.enabled.alphabetized
   end
 
   def state_names
@@ -96,7 +69,7 @@ private
       draft: "Draft",
       in_review: humanize_state("in_review"),
       amends_needed: "Amends needed",
-      fact_check: "Out for fact check",
+      fact_check: humanize_state("out_for_fact_check"),
       fact_check_received: "Fact check received",
       ready: "Ready",
       scheduled_for_publishing: "Scheduled",
@@ -105,40 +78,28 @@ private
     }
   end
 
-  def content_type_filter_selection_options
-    [%w[All all]] +
-      Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].map do |format_name|
-        displayed_format_name = format_name.humanize
-        displayed_format_name += " (Retired)" if Artefact::RETIRED_FORMATS.include?(format_name)
-        [displayed_format_name, format_name]
-      end
-  end
-
   def editions_by_content_type
-    return Edition.all unless content_type_filter && content_type_filter != "all"
+    return Edition.where.not(editionable_type: "PopularLinksEdition") if @content_type_filter.blank?
 
-    Edition.where(editionable_type: "#{content_type_filter.camelcase}Edition")
+    Edition.where(editionable_type: "#{@content_type_filter.camelcase}Edition")
   end
 
   def apply_states_filter(editions)
-    return editions if states_filter.empty?
+    return editions.where.not(state: "archived") if @states_filter.empty?
 
-    editions.where(state: states_filter)
+    editions.where(state: @states_filter)
   end
 
   def apply_assigned_to_filter(editions)
-    return editions unless assigned_to_filter
+    return editions if @assigned_to_filter.blank?
 
-    if assigned_to_filter == "nobody"
-      editions = editions.assigned_to(nil)
-    else
-      begin
-        assigned_user = User.find(assigned_to_filter)
-        editions = editions.assigned_to(assigned_user) if assigned_user
-      rescue ActiveRecord::RecordNotFound
-        Rails.logger.warn "An attempt was made to filter by an unknown user ID: '#{assigned_to_filter}'"
-      end
+    begin
+      assigned_user = User.find(@assigned_to_filter)
+      editions = editions.assigned_to(assigned_user) if assigned_user
+    rescue ActiveRecord::RecordNotFound
+      Rails.logger.warn "An attempt was made to filter by an unknown user ID: '#{@assigned_to_filter}'"
     end
+
     editions
   end
 
@@ -153,6 +114,4 @@ private
 
     editions.page(@page).per(ITEMS_PER_PAGE)
   end
-
-  attr_reader :user, :states_filter, :assigned_to_filter, :content_type_filter, :page
 end
