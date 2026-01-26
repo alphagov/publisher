@@ -5,6 +5,7 @@ class EditionAdminTest < IntegrationTest
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     login_as(@govuk_editor)
     @test_strategy = Flipflop::FeatureSet.current.test!
+    @test_strategy.switch!(:fact_check_manager_api, false)
     @test_strategy.switch!(:design_system_edit_phase_3a, true)
   end
 

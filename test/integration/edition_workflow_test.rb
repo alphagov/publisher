@@ -7,6 +7,7 @@ class EditionWorkflowTest < IntegrationTest
     login_as(@govuk_editor)
     @test_strategy = Flipflop::FeatureSet.current.test!
     @test_strategy.switch!(:design_system_edit_phase_3a, true)
+    @test_strategy.switch!(:fact_check_manager_api, false)
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api
