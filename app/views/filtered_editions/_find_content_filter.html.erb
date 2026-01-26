@@ -17,7 +17,7 @@
         label: "Status",
         heading_size: "m",
         full_width: true,
-        options: @presenter.edition_states,
+        options: @presenter.state_options,
       } %>
     </div>
 
@@ -26,7 +26,7 @@
         id: "assignee_filter",
         label: "Assigned to",
         heading_size: "m",
-        options: @presenter.assignees,
+        options: @presenter.assignee_options,
       } %>
     </div>
 
@@ -36,7 +36,7 @@
         label: "Content type",
         full_width: true,
         heading_size: "m",
-        options: @presenter.content_types,
+        options: @presenter.content_type_options,
       } %>
     </div>
   </div>

@@ -331,9 +331,7 @@ class PublicationsPageTest < IntegrationTest
         @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
 
         visit find_content_path
-
         select "Draft", from: "Status"
-
         click_button("Apply filters")
 
         assert_link "Clear filters"
@@ -346,9 +344,7 @@ class PublicationsPageTest < IntegrationTest
         @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
 
         visit find_content_path
-
         select "Guide", from: "Content type"
-
         click_button("Apply filters")
 
         assert_link "Clear filters"
@@ -361,12 +357,10 @@ class PublicationsPageTest < IntegrationTest
         @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
 
         visit find_content_path
-
-        fill_in "search_text", with: "Draft edition"
-
+        fill_in "Title or slug", with: "Draft edition"
         click_button("Apply filters")
 
-        assert page.has_field?("search_text", with: "Draft edition")
+        assert_field "Title or slug", with: "Draft edition"
         assert_link "Clear filters"
 
         within find(".govuk-table__row", text: "Draft edition") do
@@ -383,9 +377,7 @@ class PublicationsPageTest < IntegrationTest
         @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
 
         visit find_content_path
-
         select @user.name, from: "Assigned to"
-
         click_button("Apply filters")
 
         assert_link "Clear filters"
@@ -399,7 +391,6 @@ class PublicationsPageTest < IntegrationTest
         visit find_content_path
 
         select "Published", from: "Status"
-
         click_button("Apply filters")
 
         assert_link "Clear filters"
@@ -413,22 +404,18 @@ class PublicationsPageTest < IntegrationTest
 
         visit find_content_path
 
-        fill_in "search_text", with: "Draft edition1"
+        fill_in "Title or slug", with: "Draft edition1"
         select "Draft", from: "Status"
         select "Guide", from: "Content type"
         select @user.name, from: "Assigned to"
-
         click_button("Apply filters")
-
-        assert_link "Clear filters"
-
         click_link("Clear filters")
 
         assert_field("Title or slug")
         assert_nil find_field("Title or slug").value
-        assert_select("Status", selected: nil)
-        assert_select("Assigned to", selected: nil)
-        assert_select("Content type", selected: nil)
+        assert_select("Status", selected: "All active statuses")
+        assert_select("Assigned to", selected: "All assignees")
+        assert_select("Content type", selected: "All types")
         assert_button "Apply filters"
         assert_no_link "Clear filters"
 
