@@ -1,0 +1,45 @@
+require "test_helper"
+
+class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
+  setup do
+    @user = FactoryBot.create(:user, :govuk_editor, uid: "123", name: "Ben")
+    @edition = FactoryBot.create(:answer_edition)
+    stub_holidays_used_by_fact_check
+    stub_post_new_fact_check_request
+  end
+
+  context ".request_fact_check" do
+    should "call the fact check manager api adapter" do
+      Services.fact_check_manager_api.expects(:post_fact_check).returns("stub response")
+
+      FactCheckManagerApiService.request_fact_check(@edition, @user, "test@email.com")
+    end
+  end
+
+  context ".build_post_payload" do
+    should "build a properly formatted payload with one email address" do
+      travel_to Time.zone.local(2026, 2, 2, 0, 0, 0) do
+        payload = FactCheckManagerApiService.build_post_payload(@edition, @user, "stub@email.com")
+
+        expected_payload = { source_app: "publisher",
+                             source_id: @edition.id,
+                             source_title: "New Title",
+                             source_url: "#{Plek.find('publisher')}/editions/#{@edition.id}",
+                             requester_name: "Ben",
+                             requester_email: "joe1@bloggs.com",
+                             current_content: "some body",
+                             previous_content: nil,
+                             deadline: "2026-02-09",
+                             recipients: ["stub@email.com"] }
+
+        assert payload == expected_payload
+      end
+    end
+
+    should "unpack multiple email addresses" do
+      payload = FactCheckManagerApiService.build_post_payload(@edition, @user, "stub@email.com, stub2@email.com")
+
+      assert payload[:recipients] == %w[stub@email.com stub2@email.com]
+    end
+  end
+end

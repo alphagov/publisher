@@ -3,26 +3,32 @@ require "gds_api/base"
 class GdsApi::FactCheckManager < GdsApi::Base
   # Post details to open a new fact check request
   #
-  # @param [uuid] edition_id The unique ID for the edition
-  # @param [string] edition_title The title of the edition
-  # @param [string] requester_name The username of the Publisher user submitting the request
-  # @param [string] requester_email The email address of the Publisher user submitting the request
-  # @param [array] recipients Array of emails to be notified of the request
+  # Keyword Arguments:
+  # @param [string] source_app identifier for the application sending the request
+  # @param [uuid] source_id The unique ID for the content
+  # @option [string] source_title The title of the content
+  # @option [string] source_url The url locating the content on the source application
+  # @param [string] requester_name The username of the source app user submitting the request
+  # @param [string] requester_email The email address of the source app user submitting the request
   # @param [string] current_content String containing HTML content being fact checked
-  # @param [datetime] deadline Time a response is requested by
-  # @option [string] previous_published_edition String containing HTML content of previous edition to check against
-  #
+  # @option [string] previous_content String containing HTML content of previous content version to check against
+  # @option [string] deadline Date a response is requested by. Use iso8601 date format: "2026-02-09"
+  # @param [array] recipients Array of emails to be notified of the request
   #
   # @return [GdsApi::Response] Basic response with code
-  #
-  def post_fact_check(edition_id, _edition_title, requester_name, requester_email, current_content, previous_published_edition, deadline, recipients)
+
+  def post_fact_check(source_app:, source_id:, requester_name:, requester_email:, current_content:,
+                      recipients:, source_title: nil, source_url: nil, previous_content: nil, deadline: nil)
     post_json(
       "#{endpoint}/api/requests",
-      edition_id:,
+      source_app:,
+      source_id:,
+      source_title:,
+      source_url:,
       requester_name:,
       requester_email:,
       current_content:,
-      previous_published_edition:,
+      previous_content:,
       deadline:,
       recipients:,
     )

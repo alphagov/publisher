@@ -19,6 +19,7 @@ class EventNotifierService
     emails.map(&:deliver_now)
   end
 
+  # TODO: when we migrate fully to the new fact check manager, delete this method.
   def self.request_fact_check(action, mailer: EventMailer)
     emails = action.email_addresses.split(/,\s*/).map do |recipient_email|
       mailer.request_fact_check(action, recipient_email)
@@ -31,7 +32,9 @@ class EventNotifierService
     edition = action.edition
     latest_status_action = edition.latest_status_action
     if latest_status_action.is_fact_check_request? && action.request_type == Action::RESEND_FACT_CHECK
-      request_fact_check(latest_status_action)
+      unless Flipflop.enabled?(:fact_check_manager_api)
+        request_fact_check(latest_status_action)
+      end
     else
       Rails.logger.info("Asked to resend fact check for #{edition.content_id}, but its most recent status action is not a fact check, it's a #{latest_status_action.request_type}")
     end

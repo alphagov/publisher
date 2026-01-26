@@ -20,23 +20,28 @@
         hint: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com",
       } %>
 
-      <%= render "govuk_publishing_components/components/textarea", {
-        label: {
-          heading_size: "m",
-          text: "Customised message",
-        },
-        id: "customised_message",
-        name: "customised_message",
-        value: params[:customised_message] || template,
-        rows: 14,
-      } %>
+      <% unless Flipflop.enabled?(:fact_check_manager_api) %>
 
-      <div class="govuk-button-group">
-        <%= render "govuk_publishing_components/components/button", {
+
+        <%= render "govuk_publishing_components/components/textarea", {
+            label: {
+              heading_size: "m",
+              text: "Customised message",
+            },
+            id: "customised_message",
+            name: "customised_message",
+            value: params[:customised_message] || template,
+            rows: 14,
+          } %>
+
+      <% end %>
+
+    <div class="govuk-button-group">
+      <%= render "govuk_publishing_components/components/button", {
           text: "Send to fact check",
         } %>
-        <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
-      </div>
+      <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+    </div>
     <% end %>
   </div>
 </div>
