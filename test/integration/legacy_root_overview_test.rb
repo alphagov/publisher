@@ -126,7 +126,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
     assert page.has_no_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
   end
 
-  [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
+  [[true, "In 2i", "Fact check sent"], [false, "In review", "Out for fact check"]].each do |toggle_value, in_review_filter_text, fact_check_filter_text|
     context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
       setup do
         @test_strategy.switch!(:rename_edition_states, toggle_value)
@@ -158,7 +158,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
         visit "/"
         filter_by_user("All")
-        click_on in_review_state_label
+        click_on in_review_filter_text
 
         assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "4 days")
         assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
@@ -176,7 +176,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
         visit "/"
         filter_by_user("All")
-        click_on in_review_state_label
+        click_on in_review_filter_text
 
         assert page.has_link?("Check Collections publisher", href: "#{Plek.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at")
       end
@@ -197,7 +197,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
         visit "/"
         filter_by_user("All")
 
-        click_on in_review_state_label
+        click_on in_review_filter_text
 
         within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
           find_button("Claim 2i").click
@@ -226,7 +226,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
         visit "/"
         filter_by_user("All")
-        click_on in_review_state_label
+        click_on in_review_filter_text
 
         edition.reviewer = another_user.name
         edition.save!
@@ -245,7 +245,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
         visit "/"
         filter_by_user("All")
-        click_on in_review_state_label
+        click_on in_review_filter_text
 
         within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
           click_on "Claim 2i"
@@ -267,7 +267,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
         visit "/"
         filter_by_user("All")
 
-        click_on in_review_state_label
+        click_on in_review_filter_text
 
         assert page.has_css?("#publication-list-container tbody tr:first-child td:nth-child(6)", text: "")
       end
@@ -280,7 +280,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
         login_as(welsh_editor)
         visit "/"
         filter_by_user("All")
-        click_on in_review_state_label
+        click_on in_review_filter_text
 
         assert page.has_button?("Claim 2i")
       end
@@ -293,9 +293,24 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
         login_as(welsh_editor)
         visit "/"
         filter_by_user("All")
-        click_on in_review_state_label
+        click_on in_review_filter_text
 
         assert_not page.has_button?("Claim 2i")
+      end
+
+      should "allow filtering of publications in the 'fact_check' state" do
+        FactoryBot.create(:user, :govuk_editor)
+        FactoryBot.create(:edition, :fact_check, title: "Fact check edition 1")
+        FactoryBot.create(:edition, :fact_check, title: "Fact check edition 2")
+        FactoryBot.create(:edition, :draft, title: "Draft edition")
+
+        visit "/"
+        filter_by_user("All")
+        click_on fact_check_filter_text
+
+        assert page.has_link?("Fact check edition 1")
+        assert page.has_link?("Fact check edition 2")
+        assert page.has_no_link?("Draft edition")
       end
     end
   end

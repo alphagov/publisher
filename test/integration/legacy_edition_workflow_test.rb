@@ -99,61 +99,79 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     assert_match(/reply is being sent to #{Regexp.escape guide.fact_check_email_address}\./, fact_check_email.body.to_s)
   end
 
-  test "can send guide to fact-check when in ready state" do
-    guide.update!(state: "ready")
-    visit_edition guide
+  [[true, "Fact check sent"], [false, "Fact check"]].each do |toggle_value, fact_check_state_label|
+    context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+      setup do
+        @test_strategy.switch!(:rename_edition_states, toggle_value)
+      end
 
-    click_link("Fact check")
+      should "be able to send guide to fact-check when in ready state" do
+        guide.update!(state: "ready")
+        visit_edition guide
 
-    ActionMailer::Base.deliveries.clear
+        click_link("Fact check")
 
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user@example.com"
-      click_on "Send"
+        ActionMailer::Base.deliveries.clear
+
+        within "#send_fact_check_form" do
+          fill_in "Customised message", with: "Blah"
+          fill_in "Email address", with: "user@example.com"
+          click_on "Send"
+        end
+
+        assert page.has_css?(".label", text: fact_check_state_label)
+
+        click_on "History and notes"
+        assert page.has_content? "Send fact check by Alice"
+        assert page.has_content? "Request sent to user@example.com"
+
+        guide.reload
+        assert guide.fact_check?
+
+        fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
+        assert fact_check_email
+        assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email.subject)
+        assert_equal "Blah", fact_check_email.body.to_s
+      end
+
+      should "be able to send guide to several fact-check recipients with comma separated emails" do
+        guide.update!(state: "ready")
+        visit_edition guide
+
+        click_link("Fact check")
+
+        ActionMailer::Base.deliveries.clear
+
+        within "#send_fact_check_form" do
+          fill_in "Customised message", with: "Blah"
+          fill_in "Email address", with: "user1@example.com, user2@example.com"
+          click_on "Send"
+        end
+
+        assert page.has_css?(".label", text: fact_check_state_label)
+        guide.reload
+        assert guide.fact_check?
+
+        fact_check_email1 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
+        assert fact_check_email1
+        fact_check_email2 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user2@example.com" }.last
+        assert fact_check_email2
+        assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email1.subject)
+        assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email2.subject)
+        assert_equal "Blah", fact_check_email1.body.to_s
+        assert_equal "Blah", fact_check_email2.body.to_s
+      end
+
+      should "be able to go back to fact-check from fact-check received" do
+        guide.update!(state: "fact_check_received")
+
+        visit_edition guide
+        send_for_fact_check guide
+        visit_edition guide
+
+        assert page.has_css?(".label", text: fact_check_state_label)
+      end
     end
-
-    assert page.has_css?(".label", text: "Fact check")
-
-    click_on "History and notes"
-    assert page.has_content? "Send fact check by Alice"
-    assert page.has_content? "Request sent to user@example.com"
-
-    guide.reload
-    assert guide.fact_check?
-
-    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
-    assert fact_check_email
-    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email.subject)
-    assert_equal "Blah", fact_check_email.body.to_s
-  end
-
-  test "can send guide to several fact-check recipients with comma separated emails" do
-    guide.update!(state: "ready")
-    visit_edition guide
-
-    click_link("Fact check")
-
-    ActionMailer::Base.deliveries.clear
-
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user1@example.com, user2@example.com"
-      click_on "Send"
-    end
-
-    assert page.has_css?(".label", text: "Fact check")
-    guide.reload
-    assert guide.fact_check?
-
-    fact_check_email1 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
-    assert fact_check_email1
-    fact_check_email2 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user2@example.com" }.last
-    assert fact_check_email2
-    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email1.subject)
-    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email2.subject)
-    assert_equal "Blah", fact_check_email1.body.to_s
-    assert_equal "Blah", fact_check_email2.body.to_s
   end
 
   test "the fact-check form validates emails and won't send if they are mangled" do
@@ -426,16 +444,6 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     view_filtered_list "Ready"
 
     assert page.has_content? guide.title
-  end
-
-  test "can go back to fact-check from fact-check received" do
-    guide.update!(state: "fact_check_received")
-
-    visit_edition guide
-    send_for_fact_check guide
-    visit_edition guide
-
-    assert page.has_css?(".label", text: "Fact check")
   end
 
   test "can create a new edition from the listings screens" do

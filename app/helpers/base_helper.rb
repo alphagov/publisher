@@ -4,7 +4,7 @@ module BaseHelper
       drafts: "Drafts",
       in_review: humanize_state("in_review"),
       amends_needed: "Amends needed",
-      out_for_fact_check: "Out for fact check",
+      out_for_fact_check: humanize_state("out_for_fact_check"),
       fact_check_received: "Fact check received",
       ready: "Ready",
       scheduled_for_publishing: "Scheduled",
@@ -27,7 +27,10 @@ module BaseHelper
   end
 
   def humanize_state(state)
-    return "In 2i" if state == "in_review" && Flipflop.enabled?(:rename_edition_states)
+    if Flipflop.enabled?(:rename_edition_states)
+      return "In 2i" if state == "in_review"
+      return "Fact check sent" if state == "out_for_fact_check"
+    end
 
     state.humanize
   end

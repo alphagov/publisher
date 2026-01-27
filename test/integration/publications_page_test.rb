@@ -17,7 +17,7 @@ class PublicationsPageTest < IntegrationTest
       assert_current_path my_content_path
     end
 
-    [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
+    [[true, "In 2i", "Fact check sent"], [false, "In review", "Fact check"]].each do |toggle_value, in_review_state_label, fact_check_state_label|
       context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
         setup do
           @test_strategy.switch!(:rename_edition_states, toggle_value)
@@ -25,7 +25,7 @@ class PublicationsPageTest < IntegrationTest
 
         should "display publications assigned to the current user" do
           @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
-          @amends_needed_edition = FactoryBot.create(:guide_edition, :amends_needed, title: "Amends needed edition", updated_at: 2.days.ago, assigned_to: @user)
+          @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago, assigned_to: @user)
           @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
           @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @user)
 
@@ -38,9 +38,9 @@ class PublicationsPageTest < IntegrationTest
             assert_text "Answer"
           end
 
-          within find(".govuk-table__row", text: "Amends needed edition") do
-            assert_link "Amends needed edition", href: edition_path(@amends_needed_edition)
-            assert page.has_css?(".govuk-tag--red", text: "Amends needed")
+          within find(".govuk-table__row", text: "Fact check edition") do
+            assert_link "Fact check edition", href: edition_path(@fact_check_edition)
+            assert page.has_css?(".govuk-tag--purple", text: fact_check_state_label)
             assert_text "2 days ago"
             assert_text "Guide"
           end
@@ -265,12 +265,12 @@ class PublicationsPageTest < IntegrationTest
       assert_current_path find_content_path
     end
 
-    [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
+    [[true, "In 2i", "Fact check sent"], [false, "In review", "Fact check"]].each do |toggle_value, in_review_state_label, fact_check_state_label|
       context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
         should "display publications data for find content page" do
           @test_strategy.switch!(:rename_edition_states, toggle_value)
           @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
-          @amends_needed_edition = FactoryBot.create(:guide_edition, :amends_needed, title: "Amends needed edition", updated_at: 2.days.ago, assigned_to: @other_user)
+          @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago, assigned_to: @other_user)
           @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
           @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
 
@@ -283,9 +283,9 @@ class PublicationsPageTest < IntegrationTest
             assert_text "Answer"
           end
 
-          within find(".govuk-table__row", text: "Amends needed edition") do
-            assert_link "Amends needed edition", href: edition_path(@amends_needed_edition)
-            assert page.has_css?(".govuk-tag--red", text: "Amends needed")
+          within find(".govuk-table__row", text: "Fact check edition") do
+            assert_link "Fact check edition", href: edition_path(@fact_check_edition)
+            assert page.has_css?(".govuk-tag--purple", text: fact_check_state_label)
             assert_text "2 days ago"
             assert_text "Guide"
           end

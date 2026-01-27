@@ -541,7 +541,10 @@ class Edition < ApplicationRecord
   end
 
   def human_state_name
-    return "in 2i" if state == "in_review" && Flipflop.enabled?(:rename_edition_states)
+    if Flipflop.enabled?(:rename_edition_states)
+      return "in 2i" if state == "in_review"
+      return "fact check sent" if state == "fact_check"
+    end
 
     super
   end
