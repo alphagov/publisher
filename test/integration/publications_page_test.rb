@@ -313,7 +313,7 @@ class PublicationsPageTest < IntegrationTest
       visit find_content_path
 
       within find(".govuk-table__row", text: "Draft edition") do
-        assert page.has_css?(".govuk-hint", text: "/slug-1")
+        assert page.has_css?(".govuk-body", text: "/slug-1")
       end
     end
 

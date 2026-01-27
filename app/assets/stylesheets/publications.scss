@@ -92,8 +92,14 @@
     @include govuk-font(19, "regular");
   }
 
-  .govuk-hint {
+  .find-content__title__slug {
     @include govuk-font(16);
+  }
+
+  .js-enabled & .govuk-input {
+    height: 2.5em;
+    padding-top: 0;
+    padding-bottom: 0.2rem;
   }
 
   thead tr {
