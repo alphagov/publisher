@@ -126,7 +126,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
     assert page.has_no_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
   end
 
-  [[true, "In 2i", "Fact check sent"], [false, "In review", "Out for fact check"]].each do |toggle_value, in_review_filter_text, fact_check_filter_text|
+  [[true, "In 2i", "Fact check sent", "Scheduled"], [false, "In review", "Out for fact check", "Scheduled for publishing"]].each do |toggle_value, in_review_filter_text, fact_check_filter_text, scheduled_for_publishing_page_heading|
     context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
       setup do
         @test_strategy.switch!(:rename_edition_states, toggle_value)
@@ -311,6 +311,16 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
         assert page.has_link?("Fact check edition 1")
         assert page.has_link?("Fact check edition 2")
         assert page.has_no_link?("Draft edition")
+      end
+
+      should "display the correct page heading when filtering by publications in the 'scheduled_for_publishing' state" do
+        FactoryBot.create(:user, :govuk_editor)
+
+        visit "/"
+        filter_by_user("All")
+        click_on "Scheduled"
+
+        assert_selector "h1", text: scheduled_for_publishing_page_heading
       end
     end
   end
