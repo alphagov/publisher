@@ -37,11 +37,11 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
           test_strategy.switch!(:rename_edition_states, toggle_value)
         end
 
-        should "return all state options with 'All active statuses' selected when no state filter has been specified" do
+        should "return all state options with 'Active statuses' selected when no state filter has been specified" do
           state_options = FilteredEditionsPresenter.new(a_gds_user).state_options
 
           assert_equal(10, state_options.count)
-          assert_includes(state_options, { text: "All active statuses", value: "", selected: true })
+          assert_includes(state_options, { text: "Active statuses", value: "", selected: true })
           assert_includes(state_options, { text: "Draft", value: :draft, selected: false })
           assert_includes(state_options, { text: in_review_state_label, value: :in_review, selected: false })
           assert_includes(state_options, { text: "Amends needed", value: :amends_needed, selected: false })
