@@ -413,7 +413,7 @@ class PublicationsPageTest < IntegrationTest
 
         assert_field("Title or slug")
         assert_nil find_field("Title or slug").value
-        assert_select("Status", selected: "All active statuses")
+        assert_select("Status", selected: "Active statuses")
         assert_select("Assigned to", selected: "All assignees")
         assert_select("Content type", selected: "All types")
         assert_button "Apply filters"
