@@ -313,7 +313,7 @@ class PublicationsPageTest < IntegrationTest
       visit find_content_path
 
       within find(".govuk-table__row", text: "Draft edition") do
-        assert page.has_css?(".govuk-hint", text: "/slug-1")
+        assert page.has_css?(".govuk-body", text: "/slug-1")
       end
     end
 
@@ -413,7 +413,7 @@ class PublicationsPageTest < IntegrationTest
 
         assert_field("Title or slug")
         assert_nil find_field("Title or slug").value
-        assert_select("Status", selected: "All active statuses")
+        assert_select("Status", selected: "Active statuses")
         assert_select("Assigned to", selected: "All assignees")
         assert_select("Content type", selected: "All types")
         assert_button "Apply filters"

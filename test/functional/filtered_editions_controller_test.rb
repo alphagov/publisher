@@ -252,7 +252,7 @@ class FilteredEditionsControllerTest < ActionController::TestCase
 
       assert_response :ok
       assert_select "th.govuk-table__header a", "Draft edition"
-      assert_select "th.govuk-table__header .govuk-hint", "/slug-1"
+      assert_select "th.govuk-table__header .govuk-body", "/slug-1"
     end
 
     should "display the total count of editions" do
