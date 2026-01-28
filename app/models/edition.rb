@@ -212,9 +212,7 @@ class Edition < ApplicationRecord
   end
 
   def latest_change_note
-    if latest_major_update.present?
-      latest_major_update.change_note
-    end
+    latest_major_update.presence&.change_note
   end
 
   def public_updated_at

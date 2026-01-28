@@ -22,7 +22,7 @@ module PublicationsTableHelper
   end
 
   def important_note(publication)
-    publication.important_note.comment if publication.important_note.present?
+    publication.important_note.presence&.comment
   end
 
   def awaiting_review(publication)
@@ -34,7 +34,7 @@ module PublicationsTableHelper
   end
 
   def scheduled(publication)
-    publication.publish_at.to_fs(:govuk_date_short) if publication.publish_at.present?
+    publication.publish_at.presence&.to_fs(:govuk_date_short)
   end
 
   def published_by(publication)
