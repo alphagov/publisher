@@ -43,8 +43,8 @@ module TaggingHelper
   def get_from_mainstream_browse_pages(reference, linkables)
     linkables.mainstream_browse_pages.each_value
              .flat_map do |level_2|
-      level_2.select { |page| reference.include? page[1] }
-             .map { |page| page[0].gsub(" / ", " > ") }
+               level_2.select { |page| reference.include? page[1] }
+                      .map { |page| page[0].gsub(" / ", " > ") }
     end
   end
 end
