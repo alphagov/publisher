@@ -5,6 +5,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api
+    @user = FactoryBot.create(:user, :govuk_editor)
     UpdateWorker.stubs(:perform_async)
   end
 
@@ -56,7 +57,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "filtering by title content" do
-    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, title: "XXX")
     FactoryBot.create(:guide_edition, title: "YYY")
 
@@ -70,8 +70,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "filtering by title content should not lose the active section" do
-    FactoryBot.create(:user, :govuk_editor)
-
     visit "/"
     click_on "Amends needed"
 
@@ -81,7 +79,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "filtering by format" do
-    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, title: "Draft guide")
     FactoryBot.create(:transaction_edition, title: "Draft transaction")
     FactoryBot.create(:guide_edition, title: "Amends needed guide", state: "amends_needed")
@@ -108,7 +105,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "invalid sibling_in_progress should not break archived view" do
-    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, title: "XXX", state: "archived", sibling_in_progress: 2)
 
     visit "/"
@@ -133,7 +129,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
       end
 
       should "order 'in_review' publications correctly" do
-        FactoryBot.create(:user, :govuk_editor)
         FactoryBot.create(
           :guide_edition,
           title: "XXX",
@@ -172,8 +167,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
       end
 
       should "show links to Collections Publisher when reviewing 'in_review' documents" do
-        FactoryBot.create(:user, :govuk_editor)
-
         visit "/"
         filter_by_user("All")
         click_on in_review_filter_text
@@ -184,7 +177,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
       should "allow a user to claim 2i" do
         stub_linkables
 
-        user = FactoryBot.create(:user, :govuk_editor)
         assignee = FactoryBot.create(:user, :govuk_editor)
         edition = FactoryBot.create(
           :guide_edition,
@@ -205,14 +197,12 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
         assert edition_url(edition), current_url
         assert page.has_content?("You are the reviewer of this guide.")
-        assert page.has_select?("Reviewer", selected: user.name)
+        assert page.has_select?("Reviewer", selected: @user.name)
         assert page.has_select?("Assigned to", selected: assignee.name)
       end
 
       should "prevent claiming 2i when already claimed" do
         stub_linkables
-
-        FactoryBot.create(:user, :govuk_editor)
 
         assignee = FactoryBot.create(:user, :govuk_editor)
         another_user = FactoryBot.create(:user, :govuk_editor, name: "Another McPerson")
@@ -255,13 +245,12 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
       end
 
       should "prevent the assignee from claiming 2i" do
-        user = FactoryBot.create(:user, :govuk_editor)
         FactoryBot.create(
           :guide_edition,
           title: "XXX",
           state: "in_review",
           review_requested_at: Time.zone.now,
-          assigned_to: user,
+          assigned_to: @user,
         )
 
         visit "/"
@@ -299,7 +288,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
       end
 
       should "allow filtering of publications in the 'fact_check' state" do
-        FactoryBot.create(:user, :govuk_editor)
         FactoryBot.create(:edition, :fact_check, title: "Fact check edition 1")
         FactoryBot.create(:edition, :fact_check, title: "Fact check edition 2")
         FactoryBot.create(:edition, :draft, title: "Draft edition")
@@ -314,19 +302,16 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
       end
 
       should "display the correct page heading when filtering by publications in the 'scheduled_for_publishing' state" do
-        FactoryBot.create(:user, :govuk_editor)
-
         visit "/"
         filter_by_user("All")
         click_on "Scheduled"
 
-        assert_selector "h1", text: scheduled_for_publishing_page_heading
+        assert_selector("h1", text: scheduled_for_publishing_page_heading)
       end
     end
   end
 
   test "filtering by published should show a table with an edition with a slug as a link" do
-    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, state: "published", title: "Test", slug: "test-slug")
 
     visit "/"
@@ -338,7 +323,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "should not render popular links edition" do
-    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, title: "Draft guide")
     FactoryBot.create(:transaction_edition, title: "Draft transaction")
     FactoryBot.create(:popular_links, title: "Popular links edition")
