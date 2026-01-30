@@ -4,8 +4,6 @@ class EditReadyEditionTest < IntegrationTest
   setup do
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     login_as(@govuk_editor)
-    @test_strategy = Flipflop::FeatureSet.current.test!
-    @test_strategy.switch!(:design_system_edit_phase_3a, true)
     @ready_edition = FactoryBot.create(:edition, :ready)
 
     visit edition_path(@ready_edition)
