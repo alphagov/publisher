@@ -1072,10 +1072,10 @@ class EditionTest < ActiveSupport::TestCase
   context "#latest_change_note" do
     should "return the change note of the latest major update" do
       edition1 = FactoryBot.create(
-        :answer_edition,
+        :edition,
+        :published,
         major_change: true,
         change_note: "a change note",
-        state: "published",
       )
       edition2 = edition1.build_clone
 
@@ -1083,11 +1083,7 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should "return nil if there is no major update in the edition series" do
-      edition1 = FactoryBot.create(
-        :answer_edition,
-        major_change: false,
-        state: "published",
-      )
+      edition1 = FactoryBot.create(:edition, :published, major_change: false)
       assert_nil edition1.latest_change_note
     end
   end
@@ -1095,11 +1091,11 @@ class EditionTest < ActiveSupport::TestCase
   context "#public_updated_at" do
     should "return the updated_at timestamp of the latest major update" do
       edition1 = FactoryBot.create(
-        :answer_edition,
+        :edition,
+        :published,
         major_change: true,
         change_note: "a change note",
         updated_at: 1.minute.ago,
-        state: "published",
       )
       edition2 = edition1.build_clone
 
@@ -1107,12 +1103,7 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should "return the timestamp of the first published edition when there are no major updates" do
-      edition1 = FactoryBot.create(
-        :answer_edition,
-        major_change: false,
-        updated_at: 2.minutes.ago,
-        state: "published",
-      )
+      edition1 = FactoryBot.create(:edition, :published, major_change: false, updated_at: 2.minutes.ago)
       edition2 = edition1.build_clone
       Timecop.freeze(1.minute.ago) do
         # added to allow significant amount of time between edition updated_at values
@@ -1125,14 +1116,9 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should "return nil if there are no major updates and no published editions" do
-      edition1 = FactoryBot.create(
-        :answer_edition,
-        major_change: false,
-        updated_at: 1.minute.ago,
-        state: "draft",
-      )
+      edition = FactoryBot.create(:edition, :draft, major_change: false, updated_at: 1.minute.ago)
 
-      assert_nil edition1.public_updated_at
+      assert_nil edition.public_updated_at
     end
   end
 
