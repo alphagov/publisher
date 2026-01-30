@@ -10,7 +10,7 @@ class LegacyChangeEditionTypeTest < LegacyIntegrationTest
     UpdateWorker.stubs(:perform_async)
   end
 
-  FULLY_TRANSITIONED_TYPES = %w[answer help_page place transaction completed_transaction local_transaction].freeze
+  FULLY_TRANSITIONED_TYPES = %w[answer help_page place transaction completed_transaction local_transaction guide].freeze
 
   def select_target_edition(format)
     select(format.to_s.humanize, from: "to")

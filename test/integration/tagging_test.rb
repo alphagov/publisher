@@ -9,7 +9,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
 
-    @edition = FactoryBot.create(:guide_edition, title: "Test guide")
+    @edition = FactoryBot.create(:simple_smart_answer_edition, title: "Test simple smart answer")
     @artefact = @edition.artefact
     @artefact.external_links = []
     @content_id = @edition.artefact.content_id
@@ -217,7 +217,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
 
       visit_edition @edition
 
-      assert page.has_content?("Test guide")
+      assert page.has_content?("Test simple smart answer")
     end
   end
 

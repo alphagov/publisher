@@ -18,9 +18,9 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
     bob     = FactoryBot.create(:user, :govuk_editor, name: "Bob", uid: "bob")
     charlie = FactoryBot.create(:user, :govuk_editor, name: "Charlie", uid: "charlie")
 
-    x = FactoryBot.create(:guide_edition, title: "XXX", slug: "xxx")
-    y = FactoryBot.create(:guide_edition, title: "YYY", slug: "yyy")
-    FactoryBot.create(:guide_edition, title: "ZZZ", slug: "zzz")
+    x = FactoryBot.create(:simple_smart_answer_edition, title: "XXX", slug: "xxx")
+    y = FactoryBot.create(:simple_smart_answer_edition, title: "YYY", slug: "yyy")
+    FactoryBot.create(:simple_smart_answer_edition, title: "ZZZ", slug: "zzz")
 
     bob.assign(x, alice)
     bob.assign(y, charlie)
@@ -57,8 +57,8 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "filtering by title content" do
-    FactoryBot.create(:guide_edition, title: "XXX")
-    FactoryBot.create(:guide_edition, title: "YYY")
+    FactoryBot.create(:simple_smart_answer_edition, title: "XXX")
+    FactoryBot.create(:simple_smart_answer_edition, title: "YYY")
 
     visit "/"
     filter_by_user("All")
@@ -79,33 +79,33 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "filtering by format" do
-    FactoryBot.create(:guide_edition, title: "Draft guide")
+    FactoryBot.create(:simple_smart_answer_edition, title: "Draft simple smart answer")
     FactoryBot.create(:transaction_edition, title: "Draft transaction")
-    FactoryBot.create(:guide_edition, title: "Amends needed guide", state: "amends_needed")
+    FactoryBot.create(:simple_smart_answer_edition, title: "Amends needed simple smart answer", state: "amends_needed")
     FactoryBot.create(:transaction_edition, title: "Amends needed transaction", state: "amends_needed")
 
     visit "/"
 
     filter_by_user("All")
 
-    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft simple smart answer")
     assert page.has_content?("Draft transaction")
 
-    filter_by_format("Guide")
+    filter_by_format("Simple smart answer")
 
-    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft simple smart answer")
     assert page.has_no_content?("Draft transaction")
 
     click_on "Amends needed"
 
-    assert page.has_no_content?("Draft guide")
+    assert page.has_no_content?("Draft simple smart answer")
     assert page.has_no_content?("Draft transaction")
-    assert page.has_content?("Amends needed guide")
+    assert page.has_content?("Amends needed simple smart answer")
     assert page.has_no_content?("Amends needed transaction")
   end
 
   test "invalid sibling_in_progress should not break archived view" do
-    FactoryBot.create(:guide_edition, title: "XXX", state: "archived", sibling_in_progress: 2)
+    FactoryBot.create(:simple_smart_answer_edition, title: "XXX", state: "archived", sibling_in_progress: 2)
 
     visit "/"
     filter_by_user("All")
@@ -130,21 +130,21 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
       should "order 'in_review' publications correctly" do
         FactoryBot.create(
-          :guide_edition,
+          :simple_smart_answer_edition,
           title: "XXX",
           slug: "xxx",
           state: "in_review",
           review_requested_at: 4.days.ago,
         )
         FactoryBot.create(
-          :guide_edition,
+          :simple_smart_answer_edition,
           title: "YYY",
           slug: "yyy",
           state: "in_review",
           review_requested_at: 2.days.ago,
         )
         FactoryBot.create(
-          :guide_edition,
+          :simple_smart_answer_edition,
           title: "ZZZ",
           slug: "zzz",
           state: "in_review",
@@ -179,7 +179,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
         assignee = FactoryBot.create(:user, :govuk_editor)
         edition = FactoryBot.create(
-          :guide_edition,
+          :simple_smart_answer_edition,
           title: "XXX",
           state: "in_review",
           review_requested_at: Time.zone.now,
@@ -196,7 +196,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
         end
 
         assert edition_url(edition), current_url
-        assert page.has_content?("You are the reviewer of this guide.")
+        assert page.has_content?("You are the reviewer of this simple smart answer.")
         assert page.has_select?("Reviewer", selected: @user.name)
         assert page.has_select?("Assigned to", selected: assignee.name)
       end
@@ -207,7 +207,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
         assignee = FactoryBot.create(:user, :govuk_editor)
         another_user = FactoryBot.create(:user, :govuk_editor, name: "Another McPerson")
         edition = FactoryBot.create(
-          :guide_edition,
+          :simple_smart_answer_edition,
           title: "XXX",
           state: "in_review",
           review_requested_at: Time.zone.now,
@@ -241,12 +241,12 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
           click_on "Claim 2i"
         end
 
-        assert page.has_content?("You are the reviewer of this guide.")
+        assert page.has_content?("You are the reviewer of this simple smart answer.")
       end
 
       should "prevent the assignee from claiming 2i" do
         FactoryBot.create(
-          :guide_edition,
+          :simple_smart_answer_edition,
           title: "XXX",
           state: "in_review",
           review_requested_at: Time.zone.now,
@@ -263,7 +263,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
       should "display 'Claim 2i' button to Welsh editors viewing Welsh editions" do
         stub_linkables
-        FactoryBot.create(:guide_edition, :in_review, :welsh)
+        FactoryBot.create(:simple_smart_answer_edition, :in_review, :welsh)
         welsh_editor = FactoryBot.create(:user, :welsh_editor)
 
         login_as(welsh_editor)
@@ -276,7 +276,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
       should "not display 'Claim 2i' button to Welsh editors viewing non-Welsh editions" do
         stub_linkables
-        FactoryBot.create(:guide_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
+        FactoryBot.create(:simple_smart_answer_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
         welsh_editor = FactoryBot.create(:user, :welsh_editor)
 
         login_as(welsh_editor)
@@ -312,7 +312,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "filtering by published should show a table with an edition with a slug as a link" do
-    FactoryBot.create(:guide_edition, state: "published", title: "Test", slug: "test-slug")
+    FactoryBot.create(:simple_smart_answer_edition, state: "published", title: "Test", slug: "test-slug")
 
     visit "/"
     filter_by_user("All")
@@ -323,7 +323,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "should not render popular links edition" do
-    FactoryBot.create(:guide_edition, title: "Draft guide")
+    FactoryBot.create(:simple_smart_answer_edition, title: "Draft simple smart answer")
     FactoryBot.create(:transaction_edition, title: "Draft transaction")
     FactoryBot.create(:popular_links, title: "Popular links edition")
 
@@ -331,9 +331,9 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
     filter_by_user("All")
 
-    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft simple smart answer")
     assert page.has_content?("Draft transaction")
-    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft simple smart answer")
     assert page.has_no_content?("Popular links edition")
   end
 end
