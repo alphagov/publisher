@@ -12,14 +12,14 @@ class MarkEditionInBetaTest < LegacyJavascriptIntegrationTest
 
   with_and_without_javascript do
     should "allow marking an edition as in beta" do
-      edition = FactoryBot.create(:guide_edition)
+      edition = FactoryBot.create(:simple_smart_answer_edition)
       visit_edition edition
 
       assert_not find("#edition_in_beta").checked?
       check "Content is in beta"
+      save_edition
 
-      save_edition_and_assert_success
-
+      assert page.has_text? "Simple smart answer edition was successfully updated."
       assert find("#edition_in_beta").checked?
 
       visit "/?user_filter=all"
@@ -27,14 +27,14 @@ class MarkEditionInBetaTest < LegacyJavascriptIntegrationTest
     end
 
     should "allow marking an edition as not in beta" do
-      edition = FactoryBot.create(:guide_edition, in_beta: true)
+      edition = FactoryBot.create(:simple_smart_answer_edition, in_beta: true)
       visit_edition edition
 
       assert find("#edition_in_beta").checked?
       uncheck "Content is in beta"
+      save_edition
 
-      save_edition_and_assert_success
-
+      assert page.has_text? "Simple smart answer edition was successfully updated."
       assert_not find("#edition_in_beta").checked?
 
       visit "/?user_filter=all"

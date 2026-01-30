@@ -4,8 +4,6 @@ class EditDraftGuideEditionJsTest < JavascriptIntegrationTest
   context "auto-population of a chapter's slug from its title when JS is enabled" do
     setup do
       login_as_govuk_editor
-      @test_strategy = Flipflop::FeatureSet.current.test!
-      @test_strategy.switch!(:design_system_edit_phase_3a, true)
     end
 
     should "auto-populate the chapter's slug from the title" do

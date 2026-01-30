@@ -6,7 +6,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "be created with valid nodes" do
-    edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
+    edition = FactoryBot.build(:simple_smart_answer_edition, nodes: [], panopticon_id: @artefact.id)
     edition.body = "This is a simple smart answer."
 
     edition.nodes.build(slug: "question1", title: "You approach two locked doors. Which do you choose?", kind: "question", order: 1)
@@ -24,6 +24,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   should "copy the body and nodes when cloning an edition" do
     edition = FactoryBot.create(
       :simple_smart_answer_edition,
+      nodes: [],
       panopticon_id: @artefact.id,
       body: "This smart answer is somewhat unique and calls for a different kind of introduction",
       state: "published",
@@ -48,6 +49,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   should "copy the node options when cloning an edition" do
     edition = FactoryBot.create(
       :simple_smart_answer_edition,
+      nodes: [],
       panopticon_id: @artefact.id,
       body: "This smart answer is somewhat unique and calls for a different kind of introduction",
       state: "published",
@@ -78,6 +80,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   should "not copy across old mongo_ids for nodes and options when cloning an edition" do
     edition = FactoryBot.create(
       :simple_smart_answer_edition,
+      nodes: [],
       panopticon_id: @artefact.id,
       body: "This smart answer is somewhat unique and calls for a different kind of introduction",
       state: "published",
@@ -96,6 +99,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   should "not copy nodes when new edition is not a smart answer" do
     edition = FactoryBot.create(
       :simple_smart_answer_edition,
+      nodes: [],
       panopticon_id: @artefact.id,
       body: "This smart answer is somewhat unique and calls for a different kind of introduction",
       state: "published",
@@ -112,7 +116,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "select the first node as the starting node" do
-    edition = FactoryBot.create(:simple_smart_answer_edition)
+    edition = FactoryBot.create(:simple_smart_answer_edition, nodes: [])
     edition.nodes.build(slug: "question1", title: "Question 1", kind: "question", order: 1)
     edition.nodes.build(slug: "question2", title: "Question 2", kind: "question", order: 2)
     edition.nodes.build(slug: "foo", title: "Outcome 1.", order: 3, kind: "outcome")
@@ -122,7 +126,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "format the questions and outcomes correctly for the history" do
-    edition = FactoryBot.build(:simple_smart_answer_edition)
+    edition = FactoryBot.build(:simple_smart_answer_edition, nodes: [])
     edition.nodes.build(slug: "question-1",
                         title: "The first question",
                         kind: "question",
@@ -146,6 +150,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   should "create nodes with nested attributes" do
     edition = FactoryBot.create(
       :simple_smart_answer_edition,
+      nodes: [],
       nodes_attributes: [
         { slug: "question1", title: "Question 1", kind: "question", order: 1 },
         { slug: "foo", title: "Outcome 1", kind: "outcome", order: 2 },
@@ -157,7 +162,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "destroy nodes using nested attributes" do
-    edition = FactoryBot.create(:simple_smart_answer_edition)
+    edition = FactoryBot.create(:simple_smart_answer_edition, nodes: [])
     edition.nodes.build(slug: "question1", title: "Question 1", kind: "question", order: 1)
     edition.nodes.build(slug: "question2", title: "Question 2", kind: "question", order: 1)
     edition.save!
@@ -217,7 +222,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   # rubocop:disable Rails/SaveBang
   context "update method" do
     setup do
-      @edition = FactoryBot.build(:simple_smart_answer_edition)
+      @edition = FactoryBot.build(:simple_smart_answer_edition, nodes: [])
       @edition.nodes.build(slug: "question1", title: "Question 1", kind: "question", order: 1)
       @edition.nodes.build(slug: "question2", title: "Question 2", kind: "question", order: 1)
 
@@ -283,7 +288,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
   context "generating mermaid.js syntax" do
     should "generate correct syntax from a simple smart answer with no nodes" do
-      edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
+      edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id, nodes: [])
       edition.update(title: "Smarter than the average answer")
       edition.save!
 
@@ -296,7 +301,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "generate correct syntax from a simple smart answer with one node" do
-      edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
+      edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id, nodes: [])
       edition.update(title: "Smarter than the average answer")
       edition.nodes.build(slug: "question-1", title: "You approach two locked doors. Which do you choose?", kind: "question")
 
@@ -312,7 +317,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "generate mermaid.js syntax from a simple smart answer with multiple nodes" do
-      edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
+      edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id, nodes: [])
 
       edition.nodes.build(slug: "question-1", title: "You approach two locked doors. Which do you choose?", kind: "question", options: [FactoryBot.build(:option, label: "A tiger fights you", next_node: "outcome-1")])
       edition.nodes.build(slug: "outcome-1", title: "Tiger wins", kind: "outcome")

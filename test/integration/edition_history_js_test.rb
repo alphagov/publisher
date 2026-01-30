@@ -7,9 +7,6 @@ class EditionHistoryJSTest < JavascriptIntegrationTest
 
     stub_events_for_all_content_ids
     stub_users_from_signon_api
-
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_3a, true)
   end
 
   context "History and notes tab" do

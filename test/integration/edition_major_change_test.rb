@@ -15,7 +15,7 @@ class EditionMajorChangeTest < LegacyJavascriptIntegrationTest
   end
 
   test "doesn't show change note until an edition has been published" do
-    edition = FactoryBot.create(:guide_edition)
+    edition = FactoryBot.create(:simple_smart_answer_edition)
     visit_edition edition
     assert page.has_no_field?("edition_change_note")
     assert page.has_no_field?("edition_major_change")
@@ -24,7 +24,7 @@ class EditionMajorChangeTest < LegacyJavascriptIntegrationTest
   without_javascript do
     context "change note fields" do
       setup do
-        @edition = FactoryBot.create(:guide_edition, state: "published")
+        @edition = FactoryBot.create(:simple_smart_answer_edition, state: "published")
       end
 
       should "show change note fields once an edition has been published" do
@@ -48,7 +48,8 @@ class EditionMajorChangeTest < LegacyJavascriptIntegrationTest
         should "validate that the change note is present for a major change" do
           visit_edition @second_edition
           check("edition_major_change")
-          save_edition_and_assert_error("can't be blank", "#edition_change_note")
+          save_edition
+          assert page.has_css? "#error-change-note", text: "can't be blank"
 
           fill_in "edition_change_note", with: "Something changed"
           save_edition_and_assert_success
