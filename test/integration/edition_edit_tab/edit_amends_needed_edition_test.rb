@@ -4,8 +4,6 @@ class EditAmendsNeededEditionTest < IntegrationTest
   setup do
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     login_as(@govuk_editor)
-    @test_strategy = Flipflop::FeatureSet.current.test!
-    @test_strategy.switch!(:design_system_edit_phase_3a, true)
     @amends_needed_edition = FactoryBot.create(:edition, :amends_needed)
 
     visit edition_path(@amends_needed_edition)
