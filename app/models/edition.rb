@@ -204,6 +204,8 @@ class Edition < ApplicationRecord
   end
 
   def latest_major_update
+    return self if major_change
+
     major_updates_in_series.first
   end
 

@@ -1086,6 +1086,12 @@ class EditionTest < ActiveSupport::TestCase
       edition1 = FactoryBot.create(:edition, :published, major_change: false)
       assert_nil edition1.latest_change_note
     end
+
+    should "return the change note of the current draft edition when it is a major update" do
+      edition = FactoryBot.create(:edition, :draft, major_change: true, change_note: "a change note")
+
+      assert_equal "a change note", edition.latest_change_note
+    end
   end
 
   context "#public_updated_at" do
@@ -1119,6 +1125,12 @@ class EditionTest < ActiveSupport::TestCase
       edition = FactoryBot.create(:edition, :draft, major_change: false, updated_at: 1.minute.ago)
 
       assert_nil edition.public_updated_at
+    end
+
+    should "return the updated_at timestamp of the current draft edition if it is a major update" do
+      edition = FactoryBot.create(:edition, :draft, major_change: true, change_note: "a change note")
+
+      assert_not_nil edition.public_updated_at
     end
   end
 
