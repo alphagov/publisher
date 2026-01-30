@@ -7,6 +7,7 @@ class EditFactCheckEditionTest < IntegrationTest
     login_as(@govuk_editor)
     @test_strategy = Flipflop::FeatureSet.current.test!
     @test_strategy.switch!(:design_system_edit_phase_3a, true)
+    @test_strategy.switch!(:fact_check_manager_api, false)
     @fact_check_edition = FactoryBot.create(:edition, :fact_check, requester: @govuk_editor)
   end
 
