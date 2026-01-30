@@ -22,7 +22,7 @@
         rows: @presenter.editions.map do | edition |
           [
             { text: link_to(edition.title, edit_edition_path(edition), class: "govuk-link govuk-link--no-visited-state") +
-              (render("govuk_publishing_components/components/hint", { text: "/#{edition.slug}", margin_bottom: 0 }) ) },
+              sanitize("<p class='govuk-body govuk-!-margin-bottom-0 find-content__title__slug' >/#{edition.slug}</p>")},
             { text: render("govuk_publishing_components/components/tag", { text: edition.human_state_name, colour: edition_status_tag_colour(edition) }) },
             { text: "#{time_ago_in_words(edition.updated_at).capitalize} ago" },
             {

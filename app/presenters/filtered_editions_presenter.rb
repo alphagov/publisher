@@ -28,7 +28,7 @@ class FilteredEditionsPresenter
   end
 
   def state_options
-    options = [{ text: "All active statuses", value: "", selected: @states_filter.blank? }]
+    options = [{ text: "Active statuses", value: "", selected: @states_filter.blank? }]
 
     state_names.each do |state, label|
       options << { text: label, value: state, selected: @states_filter.first == state.to_s }
