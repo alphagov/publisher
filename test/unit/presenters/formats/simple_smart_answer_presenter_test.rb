@@ -9,6 +9,7 @@ class SimpleSmartAnswerPresenterTest < ActiveSupport::TestCase
     @edition ||= begin
       @edition = FactoryBot.create(
         :simple_smart_answer_edition,
+        nodes: [],
         start_button_text: "Start now",
         title: "Party time",
         body: "Are you ready to party?",

@@ -536,9 +536,13 @@ FactoryBot.define do
   end
 
   factory :create_simple_smart_answer, class: "SimpleSmartAnswerEdition" do
+    nodes { build_list(:node, 2) }
   end
 
   factory :node, class: "SimpleSmartAnswerEdition::Node" do
+    title { "New Title" }
+    kind { "question" }
+    sequence(:slug) { |n| "slug-#{n}" }
   end
 
   factory :option, class: "SimpleSmartAnswerEdition::Node::Option" do
