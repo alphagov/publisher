@@ -1228,7 +1228,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
   context "given a simple smart answer" do
     setup do
       @artefact = FactoryBot.create(:artefact, slug: "foo", name: "Foo", kind: "simple_smart_answer", owning_app: "publisher")
-      @edition = FactoryBot.create(:simple_smart_answer_edition, body: "blah", state: "draft", slug: "foo", panopticon_id: @artefact.id)
+      @edition = FactoryBot.create(:simple_smart_answer_edition, nodes: [], body: "blah", state: "draft", slug: "foo", panopticon_id: @artefact.id)
       @edition.nodes.build(
         kind: "question",
         slug: "question-1",
