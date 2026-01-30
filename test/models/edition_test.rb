@@ -1085,6 +1085,12 @@ class EditionTest < ActiveSupport::TestCase
       edition1 = FactoryBot.create(:edition, :published, major_change: false)
       assert_nil edition1.latest_change_note
     end
+
+    should "return the change note of the current draft edition when it is a major update" do
+      edition = FactoryBot.create(:edition, :draft, :is_major_change, change_note: "a change note")
+
+      assert_equal "a change note", edition.latest_change_note
+    end
   end
 
   context "#public_updated_at" do
@@ -1112,6 +1118,29 @@ class EditionTest < ActiveSupport::TestCase
       edition = FactoryBot.create(:edition, :draft, major_change: false, updated_at: 1.minute.ago)
 
       assert_nil edition.public_updated_at
+    end
+
+    should "return the updated_at timestamp of the current draft edition if it is a major update" do
+      edition = FactoryBot.create(:edition, :draft, :is_major_change)
+
+      assert_not_nil edition.public_updated_at
+    end
+
+    should "return the updated_at timestamp of the current edition, even if there is a later edition in one of the draft states with major changes" do
+      # When republishing the current published edition, we don't want to use the public_updated_at of any draft editions
+
+      edition1 = FactoryBot.create(
+        :edition,
+        :published,
+        :is_major_change,
+        updated_at: 2.minutes.ago,
+      )
+      edition2 = edition1.build_clone
+      Timecop.freeze(1.minute.ago) do
+        edition2.update!(state: "draft", major_change: true, change_note: "a change note")
+      end
+
+      assert_in_delta edition1.updated_at, edition1.public_updated_at, 1.second
     end
   end
 
