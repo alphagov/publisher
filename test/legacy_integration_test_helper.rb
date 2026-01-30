@@ -193,20 +193,12 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
   def save_edition_and_assert_success
     save_edition
 
-    if using_javascript?
-      assert page.has_css?(".workflow-message", text: "Saved"), "Edition didn’t successfully save with javascript"
-    else
-      assert page.has_content? "edition was successfully updated."
-    end
+    assert page.has_content? "edition was successfully updated."
     page.refresh
   end
 
   def save_edition_and_assert_error(error_message = nil, link_href = nil)
     save_edition
-
-    if using_javascript?
-      assert page.has_content? "We had some problems saving"
-    end
 
     if error_message.present?
       assert page.has_content? "There is a problem"

@@ -408,6 +408,7 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
         title: "Can I get a driving licence?",
         panopticon_id: @artefact.id,
         slug: "can-i-get-a-driving-licence",
+        nodes: [],
       )
       @edition.nodes.build(
         slug: "question-1",
@@ -600,6 +601,7 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
         title: "Can I get a driving licence?",
         panopticon_id: @artefact.id,
         slug: "can-i-get-a-driving-licence",
+        nodes: [],
       )
       @edition.nodes.build(
         slug: "question-1",

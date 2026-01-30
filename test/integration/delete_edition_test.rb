@@ -15,8 +15,8 @@ class DeleteEditionTest < LegacyIntegrationTest
 
   context "when an artefact has multiple editions" do
     should "discard the draft in the publishing api" do
-      artefact = FactoryBot.create(:artefact, kind: "guide")
-      edition = FactoryBot.create(:guide_edition, panopticon_id: artefact.id)
+      artefact = FactoryBot.create(:artefact, kind: "simple_smart_answer")
+      edition = FactoryBot.create(:simple_smart_answer_edition, panopticon_id: artefact.id)
 
       visit_edition edition
 
@@ -34,8 +34,8 @@ class DeleteEditionTest < LegacyIntegrationTest
 
   context "when an artefact has only one edition" do
     should "discard the draft in the publishing api" do
-      artefact = FactoryBot.create(:artefact, :with_published_edition, kind: "guide")
-      edition = FactoryBot.create(:guide_edition, panopticon_id: artefact.id)
+      artefact = FactoryBot.create(:artefact, :with_published_edition, kind: "simple_smart_answer")
+      edition = FactoryBot.create(:simple_smart_answer_edition, panopticon_id: artefact.id)
 
       visit_edition edition
 

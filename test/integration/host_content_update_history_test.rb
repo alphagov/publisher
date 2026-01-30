@@ -74,7 +74,7 @@ class HostContentUpdateHistoryTest < LegacyJavascriptIntegrationTest
       )
 
       some_time_passes
-      @edition3 = edition2.build_clone(GuideEdition)
+      @edition3 = edition2.build_clone(SimpleSmartAnswerEdition)
       @edition3.save!
 
       all_events = [

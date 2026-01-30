@@ -18,22 +18,20 @@ class SkipReviewTest < LegacyJavascriptIntegrationTest
     @artefact = FactoryBot.create(
       :artefact,
       slug: "hedgehog-topiary",
-      kind: "guide",
+      kind: "simple_smart_answer",
       name: "Foo bar",
       owning_app: "publisher",
     )
 
-    @guide = FactoryBot.build(
-      :guide_edition,
+    @simple_smart_answer = FactoryBot.create(
+      :simple_smart_answer_edition,
       panopticon_id: @artefact.id,
       title: "Foo bar",
       state: "in_review",
       review_requested_at: 1.hour.ago,
     )
-    @guide.parts.build(title: "Placeholder", body: "placeholder", slug: "placeholder", order: 1)
-    @guide.save!
 
-    @guide.new_action(@permitted_user, Action::REQUEST_REVIEW)
+    @simple_smart_answer.new_action(@permitted_user, Action::REQUEST_REVIEW)
   end
 
   teardown do

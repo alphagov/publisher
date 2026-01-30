@@ -9,14 +9,14 @@ class EditionTabTest < LegacyJavascriptIntegrationTest
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
 
-    @guide = FactoryBot.create(:guide_edition, state: "draft")
+    @simple_smart_answer = FactoryBot.create(:simple_smart_answer_edition, state: "draft")
   end
 
   def visit_tab(tab)
     if tab == "edit"
-      visit_edition @guide
+      visit_edition @simple_smart_answer
     else
-      visit "/editions/#{@guide.to_param}/#{tab}"
+      visit "/editions/#{@simple_smart_answer.to_param}/#{tab}"
     end
   end
 
@@ -30,17 +30,17 @@ class EditionTabTest < LegacyJavascriptIntegrationTest
 
   with_and_without_javascript do
     should "show the edit tab by default" do
-      visit_edition @guide
+      visit_edition @simple_smart_answer
       assert_tab_active("edit", "Edit")
     end
 
     should "show the edit tab after saving whether successful or not" do
-      visit_edition @guide
-      fill_in "Title", with: "New title"
+      visit_edition @simple_smart_answer
+      fill_in "edition[title]", with: "New title"
       save_edition_and_assert_success
       assert_tab_active("edit", "Edit")
 
-      fill_in "Title", with: ""
+      fill_in "edition[title]", with: ""
       save_edition_and_assert_error("Enter a title", "#edition_title")
       assert_tab_active("edit", "Edit")
     end
@@ -63,7 +63,7 @@ class EditionTabTest < LegacyJavascriptIntegrationTest
     end
 
     should "show the correct tab when clicking tabs" do
-      visit_edition @guide
+      visit_edition @simple_smart_answer
 
       click_on("Metadata")
       assert_tab_active("metadata", "Metadata")
