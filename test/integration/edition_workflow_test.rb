@@ -5,8 +5,6 @@ class EditionWorkflowTest < IntegrationTest
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     @govuk_requester = FactoryBot.create(:user, :govuk_editor, name: "Stub requester")
     login_as(@govuk_editor)
-    @test_strategy = Flipflop::FeatureSet.current.test!
-    @test_strategy.switch!(:design_system_edit_phase_3a, true)
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api

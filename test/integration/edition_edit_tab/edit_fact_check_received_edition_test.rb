@@ -5,8 +5,6 @@ class EditFactCheckReceivedEditionTest < IntegrationTest
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     @govuk_requester = FactoryBot.create(:user, :govuk_editor, name: "Stub requester")
     login_as(@govuk_editor)
-    @test_strategy = Flipflop::FeatureSet.current.test!
-    @test_strategy.switch!(:design_system_edit_phase_3a, true)
     @fact_check_received_edition = FactoryBot.create(:edition, :fact_check_received)
   end
 

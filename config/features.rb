@@ -9,10 +9,6 @@ Flipflop.configure do
             description: "A feature only used by tests; not to be used for any actual features."
   end
 
-  feature :design_system_edit_phase_3a,
-          default: true,
-          description: "Update the publications edit page for Guide content type to use the GOV.UK Design System"
-
   feature :design_system_edit_phase_3b,
           default: false,
           description: "Update the publications page to use the GOV.UK Design System with a multi-page design"
