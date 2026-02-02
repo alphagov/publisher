@@ -1,40 +1,56 @@
 <% content_for :page_title, "Find content" %>
 <% content_for :title, "Find content" %>
 
-<%= render partial: "filtered_editions/find_content_filter" %>
+<div
+  data-ga4-ecommerce
+  data-ga4-list-title="Find content"
+  data-ga4-search-query="Populated-dynamically"
+  data-ga4-ecommerce-start-index="1"
+  data-module="ga4-search-results-setup"
+>
+  <%= render partial: "filtered_editions/find_content_filter" %>
 
-<% caption = sanitize("<span class='govuk-visually-hidden'>Find content</span><span class='item-count'>#{pluralize(number_with_delimiter(@presenter.editions.total_count), 'item' )}</span>") %>
+  <% caption =
+    tag.span(class:"govuk-visually-hidden") do
+      "Find content "
+    end + tag.span(class: "item-count", id: "js-result-count") do
+      pluralize(number_with_delimiter(@presenter.editions.total_count), 'item')
+    end
+  %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full find-content">
-    <% if @presenter.editions.any? %>
-      <%= render "govuk_publishing_components/components/table", {
-        first_cell_is_header: true,
-        caption: caption,
-        caption_classes: "govuk-!-margin-bottom-2",
-        head: [
-          { text: "Title" },
-          { text: "Status" },
-          { text: "Updated" },
-          { text: "Assigned to" },
-          { text: "Content type" },
-        ],
-        rows: @presenter.editions.map do | edition |
-          [
-            { text: link_to(edition.title, edit_edition_path(edition), class: "govuk-link govuk-link--no-visited-state") +
-              sanitize("<p class='govuk-body govuk-!-margin-bottom-0 find-content__title__slug' >/#{edition.slug}</p>")},
-            { text: render("govuk_publishing_components/components/tag", { text: edition.human_state_name, colour: edition_status_tag_colour(edition) }) },
-            { text: "#{time_ago_in_words(edition.updated_at).capitalize} ago" },
-            {
-              text: edition.assignee,
-            },
-            { text: edition.format.underscore.humanize },
-          ]
-        end,
-        } %>
-    <%= paginate @presenter.editions %>
-      <% else %>
-      <p class="govuk-body item-count">0 items</p>
-    <% end %>
+  <div
+    class="govuk-grid-row"
+  >
+    <div class="govuk-grid-column-full find-content">
+      <% if @presenter.editions.any? %>
+        <%= render "govuk_publishing_components/components/table", {
+          first_cell_is_header: true,
+          caption: caption,
+          caption_classes: "govuk-!-margin-bottom-2",
+          head: [
+            { text: "Title" },
+            { text: "Status" },
+            { text: "Updated" },
+            { text: "Assigned to" },
+            { text: "Content type" },
+          ],
+          rows: @presenter.editions.map do | edition |
+            [
+              { text: link_to(edition.title, edit_edition_path(edition), class: "govuk-link govuk-link--no-visited-state", data: {'ga4-ecommerce-content-id': edition.id, 'ga4-ecommerce-path': edit_edition_path(edition)}) +
+                sanitize("<p class='govuk-body govuk-!-margin-bottom-0 find-content__title__slug' >/#{edition.slug}</p>")},
+              { text: render("govuk_publishing_components/components/tag", { text: edition.human_state_name, colour: edition_status_tag_colour(edition) }) },
+              { text: "#{time_ago_in_words(edition.updated_at).capitalize} ago" },
+              {
+                text: edition.assignee,
+              },
+              { text: edition.format.underscore.humanize },
+            ]
+          end,
+          } %>
+      <%= paginate @presenter.editions %>
+        <% else %>
+        <p class="govuk-body item-count" id="js-result-count">0 items</p>
+      <% end %>
+    </div>
   </div>
 </div>
