@@ -27,12 +27,18 @@ module BaseHelper
   end
 
   def humanize_state(state)
-    if Flipflop.enabled?(:rename_edition_states)
-      return "In 2i" if state == "in_review"
-      return "Fact check sent" if state == "out_for_fact_check"
-    end
+    return state.humanize unless Flipflop.enabled?(:rename_edition_states)
 
-    state.humanize
+    case state
+    when "in_review"
+      "In 2i"
+    when "out_for_fact_check"
+      "Fact check sent"
+    when "scheduled_for_publishing"
+      "Scheduled"
+    else
+      state.humanize
+    end
   end
 
   def resource_fields(resource)

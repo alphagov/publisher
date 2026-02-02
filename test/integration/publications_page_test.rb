@@ -265,17 +265,19 @@ class PublicationsPageTest < IntegrationTest
       assert_current_path find_content_path
     end
 
-    [[true, "In 2i", "Fact check sent"], [false, "In review", "Fact check"]].each do |toggle_value, in_review_state_label, fact_check_state_label|
+    [[true, "In 2i", "Fact check sent", "Scheduled"], [false, "In review", "Fact check", "Scheduled for publishing"]].each do |toggle_value, in_review_state_label, fact_check_state_label, scheduled_for_publishing_state_label|
       context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
-        should "display publications data for find content page" do
+        setup do
           @test_strategy.switch!(:rename_edition_states, toggle_value)
           @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
           @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago, assigned_to: @other_user)
           @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
-          @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+          @scheduled_edition = FactoryBot.create(:transaction_edition, :scheduled_for_publishing, title: "Scheduled edition", updated_at: 4.days.ago, assigned_to: @other_user)
 
           visit find_content_path
+        end
 
+        should "display publications data for find content page" do
           within find(".govuk-table__row", text: "Draft edition") do
             assert_link "Draft edition", href: edition_path(@draft_edition)
             assert_css ".govuk-tag--yellow", text: "Draft"
@@ -297,11 +299,54 @@ class PublicationsPageTest < IntegrationTest
             assert_text "Help page"
           end
 
-          within find(".govuk-table__row", text: "Ready edition") do
-            assert_link "Ready edition", href: edition_path(@ready_edition)
-            assert page.has_css?(".govuk-tag--green", text: "Ready")
+          within find(".govuk-table__row", text: "Scheduled edition") do
+            assert_link "Scheduled edition", href: edition_path(@scheduled_edition)
+            assert page.has_css?(".govuk-tag--turquoise", text: scheduled_for_publishing_state_label)
             assert_text "4 days ago"
             assert_text "Transaction"
+          end
+        end
+
+        should "allow filtering of publications with the 'in_review' state" do
+          select in_review_state_label, from: "Status"
+          click_button("Apply filters")
+
+          assert_link "Clear filters"
+
+          within find(".govuk-table") do
+            assert_text in_review_state_label
+            assert_no_text scheduled_for_publishing_state_label
+            assert_no_text fact_check_state_label
+            assert_no_text "Draft"
+          end
+        end
+
+        should "allow filtering of publications with the 'fact_check' state" do
+          fact_check_state_option = fact_check_state_label == "Fact check" ? "Out for fact check" : fact_check_state_label
+          select fact_check_state_option, from: "Status"
+          click_button("Apply filters")
+
+          assert_link "Clear filters"
+
+          within find(".govuk-table") do
+            assert_text fact_check_state_label
+            assert_no_text scheduled_for_publishing_state_label
+            assert_no_text in_review_state_label
+            assert_no_text "Draft"
+          end
+        end
+
+        should "allow filtering of publications with the 'scheduled_for_publishing' state" do
+          select "Scheduled", from: "Status"
+          click_button("Apply filters")
+
+          assert_link "Clear filters"
+
+          within find(".govuk-table") do
+            assert_text scheduled_for_publishing_state_label
+            assert_no_text fact_check_state_label
+            assert_no_text in_review_state_label
+            assert_no_text "Draft"
           end
         end
       end
