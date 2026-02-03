@@ -38,7 +38,8 @@ class GuidePartsController < InheritedResources::Base
   end
 
   def create
-    @part = @edition.editionable.parts.build(permitted_parts_params.merge(order: @edition.editionable.parts.size))
+    @edition.order_parts
+    @part = @edition.editionable.parts.build(permitted_parts_params.merge(order: @edition.editionable.parts.size + 1))
     if @edition.save
       UpdateWorker.perform_async(@edition.id.to_s)
       if params[:save] == "save and summary"

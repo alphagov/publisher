@@ -44,16 +44,15 @@ class LocalTransactionEdition < ApplicationRecord
     introduction
   end
 
-  def copy_to(new_edition)
-    if new_edition.editionable.is_a?(LocalTransactionEdition)
-      new_edition.editionable.scotland_availability = scotland_availability.clone
-      new_edition.editionable.scotland_availability.mongo_id = nil
-      new_edition.editionable.wales_availability = wales_availability.clone
-      new_edition.editionable.wales_availability.mongo_id = nil
-      new_edition.editionable.northern_ireland_availability = northern_ireland_availability.clone
-      new_edition.editionable.northern_ireland_availability.mongo_id = nil
+  def copy_to(other)
+    if other.is_a?(LocalTransactionEdition)
+      other.scotland_availability = scotland_availability.clone
+      other.scotland_availability.mongo_id = nil
+      other.wales_availability = wales_availability.clone
+      other.wales_availability.mongo_id = nil
+      other.northern_ireland_availability = northern_ireland_availability.clone
+      other.northern_ireland_availability.mongo_id = nil
     end
-    new_edition
   end
 
 private

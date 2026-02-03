@@ -1,0 +1,11 @@
+<%# locals: (edition:) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/back_link", {
+      text: "Back to summary",
+      href: edit_edition_path(edition),
+      margin_bottom: 6,
+    } %>
+  </div>
+</div>

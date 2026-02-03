@@ -62,6 +62,30 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       click_on "Search"
     end
   end
+
+  def create_important_note_for_edition(edition, note_text)
+    FactoryBot.create(
+      :action,
+      requester: @govuk_editor,
+      request_type: Action::IMPORTANT_NOTE,
+      edition: edition,
+      comment: note_text,
+    )
+  end
+
+  def create_content_update_event(updated_by_user_uid:)
+    {
+      "created_at" => "2024-08-07 11:26:00",
+      "payload" => {
+        "source_block" => {
+          "updated_by_user_uid" => updated_by_user_uid,
+          "content_id" => SecureRandom.uuid,
+          "title" => "Some content",
+          "document_type" => "content_block_email_address",
+        },
+      },
+    }
+  end
 end
 
 class JavascriptIntegrationTest < IntegrationTest

@@ -9,10 +9,6 @@ Flipflop.configure do
             description: "A feature only used by tests; not to be used for any actual features."
   end
 
-  feature :design_system_edit_phase_3a,
-          default: false,
-          description: "Update the publications edit page for Guide content type to use the GOV.UK Design System"
-
   feature :design_system_edit_phase_3b,
           default: false,
           description: "Update the publications page to use the GOV.UK Design System with a multi-page design"
@@ -28,4 +24,8 @@ Flipflop.configure do
   feature :ga4_form_tracking,
           default: false,
           description: "Add tracking to forms across publisher"
+
+  feature :rename_edition_states,
+          default: false,
+          description: "Changes the following edition state labels: 'In review' to 'In 2i', 'Fact check'/'Out for fact check' to 'Fact check sent', and 'Scheduled for publishing' to 'Scheduled'"
 end

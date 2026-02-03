@@ -1,62 +1,22 @@
-$width: 40;
-
-.publications-filter {
-  background: govuk-colour("light-grey");
-
-  .gem-c-select {
-    label {
-      font-weight: 700;
-    }
-  }
-
-  .govuk-checkboxes__label::before {
-    background: govuk-colour("white");
+.fact-check, 
+.two-eye-queue {
+  .item-count {
+    color: $govuk-secondary-text-colour;
+    margin-left: govuk-spacing(3);
+    vertical-align: middle;
+    @include govuk-font(19, regular);
   }
 }
 
-.publications-table {
-  th:first-child {
-    width: calc($width * 1%);
-  }
-
-  details {
-    width: calc(100 / $width * 100%);
-  }
-
-  table {
-    table-layout: fixed;
-  }
-
-  &--expand-link {
-    float: right;
-    font-size: 1.1875rem;
-  }
-
-  .govuk-table {
-    border-top: 2px solid $govuk-text-colour;
-  }
-
-  .govuk-details {
-    margin-top: govuk-spacing(2);
-  }
-
-  .govuk-summary-list {
-    width: auto;
-  }
-
-  .govuk-details__summary {
-    &::before {
-      color: $govuk-text-colour;
+.fact-check {
+  thead tr {
+    // Title
+    :nth-child(1) {
+      width: 40%;
     }
-  }
-
-  .govuk-details__summary-text {
-    color: $govuk-text-colour;
-  }
-
-  .govuk-details__text {
-    dd {
-      word-break: break-word;
+    // Response/Sent out
+    :nth-child(2) {
+      width: 20%;
     }
   }
 }
@@ -87,14 +47,6 @@ $width: 40;
 }
 
 .two-eye-queue {
-  .item-count {
-    color: $govuk-secondary-text-colour;
-    font-size: 19px;
-    font-weight: normal;
-    margin-left: govuk-spacing(3);
-    vertical-align: middle;
-  }
-
   th > .important-note {
     font-size: 16px;
     font-weight: 400;
@@ -130,6 +82,46 @@ $width: 40;
     // 2i reviewer
     :nth-child(5) {
       width: 15%;
+    }
+  }
+}
+
+.find-content {
+  .item-count {
+    color: $govuk-secondary-text-colour;
+    @include govuk-font(19, "regular");
+  }
+
+  .find-content__title__slug {
+    @include govuk-font(16);
+  }
+
+  .js-enabled & .govuk-input {
+    height: 2.5em;
+    padding-top: 0;
+    padding-bottom: 0.2rem;
+  }
+
+  thead tr {
+    // Title
+    :nth-child(1) {
+      width: 40%;
+    }
+    // Status
+    :nth-child(2) {
+      width: 20%;
+    }
+    // Updated
+    :nth-child(3) {
+      width: 15%;
+    }
+    // Assigned to
+    :nth-child(4) {
+      width: 15%;
+    }
+    // Content type
+    :nth-child(5) {
+      width: 10%;
     }
   }
 }

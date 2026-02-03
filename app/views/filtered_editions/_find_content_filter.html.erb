@@ -1,0 +1,57 @@
+<%= form_with url: find_content_path, method: :get do %>
+  <div class="govuk-grid-row find-content">
+    <div class="govuk-grid-column-one-quarter">
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Title or slug",
+          heading_size: "m",
+        },
+        name: "search_text",
+        value: @presenter.search_text,
+      } %>
+    </div>
+
+    <div class="govuk-grid-column-one-quarter">
+      <%= render "govuk_publishing_components/components/select_with_search", {
+        id: "states_filter",
+        label: "Status",
+        heading_size: "m",
+        full_width: true,
+        options: @presenter.state_options,
+      } %>
+    </div>
+
+    <div class="govuk-grid-column-one-quarter">
+      <%= render "govuk_publishing_components/components/select_with_search", {
+        id: "assignee_filter",
+        label: "Assigned to",
+        heading_size: "m",
+        options: @presenter.assignee_options,
+      } %>
+    </div>
+
+    <div class="govuk-grid-column-one-quarter">
+      <%= render "govuk_publishing_components/components/select_with_search", {
+        id: "content_type_filter",
+        label: "Content type",
+        full_width: true,
+        heading_size: "m",
+        options: @presenter.content_type_options,
+      } %>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Apply filters",
+        } %>
+
+        <% if show_clear_filters_link? %>
+          <%= link_to "Clear filters", find_content_path, class: "govuk-link govuk-link--no-visited-state" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

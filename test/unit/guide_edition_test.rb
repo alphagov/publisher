@@ -64,6 +64,15 @@ class GuideEditionTest < ActiveSupport::TestCase
     assert_nil cloned_edition.parts[1].mongo_id
   end
 
+  test "cloning a guide with parts should copy all parts' text" do
+    edition = FactoryBot.create(:guide_edition_with_two_parts, :published)
+    new_edition = edition.build_clone
+
+    original_text = edition.parts.map(&:body).join(" ")
+    new_text = new_edition.parts.map(&:body).join(" ")
+    assert_equal original_text, new_text
+  end
+
   test "it should trim whitespace from URLs" do
     guide = FactoryBot.create(:guide_edition, video_url: " https://youtube.com ")
     assert guide.valid?

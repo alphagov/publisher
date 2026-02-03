@@ -5,6 +5,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api
+    @user = FactoryBot.create(:user, :govuk_editor)
     UpdateWorker.stubs(:perform_async)
   end
 
@@ -17,9 +18,9 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
     bob     = FactoryBot.create(:user, :govuk_editor, name: "Bob", uid: "bob")
     charlie = FactoryBot.create(:user, :govuk_editor, name: "Charlie", uid: "charlie")
 
-    x = FactoryBot.create(:guide_edition, title: "XXX", slug: "xxx")
-    y = FactoryBot.create(:guide_edition, title: "YYY", slug: "yyy")
-    FactoryBot.create(:guide_edition, title: "ZZZ", slug: "zzz")
+    x = FactoryBot.create(:simple_smart_answer_edition, title: "XXX", slug: "xxx")
+    y = FactoryBot.create(:simple_smart_answer_edition, title: "YYY", slug: "yyy")
+    FactoryBot.create(:simple_smart_answer_edition, title: "ZZZ", slug: "zzz")
 
     bob.assign(x, alice)
     bob.assign(y, charlie)
@@ -56,9 +57,8 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "filtering by title content" do
-    FactoryBot.create(:user, :govuk_editor)
-    FactoryBot.create(:guide_edition, title: "XXX")
-    FactoryBot.create(:guide_edition, title: "YYY")
+    FactoryBot.create(:simple_smart_answer_edition, title: "XXX")
+    FactoryBot.create(:simple_smart_answer_edition, title: "YYY")
 
     visit "/"
     filter_by_user("All")
@@ -70,8 +70,6 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "filtering by title content should not lose the active section" do
-    FactoryBot.create(:user, :govuk_editor)
-
     visit "/"
     click_on "Amends needed"
 
@@ -81,35 +79,33 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "filtering by format" do
-    FactoryBot.create(:user, :govuk_editor)
-    FactoryBot.create(:guide_edition, title: "Draft guide")
+    FactoryBot.create(:simple_smart_answer_edition, title: "Draft simple smart answer")
     FactoryBot.create(:transaction_edition, title: "Draft transaction")
-    FactoryBot.create(:guide_edition, title: "Amends needed guide", state: "amends_needed")
+    FactoryBot.create(:simple_smart_answer_edition, title: "Amends needed simple smart answer", state: "amends_needed")
     FactoryBot.create(:transaction_edition, title: "Amends needed transaction", state: "amends_needed")
 
     visit "/"
 
     filter_by_user("All")
 
-    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft simple smart answer")
     assert page.has_content?("Draft transaction")
 
-    filter_by_format("Guide")
+    filter_by_format("Simple smart answer")
 
-    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft simple smart answer")
     assert page.has_no_content?("Draft transaction")
 
     click_on "Amends needed"
 
-    assert page.has_no_content?("Draft guide")
+    assert page.has_no_content?("Draft simple smart answer")
     assert page.has_no_content?("Draft transaction")
-    assert page.has_content?("Amends needed guide")
+    assert page.has_content?("Amends needed simple smart answer")
     assert page.has_no_content?("Amends needed transaction")
   end
 
   test "invalid sibling_in_progress should not break archived view" do
-    FactoryBot.create(:user, :govuk_editor)
-    FactoryBot.create(:guide_edition, title: "XXX", state: "archived", sibling_in_progress: 2)
+    FactoryBot.create(:simple_smart_answer_edition, title: "XXX", state: "archived", sibling_in_progress: 2)
 
     visit "/"
     filter_by_user("All")
@@ -126,175 +122,197 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
     assert page.has_no_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
   end
 
-  test "Publications in review are ordered correctly" do
-    FactoryBot.create(:user, :govuk_editor)
-    FactoryBot.create(
-      :guide_edition,
-      title: "XXX",
-      slug: "xxx",
-      state: "in_review",
-      review_requested_at: 4.days.ago,
-    )
-    FactoryBot.create(
-      :guide_edition,
-      title: "YYY",
-      slug: "yyy",
-      state: "in_review",
-      review_requested_at: 2.days.ago,
-    )
-    FactoryBot.create(
-      :guide_edition,
-      title: "ZZZ",
-      slug: "zzz",
-      state: "in_review",
-      review_requested_at: 20.minutes.ago,
-    )
+  [[true, "In 2i", "Fact check sent", "Scheduled"], [false, "In review", "Out for fact check", "Scheduled for publishing"]].each do |toggle_value, in_review_filter_text, fact_check_filter_text, scheduled_for_publishing_page_heading|
+    context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+      setup do
+        @test_strategy.switch!(:rename_edition_states, toggle_value)
+      end
 
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
+      should "order 'in_review' publications correctly" do
+        FactoryBot.create(
+          :simple_smart_answer_edition,
+          title: "XXX",
+          slug: "xxx",
+          state: "in_review",
+          review_requested_at: 4.days.ago,
+        )
+        FactoryBot.create(
+          :simple_smart_answer_edition,
+          title: "YYY",
+          slug: "yyy",
+          state: "in_review",
+          review_requested_at: 2.days.ago,
+        )
+        FactoryBot.create(
+          :simple_smart_answer_edition,
+          title: "ZZZ",
+          slug: "zzz",
+          state: "in_review",
+          review_requested_at: 20.minutes.ago,
+        )
 
-    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "4 days")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "20 minutes")
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_filter_text
 
-    click_on "Awaiting review"
+        assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "4 days")
+        assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
+        assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "20 minutes")
 
-    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "20 minutes")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "4 days")
-  end
+        click_on "Awaiting review"
 
-  test "Shows link to Collections Publisher when reviewing in review documents" do
-    FactoryBot.create(:user, :govuk_editor)
+        assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "20 minutes")
+        assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
+        assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "4 days")
+      end
 
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
+      should "show links to Collections Publisher when reviewing 'in_review' documents" do
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_filter_text
 
-    assert page.has_link?("Check Collections publisher", href: "#{Plek.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at")
-  end
+        assert page.has_link?("Check Collections publisher", href: "#{Plek.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at")
+      end
 
-  test "allows a user to claim 2i" do
-    stub_linkables
+      should "allow a user to claim 2i" do
+        stub_linkables
 
-    user = FactoryBot.create(:user, :govuk_editor)
-    assignee = FactoryBot.create(:user, :govuk_editor)
-    edition = FactoryBot.create(
-      :guide_edition,
-      title: "XXX",
-      state: "in_review",
-      review_requested_at: Time.zone.now,
-      assigned_to: assignee,
-    )
+        assignee = FactoryBot.create(:user, :govuk_editor)
+        edition = FactoryBot.create(
+          :simple_smart_answer_edition,
+          title: "XXX",
+          state: "in_review",
+          review_requested_at: Time.zone.now,
+          assigned_to: assignee,
+        )
 
-    visit "/"
-    filter_by_user("All")
+        visit "/"
+        filter_by_user("All")
 
-    click_on "In review"
+        click_on in_review_filter_text
 
-    within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
-      find_button("Claim 2i").click
+        within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
+          find_button("Claim 2i").click
+        end
+
+        assert edition_url(edition), current_url
+        assert page.has_content?("You are the reviewer of this simple smart answer.")
+        assert page.has_select?("Reviewer", selected: @user.name)
+        assert page.has_select?("Assigned to", selected: assignee.name)
+      end
+
+      should "prevent claiming 2i when already claimed" do
+        stub_linkables
+
+        assignee = FactoryBot.create(:user, :govuk_editor)
+        another_user = FactoryBot.create(:user, :govuk_editor, name: "Another McPerson")
+        edition = FactoryBot.create(
+          :simple_smart_answer_edition,
+          title: "XXX",
+          state: "in_review",
+          review_requested_at: Time.zone.now,
+          assigned_to: assignee,
+        )
+
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_filter_text
+
+        edition.reviewer = another_user.name
+        edition.save!
+
+        within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
+          find_button("Claim 2i").click
+        end
+
+        assert edition_url(edition), current_url
+        assert page.has_content?("Another McPerson has already claimed this 2i")
+        assert page.has_select?("Reviewer", selected: another_user.name)
+        assert page.has_select?("Assigned to", selected: assignee.name)
+
+        select("", from: "Reviewer")
+        click_on "Save"
+
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_filter_text
+
+        within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
+          click_on "Claim 2i"
+        end
+
+        assert page.has_content?("You are the reviewer of this simple smart answer.")
+      end
+
+      should "prevent the assignee from claiming 2i" do
+        FactoryBot.create(
+          :simple_smart_answer_edition,
+          title: "XXX",
+          state: "in_review",
+          review_requested_at: Time.zone.now,
+          assigned_to: @user,
+        )
+
+        visit "/"
+        filter_by_user("All")
+
+        click_on in_review_filter_text
+
+        assert page.has_css?("#publication-list-container tbody tr:first-child td:nth-child(6)", text: "")
+      end
+
+      should "display 'Claim 2i' button to Welsh editors viewing Welsh editions" do
+        stub_linkables
+        FactoryBot.create(:simple_smart_answer_edition, :in_review, :welsh)
+        welsh_editor = FactoryBot.create(:user, :welsh_editor)
+
+        login_as(welsh_editor)
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_filter_text
+
+        assert page.has_button?("Claim 2i")
+      end
+
+      should "not display 'Claim 2i' button to Welsh editors viewing non-Welsh editions" do
+        stub_linkables
+        FactoryBot.create(:simple_smart_answer_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
+        welsh_editor = FactoryBot.create(:user, :welsh_editor)
+
+        login_as(welsh_editor)
+        visit "/"
+        filter_by_user("All")
+        click_on in_review_filter_text
+
+        assert_not page.has_button?("Claim 2i")
+      end
+
+      should "allow filtering of publications in the 'fact_check' state" do
+        FactoryBot.create(:edition, :fact_check, title: "Fact check edition 1")
+        FactoryBot.create(:edition, :fact_check, title: "Fact check edition 2")
+        FactoryBot.create(:edition, :draft, title: "Draft edition")
+
+        visit "/"
+        filter_by_user("All")
+        click_on fact_check_filter_text
+
+        assert page.has_link?("Fact check edition 1")
+        assert page.has_link?("Fact check edition 2")
+        assert page.has_no_link?("Draft edition")
+      end
+
+      should "display the correct page heading when filtering by publications in the 'scheduled_for_publishing' state" do
+        visit "/"
+        filter_by_user("All")
+        click_on "Scheduled"
+
+        assert_selector("h1", text: scheduled_for_publishing_page_heading)
+      end
     end
-
-    assert edition_url(edition), current_url
-    assert page.has_content?("You are the reviewer of this guide.")
-    assert page.has_select?("Reviewer", selected: user.name)
-    assert page.has_select?("Assigned to", selected: assignee.name)
-  end
-
-  test "prevents claiming 2i when someone else has" do
-    stub_linkables
-
-    FactoryBot.create(:user, :govuk_editor)
-
-    assignee = FactoryBot.create(:user, :govuk_editor)
-    another_user = FactoryBot.create(:user, :govuk_editor, name: "Another McPerson")
-    edition = FactoryBot.create(
-      :guide_edition,
-      title: "XXX",
-      state: "in_review",
-      review_requested_at: Time.zone.now,
-      assigned_to: assignee,
-    )
-
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
-
-    edition.reviewer = another_user.name
-    edition.save!
-
-    within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
-      find_button("Claim 2i").click
-    end
-
-    assert edition_url(edition), current_url
-    assert page.has_content?("Another McPerson has already claimed this 2i")
-    assert page.has_select?("Reviewer", selected: another_user.name)
-    assert page.has_select?("Assigned to", selected: assignee.name)
-
-    select("", from: "Reviewer")
-    click_on "Save"
-
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
-
-    within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
-      click_on "Claim 2i"
-    end
-
-    assert page.has_content?("You are the reviewer of this guide.")
-  end
-
-  test "prevents the assignee claiming 2i" do
-    user = FactoryBot.create(:user, :govuk_editor)
-    FactoryBot.create(
-      :guide_edition,
-      title: "XXX",
-      state: "in_review",
-      review_requested_at: Time.zone.now,
-      assigned_to: user,
-    )
-
-    visit "/"
-    filter_by_user("All")
-
-    click_on "In review"
-
-    assert page.has_css?("#publication-list-container tbody tr:first-child td:nth-child(6)", text: "")
-  end
-
-  test "Welsh editors can see claim 2i button in Welsh editions" do
-    stub_linkables
-    FactoryBot.create(:guide_edition, :in_review, :welsh)
-    welsh_editor = FactoryBot.create(:user, :welsh_editor)
-
-    login_as(welsh_editor)
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
-
-    assert page.has_button?("Claim 2i")
-  end
-
-  test "Welsh editors cannot see claim 2i button in non-Welsh editions" do
-    stub_linkables
-    FactoryBot.create(:guide_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
-    welsh_editor = FactoryBot.create(:user, :welsh_editor)
-
-    login_as(welsh_editor)
-    visit "/"
-    filter_by_user("All")
-    click_on "In review"
-
-    assert_not page.has_button?("Claim 2i")
   end
 
   test "filtering by published should show a table with an edition with a slug as a link" do
-    FactoryBot.create(:user, :govuk_editor)
-    FactoryBot.create(:guide_edition, state: "published", title: "Test", slug: "test-slug")
+    FactoryBot.create(:simple_smart_answer_edition, state: "published", title: "Test", slug: "test-slug")
 
     visit "/"
     filter_by_user("All")
@@ -305,8 +323,7 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
   end
 
   test "should not render popular links edition" do
-    FactoryBot.create(:user, :govuk_editor)
-    FactoryBot.create(:guide_edition, title: "Draft guide")
+    FactoryBot.create(:simple_smart_answer_edition, title: "Draft simple smart answer")
     FactoryBot.create(:transaction_edition, title: "Draft transaction")
     FactoryBot.create(:popular_links, title: "Popular links edition")
 
@@ -314,9 +331,9 @@ class LegacyRootOverviewTest < LegacyIntegrationTest
 
     filter_by_user("All")
 
-    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft simple smart answer")
     assert page.has_content?("Draft transaction")
-    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft simple smart answer")
     assert page.has_no_content?("Popular links edition")
   end
 end

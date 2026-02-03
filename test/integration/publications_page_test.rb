@@ -6,8 +6,8 @@ class PublicationsPageTest < IntegrationTest
   setup do
     @other_user = FactoryBot.create(:user, name: "Other User")
     login_as_govuk_editor
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_3b, true)
+    @test_strategy = Flipflop::FeatureSet.current.test!
+    @test_strategy.switch!(:design_system_edit_phase_3b, true)
   end
 
   context "my_content page" do
@@ -17,40 +17,48 @@ class PublicationsPageTest < IntegrationTest
       assert_current_path my_content_path
     end
 
-    should "display publications assigned to the current user" do
-      @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
-      @amends_needed_edition = FactoryBot.create(:guide_edition, :amends_needed, title: "Amends needed edition", updated_at: 2.days.ago, assigned_to: @user)
-      @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
-      @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @user)
+    [[true, "In 2i", "Fact check sent"], [false, "In review", "Fact check"]].each do |toggle_value, in_review_state_label, fact_check_state_label|
+      context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+        setup do
+          @test_strategy.switch!(:rename_edition_states, toggle_value)
+        end
 
-      visit my_content_path
+        should "display publications assigned to the current user" do
+          @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+          @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago, assigned_to: @user)
+          @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
+          @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @user)
 
-      within find(".govuk-table__row", text: "Draft edition") do
-        assert_link "Draft edition", href: edition_path(@draft_edition)
-        assert_css ".govuk-tag--yellow", text: "Draft"
-        assert_text "1 day ago"
-        assert_text "Answer"
-      end
+          visit my_content_path
 
-      within find(".govuk-table__row", text: "Amends needed edition") do
-        assert_link "Amends needed edition", href: edition_path(@amends_needed_edition)
-        assert page.has_css?(".govuk-tag--red", text: "Amends needed")
-        assert_text "2 days ago"
-        assert_text "Guide"
-      end
+          within find(".govuk-table__row", text: "Draft edition") do
+            assert_link "Draft edition", href: edition_path(@draft_edition)
+            assert_css ".govuk-tag--yellow", text: "Draft"
+            assert_text "1 day ago"
+            assert_text "Answer"
+          end
 
-      within find(".govuk-table__row", text: "In review edition") do
-        assert_link "In review edition", href: edition_path(@in_review_edition)
-        assert page.has_css?(".govuk-tag--grey", text: "In review")
-        assert_text "3 days ago"
-        assert_text "Help page"
-      end
+          within find(".govuk-table__row", text: "Fact check edition") do
+            assert_link "Fact check edition", href: edition_path(@fact_check_edition)
+            assert page.has_css?(".govuk-tag--purple", text: fact_check_state_label)
+            assert_text "2 days ago"
+            assert_text "Guide"
+          end
 
-      within find(".govuk-table__row", text: "Ready edition") do
-        assert_link "Ready edition", href: edition_path(@ready_edition)
-        assert page.has_css?(".govuk-tag--green", text: "Ready")
-        assert_text "4 days ago"
-        assert_text "Transaction"
+          within find(".govuk-table__row", text: "In review edition") do
+            assert_link "In review edition", href: edition_path(@in_review_edition)
+            assert page.has_css?(".govuk-tag--grey", text: in_review_state_label)
+            assert_text "3 days ago"
+            assert_text "Help page"
+          end
+
+          within find(".govuk-table__row", text: "Ready edition") do
+            assert_link "Ready edition", href: edition_path(@ready_edition)
+            assert page.has_css?(".govuk-tag--green", text: "Ready")
+            assert_text "4 days ago"
+            assert_text "Transaction"
+          end
+        end
       end
     end
 
@@ -129,14 +137,20 @@ class PublicationsPageTest < IntegrationTest
   context "2i-queue page" do
     setup do
       @claimed_edition = FactoryBot.create(:answer_edition, :in_review, title: "Claimed edition", assigned_to: @user, review_requested_at: 1.day.ago, reviewer: @other_user)
-      @unclaimed_edition = FactoryBot.create(:answer_edition, :in_review, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 1.day.ago)
-      @other_user_edition = FactoryBot.create(:guide_edition, :in_review, title: "Other User's edition", assigned_to: @other_user, review_requested_at: 1.week.ago)
+      @unclaimed_edition = FactoryBot.create(:guide_edition, :in_review, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 1.month.ago)
+      @other_user_edition = FactoryBot.create(:answer_edition,
+                                              :in_review,
+                                              title: "Other User's edition (English)",
+                                              assigned_to: @other_user,
+                                              review_requested_at: 1.week.ago,
+                                              actions: [FactoryBot.create(:action, request_type: Action::REQUEST_REVIEW)])
       @welsh_edition = FactoryBot.create(:answer_edition, :in_review, :welsh, title: "Welsh edition", assigned_to: @user, review_requested_at: 1.day.ago, reviewer: @other_user)
+      @other_user_welsh_edition = FactoryBot.create(:answer_edition, :in_review, :welsh, title: "Other User's edition (Welsh)", assigned_to: @user, review_requested_at: 1.week.ago)
       @important_note = FactoryBot.create(:action, comment: "This is an important note", edition: @claimed_edition)
       visit "/2i-queue"
     end
 
-    should 'display all English publications in the "in_review" state' do
+    should "display all English publications in the 'in_review' state" do
       within find("section#english") do
         within find(".govuk-table__row", text: "Claimed edition") do
           assert_link "Claimed edition", href: edition_path(@claimed_edition)
@@ -147,27 +161,62 @@ class PublicationsPageTest < IntegrationTest
 
         within find(".govuk-table__row", text: "Unclaimed edition") do
           assert_link "Unclaimed edition", href: edition_path(@unclaimed_edition)
-          assert_text "Answer"
+          assert_text "Guide"
           assert_text "Stub User"
-          assert_text "1 day"
+          assert_text "1 month"
         end
 
-        within find(".govuk-table__row", text: "Other User's edition") do
-          assert_link "Other User's edition", href: edition_path(@other_user_edition)
-          assert_text "Guide"
+        within find(".govuk-table__row", text: "Other User's edition (English)") do
+          assert_link "Other User's edition (English)", href: edition_path(@other_user_edition)
+          assert_text "Answer"
           assert_text "Other User"
           assert_text "7 days"
         end
       end
     end
 
-    should 'display all Welsh publications in the "in_review" state' do
+    should "display all Welsh publications in the 'in_review' state" do
       within find("section#welsh") do
         within find(".govuk-table__row", text: "Welsh edition") do
           assert_link "Welsh edition", href: edition_path(@welsh_edition)
           assert_text "Answer"
           assert_text "Stub User"
           assert_text "1 day"
+        end
+
+        within find(".govuk-table__row", text: "Other User's edition (Welsh)") do
+          assert_link "Other User's edition (Welsh)", href: edition_path(@other_user_welsh_edition)
+          assert_text "Answer"
+          assert_text "Stub User"
+          assert_text "7 days"
+        end
+      end
+    end
+
+    should "display English publications ordered by 'review_requested_at' (earliest first)" do
+      within find("section#english") do
+        within find_all(".govuk-table__row")[1] do
+          assert_link "Unclaimed edition", href: edition_path(@unclaimed_edition)
+        end
+
+        within find_all(".govuk-table__row")[2] do
+          assert_link "Other User's edition (English)", href: edition_path(@other_user_edition)
+        end
+
+        within find_all(".govuk-table__row")[3] do
+          assert_link "Claimed edition", href: edition_path(@claimed_edition)
+        end
+      end
+    end
+
+    should "display Welsh publications ordered by 'review_requested_at' (earliest first)" do
+      within find("section#welsh") do
+        within find_all(".govuk-table__row")[1] do
+          assert_link "Other User's edition (Welsh)", href: edition_path(@other_user_welsh_edition)
+        end
+
+        within find_all(".govuk-table__row")[2] do
+          assert_link "Welsh edition", href: edition_path(@welsh_edition)
         end
       end
     end
@@ -191,8 +240,331 @@ class PublicationsPageTest < IntegrationTest
     end
 
     should "display claimed editions assigned to other users with the 'Claim 2i' button" do
-      within find(".govuk-table__row", text: "Other User's edition") do
+      within find(".govuk-table__row", text: "Other User's edition (English)") do
         assert_button "Claim 2i"
+      end
+    end
+
+    should "allow user to claim an edition via the 'Claim 2i' button" do
+      within find(".govuk-table__row", text: "Other User's edition (English)") do
+        click_button "Claim 2i"
+      end
+
+      assert_current_path edition_path(@other_user_edition)
+      assert_text "You are the reviewer of this answer."
+      within find(".govuk-summary-list__row", text: "2i reviewer") do
+        assert_selector(".govuk-summary-list__value", text: @user.name)
+      end
+    end
+  end
+
+  context "find_content page" do
+    should "redirect to the find-content page when find content link in the navigation bar is clicked" do
+      visit "/find-content"
+
+      assert_current_path find_content_path
+    end
+
+    [[true, "In 2i", "Fact check sent", "Scheduled"], [false, "In review", "Fact check", "Scheduled for publishing"]].each do |toggle_value, in_review_state_label, fact_check_state_label, scheduled_for_publishing_state_label|
+      context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+        setup do
+          @test_strategy.switch!(:rename_edition_states, toggle_value)
+          @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+          @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago, assigned_to: @other_user)
+          @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
+          @scheduled_edition = FactoryBot.create(:transaction_edition, :scheduled_for_publishing, title: "Scheduled edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+          visit find_content_path
+        end
+
+        should "display publications data for find content page" do
+          within find(".govuk-table__row", text: "Draft edition") do
+            assert_link "Draft edition", href: edition_path(@draft_edition)
+            assert_css ".govuk-tag--yellow", text: "Draft"
+            assert_text "1 day ago"
+            assert_text "Answer"
+          end
+
+          within find(".govuk-table__row", text: "Fact check edition") do
+            assert_link "Fact check edition", href: edition_path(@fact_check_edition)
+            assert page.has_css?(".govuk-tag--purple", text: fact_check_state_label)
+            assert_text "2 days ago"
+            assert_text "Guide"
+          end
+
+          within find(".govuk-table__row", text: "In review edition") do
+            assert_link "In review edition", href: edition_path(@in_review_edition)
+            assert page.has_css?(".govuk-tag--grey", text: in_review_state_label)
+            assert_text "3 days ago"
+            assert_text "Help page"
+          end
+
+          within find(".govuk-table__row", text: "Scheduled edition") do
+            assert_link "Scheduled edition", href: edition_path(@scheduled_edition)
+            assert page.has_css?(".govuk-tag--turquoise", text: scheduled_for_publishing_state_label)
+            assert_text "4 days ago"
+            assert_text "Transaction"
+          end
+        end
+
+        should "allow filtering of publications with the 'in_review' state" do
+          select in_review_state_label, from: "Status"
+          click_button("Apply filters")
+
+          assert_link "Clear filters"
+
+          within find(".govuk-table") do
+            assert_text in_review_state_label
+            assert_no_text scheduled_for_publishing_state_label
+            assert_no_text fact_check_state_label
+            assert_no_text "Draft"
+          end
+        end
+
+        should "allow filtering of publications with the 'fact_check' state" do
+          fact_check_state_option = fact_check_state_label == "Fact check" ? "Out for fact check" : fact_check_state_label
+          select fact_check_state_option, from: "Status"
+          click_button("Apply filters")
+
+          assert_link "Clear filters"
+
+          within find(".govuk-table") do
+            assert_text fact_check_state_label
+            assert_no_text scheduled_for_publishing_state_label
+            assert_no_text in_review_state_label
+            assert_no_text "Draft"
+          end
+        end
+
+        should "allow filtering of publications with the 'scheduled_for_publishing' state" do
+          select "Scheduled", from: "Status"
+          click_button("Apply filters")
+
+          assert_link "Clear filters"
+
+          within find(".govuk-table") do
+            assert_text scheduled_for_publishing_state_label
+            assert_no_text fact_check_state_label
+            assert_no_text in_review_state_label
+            assert_no_text "Draft"
+          end
+        end
+      end
+    end
+
+    should "display the correct hint text with title" do
+      @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+
+      visit find_content_path
+
+      within find(".govuk-table__row", text: "Draft edition") do
+        assert page.has_css?(".govuk-body", text: "/slug-1")
+      end
+    end
+
+    should "not display publications that are in an archived state" do
+      @archived_edition = FactoryBot.create(:edition, :archived, title: "Archived edition", assigned_to: @user)
+
+      visit find_content_path
+
+      assert_no_link "Archived edition"
+    end
+
+    context "find_content_filter" do
+      should "filter publications data by state" do
+        @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+        visit find_content_path
+        select "Draft", from: "Status"
+        click_button("Apply filters")
+
+        assert_link "Clear filters"
+        assert page.has_css?(".govuk-table__cell", text: "Draft")
+        assert_not page.has_css?(".govuk-table__cell", text: "Ready")
+      end
+
+      should "filter publications data by content type" do
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+        visit find_content_path
+        select "Guide", from: "Content type"
+        click_button("Apply filters")
+
+        assert_link "Clear filters"
+        assert page.has_css?(".govuk-table__cell", text: "Guide")
+        assert_not page.has_css?(".govuk-table__cell", text: "Transaction")
+      end
+
+      should "filter publications data by title text" do
+        @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+        visit find_content_path
+        fill_in "Title or slug", with: "Draft edition"
+        click_button("Apply filters")
+
+        assert_field "Title or slug", with: "Draft edition"
+        assert_link "Clear filters"
+
+        within find(".govuk-table__row", text: "Draft edition") do
+          assert_link "Draft edition", href: edition_path(@draft_edition)
+          assert_css ".govuk-tag--yellow", text: "Draft"
+          assert_text "1 day ago"
+          assert_text "Answer"
+        end
+        assert_not page.has_css?(".govuk-table__cell", text: "Transaction")
+      end
+
+      should "filter publications data by assignee" do
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+        visit find_content_path
+        select @user.name, from: "Assigned to"
+        click_button("Apply filters")
+
+        assert_link "Clear filters"
+        assert page.has_css?(".govuk-table__cell", text: @user.name)
+        assert_not page.has_css?(".govuk-table__cell", text: @other_user.name)
+      end
+
+      should "return 0 items when no editions match the filter criteria" do
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+        @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
+        visit find_content_path
+
+        select "Published", from: "Status"
+        click_button("Apply filters")
+
+        assert_link "Clear filters"
+        assert page.has_css?("p", text: "0 items")
+      end
+
+      should "reset all filter fields when clear filter link is clicked" do
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition1", updated_at: 1.day.ago, assigned_to: @user)
+        @draft_edition = FactoryBot.create(:guide_edition, :draft, title: "Draft edition2", updated_at: 1.day.ago, assigned_to: @user)
+        @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition3", updated_at: 1.day.ago, assigned_to: @other_user)
+
+        visit find_content_path
+
+        fill_in "Title or slug", with: "Draft edition1"
+        select "Draft", from: "Status"
+        select "Guide", from: "Content type"
+        select @user.name, from: "Assigned to"
+        click_button("Apply filters")
+        click_link("Clear filters")
+
+        assert_field("Title or slug")
+        assert_nil find_field("Title or slug").value
+        assert_select("Status", selected: "Active statuses")
+        assert_select("Assigned to", selected: "All assignees")
+        assert_select("Content type", selected: "All types")
+        assert_button "Apply filters"
+        assert_no_link "Clear filters"
+
+        assert page.has_css?(".govuk-table__cell", text: "Guide")
+        assert page.has_css?(".govuk-table__cell", text: "Guide")
+        assert page.has_css?(".govuk-table__cell", text: "Answer")
+      end
+    end
+  end
+
+  context "fact-check page" do
+    setup do
+      @returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Returned edition", assigned_to: @user, received_at: 1.day.ago)
+      @other_user_returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Other User's edition", assigned_to: @other_user, received_at: 1.month.ago)
+      @recent_returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Recent returned edition", assigned_to: @user, received_at: 1.hour.ago)
+      @awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Awaiting response edition", assigned_to: @user, sent_out_at: 1.week.ago)
+      @other_user_awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Other User's edition", assigned_to: @other_user, sent_out_at: 1.month.ago)
+      @recent_awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Recent awaiting response edition", assigned_to: @user, sent_out_at: 1.hour.ago)
+
+      visit "/fact-check"
+    end
+
+    should "display all publications in the 'fact_check_received' state" do
+      within find("section#received") do
+        within find(".govuk-table__row", text: "Returned edition") do
+          assert_link "Returned edition", href: edition_path(@returned_edition)
+          assert_link "View response", href: history_edition_path(@returned_edition, anchor: "edition-#{@returned_edition.history.first.version_number}")
+          assert_text "1 day ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Other User's edition") do
+          assert_link "Other User's edition", href: edition_path(@other_user_returned_edition)
+          assert_link "View response", href: history_edition_path(@other_user_returned_edition, anchor: "edition-#{@other_user_returned_edition.history.first.version_number}")
+          assert_text "1 month ago"
+          assert_text "Other User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Recent returned edition") do
+          assert_link "Recent returned edition", href: edition_path(@recent_returned_edition)
+          assert_link "View response", href: history_edition_path(@recent_returned_edition, anchor: "edition-#{@recent_returned_edition.history.first.version_number}")
+          assert_text "1 hour ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+      end
+    end
+
+    should "display 'fact_check_received' publications ordered by the 'receive_fact_check' action creation date (most recent first)" do
+      within find("section#received") do
+        within find_all(".govuk-table__row")[1] do
+          assert_link "Recent returned edition", href: edition_path(@recent_returned_edition)
+        end
+
+        within find_all(".govuk-table__row")[2] do
+          assert_link "Returned edition", href: edition_path(@returned_edition)
+        end
+
+        within find_all(".govuk-table__row")[3] do
+          assert_link "Other User's edition", href: edition_path(@other_user_returned_edition)
+        end
+      end
+    end
+
+    should "display all publications in the 'fact_check' state" do
+      within find("section#sent_out") do
+        within find(".govuk-table__row", text: "Awaiting response edition") do
+          assert_link "Awaiting response edition", href: edition_path(@awaiting_response_edition)
+          assert_text "7 days ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Other User's edition") do
+          assert_link "Other User's edition", href: edition_path(@other_user_awaiting_response_edition)
+          assert_text "1 month ago"
+          assert_text "Other User"
+          assert_text "Answer"
+        end
+
+        within find(".govuk-table__row", text: "Recent awaiting response edition") do
+          assert_link "Recent awaiting response edition", href: edition_path(@recent_awaiting_response_edition)
+          assert_text "1 hour ago"
+          assert_text "Stub User"
+          assert_text "Answer"
+        end
+      end
+    end
+
+    should "display 'fact_check' publications ordered by 'last_fact_checked_at' (most recent first)" do
+      within find("section#sent_out") do
+        within find_all(".govuk-table__row")[1] do
+          assert_link "Recent awaiting response edition", href: edition_path(@recent_awaiting_response_edition)
+        end
+
+        within find_all(".govuk-table__row")[2] do
+          assert_link "Awaiting response edition", href: edition_path(@awaiting_response_edition)
+        end
+
+        within find_all(".govuk-table__row")[3] do
+          assert_link "Other User's edition", href: edition_path(@other_user_awaiting_response_edition)
+        end
       end
     end
   end

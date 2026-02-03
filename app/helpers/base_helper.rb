@@ -2,9 +2,9 @@ module BaseHelper
   def publication_tab_list(presenter, options)
     state_names = {
       drafts: "Drafts",
-      in_review: "In review",
+      in_review: humanize_state("in_review"),
       amends_needed: "Amends needed",
-      out_for_fact_check: "Out for fact check",
+      out_for_fact_check: humanize_state("out_for_fact_check"),
       fact_check_received: "Fact check received",
       ready: "Ready",
       scheduled_for_publishing: "Scheduled",
@@ -24,6 +24,21 @@ module BaseHelper
       end
     end
     safe_join(output)
+  end
+
+  def humanize_state(state)
+    return state.humanize unless Flipflop.enabled?(:rename_edition_states)
+
+    case state
+    when "in_review"
+      "In 2i"
+    when "out_for_fact_check"
+      "Fact check sent"
+    when "scheduled_for_publishing"
+      "Scheduled"
+    else
+      state.humanize
+    end
   end
 
   def resource_fields(resource)

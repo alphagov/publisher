@@ -187,16 +187,31 @@ FactoryBot.define do
     end
 
     trait :fact_check do
+      transient do
+        requester { FactoryBot.create(:user, :govuk_editor) }
+        sent_out_at { Time.zone.now }
+      end
+
       state { "fact_check" }
-      actions { [FactoryBot.build(:action, request_type: Action::SEND_FACT_CHECK)] }
+      actions { [FactoryBot.build(:action, request_type: Action::SEND_FACT_CHECK, customised_message: "Example customised message", requester:, created_at: sent_out_at)] }
     end
 
     trait :fact_check_received do
+      transient do
+        received_at { Time.zone.now }
+      end
+
       state { "fact_check_received" }
+      actions { [FactoryBot.build(:action, request_type: Action::RECEIVE_FACT_CHECK, created_at: received_at)] }
     end
 
     trait :in_review do
+      transient do
+        requester { FactoryBot.create(:user, :govuk_editor) }
+      end
+
       state { "in_review" }
+      actions { [FactoryBot.build(:action, request_type: Action::REQUEST_REVIEW, requester:)] }
       review_requested_at { Time.zone.now }
     end
 
@@ -226,7 +241,7 @@ FactoryBot.define do
     end
 
     panopticon_id do
-      a = create(:artefact)
+      a = create(:artefact, kind: "answer")
       a.id if a
     end
   end
@@ -248,7 +263,7 @@ FactoryBot.define do
     end
 
     panopticon_id do
-      a = create(:artefact)
+      a = create(:artefact, kind: "help_page", slug:)
       a.id
     end
 
@@ -260,7 +275,7 @@ FactoryBot.define do
   end
 
   factory :completed_transaction_edition, class: "Edition" do
-    sequence(:slug) { |n| "help/slug-#{n}" }
+    sequence(:slug) { |n| "done/slug-#{n}" }
     sequence(:version_number)
 
     title { "New Title" }
@@ -274,7 +289,7 @@ FactoryBot.define do
     end
 
     panopticon_id do
-      a = create(:artefact)
+      a = create(:artefact, kind: "completed_transaction", slug:)
       a.id
     end
   end
@@ -391,8 +406,6 @@ FactoryBot.define do
   factory :local_transaction_edition, class: "Edition" do
     title { "New Title" }
     transient do
-      lgil_code { "" }
-      lgsl_code { "" }
       cta_text { "Find your local council" }
       introduction { "Test introduction" }
       more_information { "This is more information" }
@@ -409,18 +422,20 @@ FactoryBot.define do
     end
 
     panopticon_id do
-      a = build(:artefact)
+      a = create(:artefact, kind: "local_transaction")
       a.id if a
     end
+
+    lgsl_code do
+      local_service = create(:local_service)
+      local_service.lgsl_code
+    end
+    lgil_code { 1 }
 
     sequence(:version_number)
   end
 
   factory :create_local_transaction, class: "LocalTransactionEdition" do
-    lgsl_code do
-      local_service = FactoryBot.build(:local_service)
-      local_service.lgsl_code
-    end
   end
 
   factory :devolved_administration_availability, class: "DevolvedAdministrationAvailability" do
@@ -521,9 +536,13 @@ FactoryBot.define do
   end
 
   factory :create_simple_smart_answer, class: "SimpleSmartAnswerEdition" do
+    nodes { build_list(:node, 2) }
   end
 
   factory :node, class: "SimpleSmartAnswerEdition::Node" do
+    title { "New Title" }
+    kind { "question" }
+    sequence(:slug) { |n| "slug-#{n}" }
   end
 
   factory :option, class: "SimpleSmartAnswerEdition::Node::Option" do

@@ -212,9 +212,7 @@ class Edition < ApplicationRecord
   end
 
   def latest_change_note
-    if latest_major_update.present?
-      latest_major_update.change_note
-    end
+    latest_major_update.presence&.change_note
   end
 
   def public_updated_at
@@ -289,8 +287,7 @@ class Edition < ApplicationRecord
     end
 
     unless can_create_new_edition?
-      raise "Cloning of a published edition when an in-progress edition exists
-             is not allowed"
+      raise "Cloning of a published edition when an in-progress edition exists is not allowed"
     end
 
     target_class ||= editionable.class
@@ -325,7 +322,7 @@ class Edition < ApplicationRecord
     end
 
     if self.editionable.respond_to?(:copy_to)
-      new_edition = self.editionable.copy_to(new_edition)
+      self.editionable.copy_to(new_edition.editionable)
     end
 
     new_edition
@@ -539,6 +536,21 @@ class Edition < ApplicationRecord
 
   def is_editable_by?(user)
     !scheduled_for_publishing? && !published? && !archived? && user.has_editor_permissions?(self)
+  end
+
+  def human_state_name
+    return super unless Flipflop.enabled?(:rename_edition_states)
+
+    case state
+    when "in_review"
+      "in 2i"
+    when "fact_check"
+      "fact check sent"
+    when "scheduled_for_publishing"
+      "scheduled"
+    else
+      super
+    end
   end
 
 private
