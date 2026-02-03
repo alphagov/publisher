@@ -5,7 +5,12 @@
 
 <% caption = sanitize("<span class='govuk-visually-hidden'>Find content</span><span class='item-count'>#{pluralize(number_with_delimiter(@presenter.editions.total_count), 'item' )}</span>") %>
 
-<div class="govuk-grid-row">
+<div
+  class="govuk-grid-row"
+  data-ga4-ecommerce
+  data-ga4-search-query=""
+  data-ga4-ecommerce-start-index="0"
+>
   <div class="govuk-grid-column-full find-content">
     <% if @presenter.editions.any? %>
       <%= render "govuk_publishing_components/components/table", {
