@@ -12,6 +12,17 @@ module GovukContentModels
 
         edition.send_fact_check
       end
+
+    private
+
+      def notify_about_event(new_action)
+        super
+
+        # TODO: when we fully migrate to the new fact check manager, remove this
+        unless Flipflop.enabled?(:fact_check_manager_api)
+          EventNotifierService.request_fact_check(new_action)
+        end
+      end
     end
   end
 end

@@ -38,13 +38,13 @@ module GovukContentModels
       def record_action
         new_action = edition.new_action(actor, action_name, action_attributes || {})
         edition.denormalise_users!
-        notify_about_event(new_action, action_name)
+        notify_about_event(new_action)
       end
 
       def record_action_without_validation
         new_action = edition.new_action_without_validation(actor, action_name, action_attributes || {})
         edition.denormalise_users!
-        notify_about_event(new_action, action_name)
+        notify_about_event(new_action)
       end
 
       def requester_different?
@@ -57,14 +57,8 @@ module GovukContentModels
 
     private
 
-      def notify_about_event(new_action, action_name)
+      def notify_about_event(new_action)
         EventNotifierService.any_action(new_action)
-        # TODO: when we fully migrate to the new fact check manager, remove this
-        if !Flipflop.enabled?(:fact_check_manager_api) && (action_name.to_s == "send_fact_check")
-          EventNotifierService.request_fact_check(new_action)
-        end
-        EventNotifierService.resend_fact_check(new_action) if action_name.to_s == "resend_fact_check"
-        EventNotifierService.skip_review(new_action) if action_name.to_s == "skip_review"
       end
     end
   end
