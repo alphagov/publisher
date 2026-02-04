@@ -222,6 +222,11 @@ FactoryBot.define do
     trait :with_body do
       body { "Some body text" }
     end
+
+    trait :is_major_change do
+      major_change { true }
+      change_note { "Default major change note" }
+    end
   end
 
   factory :answer_edition, class: "Edition" do

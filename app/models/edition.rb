@@ -203,11 +203,9 @@ class Edition < ApplicationRecord
     Artefact::RETIRED_FORMATS.include? format.underscore
   end
 
-  def major_updates_in_series
-    history.archived_or_published.major_updates
-  end
-
   def latest_major_update
+    return self if major_change
+
     major_updates_in_series.first
   end
 
@@ -554,6 +552,10 @@ class Edition < ApplicationRecord
   end
 
 private
+
+  def major_updates_in_series
+    history.archived_or_published.major_updates
+  end
 
   def base_field_keys
     %i[
