@@ -139,13 +139,13 @@ class EditionTest < ActiveSupport::TestCase
       assert_not edition.major_change
     end
     should "not be valid for major changes with a blank change note" do
-      edition = FactoryBot.build(:edition, title: "Edition", change_note: "", major_change: true)
+      edition = FactoryBot.build(:edition, :is_major_change, title: "Edition", change_note: "")
 
       assert_not edition.valid?
       assert edition.errors.key?(:change_note)
     end
     should "be valid for major changes with a change note" do
-      edition = FactoryBot.create(:edition, title: "Edition", major_change: true, change_note: "Changed")
+      edition = FactoryBot.create(:edition, :is_major_change, title: "Edition", change_note: "Changed")
       assert edition.valid?
     end
     should "be valid when blank for minor changes" do
@@ -1052,9 +1052,8 @@ class EditionTest < ActiveSupport::TestCase
   context "#latest_major_update" do
     should "return the most recent published edition with a major change" do
       edition1 = FactoryBot.create(
-        :answer_edition,
-        major_change: true,
-        change_note: "published",
+        :edition,
+        :is_major_change,
         state: "published",
         version_number: 1,
       )
@@ -1074,7 +1073,7 @@ class EditionTest < ActiveSupport::TestCase
       edition1 = FactoryBot.create(
         :edition,
         :published,
-        major_change: true,
+        :is_major_change,
         change_note: "a change note",
       )
       edition2 = edition1.build_clone
@@ -1090,13 +1089,7 @@ class EditionTest < ActiveSupport::TestCase
 
   context "#public_updated_at" do
     should "return the updated_at timestamp of the latest major update" do
-      edition1 = FactoryBot.create(
-        :edition,
-        :published,
-        major_change: true,
-        change_note: "a change note",
-        updated_at: 1.minute.ago,
-      )
+      edition1 = FactoryBot.create(:edition, :published, :is_major_change, updated_at: 1.minute.ago)
       edition2 = edition1.build_clone
 
       assert_in_delta edition1.updated_at, edition2.public_updated_at, 1.second
