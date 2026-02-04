@@ -32,6 +32,10 @@ Flipflop.configure do
   end
 
   group "For developer only (These features are for use by developers only)" do
+    feature :design_system_edit_phase_4,
+            default: false,
+            description: "Update the 'Add artefact' page to use the GOV.UK Design System with a two-step process"
+
     feature :fact_check_manager_api,
             default: false,
             description: "Experimental: enables in-development fact-check-manager API features for testing"
