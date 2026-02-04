@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ArtefactsControllerTest < ActionController::TestCase
+class LegacyArtefactsControllerTest < ActionController::TestCase
   context "#new" do
     should "allow creation if govuk_editor" do
       login_as_govuk_editor

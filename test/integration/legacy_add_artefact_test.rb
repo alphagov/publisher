@@ -1,6 +1,6 @@
 require "legacy_integration_test_helper"
 
-class AddArtefactTest < LegacyIntegrationTest
+class LegacyAddArtefactTest < LegacyIntegrationTest
   setup do
     setup_users
     stub_linkables

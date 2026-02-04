@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
   get "downtimes" => "downtimes#index"
 
-  resources :artefacts, only: %i[new create update]
+  resources :artefacts, controller: "legacy_artefacts", only: %i[new create update]
 
   constraints NewDesignSystemConstraint.new do
     resources :editions do

@@ -1,4 +1,4 @@
-class ArtefactsController < ApplicationController
+class LegacyArtefactsController < ApplicationController
   before_action :require_editor_permission
 
   def new
