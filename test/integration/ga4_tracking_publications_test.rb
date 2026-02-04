@@ -6,37 +6,57 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
   setup do
     setup_users
-    @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
+    # @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
+    @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago)
+    @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago)
+    @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago)
+    @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago)
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:ga4_form_tracking, true)
     test_strategy.switch!(:design_system_edit_phase_3b, true)
+    test_strategy.switch!(:ga4_form_tracking, true)
   end
 
   context "Find content page" do
     setup do
+      # @test_strategy.switch!(:ga4_form_tracking, true)
       visit find_content_path
       disable_form_submit
+      # execute_script("document.querySelector('#states_filter').style.display='block !important'")
+    end
+
+    should "push values to the dataLayer on initial page load (no search term)" do
+      assert page.has_css?(".govuk-table__cell", text: "Draft")
+
+      search_data = get_search_data
+
+      print "===="
+      print search_data
+      print "===="
     end
 
     should "add find content selection events to the dataLayer" do
       fill_in "Title or slug", with: "Search"
-      within all(".gem-c-select-with-search")[0] do
-        find("label").click
-        # within (".choices__list--dropdown") do
-        #   choices = find_all(".choices__item--choice")
-        #   choices[1].click
-        # end
-        find("#choices--states_filter-item-choice-2").click
-      end
+      # within all(".gem-c-select-with-search")[0] do
+      #   # execute_script("document.querySelector('.choices__input').style.display='block'")
+      #   find("label").click
+      #   # within (".choices__list--dropdown") do
+      #   #   choices = find_all(".choices__item--choice")
+      #   #   choices[1].click
+      #   # end
+      #   find("#choices--states_filter-item-choice-2").click
+      #   # select "Draft", from: "Status"
+      # end
 
       # select "Test user", from: "Assigned to"
       # select "Answer", from: "Content type"
-      # click_button "Apply filters"
+      click_button "Apply filters"
 
       event_data = get_event_data
 
-      print "==== event_data = " + event_data.to_s + "===="
+      print "===="
+      print event_data
+      print "===="
 
       # assert_equal "select", event_data[0]["action"]
       # assert_equal "select_content", event_data[0]["event_name"]
