@@ -15,15 +15,18 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
 
   Ga4SearchResultsSetup.prototype.trackEcommerce = function () {
     var searchTarget = document.querySelector('[data-ga4-ecommerce]')
+    var searchTerm = document.querySelector('input[name="search_text"]').value
+
+    searchTarget.dataset.ga4SearchQuery = searchTerm
 
     if (searchTarget) {
-      searchTarget.setAttribute('data-ga4-ecommerce', true)
+    //   searchTarget.setAttribute('data-ga4-ecommerce', true)
 
-      if (!searchTarget.hasAttribute('data-ga4-ecommerce-started')) {
+      // if (!searchTarget.hasAttribute('data-ga4-ecommerce-started')) {
         window.GOVUK.analyticsGa4.Ga4EcommerceTracker.init()
-      }
+      // }
 
-      searchTarget.setAttribute('data-ga4-ecommerce-started', true)
+    //   searchTarget.setAttribute('data-ga4-ecommerce-started', true)
     }
   }
 
