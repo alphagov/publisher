@@ -17,7 +17,7 @@ module Services
 
   def self.fact_check_manager_api
     @fact_check_manager_api ||= GdsApi::FactCheckManager.new(
-      Plek.find("fact-check-manager"),
+      Plek.find("fact-check-manager", external: true),
     )
   end
 end
