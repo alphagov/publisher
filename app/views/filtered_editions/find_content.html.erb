@@ -9,7 +9,13 @@
 >
   <%= render partial: "filtered_editions/find_content_filter" %>
 
-  <% caption = sanitize("<span class='govuk-visually-hidden'>Find content</span><span class='item-count'>#{pluralize(number_with_delimiter(@presenter.editions.total_count), 'item' )}</span>") %>
+  <% caption =
+    tag.span(class:"govuk-visually-hidden") do
+      "Find content "
+    end + tag.span(class: "item-count", id: "js-result-count") do
+      pluralize(number_with_delimiter(@presenter.editions.total_count), 'item')
+    end
+  %>
 
   <div
     class="govuk-grid-row"
@@ -42,7 +48,7 @@
           } %>
       <%= paginate @presenter.editions %>
         <% else %>
-        <p class="govuk-body item-count">0 items</p>
+        <p class="govuk-body item-count" id="js-result-count">0 items</p>
       <% end %>
     </div>
   </div>
