@@ -5,6 +5,7 @@ class WorkflowTest < ActiveSupport::TestCase
   def setup
     @artefact = FactoryBot.create(:artefact)
     GovukContentModels::ActionProcessors::BaseProcessor.any_instance.stubs(:notify_about_event)
+    stub_holidays_used_by_fact_check
   end
 
   def template_users

@@ -3,8 +3,9 @@ require "test_helper"
 class EditionsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:restrict_access_by_org, true)
+    @test_strategy = Flipflop::FeatureSet.current.test!
+    @test_strategy.switch!(:restrict_access_by_org, true)
+    @test_strategy.switch!(:fact_check_manager_api, false)
     @edition = FactoryBot.create(:edition, :fact_check)
     @welsh_edition = FactoryBot.create(:edition, :fact_check, :welsh)
     UpdateWorker.stubs(:perform_async)
@@ -702,144 +703,251 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#send_to_fact_check" do
-    context "user is not a govuk_editor or welsh editor" do
-      should "render an error message" do
-        user = FactoryBot.create(:user)
-        login_as(user)
-
-        post :send_to_fact_check, params: {
-          id: @edition.id,
-        }
-
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+    context "fact_check_manager_api is not enabled" do
+      setup do
+        @test_strategy.switch!(:fact_check_manager_api, false)
       end
-    end
 
-    context "user is a welsh editor but it is not a welsh edition" do
-      should "render an error message" do
-        login_as_welsh_editor
+      context "user is not a govuk_editor or welsh editor" do
+        should "render an error message" do
+          user = FactoryBot.create(:user)
+          login_as(user)
 
-        post :send_to_fact_check, params: {
-          id: @edition.id,
-        }
+          post :send_to_fact_check, params: {
+            id: @edition.id,
+          }
 
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-    end
-
-    context "edition is not in a valid state to be sent to fact check" do
-      %i[draft in_review amends_needed fact_check scheduled_for_publishing published archived].each do |edition_state|
-        context "edition in '#{edition_state}' state" do
-          should "redirect to edition path with error message" do
-            edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
-
-            post :send_to_fact_check, params: {
-              id: edition.id,
-            }
-
-            assert_redirected_to edition_path
-            assert_equal "Edition is not in a state where it can be sent to fact check", flash[:danger]
-          end
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
         end
       end
-    end
 
-    context "user has govuk_editor permission" do
-      ["test@test.com", "test1@test.com, test2@test.com"].each do |email_addresses|
-        context "using email address(es) '#{email_addresses}'" do
-          should "update the edition status to 'fact_check', generate the comment and save the user input" do
-            edition = FactoryBot.create(:edition, :ready)
+      context "user is a welsh editor but it is not a welsh edition" do
+        should "render an error message" do
+          login_as_welsh_editor
 
-            post :send_to_fact_check, params: {
-              id: edition.id,
-              email_addresses: email_addresses,
-              customised_message: "Please fact check this",
-            }
+          post :send_to_fact_check, params: {
+            id: @edition.id,
+          }
 
-            assert_equal "Sent to fact check", flash[:success]
-            edition.reload
-            assert_equal "fact_check", edition.state
-            assert_equal "Sent to fact check", edition.latest_status_action.comment
-            assert_equal email_addresses, edition.latest_status_action.email_addresses
-            assert_equal "Please fact check this", edition.latest_status_action.customised_message
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+
+      context "edition is not in a valid state to be sent to fact check" do
+        %i[draft in_review amends_needed fact_check scheduled_for_publishing published archived].each do |edition_state|
+          context "edition in '#{edition_state}' state" do
+            should "redirect to edition path with error message" do
+              edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
+
+              post :send_to_fact_check, params: {
+                id: edition.id,
+              }
+
+              assert_redirected_to edition_path
+              assert_equal "Edition is not in a state where it can be sent to fact check", flash[:danger]
+            end
           end
         end
       end
 
-      should "not update the edition state and render an error message when no email addresses are provided" do
-        edition = FactoryBot.create(:edition, :ready)
+      context "user has govuk_editor permission" do
+        ["test@test.com", "test1@test.com, test2@test.com"].each do |email_addresses|
+          context "using email address(es) '#{email_addresses}'" do
+            should "update the edition status to 'fact_check', generate the comment and save the user input" do
+              edition = FactoryBot.create(:edition, :ready)
 
-        post :send_to_fact_check, params: {
-          id: edition.id,
-          email_addresses: "",
-          customised_message: "Please fact check this",
-        }
+              post :send_to_fact_check, params: {
+                id: edition.id,
+                email_addresses: email_addresses,
+                customised_message: "Please fact check this",
+              }
 
-        assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "Enter email addresses and/or customised message", flash[:danger]
-        edition.reload
-        assert_equal "ready", edition.state
+              assert_equal "Sent to fact check", flash[:success]
+              edition.reload
+              assert_equal "fact_check", edition.state
+              assert_equal "Sent to fact check", edition.latest_status_action.comment
+              assert_equal email_addresses, edition.latest_status_action.email_addresses
+              assert_equal "Please fact check this", edition.latest_status_action.customised_message
+            end
+          end
+        end
+
+        should "not update the edition state and render an error message when no email addresses are provided" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "",
+            customised_message: "Please fact check this",
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Enter email addresses and/or customised message", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+
+        should "not update the edition state and render an error message when email address is invalid" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "user1@example.com, another-user AT example DOT com",
+            customised_message: "Please fact check this",
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Enter email addresses and/or customised message", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+
+        should "not update the edition state and render an error message when customised message is empty" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "user1@example.com",
+            customised_message: "",
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Enter email addresses and/or customised message", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+
+        should "not update the edition state and render an error message when the edition progression is false" do
+          EditionProgressor.any_instance.stubs(:progress).returns(false)
+
+          edition = FactoryBot.create(:edition, :ready)
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "test@test.com",
+            customised_message: "Please fact check this",
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+
+        should "not update the edition state render an error message when a system error occurs" do
+          EditionProgressor.any_instance.stubs(:progress).raises(StandardError)
+
+          edition = FactoryBot.create(:edition, :ready)
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "test@test.com",
+            customised_message: "Please fact check this",
+          }
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+      end
+    end
+
+    context "fact_check_manager_api is enabled" do
+      setup do
+        @test_strategy.switch!(:fact_check_manager_api, true)
+        stub_post_new_fact_check_request(success: true)
       end
 
-      should "not update the edition state and render an error message when email address is invalid" do
-        edition = FactoryBot.create(:edition, :ready)
+      context "user has govuk_editor permission" do
+        ["test@test.com", "test1@test.com, test2@test.com"].each do |email_addresses|
+          context "using email address(es) '#{email_addresses}'" do
+            should "update the edition status to 'fact_check', generate the comment and save the user input" do
+              edition = FactoryBot.create(:edition, :ready)
 
-        post :send_to_fact_check, params: {
-          id: edition.id,
-          email_addresses: "user1@example.com, another-user AT example DOT com",
-          customised_message: "Please fact check this",
-        }
+              post :send_to_fact_check, params: {
+                id: edition.id,
+                email_addresses: email_addresses,
+              }
 
-        assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "Enter email addresses and/or customised message", flash[:danger]
-        edition.reload
-        assert_equal "ready", edition.state
-      end
+              assert_equal "Sent to fact check", flash[:success]
+              edition.reload
+              assert_equal "fact_check", edition.state
+              assert_equal "Sent to fact check", edition.latest_status_action.comment
+              assert_equal email_addresses, edition.latest_status_action.email_addresses
+            end
+          end
+        end
 
-      should "not update the edition state and render an error message when customised message is empty" do
-        edition = FactoryBot.create(:edition, :ready)
+        should "not update the edition state and render an error message when no email addresses are provided" do
+          edition = FactoryBot.create(:edition, :ready)
 
-        post :send_to_fact_check, params: {
-          id: edition.id,
-          email_addresses: "user1@example.com",
-          customised_message: "",
-        }
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "",
+            customised_message: "Please fact check this",
+          }
 
-        assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "Enter email addresses and/or customised message", flash[:danger]
-        edition.reload
-        assert_equal "ready", edition.state
-      end
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Enter email addresses", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
 
-      should "not update the edition state and render an error message when the edition progression is false" do
-        EditionProgressor.any_instance.stubs(:progress).returns(false)
+        should "not update the edition state and render an error message when email address is invalid" do
+          edition = FactoryBot.create(:edition, :ready)
 
-        edition = FactoryBot.create(:edition, :ready)
-        post :send_to_fact_check, params: {
-          id: edition.id,
-          email_addresses: "test@test.com",
-          customised_message: "Please fact check this",
-        }
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "user1@example.com, another-user AT example DOT com",
+          }
 
-        assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
-        edition.reload
-        assert_equal "ready", edition.state
-      end
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Enter email addresses", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
 
-      should "not update the edition state render an error message when a system error occurs" do
-        EditionProgressor.any_instance.stubs(:progress).raises(StandardError)
+        should "not update the edition state and render an error message when the API returns an error" do
+          stub_post_new_fact_check_request(success: false)
+          edition = FactoryBot.create(:edition, :ready)
 
-        edition = FactoryBot.create(:edition, :ready)
-        post :send_to_fact_check, params: {
-          id: edition.id,
-          email_addresses: "test@test.com",
-          customised_message: "Please fact check this",
-        }
-        assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
-        edition.reload
-        assert_equal "ready", edition.state
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "user1@example.com",
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+
+        should "not update the edition state and render an error message when the edition progression is false" do
+          EditionProgressor.any_instance.stubs(:progress).returns(false)
+
+          edition = FactoryBot.create(:edition, :ready)
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "test@test.com",
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+
+        should "not update the edition state and render an error message when a system error occurs" do
+          EditionProgressor.any_instance.stubs(:progress).raises(StandardError)
+
+          edition = FactoryBot.create(:edition, :ready)
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            email_addresses: "test@test.com",
+          }
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          edition.reload
+          assert_equal "ready", edition.state
+        end
       end
     end
   end

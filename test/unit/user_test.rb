@@ -2,6 +2,9 @@ require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   test "it doesn't try to send a fact check email if no addresses were given" do
+    stub_holidays_used_by_fact_check
+    stub_post_new_fact_check_request
+
     user = FactoryBot.create(:user, :govuk_editor, name: "bob")
     EventMailer.expects(:request_fact_check).never
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: FactoryBot.create(:artefact).id)

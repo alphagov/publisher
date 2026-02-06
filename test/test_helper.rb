@@ -16,6 +16,7 @@ require "support/tab_test_helpers"
 require "support/holidays_test_helpers"
 require "support/action_processor_helpers"
 require "support/factories"
+require "support/fact_check_manager_api_helpers"
 require "support/host_content_update_test_helpers"
 require "support/local_services"
 require "support/presenter_test_helpers"
@@ -95,6 +96,7 @@ class ActiveSupport::TestCase
   include TagTestHelpers
   include TabTestHelpers
   include HolidaysTestHelpers
+  include FactCheckManagerApiHelpers
   include ActionProcessorHelpers
   extend PresenterTestHelpers
   include SignonApiHelpers

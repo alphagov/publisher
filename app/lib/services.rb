@@ -14,4 +14,10 @@ module Services
       bearer_token: ENV.fetch("SIGNON_API_BEARER_TOKEN", "example"),
     )
   end
+
+  def self.fact_check_manager_api
+    @fact_check_manager_api ||= GdsApi::FactCheckManager.new(
+      Plek.find("fact-check-manager", external: true),
+    )
+  end
 end
