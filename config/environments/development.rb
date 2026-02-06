@@ -11,9 +11,7 @@ Rails.application.configure do
 
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # In the development environment your application's code is reloaded any time
-  # it changes. This slows down response time but is perfect for development
-  # since you don't have to restart the web server when you make code changes.
+  # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
   # Do not eager load code on boot.
@@ -27,7 +25,7 @@ Rails.application.configure do
 
   config.jwt_auth_secret = "123"
 
-  # Enable server timing
+  # Enable server timing.
   config.server_timing = true
 
   # Enable/disable Action Controller caching. By default Action Controller caching is disabled.
@@ -37,9 +35,7 @@ Rails.application.configure do
     config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=#{2.days.to_i}",
-    }
+    config.public_file_server.headers = { "cache-control" => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
 
@@ -52,6 +48,7 @@ Rails.application.configure do
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
+  # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "www.dev.gov.uk" }
 
   # Print deprecation notices to the Rails logger.
@@ -70,10 +67,13 @@ Rails.application.configure do
   # config.active_record.verbose_query_logs = true
 
   # Append comments with runtime information tags to SQL queries in logs.
-  # config.active_record.query_log_tags_enabled = true
+  config.active_record.query_log_tags_enabled = true
 
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
+
+  # Highlight code that triggered redirect in logs.
+  config.action_dispatch.verbose_redirect_logs = true
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large

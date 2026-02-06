@@ -15,13 +15,11 @@ Rails.application.configure do
   # Turn on fragment caching in view templates.
   config.action_controller.perform_caching = true
 
-  # Ensures that a master key has been made available in ENV["RAILS_MASTER_KEY"], config/master.key, or an environment
-  # key such as config/credentials/production.key. This key is used to decrypt credentials (and other encrypted files).
-  # config.require_master_key = true
-
-  # Disable serving static files from the `/public` folder by default since
-  # Apache or NGINX already handles this.
+  # Disable serving static files from `public/`, relying on NGINX/Apache to do so instead.
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
+
+  # Cache assets for far-future expiry since they are all digest stamped.
+  config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :terser
@@ -49,9 +47,12 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
+  # Skip http-to-https redirect for the default health check endpoint.
+  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
-  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", :info)
+  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
@@ -60,23 +61,11 @@ Rails.application.configure do
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
+  # Prevent health checks from clogging up the logs.
+  config.silence_healthcheck_path = /^\/healthcheck/
+
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
-  # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "publisher_production"
-
-  config.action_mailer.default_url_options = { host: "www.gov.uk" }
-  config.action_mailer.perform_caching = false
-
-  config.action_mailer.delivery_method = :notify
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
-
-  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
-  # the I18n.default_locale when a translation cannot be found).
-  config.i18n.fallbacks = true
 
   # Log disallowed deprecations.
   config.active_support.disallowed_deprecation = :log
@@ -84,9 +73,40 @@ Rails.application.configure do
   # Tell Active Support which deprecation messages to disallow.
   config.active_support.disallowed_deprecation_warnings = []
 
+  # Replace the default in-process memory cache store with a durable alternative.
+  # config.cache_store = :mem_cache_store
+
+  # Replace the default in-process and non-durable queuing backend for Active Job.
+  # config.active_job.queue_adapter = :resque
+
+  # Ignore bad email addresses and do not raise email delivery errors.
+  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
+  # config.action_mailer.raise_delivery_errors = false
+
+  # Set host to be used by links generated in mailer templates.
+  config.action_mailer.default_url_options = { host: "www.gov.uk" }
+  config.action_mailer.perform_caching = false
+
+  config.action_mailer.delivery_method = :notify
+
+  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
+  # config.action_mailer.smtp_settings = {
+  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
+  #   password: Rails.application.credentials.dig(:smtp, :password),
+  #   address: "smtp.example.com",
+  #   port: 587,
+  #   authentication: :plain
+  # }
+
   if ENV["DISABLE_EMAIL"]
     ActionMailer::Base.perform_deliveries = false
   end
+
+  # Do not dump schema after migrations.
+  config.active_record.dump_schema_after_migration = false
+
+  # Only use :id for inspections in production.
+  config.active_record.attributes_for_inspect = [:id]
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
