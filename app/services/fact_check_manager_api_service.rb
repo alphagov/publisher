@@ -9,7 +9,7 @@ class FactCheckManagerApiService
   def self.build_post_payload(edition, requester, email_addresses)
     { source_app: "publisher",
       source_id: edition.id,
-      source_url: "#{Plek.find('publisher')}/editions/#{edition.id}",
+      source_url: "#{Plek.find('publisher', external: true)}/editions/#{edition.id}",
       source_title: edition.title,
       requester_name: requester.name,
       requester_email: requester.email,

@@ -18,6 +18,7 @@ module Services
   def self.fact_check_manager_api
     @fact_check_manager_api ||= GdsApi::FactCheckManager.new(
       Plek.find("fact-check-manager", external: true),
+      bearer_token: ENV.fetch("FACT_CHECK_MANAGER_BEARER_TOKEN", "example"),
     )
   end
 end
