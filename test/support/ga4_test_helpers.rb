@@ -21,14 +21,20 @@ module Ga4TestHelpers
 
   def get_search_data
     data_layer_items = evaluate_script("window.dataLayer")
+    # data_layer_items = evaluate_script("setTimeout(function(){window.dataLayer},1000)")
+
     search_data = []
 
     data_layer_items.each do |item|
-      if item["search_data"]
-        search_data << item["search_data"]
+      # if item["search_data"]
+      if item["event"]
+        # search_data << item["search_data"]
+        search_data << item
       end
     end
 
     search_data
+    # data_layer_items
+    # evaluate_script("setTimeout(function(){window.dataLayer},1000)")
   end
 end

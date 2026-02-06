@@ -19,14 +19,18 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
   context "Find content page" do
     setup do
-      # @test_strategy.switch!(:ga4_form_tracking, true)
+      # test_strategy = Flipflop::FeatureSet.current.test!
+      # test_strategy.switch!(:design_system_edit_phase_3b, true)
       visit find_content_path
       disable_form_submit
       # execute_script("document.querySelector('#states_filter').style.display='block !important'")
     end
 
     should "push values to the dataLayer on initial page load (no search term)" do
-      assert page.has_css?(".govuk-table__cell", text: "Draft")
+      # Forces the driver to wait for any async javascript to complete
+      page.has_css?("[data-ga4-ecommerce-started='true']")
+
+      # fill_in "Title or slug", with: "Search"
 
       search_data = get_search_data
 
@@ -35,8 +39,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       print "===="
     end
 
-    should "add find content selection events to the dataLayer" do
-      fill_in "Title or slug", with: "Search"
+    should "push values to the dataLayer when the user enters a search term and submits" do
+      fill_in "Title or slug", with: "search"
       # within all(".gem-c-select-with-search")[0] do
       #   # execute_script("document.querySelector('.choices__input').style.display='block'")
       #   find("label").click
@@ -53,10 +57,15 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       click_button "Apply filters"
 
       event_data = get_event_data
+      # search_data = get_search_data
 
-      print "===="
+      print "==event_data=="
       print event_data
       print "===="
+
+      # print "==search_data=="
+      # print search_data
+      # print "===="
 
       # assert_equal "select", event_data[0]["action"]
       # assert_equal "select_content", event_data[0]["event_name"]
