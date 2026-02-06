@@ -39,10 +39,12 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
       tool_name: toolName
     }
 
-    if (dataModule) {
-      form.setAttribute('data-module', dataModule + ' ga4-form-tracker')
-    } else {
-      form.setAttribute('data-module', 'ga4-form-tracker')
+    if (!form.querySelector('input[type="search"]')) {
+      if (dataModule) {
+        form.setAttribute('data-module', dataModule + ' ga4-form-tracker')
+      } else {
+        form.setAttribute('data-module', 'ga4-form-tracker')
+      }
     }
 
     form.setAttribute('data-ga4-form-include-text', '')
