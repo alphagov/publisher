@@ -41,8 +41,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       print "===="
     end
 
-    should "push 'event_data' values to the dataLayer when the user selects values in the filters" do
-      fill_in "Title or slug", with: "search"
+    should "push 'event_data' values to the dataLayer when the user selects values in the filters and submits" do
+      fill_in "Title or slug", with: "search-term"
 
       within all(".gem-c-select-with-search")[0] do
         find("label").click
@@ -59,13 +59,9 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
         find("#choices--content_type_filter-item-choice-2").click
       end
  
-      # click_button "Apply filters"
+      click_button "Apply filters"
 
       event_data = get_event_data
-
-      # print "==event_data=="
-      # print event_data
-      # print "===="
 
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
@@ -88,12 +84,12 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "4", event_data[2]["index"]["index_section"]
       assert_equal "4", event_data[2]["index"]["index_section_count"]
 
-      # assert_equal "Save", event_data[1]["action"]
-      # assert_equal "form_response", event_data[1]["event_name"]
-      # assert_equal "Add edition note", event_data[1]["section"]
-      # assert_equal "{\"Edition note\":\"26\"}", event_data[1]["text"]
-      # assert_equal "Answer", event_data[1]["tool_name"]
-      # assert_equal "edit", event_data[1]["type"]
+      assert_equal "search", event_data[3]["action"]
+      assert_equal "search", event_data[3]["event_name"]
+      assert_equal "index_additions", event_data[3]["type"]
+      assert_equal "Find content", event_data[3]["section"]
+      assert_equal "search-term", event_data[3]["text"]
+      assert_equal "/find-content", event_data[3]["url"]
     end
 
     should "push values to the dataLayer when the user visits multiple pages of results" do
