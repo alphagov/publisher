@@ -6,6 +6,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
   setup do
     setup_users
+    # login_as_govuk_editor
+
     # @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
     @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago)
     @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago)
@@ -39,40 +41,52 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       print "===="
     end
 
-    should "push values to the dataLayer when the user enters a search term and submits" do
+    should "push 'event_data' values to the dataLayer when the user selects values in the filters" do
       fill_in "Title or slug", with: "search"
-      # within all(".gem-c-select-with-search")[0] do
-      #   # execute_script("document.querySelector('.choices__input').style.display='block'")
-      #   find("label").click
-      #   # within (".choices__list--dropdown") do
-      #   #   choices = find_all(".choices__item--choice")
-      #   #   choices[1].click
-      #   # end
-      #   find("#choices--states_filter-item-choice-2").click
-      #   # select "Draft", from: "Status"
-      # end
 
-      # select "Test user", from: "Assigned to"
-      # select "Answer", from: "Content type"
-      click_button "Apply filters"
+      within all(".gem-c-select-with-search")[0] do
+        find("label").click
+        find("#choices--states_filter-item-choice-2").click
+      end
+
+      within all(".gem-c-select-with-search")[1] do
+        find("label").click
+        find("#choices--assignee_filter-item-choice-2").click
+      end
+ 
+      within all(".gem-c-select-with-search")[2] do
+        find("label").click
+        find("#choices--content_type_filter-item-choice-2").click
+      end
+ 
+      # click_button "Apply filters"
 
       event_data = get_event_data
-      # search_data = get_search_data
 
-      print "==event_data=="
-      print event_data
-      print "===="
-
-      # print "==search_data=="
-      # print search_data
+      # print "==event_data=="
+      # print event_data
       # print "===="
 
-      # assert_equal "select", event_data[0]["action"]
-      # assert_equal "select_content", event_data[0]["event_name"]
-      # assert_equal "Edition note", event_data[0]["section"]
-      # assert_equal "26", event_data[0]["text"]
-      # assert_equal "1", event_data[0]["index"]["index_section"]
-      # assert_equal "1", event_data[0]["index"]["index_section_count"]
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Status", event_data[0]["section"]
+      assert_equal "Draft", event_data[0]["text"]
+      assert_equal "2", event_data[0]["index"]["index_section"]
+      assert_equal "4", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "select", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "Assigned to", event_data[1]["section"]
+      assert_equal "Author (You)", event_data[1]["text"]
+      assert_equal "3", event_data[1]["index"]["index_section"]
+      assert_equal "4", event_data[1]["index"]["index_section_count"]
+
+      assert_equal "select", event_data[2]["action"]
+      assert_equal "select_content", event_data[2]["event_name"]
+      assert_equal "Content type", event_data[2]["section"]
+      assert_equal "Answer", event_data[2]["text"]
+      assert_equal "4", event_data[2]["index"]["index_section"]
+      assert_equal "4", event_data[2]["index"]["index_section_count"]
 
       # assert_equal "Save", event_data[1]["action"]
       # assert_equal "form_response", event_data[1]["event_name"]
@@ -80,6 +94,15 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       # assert_equal "{\"Edition note\":\"26\"}", event_data[1]["text"]
       # assert_equal "Answer", event_data[1]["tool_name"]
       # assert_equal "edit", event_data[1]["type"]
+    end
+
+    should "push values to the dataLayer when the user visits multiple pages of results" do
+    end
+
+    should "push values to the dataLayer when the user selects an edition to visit from the list of results" do
+    end
+
+    should "push values to the dataLayer when the user selects 'Clear filters'" do
     end
   end
 end
