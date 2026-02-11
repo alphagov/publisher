@@ -63,7 +63,13 @@ govuk-docker run publisher-lite bundle exec rake db:setup
 ``` 
 ```sh
 gds-cli aws govuk-integration-developer --assume-role-ttl 3h ./bin/replicate-postgresql.sh publisher
-``` 
+```
+
+As this is a copy of a production database, you will not be able to perform any destructive actions on your local database (e.g. `rake db:drop`) without also setting `DISABLE_DATABASE_ENVIRONMENT_CHECK=1`. You can avoid having to do this by setting your database environment to `development` with:
+
+```sh
+govuk-docker run publisher-lite bundle exec rake db:environment:set RAILS_ENV=development
+```
 
 The test user `James Stewart` does not have any permissions by default, so you will need to add them. Open the rails console with:
 ```sh
