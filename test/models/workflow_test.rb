@@ -52,29 +52,38 @@ class WorkflowTest < ActiveSupport::TestCase
     [user, transaction]
   end
 
-  context "#legacy_status_text" do
-    should "return a capitalized text representation of the state" do
-      assert_equal "Ready", FactoryBot.build(:edition, state: "ready").legacy_status_text
-    end
+  [[true, "Scheduled"], [false, "Scheduled for publishing"]].each do |toggle_value, scheduled_for_publishing_state_label|
+    context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
+      setup do
+        @test_strategy = Flipflop::FeatureSet.current.test!
+        @test_strategy.switch!(:rename_edition_states, toggle_value)
+      end
 
-    should "also return scheduled publishing time when the state is scheduled for publishing" do
-      edition = FactoryBot.build(:edition, :scheduled_for_publishing)
-      expected_status_text = "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}"
+      context "#legacy_status_text" do
+        should "return a capitalized text representation of the state" do
+          assert_equal "Ready", FactoryBot.build(:edition, state: "ready").legacy_status_text
+        end
 
-      assert_equal expected_status_text, edition.legacy_status_text
-    end
-  end
+        should "also return scheduled publishing time when the state is scheduled for publishing" do
+          edition = FactoryBot.build(:edition, :scheduled_for_publishing)
+          expected_status_text = "#{scheduled_for_publishing_state_label} on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}"
 
-  context "#status_text" do
-    should "return a capitalized text representation of the state" do
-      assert_equal "Ready", FactoryBot.build(:edition, state: "ready").status_text
-    end
+          assert_equal expected_status_text, edition.legacy_status_text
+        end
+      end
 
-    should "not return scheduled publishing time when the state is scheduled for publishing" do
-      edition = FactoryBot.build(:edition, :scheduled_for_publishing)
-      expected_status_text = "Scheduled for publishing"
+      context "#status_text" do
+        should "return a capitalized text representation of the state" do
+          assert_equal "Ready", FactoryBot.build(:edition, state: "ready").status_text
+        end
 
-      assert_equal expected_status_text, edition.status_text
+        should "not return scheduled publishing time when the state is scheduled for publishing" do
+          edition = FactoryBot.build(:edition, :scheduled_for_publishing)
+          expected_status_text = scheduled_for_publishing_state_label
+
+          assert_equal expected_status_text, edition.status_text
+        end
+      end
     end
   end
 
