@@ -5,7 +5,6 @@ class EditionEditTest < IntegrationTest
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     @govuk_requester = FactoryBot.create(:user, :govuk_editor, name: "Stub requester")
     login_as(@govuk_editor)
-    @test_strategy = Flipflop::FeatureSet.current.test!
     UpdateWorker.stubs(:perform_async)
   end
 

@@ -4,7 +4,6 @@ class ContentItemControllerTest < ActionController::TestCase
   def setup
     login_as_stub_user
     @edition = FactoryBot.create(:edition)
-    @test_strategy = Flipflop::FeatureSet.current.test!
   end
 
   context "When design system 3b feature toggle is off" do

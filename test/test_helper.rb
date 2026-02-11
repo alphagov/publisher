@@ -46,6 +46,11 @@ class ActiveSupport::TestCase
     Sidekiq::Testing.inline!
     stub_any_publishing_api_call
     FactoryBot.rewind_sequences
+
+    @test_strategy = Flipflop::FeatureSet.current.test!
+    @test_strategy.switch!(:design_system_edit_phase_3b, false)
+    @test_strategy.switch!(:design_system_edit_phase_4, false)
+    @test_strategy.switch!(:fact_check_manager_api, false)
   end
 
   def without_metadata_denormalisation(*klasses, &_block)

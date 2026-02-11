@@ -55,7 +55,6 @@ class WorkflowTest < ActiveSupport::TestCase
   [[true, "Scheduled"], [false, "Scheduled for publishing"]].each do |toggle_value, scheduled_for_publishing_state_label|
     context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
       setup do
-        @test_strategy = Flipflop::FeatureSet.current.test!
         @test_strategy.switch!(:rename_edition_states, toggle_value)
       end
 

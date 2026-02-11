@@ -4,7 +4,6 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
   setup do
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     login_as(@govuk_editor)
-    @test_strategy = Flipflop::FeatureSet.current.test!
     @test_strategy.switch!(:fact_check_manager_api, true)
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
