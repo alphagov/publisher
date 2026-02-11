@@ -1,0 +1,31 @@
+<% content_for :page_title, "Create new content" %>
+<% content_for :title, "Create new content" %>
+
+<% if @artefact.errors.any? %>
+  <% content_for :error_summary, render("shared/error_summary", { object: @artefact, full_messages: false }) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with url: new_artefact_content_details_path, method: :post do %>
+      <%= render "govuk_publishing_components/components/radio", {
+        heading: "Content type",
+        id: "artefact_kind",
+        name: "artefact[kind]",
+        error_message: @artefact.errors.messages_for(:kind).first,
+        items: [
+          { value: "answer", hint_text: "One-page guidance", text: "Answer" },
+          { value: "guide", hint_text: "Multi-page guidance", text: "Guide" },
+          { value: "place", hint_text: "Address lookup for nearby places and services", text: "Place" },
+          { value: "simple_smart_answer", hint_text: "Simple questions and answers that route users to relevant outcomes", text: "Simple smart answer" },
+          { value: "transaction", hint_text: "Start page for a service", text: "Transaction" },
+        ],
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", { text: "Continue" } %>
+        <%= link_to "Cancel", root_path, class: "govuk-link govuk-link--no-visited-state" %>
+      </div>
+    <% end %>
+  </div>
+</div>
