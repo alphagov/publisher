@@ -29,7 +29,7 @@ module Publisher
     config.flipflop.raise_strategy_errors = nil
 
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 8.0
+    config.load_defaults 8.1
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -99,14 +99,6 @@ module Publisher
     # Enable origin-checking CSRF mitigation. Previous versions had false.
     Rails.application.config.action_controller.forgery_protection_origin_check = false
 
-    ###
-    # Specifies whether `to_time` methods preserve the UTC offset of their receivers or preserves the timezone.
-    # If set to `:zone`, `to_time` methods will use the timezone of their receivers.
-    # If set to `:offset`, `to_time` methods will use the UTC offset.
-    # If `false`, `to_time` methods will convert to the local system UTC offset instead.
-    #++
-    Rails.application.config.active_support.to_time_preserves_timezone = false
-
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
@@ -117,31 +109,6 @@ module Publisher
 
     config.autoload_paths << Rails.root.join("app/middleware")
     config.middleware.use MaintenanceMode
-
-    ###
-    # Controls whether Active Job's `#perform_later` and similar methods automatically defer
-    # the job queuing to after the current Active Record transaction is committed.
-    #
-    # Example:
-    #   Topic.transaction do
-    #     topic = Topic.create(...)
-    #     NewTopicNotificationJob.perform_later(topic)
-    #   end
-    #
-    # In this example, if the configuration is set to `:never`, the job will
-    # be enqueued immediately, even though the `Topic` hasn't been committed yet.
-    # Because of this, if the job is picked up almost immediately, or if the
-    # transaction doesn't succeed for some reason, the job will fail to find this
-    # topic in the database.
-    #
-    # If `enqueue_after_transaction_commit` is set to `:default`, the queue adapter
-    # will define the behaviour.
-    #
-    # Note: Active Job backends can disable this feature. This is generally done by
-    # backends that use the same database as Active Record as a queue, hence they
-    # don't need this feature.
-    #++
-    Rails.application.config.active_job.enqueue_after_transaction_commit = :default
 
     ###
     # Adds image/webp to the list of content types Active Storage considers as an image

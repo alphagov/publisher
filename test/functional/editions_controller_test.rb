@@ -1052,7 +1052,7 @@ class EditionsControllerTest < ActionController::TestCase
           post :schedule, params: {
             id: @edition.id,
             comment: "Scheduling for publish",
-            publish_at_1i: nil,
+            publish_at_1i: "",
             publish_at_2i: @future_date.month,
             publish_at_3i: @future_date.day,
             publish_at_4i: @future_date.hour,
@@ -1065,7 +1065,7 @@ class EditionsControllerTest < ActionController::TestCase
             id: @edition.id,
             comment: "Scheduling for publish",
             publish_at_1i: @future_date.year,
-            publish_at_2i: nil,
+            publish_at_2i: "",
             publish_at_3i: @future_date.day,
             publish_at_4i: @future_date.hour,
             publish_at_5i: @future_date.min,
@@ -1078,7 +1078,7 @@ class EditionsControllerTest < ActionController::TestCase
             comment: "Scheduling for publish",
             publish_at_1i: @future_date.year,
             publish_at_2i: @future_date.month,
-            publish_at_3i: nil,
+            publish_at_3i: "",
             publish_at_4i: @future_date.hour,
             publish_at_5i: @future_date.min,
           }
@@ -1091,7 +1091,7 @@ class EditionsControllerTest < ActionController::TestCase
             publish_at_1i: @future_date.year,
             publish_at_2i: @future_date.month,
             publish_at_3i: @future_date.day,
-            publish_at_4i: nil,
+            publish_at_4i: "",
             publish_at_5i: @future_date.min,
           }
 
@@ -1104,7 +1104,7 @@ class EditionsControllerTest < ActionController::TestCase
             publish_at_2i: @future_date.month,
             publish_at_3i: @future_date.day,
             publish_at_4i: @future_date.hour,
-            publish_at_5i: nil,
+            publish_at_5i: "",
           }
 
           assert_equal "Select a future time and/or date to schedule publication.", flash[:danger]
@@ -1624,7 +1624,7 @@ class EditionsControllerTest < ActionController::TestCase
       should "redirect to edition_path when user does not have govuk-editor permission" do
         user = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
         login_as(user)
-        get :confirm_unpublish, params: { id: @edition.id, redirect_url: nil }
+        get :confirm_unpublish, params: { id: @edition.id, redirect_url: "" }
 
         assert_redirected_to edition_path(@edition)
       end
@@ -1637,21 +1637,21 @@ class EditionsControllerTest < ActionController::TestCase
 
       should "show success message and redirect to root path when unpublished successfully without redirect url" do
         UnpublishService.stubs(:call).returns(true)
-        get :process_unpublish, params: { id: @edition.id, redirect_url: nil }
+        get :process_unpublish, params: { id: @edition.id, redirect_url: "" }
 
         assert_equal "Content unpublished", flash[:success]
       end
 
       should "show error message when unpublish is unsuccessful" do
         UnpublishService.stubs(:call).returns(nil)
-        get :process_unpublish, params: { id: @edition.id, redirect_url: nil }
+        get :process_unpublish, params: { id: @edition.id, redirect_url: "" }
 
         assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be unpublished"
       end
 
       should "show error message when unpublish service returns an error" do
         UnpublishService.stubs(:call).raises(StandardError)
-        get :process_unpublish, params: { id: @edition.id, redirect_url: nil }
+        get :process_unpublish, params: { id: @edition.id, redirect_url: "" }
 
         assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be unpublished"
       end
