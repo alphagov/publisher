@@ -30,9 +30,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
     should "push values to the dataLayer on initial page load (no search term)" do
       # Forces the driver to wait for any async javascript to complete
-      page.has_css?("[data-ga4-ecommerce-started='true']")
-
-      # fill_in "Title or slug", with: "Search"
+      page.has_css?('[data-ga4-ecommerce-started="true"]')
 
       search_data = get_search_data
 
@@ -92,10 +90,65 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "/find-content", event_data[3]["url"]
     end
 
-    should "push values to the dataLayer when the user visits multiple pages of results" do
+    should "push values to the dataLayer when the user visits multiple pages of results (via pagination)" do
     end
 
     should "push values to the dataLayer when the user selects an edition to visit from the list of results" do
+      disable_links
+
+      # print "==h1=="
+      # print find("h1").text
+      # print "===="
+
+      within "tbody" do
+        within all(".govuk-table__row")[0] do
+          # print "===="
+          # print "first row"
+          # print find("a").text
+          # print "===="
+
+          find("a").click
+
+          print "==current_path=="
+          print current_path
+          print "===="
+
+          # event_data = get_event_data
+
+          # print "===="
+          # print event_data
+          # print "===="
+        end
+
+        # within all(".govuk-table__row")[1] do
+        #   print "===="
+        #   # print "second row"
+        #   print find('a').text
+        #   print "===="
+        # end
+
+        # within all(".govuk-table__row")[2] do
+        #   print "===="
+        #   # print "third row"
+        #   print find('a').text
+        #   print "===="
+        # end
+
+        # within all(".govuk-table__row")[3] do
+        #   print "===="
+        #   # print "fourth row"
+        #   print find('a').text
+        #   print "===="
+        # end
+      end
+
+      event_data = get_event_data
+
+      print "===="
+      print event_data
+      print "===="
+
+      assert page.has_css?("h1", text: "Find content")
     end
 
     should "push values to the dataLayer when the user selects 'Clear filters'" do
