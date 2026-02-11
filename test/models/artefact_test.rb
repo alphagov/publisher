@@ -59,6 +59,14 @@ class ArtefactTest < ActiveSupport::TestCase
       assert artefact.valid?
       assert artefact.redirect_url == "https://www.gov.uk"
     end
+
+    should "not allow a duplicate slug" do
+      FactoryBot.create(:artefact, slug: "its-a-nice-day")
+      artefact_with_duplicate_slug = FactoryBot.build(:artefact, slug: "its-a-nice-day")
+
+      assert_not artefact_with_duplicate_slug.valid?
+      assert artefact_with_duplicate_slug.errors[:slug].include? "Slug has already been taken"
+    end
   end
 
   context "validating paths and prefixes" do

@@ -56,7 +56,7 @@ class Artefact < ApplicationRecord
   after_update :update_editions
 
   validates :name, presence: { message: "Enter a title" }
-  validates :slug, presence: { message: "Enter a slug" }, uniqueness: true, slug: true
+  validates :slug, presence: { message: "Enter a slug" }, uniqueness: { message: "Slug has already been taken" }, slug: true
   validates :kind, inclusion: { in: ->(_x) { FORMATS }, message: "Select a format" }
   validates :state, inclusion: { in: %w[draft live archived] }
   validates :owning_app, presence: true
