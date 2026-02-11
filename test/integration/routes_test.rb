@@ -47,6 +47,39 @@ class RoutesTest < LegacyIntegrationTest
         end
       end
     end
+
+    context "when the 'design_system_phase_4' feature toggle is on" do
+      setup do
+        @test_strategy = Flipflop::FeatureSet.current.test!
+        @test_strategy.switch!(:design_system_edit_phase_4, true)
+      end
+
+      should "route to artefacts controller" do
+        assert_routing("/artefacts/new", controller: "artefacts", action: "new")
+        assert_routing({ method: "post", path: "/artefacts/new/content-details" }, controller: "artefacts", action: "content_details")
+        assert_routing({ method: "post", path: "/artefacts" }, controller: "artefacts", action: "create")
+      end
+
+      should "route update to legacy_artefacts controller" do
+        edition = FactoryBot.create(:edition)
+        assert_routing({ method: "patch", path: "/artefacts/#{edition.id}" }, controller: "legacy_artefacts", action: "update", id: edition.id)
+      end
+    end
+
+    context "when the 'design_system_phase_4' feature toggle is off" do
+      setup do
+        @test_strategy = Flipflop::FeatureSet.current.test!
+        @test_strategy.switch!(:design_system_edit_phase_4, false)
+      end
+
+      should "route to legacy_artefacts controller" do
+        edition = FactoryBot.create(:edition)
+
+        assert_routing("/artefacts/new", controller: "legacy_artefacts", action: "new")
+        assert_routing({ method: "post", path: "/artefacts" }, controller: "legacy_artefacts", action: "create")
+        assert_routing({ method: "patch", path: "/artefacts/#{edition.id}" }, controller: "legacy_artefacts", action: "update", id: edition.id)
+      end
+    end
   end
 
   def assert_editions_controller
