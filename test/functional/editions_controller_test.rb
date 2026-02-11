@@ -3,9 +3,7 @@ require "test_helper"
 class EditionsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-    @test_strategy = Flipflop::FeatureSet.current.test!
     @test_strategy.switch!(:restrict_access_by_org, true)
-    @test_strategy.switch!(:fact_check_manager_api, false)
     @edition = FactoryBot.create(:edition, :fact_check)
     @welsh_edition = FactoryBot.create(:edition, :fact_check, :welsh)
     UpdateWorker.stubs(:perform_async)

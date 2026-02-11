@@ -6,7 +6,6 @@ class PublicationsPageTest < IntegrationTest
   setup do
     @other_user = FactoryBot.create(:user, name: "Other User")
     login_as_govuk_editor
-    @test_strategy = Flipflop::FeatureSet.current.test!
     @test_strategy.switch!(:design_system_edit_phase_3b, true)
   end
 
