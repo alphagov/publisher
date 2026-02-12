@@ -19,7 +19,12 @@ Rails.application.routes.draw do
 
   get "downtimes" => "downtimes#index"
 
-  resources :artefacts, only: %i[new create update]
+  constraints FeatureConstraint.new("design_system_edit_phase_4") do
+    resources :artefacts, only: %i[create new]
+    post "artefacts/new/content-details", to: "artefacts#content_details", as: :new_artefact_content_details
+  end
+
+  resources :artefacts, controller: "legacy_artefacts", only: %i[new create update]
 
   constraints NewDesignSystemConstraint.new do
     resources :editions do

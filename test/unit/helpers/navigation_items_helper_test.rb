@@ -2,21 +2,44 @@ require "test_helper"
 
 class NavigationItemsHelperTest < ActionView::TestCase
   context "NavigationItemsHelper" do
-    context "When design system 3b feature toggle is off" do
+    context "when the 'design_system_phase_3b' feature toggle is off" do
       setup do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:design_system_edit_phase_3b, false)
+        @test_strategy = Flipflop::FeatureSet.current.test!
+        @test_strategy.switch!(:design_system_edit_phase_3b, false)
       end
 
-      should "include editor-only links when user is an editor" do
-        assert_equal [
-          { text: "Publications", href: root_path, active: false },
-          { text: "Add artefact", href: new_artefact_path, active: false },
-          { text: "Downtime", href: downtimes_path, active: false },
-          { text: "Reports", href: reports_path, active: false },
-          { text: "Search by user", href: user_search_path, active: false },
-          { text: "Sign out", href: "/auth/gds/sign_out" },
-        ], navigation_items(is_editor: true)
+      context "when the 'design_system_phase_4' feature toggle is on" do
+        setup do
+          @test_strategy.switch!(:design_system_edit_phase_4, true)
+        end
+
+        should "include editor-only links when user is an editor" do
+          assert_equal [
+            { text: "Publications", href: root_path, active: false },
+            { text: "Create new content", href: new_artefact_path, active: false },
+            { text: "Downtime", href: downtimes_path, active: false },
+            { text: "Reports", href: reports_path, active: false },
+            { text: "Search by user", href: user_search_path, active: false },
+            { text: "Sign out", href: "/auth/gds/sign_out" },
+          ], navigation_items(is_editor: true)
+        end
+      end
+
+      context "when the 'design_system_phase_4' feature toggle is off" do
+        setup do
+          @test_strategy.switch!(:design_system_edit_phase_4, false)
+        end
+
+        should "include editor-only links when user is an editor" do
+          assert_equal [
+            { text: "Publications", href: root_path, active: false },
+            { text: "Add artefact", href: new_artefact_path, active: false },
+            { text: "Downtime", href: downtimes_path, active: false },
+            { text: "Reports", href: reports_path, active: false },
+            { text: "Search by user", href: user_search_path, active: false },
+            { text: "Sign out", href: "/auth/gds/sign_out" },
+          ], navigation_items(is_editor: true)
+        end
       end
 
       should "not include editor-only links when user is not an editor" do
@@ -58,20 +81,44 @@ class NavigationItemsHelperTest < ActionView::TestCase
       end
     end
 
-    context "When design system 3b feature toggle is on" do
+    context "when the 'design_system_phase_3b' feature toggle is on" do
       setup do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:design_system_edit_phase_3b, true)
+        @test_strategy = Flipflop::FeatureSet.current.test!
+        @test_strategy.switch!(:design_system_edit_phase_3b, true)
       end
-      should "include editor-only links when user is an editor" do
-        assert_equal [
-          { text: "My content", href: my_content_path, active: false },
-          { text: "Find content", href: find_content_path, active: false },
-          { text: "2i queue", href: two_eye_queue_path, active: false },
-          { text: "Fact check", href: fact_check_path, active: false },
-          { text: "Add artefact", href: new_artefact_path, active: false },
-          { text: "Sign out", href: "/auth/gds/sign_out" },
-        ], navigation_items(is_editor: true)
+
+      context "when the 'design_system_phase_4' feature toggle is on" do
+        setup do
+          @test_strategy.switch!(:design_system_edit_phase_4, true)
+        end
+
+        should "include editor-only links when user is an editor" do
+          assert_equal [
+            { text: "My content", href: my_content_path, active: false },
+            { text: "Find content", href: find_content_path, active: false },
+            { text: "Create new content", href: new_artefact_path, active: false },
+            { text: "2i queue", href: two_eye_queue_path, active: false },
+            { text: "Fact check", href: fact_check_path, active: false },
+            { text: "Sign out", href: "/auth/gds/sign_out" },
+          ], navigation_items(is_editor: true)
+        end
+      end
+
+      context "when the 'design_system_phase_4' feature toggle is off" do
+        setup do
+          @test_strategy.switch!(:design_system_edit_phase_4, false)
+        end
+
+        should "include editor-only links when user is an editor" do
+          assert_equal [
+            { text: "My content", href: my_content_path, active: false },
+            { text: "Find content", href: find_content_path, active: false },
+            { text: "Add artefact", href: new_artefact_path, active: false },
+            { text: "2i queue", href: two_eye_queue_path, active: false },
+            { text: "Fact check", href: fact_check_path, active: false },
+            { text: "Sign out", href: "/auth/gds/sign_out" },
+          ], navigation_items(is_editor: true)
+        end
       end
 
       should "not include editor-only links when user is not an editor" do

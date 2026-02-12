@@ -1,0 +1,53 @@
+<% content_for :back_link, new_artefact_path %>
+<% content_for :title_context, "Create new content" %>
+<% content_for :page_title, "Create new content - #{@artefact.kind.humanize}" %>
+<% content_for :title, @artefact.kind.humanize %>
+
+<% if @artefact.errors.any? %>
+  <% content_for :error_summary, render("shared/error_summary", { object: @artefact, full_messages: false }) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @artefact, url: artefacts_path, method: "post" do |form| %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: { text: "Title" },
+        id: "artefact_name",
+        name: "artefact[name]",
+        value: @artefact.name,
+        error_items: errors_for(@artefact.errors, :name, use_full_message: false),
+        heading_size: "m",
+      } %>
+
+      <%= render "govuk_publishing_components/components/input", {
+        label: { text: "Slug" },
+        id: "artefact_slug",
+        name: "artefact[slug]",
+        value: @artefact.slug,
+        hint: "Must be written in the following format: lower-case-hyphen-separated",
+        error_items: errors_for(@artefact.errors, :slug, use_full_message: false),
+        prefix: "/",
+        heading_size: "m",
+      } %>
+
+      <%= render "govuk_publishing_components/components/radio", {
+        heading: "Language",
+        heading_size: "m",
+        id: "artefact_language",
+        name: "artefact[language]",
+        error_message: ("Please select one option" if @artefact.errors.include?(:language)),
+        items: [
+          { value: "en", text: "English", checked: @artefact.language == "en" || @artefact.language.blank? },
+          { value: "cy", text: "Welsh", checked: @artefact.language == "cy" },
+        ],
+      } %>
+
+      <%= form.hidden_field :kind, value: @artefact.kind %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", { text: "Create content" } %>
+        <%= link_to "Cancel", root_path, class: "govuk-link govuk-link--no-visited-state" %>
+      </div>
+    <% end %>
+  </div>
+</div>

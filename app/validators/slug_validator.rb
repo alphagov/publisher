@@ -117,7 +117,7 @@ class SlugValidator < ActiveModel::EachValidator
     end
 
     def validate!
-      record.errors.add(attribute, "must be usable in a url") unless valid_slug?(value)
+      record.errors.add(attribute, "Slug can only consist of lower case characters, numbers and hyphens") unless valid_slug?(value)
     end
   end
 end

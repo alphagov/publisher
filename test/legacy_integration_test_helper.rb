@@ -12,6 +12,7 @@ class LegacyIntegrationTest < ActionDispatch::IntegrationTest
   setup do
     @test_strategy = Flipflop::FeatureSet.current.test!
     @test_strategy.switch!(:design_system_edit_phase_3b, false)
+    @test_strategy.switch!(:design_system_edit_phase_4, false)
     @test_strategy.switch!(:fact_check_manager_api, false)
   end
 

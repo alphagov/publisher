@@ -1,0 +1,40 @@
+<%= content_for :page_title, "New artefact" %>
+<%= form_for(@artefact, html: { class: "artefact", id: "edit_artefact" }) do |f| %>
+  <fieldset class="inputs">
+    <legend class="page-header">
+      <h1><%= yield :page_title %></h1>
+    </legend>
+
+<%= render :partial => "shared/legacy_error_summary", locals: { object: @artefact} %>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="well">
+          <%= f.hidden_field :content_id, value: @artefact.content_id %>
+
+          <%= form_group(f, :name, label: "Title") do %>
+            <%= f.text_field :name, class: "input-md-6 form-control" %>
+          <% end %>
+
+          <%= form_group(f, :slug, help: "For example: lower-case-hyphen-separated") do %>
+            <%= f.text_field :slug, class: "input-md-6 form-control" %>
+          <% end %>
+
+          <%= form_group(f, :kind, label: "Format") do %>
+            <%= f.select :kind, formats.map { |s| [s.humanize, s]}, { include_blank: "Select a format" }, { class: "input-md-4 form-control" } %>
+          <% end %>
+
+          <%= f.hidden_field :owning_app, value: "publisher" %>
+
+          <%= form_group(f, :language) do %>
+            <%= f.select :language, { "English" => "en", "Welsh" => "cy" }, {}, { class: "input-md-4 form-control" } %>
+          <% end %>
+        </div>
+
+        <div class="form-actions">
+          <%= f.submit value: "Save and go to item", class: "add-left-margin btn btn-default" %>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+<% end %>

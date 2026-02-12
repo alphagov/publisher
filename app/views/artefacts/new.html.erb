@@ -1,40 +1,31 @@
-<%= content_for :page_title, "New artefact" %>
-<%= form_for(@artefact, html: { class: "artefact", id: "edit_artefact" }) do |f| %>
-  <fieldset class="inputs">
-    <legend class="page-header">
-      <h1><%= yield :page_title %></h1>
-    </legend>
+<% content_for :page_title, "Create new content" %>
+<% content_for :title, "Create new content" %>
 
-<%= render :partial => "shared/legacy_error_summary", locals: { object: @artefact} %>
-
-    <div class="row">
-      <div class="col-md-12">
-        <div class="well">
-          <%= f.hidden_field :content_id, value: @artefact.content_id %>
-
-          <%= form_group(f, :name, label: "Title") do %>
-            <%= f.text_field :name, class: "input-md-6 form-control" %>
-          <% end %>
-
-          <%= form_group(f, :slug, help: "For example: lower-case-hyphen-separated") do %>
-            <%= f.text_field :slug, class: "input-md-6 form-control" %>
-          <% end %>
-
-          <%= form_group(f, :kind, label: "Format") do %>
-            <%= f.select :kind, formats.map { |s| [s.humanize, s]}, { include_blank: "Select a format" }, { class: "input-md-4 form-control" } %>
-          <% end %>
-
-          <%= f.hidden_field :owning_app, value: "publisher" %>
-
-          <%= form_group(f, :language) do %>
-            <%= f.select :language, { "English" => "en", "Welsh" => "cy" }, {}, { class: "input-md-4 form-control" } %>
-          <% end %>
-        </div>
-
-        <div class="form-actions">
-          <%= f.submit value: "Save and go to item", class: "add-left-margin btn btn-default" %>
-        </div>
-      </div>
-    </div>
-  </fieldset>
+<% if @artefact.errors.any? %>
+  <% content_for :error_summary, render("shared/error_summary", { object: @artefact, full_messages: false }) %>
 <% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with url: new_artefact_content_details_path, method: :post do %>
+      <%= render "govuk_publishing_components/components/radio", {
+        heading: "Content type",
+        id: "artefact_kind",
+        name: "artefact[kind]",
+        error_message: @artefact.errors.messages_for(:kind).first,
+        items: [
+          { value: "answer", hint_text: "One-page guidance", text: "Answer" },
+          { value: "guide", hint_text: "Multi-page guidance", text: "Guide" },
+          { value: "place", hint_text: "Address lookup for nearby places and services", text: "Place" },
+          { value: "simple_smart_answer", hint_text: "Simple questions and answers that route users to relevant outcomes", text: "Simple smart answer" },
+          { value: "transaction", hint_text: "Start page for a service", text: "Transaction" },
+        ],
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", { text: "Continue" } %>
+        <%= link_to "Cancel", root_path, class: "govuk-link govuk-link--no-visited-state" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -40,6 +40,10 @@
   } %>
 
   <div class="govuk-width-container">
+    <% if content_for?(:back_link) %>
+      <%= render "govuk_publishing_components/components/back_link", { href: yield(:back_link) } %>
+    <% end %>
+
     <main
       id="main-content"
       class="govuk-main-wrapper govuk-main-wrapper--auto-spacing"
