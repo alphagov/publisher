@@ -50,7 +50,12 @@ class ActiveSupport::TestCase
     @test_strategy = Flipflop::FeatureSet.current.test!
     @test_strategy.switch!(:design_system_edit_phase_3b, false)
     @test_strategy.switch!(:design_system_edit_phase_4, false)
+    @test_strategy.switch!(:rename_edition_states, false)
     @test_strategy.switch!(:fact_check_manager_api, false)
+    @test_strategy.switch!(:ga4_form_tracking, false)
+    @test_strategy.switch!(:show_link_to_content_block_manager, false)
+    @test_strategy.switch!(:restrict_access_by_org, true)
+    @test_strategy.switch!(:feature_for_tests, true)
   end
 
   def without_metadata_denormalisation(*klasses, &_block)
