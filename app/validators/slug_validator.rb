@@ -31,7 +31,7 @@ class SlugValidator < ActiveModel::EachValidator
 
     def url_after_first_slash_is_valid_slug!
       unless valid_slug?(url_after_first_slash)
-        record.errors.add(attribute, "must be usable in a url")
+        record.errors.add(attribute, "Slug can only consist of lower case characters, numbers and hyphens")
       end
     end
 
@@ -53,6 +53,8 @@ class SlugValidator < ActiveModel::EachValidator
     end
 
     def validate!
+      return if value.to_s.blank?
+
       record.errors.add(attribute, "Done page slugs must have a done/ prefix") unless starts_with?("done/")
       url_after_first_slash_is_valid_slug!
     end
@@ -74,6 +76,8 @@ class SlugValidator < ActiveModel::EachValidator
     end
 
     def validate!
+      return if value.to_s.blank?
+
       record.errors.add(attribute, "Help page slugs must have a help/ prefix") unless starts_with?("help/")
       url_after_first_slash_is_valid_slug!
     end
