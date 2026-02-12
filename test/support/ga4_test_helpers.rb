@@ -36,14 +36,18 @@ module Ga4TestHelpers
 
     data_layer_items.each do |item|
       # if item["search_data"]
-      if item["event"]
-        # search_data << item["search_data"]
-        search_data << item
+      if item["event"] && item["event"]["search_results"]
+        # search_results = item["search_results"]["ecommerce"]["items"]
+        # if item["event"]["search_results"]
+          # search_data << item["search_data"]
+          # search_data << item["search_results"]["ecommerce"]["items"]
+          search_data = item["search_results"] # ["ecommerce"]["items"]
+        # end
       end
     end
 
-    # search_data
-    data_layer_items
+    search_data
+    # data_layer_items
     # evaluate_script("setTimeout(function(){window.dataLayer},1000)")
   end
 end
