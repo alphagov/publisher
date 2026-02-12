@@ -17,10 +17,10 @@ module Ga4TestHelpers
     event_data = []
 
     data_layer_items.each do |item|
-      # if item["event_data"]
-      #   event_data << item["event_data"]
-      if item["event"]
-        event_data << item
+      if item["event_data"]
+        event_data << item["event_data"]
+      # if item["event"]
+      #   event_data << item
       end
     end
 

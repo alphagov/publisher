@@ -9,10 +9,10 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     # login_as_govuk_editor
 
     # @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
-    @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago)
-    @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago)
-    @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago)
-    @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago)
+    @draft_edition = FactoryBot.create(:edition, :draft, title: "Test edition one", updated_at: 1.day.ago)
+    @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Test edition two", updated_at: 2.days.ago)
+    @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "Test edition three", updated_at: 3.days.ago)
+    @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Other edition", updated_at: 4.days.ago)
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit_phase_3b, true)
@@ -24,11 +24,14 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       # test_strategy = Flipflop::FeatureSet.current.test!
       # test_strategy.switch!(:design_system_edit_phase_3b, true)
       visit find_content_path
-      disable_form_submit
+      # disable_form_submit
       # execute_script("document.querySelector('#states_filter').style.display='block !important'")
     end
 
+    # TODO: add pagination test to this one - use full number of items per page elsewhere and restrict it here
     should "push values to the dataLayer on initial page load (no search term)" do
+      disable_form_submit
+
       # Forces the driver to wait for any async javascript to complete
       # page.has_css?('[data-ga4-ecommerce-started="true"]')
 
@@ -67,6 +70,14 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     should "push 'event_data' values to the dataLayer when the user selects values in the filters and submits" do
+      disable_form_submit
+
+      # FilteredEditionsPresenter::ITEMS_PER_PAGE = 3
+
+      # print "==ITEMS_PER_PAGE=="
+      # print FilteredEditionsPresenter::ITEMS_PER_PAGE
+      # print "===="
+
       fill_in "Title or slug", with: "search-term"
 
       within all(".gem-c-select-with-search")[0] do
@@ -86,7 +97,17 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
  
       click_button "Apply filters"
 
-      event_data = get_event_data
+      # event_data = get_event_data
+
+      # print "==event_data=="
+      # print event_data
+      # print "===="
+
+      # search_data = get_search_data
+
+      # print "==search_data=="
+      # print search_data
+      # print "===="
 
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
@@ -115,6 +136,56 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "Find content", event_data[3]["section"]
       assert_equal "search-term", event_data[3]["text"]
       assert_equal "/find-content", event_data[3]["url"]
+
+      # assert_equal "view_item_list", search_data["event_name"]
+      # assert_equal 4, search_data["results"]
+    end
+
+    # TODO: break this into one filter at a time
+    should "push 'search_data' values to the dataLayer when the user selects a value in the 'Title or slug' filter and submits" do
+      fill_in "Title or slug", with: "Test"
+
+      # within all(".gem-c-select-with-search")[0] do
+      #   find("label").click
+      #   find("#choices--states_filter-item-choice-2").click
+      # end
+
+      # within all(".gem-c-select-with-search")[1] do
+      #   find("label").click
+      #   find("#choices--assignee_filter-item-choice-2").click
+      # end
+ 
+      # within all(".gem-c-select-with-search")[2] do
+      #   find("label").click
+      #   find("#choices--content_type_filter-item-choice-2").click
+      # end
+ 
+      click_button "Apply filters"
+
+      search_data = get_search_data
+      base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
+
+      print "==search_data=="
+      print search_data
+      print "===="
+
+      assert_equal "view_item_list", search_data["event_name"]
+      assert_equal 3, search_data["results"]
+
+      assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal base_url + @draft_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @draft_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+
+      assert_equal 1, search_data["ecommerce"]["items"][1]["index"]
+      assert_equal base_url + @fact_check_edition.id, search_data["ecommerce"]["items"][1]["item_id"]
+      assert_equal @fact_check_edition.id, search_data["ecommerce"]["items"][1]["item_content_id"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][1]["item_list_name"]
+
+      assert_equal 2, search_data["ecommerce"]["items"][2]["index"]
+      assert_equal base_url + @in_review_edition.id, search_data["ecommerce"]["items"][2]["item_id"]
+      assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][2]["item_content_id"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][2]["item_list_name"]
     end
 
     should "push values to the dataLayer when the user visits multiple pages of results (via pagination)" do
