@@ -415,8 +415,7 @@ class GuidePartsControllerTest < ActionController::TestCase
 
   context "when 'restrict_access_by_org' feature toggle is enabled" do
     setup do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:restrict_access_by_org, true)
+      @test_strategy.switch!(:restrict_access_by_org, true)
       @edition = FactoryBot.create(:guide_edition, owning_org_content_ids: %w[org-two])
       @edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, owning_org_content_ids: %w[org-two])
     end

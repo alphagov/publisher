@@ -3,7 +3,6 @@ require "test_helper"
 class EditionsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-    @test_strategy.switch!(:restrict_access_by_org, true)
     @edition = FactoryBot.create(:edition, :fact_check)
     @welsh_edition = FactoryBot.create(:edition, :fact_check, :welsh)
     UpdateWorker.stubs(:perform_async)
@@ -1520,13 +1519,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "when 'restrict_access_by_org' feature toggle is disabled" do
     setup do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:restrict_access_by_org, false)
-    end
-
-    teardown do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:restrict_access_by_org, true)
+      @test_strategy.switch!(:restrict_access_by_org, false)
     end
 
     %i[show metadata history related_external_links].each do |action|
