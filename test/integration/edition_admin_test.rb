@@ -195,8 +195,7 @@ class EditionAdminTest < IntegrationTest
 
       context "when design system 3b feature toggle is off" do
         should "navigate to root path when 'Delete edition' is clicked" do
-          test_strategy = Flipflop::FeatureSet.current.test!
-          test_strategy.switch!(:design_system_edit_phase_3b, false)
+          @test_strategy.switch!(:design_system_edit_phase_3b, false)
 
           click_button("Delete edition")
 
@@ -206,8 +205,7 @@ class EditionAdminTest < IntegrationTest
 
       context "when design system 3b feature toggle is on" do
         should "navigate to my-content path when 'Delete edition' is clicked" do
-          test_strategy = Flipflop::FeatureSet.current.test!
-          test_strategy.switch!(:design_system_edit_phase_3b, true)
+          @test_strategy.switch!(:design_system_edit_phase_3b, true)
 
           click_button("Delete edition")
 

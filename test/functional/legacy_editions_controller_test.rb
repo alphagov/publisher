@@ -7,9 +7,6 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api
-
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:restrict_access_by_org, true)
   end
 
   context "#create" do
@@ -1311,13 +1308,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
   context "when 'restrict_access_by_org' feature toggle is disabled" do
     setup do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:restrict_access_by_org, false)
-    end
-
-    teardown do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:restrict_access_by_org, true)
+      @test_strategy.switch!(:restrict_access_by_org, false)
     end
 
     %i[metadata history].each do |action|
