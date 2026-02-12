@@ -9,11 +9,12 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     # login_as_govuk_editor
 
     # @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
-    @draft_edition = FactoryBot.create(:edition, :draft, title: "Test edition one", updated_at: 1.day.ago)
+    @draft_edition = FactoryBot.create(:edition, :draft, title: "Test edition one", assigned_to: @author, updated_at: 1.day.ago)
     @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Test edition two", updated_at: 2.days.ago)
-    @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "Test edition three", updated_at: 3.days.ago)
+    @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "Test edition three", assigned_to: @author, updated_at: 3.days.ago)
     @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Other edition one", updated_at: 4.days.ago)
     @draft_edition_2 = FactoryBot.create(:edition, :draft, title: "Other edition two", updated_at: 5.day.ago)
+    @fact_check_edition_2 = FactoryBot.create(:guide_edition, :fact_check, title: "Other edition three", updated_at: 6.days.ago)
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit_phase_3b, true)
@@ -218,7 +219,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       print "===="
 
       # Should get @draft_edition and @draft_edition_2
-
       assert_equal "view_item_list", search_data["event_name"]
       assert_equal 2, search_data["results"]
 
@@ -230,6 +230,50 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal 1, search_data["ecommerce"]["items"][1]["index"]
       assert_equal base_url + @draft_edition_2.id, search_data["ecommerce"]["items"][1]["item_id"]
       assert_equal @draft_edition_2.id, search_data["ecommerce"]["items"][1]["item_content_id"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][1]["item_list_name"]
+    end
+
+    should "push 'search_data' values to the dataLayer when the user selects a value in the 'Assigned to' filter and submits" do
+      # fill_in "Title or slug", with: "Test"
+
+      # Select Draft
+      # within all(".gem-c-select-with-search")[0] do
+      #   find("label").click
+      #   find("#choices--states_filter-item-choice-2").click
+      # end
+
+      # Select Author
+      within all(".gem-c-select-with-search")[1] do
+        find("label").click
+        find("#choices--assignee_filter-item-choice-2").click
+      end
+
+      # within all(".gem-c-select-with-search")[2] do
+      #   find("label").click
+      #   find("#choices--content_type_filter-item-choice-2").click
+      # end
+
+      click_button "Apply filters"
+
+      search_data = get_search_data
+      base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
+
+      print "==search_data=="
+      print search_data
+      print "===="
+
+      # Should get @draft_edition and @in_review_edition
+      assert_equal "view_item_list", search_data["event_name"]
+      assert_equal 2, search_data["results"]
+
+      assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal base_url + @draft_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @draft_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+
+      assert_equal 1, search_data["ecommerce"]["items"][1]["index"]
+      assert_equal base_url + @in_review_edition.id, search_data["ecommerce"]["items"][1]["item_id"]
+      assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][1]["item_content_id"]
       assert_equal "Find content", search_data["ecommerce"]["items"][1]["item_list_name"]
     end
 
