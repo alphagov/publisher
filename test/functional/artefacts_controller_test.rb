@@ -138,5 +138,31 @@ class ArtefactsControllerTest < ActionController::TestCase
       assert_equal 0, Artefact.count
       assert_template :content_details
     end
+
+    should "create a help page with the correct attributes" do
+      login_as_govuk_editor
+
+      post :create, params: { artefact: { kind: "help_page", name: "Example name", slug: "example-name", language: "en" } }
+
+      @artefact = Artefact.first
+      assert_equal "help_page", @artefact.kind
+      assert_equal "Example name", @artefact.name
+      assert_equal "help/example-name", @artefact.slug
+      assert_equal "en", @artefact.language
+      assert_equal "publisher", @artefact.owning_app
+    end
+
+    should "create a completed transaction page with the correct attributes" do
+      login_as_govuk_editor
+
+      post :create, params: { artefact: { kind: "completed_transaction", name: "Example name", slug: "example-name", language: "en" } }
+
+      @artefact = Artefact.first
+      assert_equal "completed_transaction", @artefact.kind
+      assert_equal "Example name", @artefact.name
+      assert_equal "done/example-name", @artefact.slug
+      assert_equal "en", @artefact.language
+      assert_equal "publisher", @artefact.owning_app
+    end
   end
 end
