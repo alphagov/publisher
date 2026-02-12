@@ -12,9 +12,12 @@ class AddArtefactTest < IntegrationTest
     @test_strategy.switch!(:design_system_edit_phase_4, true)
   end
 
-  %w[answer guide place simple_smart_answer transaction].each do |kind|
+  slug_prefix_for_kind = [%w[help_page help/], %w[completed_transaction done/]] +
+    %w[answer guide place simple_smart_answer transaction].map { |kind| [kind, ""] }
+
+  slug_prefix_for_kind.each do |kind, slug_prefix|
     should "be able to create a new '#{kind}' artefact" do
-      FactoryBot.create(:artefact, slug: "duplicate-slug")
+      FactoryBot.create(:artefact, kind: kind, slug: "#{slug_prefix}duplicate-slug")
 
       visit root_path
       click_link "Create new content"
@@ -48,6 +51,14 @@ class AddArtefactTest < IntegrationTest
         assert page.has_link?("Slug can only consist of lower case characters, numbers and hyphens", href: "#artefact_slug")
       end
 
+      fill_in "Title", with: "Example title"
+      fill_in "Slug", with: "#{slug_prefix}/example-title"
+      click_button "Create content"
+
+      within ".govuk-error-summary" do
+        assert page.has_link?("Slug can only consist of lower case characters, numbers and hyphens", href: "#artefact_slug")
+      end
+
       fill_in "Slug", with: "duplicate-slug"
       click_button "Create content"
 
@@ -61,7 +72,7 @@ class AddArtefactTest < IntegrationTest
       artefact = Artefact.last
       assert_equal kind, artefact.kind
       assert_equal "Example title", artefact.name
-      assert_equal "example-title", artefact.slug
+      assert_equal "#{slug_prefix}example-title", artefact.slug
       assert_equal "cy", artefact.language
       assert_equal "publisher", artefact.owning_app
 

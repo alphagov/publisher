@@ -26,7 +26,7 @@
         value: @artefact.slug,
         hint: "Must be written in the following format: lower-case-hyphen-separated",
         error_items: errors_for(@artefact.errors, :slug, use_full_message: false),
-        prefix: "/",
+        prefix: slug_prefix,
         heading_size: "m",
       } %>
 
