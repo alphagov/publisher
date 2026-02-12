@@ -50,7 +50,6 @@ class RoutesTest < LegacyIntegrationTest
 
     context "when the 'design_system_phase_4' feature toggle is on" do
       setup do
-        @test_strategy = Flipflop::FeatureSet.current.test!
         @test_strategy.switch!(:design_system_edit_phase_4, true)
       end
 
@@ -68,7 +67,6 @@ class RoutesTest < LegacyIntegrationTest
 
     context "when the 'design_system_phase_4' feature toggle is off" do
       setup do
-        @test_strategy = Flipflop::FeatureSet.current.test!
         @test_strategy.switch!(:design_system_edit_phase_4, false)
       end
 
