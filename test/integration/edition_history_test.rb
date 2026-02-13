@@ -250,6 +250,24 @@ class EditionHistoryTest < IntegrationTest
         end
       end
 
+      should "display 'Receive fact check' action with requester name when provided" do
+        @edition.actions.create! request_type: Action::RECEIVE_FACT_CHECK, created_at: "2024-06-06 8:32:00", comment: "We’re happy for you to publish. -----Original Message----- Reply and confirm the content is correct.", comment_sanitized: true, requester_name: "Joe Bloggs"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--receive_fact_check__heading" do
+          assert page.has_css?("time", text: "8:32am, 6 June 2024")
+          assert page.has_text?("Receive fact check by Joe Bloggs")
+        end
+
+        within :css, ".history__action--receive_fact_check__content" do
+          assert page.has_text?("We’re happy for you to publish.")
+          assert page.has_css?("div.js-earlier", text: "Reply and confirm the content is correct.")
+          assert page.has_text?("We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.")
+        end
+      end
+
       should "display 'Request amendments' action" do
         user = FactoryBot.create(:user, name: "Brian Kilcline")
         @edition.actions.create! request_type: Action::REQUEST_AMENDMENTS, requester_id: user.id, created_at: "2024-06-27 10:56:00", comment: "Requesting amendments"

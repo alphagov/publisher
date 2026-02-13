@@ -42,7 +42,14 @@ module ActionHelper
     items = []
 
     edition_actions(edition, update_events).map do |action|
-      requester = action.requester ? action.requester.name : "GOV.UK Bot"
+      requester =
+        if action.requester
+          action.requester.name
+        elsif action.requester_name
+          action.requester_name
+        else
+          "GOV.UK Bot"
+        end
 
       item = [
         sanitize("<div class='history__action--#{action.request_type}__heading'>
