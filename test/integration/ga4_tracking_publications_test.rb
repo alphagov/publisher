@@ -39,7 +39,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
       # @current_url = URI.parse(current_url).to_s # .split(':')[0]
       @root_url = URI.parse(current_host).to_s # @current_url.chomp(find_content_path)
-      @base_url = @root_url + "/editions/"
+      @base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
 
       # print "==base_url=="
       # print @base_url
