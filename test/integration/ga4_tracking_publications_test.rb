@@ -36,6 +36,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       visit find_content_path
       # disable_form_submit
       # execute_script("document.querySelector('#states_filter').style.display='block !important'")
+
+      @base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
     end
 
     # TODO: add pagination test to this one - use full number of items per page elsewhere and restrict it here
@@ -173,7 +175,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       # assert_equal 4, search_data["results"]
     end
 
-    # TODO: break this into one filter at a time
     should "push 'search_data' values to the dataLayer when the user selects a value in the 'Title or slug' filter and submits" do
       fill_in "Title or slug", with: "Test"
 
@@ -357,68 +358,92 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "Find content", search_data["ecommerce"]["items"][2]["item_list_name"]
     end
 
-    should "push values to the dataLayer when the user visits multiple pages of results (via pagination)" do
-    end
-
-    should "push values to the dataLayer when the user selects an edition to visit from the list of results" do
+    should "push 'search_data' values to the dataLayer when the user selects the first result" do
       disable_links
-
-      # print "==h1=="
-      # print find("h1").text
-      # print "===="
 
       within "tbody" do
         within all(".govuk-table__row")[0] do
-          # print "===="
-          # print "first row"
-          # print find("a").text
-          # print "===="
-
           find("a").click
-
-          print "==current_path=="
-          print current_path
-          print "===="
-
-          # event_data = get_event_data
-
-          # print "===="
-          # print event_data
-          # print "===="
         end
-
-        # within all(".govuk-table__row")[1] do
-        #   print "===="
-        #   # print "second row"
-        #   print find('a').text
-        #   print "===="
-        # end
-
-        # within all(".govuk-table__row")[2] do
-        #   print "===="
-        #   # print "third row"
-        #   print find('a').text
-        #   print "===="
-        # end
-
-        # within all(".govuk-table__row")[3] do
-        #   print "===="
-        #   # print "fourth row"
-        #   print find('a').text
-        #   print "===="
-        # end
       end
 
-      event_data = get_event_data
+      search_data = get_search_data
 
-      print "===="
-      print event_data
-      print "===="
+      assert_equal "select_item", search_data["event_name"]
+      assert_equal 7, search_data["results"]
+      assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal @base_url + @draft_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @draft_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "Test edition one", search_data["ecommerce"]["items"][0]["item_name"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+    end
 
-      assert page.has_css?("h1", text: "Find content")
+    should "push 'search_data' values to the dataLayer when the user selects the second result" do
+      disable_links
+
+      within "tbody" do
+        within all(".govuk-table__row")[1] do
+          find("a").click
+        end
+      end
+
+      search_data = get_search_data
+
+      assert_equal "select_item", search_data["event_name"]
+      assert_equal 7, search_data["results"]
+      assert_equal 1, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal @base_url + @fact_check_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @fact_check_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "Test edition two", search_data["ecommerce"]["items"][0]["item_name"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+    end
+
+    should "push 'search_data' values to the dataLayer when the user selects the third result" do
+      disable_links
+
+      within "tbody" do
+        within all(".govuk-table__row")[2] do
+          find("a").click
+        end
+      end
+
+      search_data = get_search_data
+
+      assert_equal "select_item", search_data["event_name"]
+      assert_equal 7, search_data["results"]
+      assert_equal 2, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal @base_url + @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "Test edition three", search_data["ecommerce"]["items"][0]["item_name"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+    end
+
+    should "push 'search_data' values to the dataLayer when the user selects the fourth result" do
+      disable_links
+
+      within "tbody" do
+        within all(".govuk-table__row")[3] do
+          find("a").click
+        end
+      end
+
+      search_data = get_search_data
+
+      assert_equal "select_item", search_data["event_name"]
+      assert_equal 7, search_data["results"]
+      assert_equal 3, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal @base_url + @ready_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @ready_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "Other edition one", search_data["ecommerce"]["items"][0]["item_name"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
     end
 
     should "push values to the dataLayer when the user selects 'Clear filters'" do
     end
   end
 end
+
+# @draft_edition = FactoryBot.create(:answer_edition, :draft, title: "Test edition one", assigned_to: @author, updated_at: 1.day.ago)
+# @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Test edition two", assigned_to: @reviewer, updated_at: 2.days.ago)
+# @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "Test edition three", assigned_to: @author, updated_at: 3.days.ago)
+# @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Other edition one", assigned_to: @reviewer, updated_at: 4.days.ago)
