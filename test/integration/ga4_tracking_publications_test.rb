@@ -37,10 +37,19 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       # disable_form_submit
       # execute_script("document.querySelector('#states_filter').style.display='block !important'")
 
-      @base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
+      # @current_url = URI.parse(current_url).to_s # .split(':')[0]
+      @root_url = URI.parse(current_host).to_s # @current_url.chomp(find_content_path)
+      @base_url = @root_url + "/editions/"
+
+      # print "==base_url=="
+      # print @base_url
+      # print "===="
+
+      # print "==root_url=="
+      # print @root_url
+      # print "===="
     end
 
-    # TODO: add pagination test to this one - use full number of items per page elsewhere and restrict it here
     should "push 'search_data' values to the dataLayer on initial page load (no search term)" do
       disable_form_submit
 
@@ -358,6 +367,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "Find content", search_data["ecommerce"]["items"][2]["item_list_name"]
     end
 
+    # TODO: put these four tests back to a single one
     should "push 'search_data' values to the dataLayer when the user selects the first result" do
       disable_links
 
@@ -438,12 +448,27 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
     end
 
-    should "push values to the dataLayer when the user selects 'Clear filters'" do
+    should "push 'event_data' values to the dataLayer when the user selects 'Clear filters'" do
+      fill_in "Title or slug", with: "some-search-term"
+      click_button "Apply filters"
+
+      disable_links
+
+      click_link "Clear filters"
+
+      event_data = get_event_data
+
+      print "==event_data=="
+      print event_data
+      print "===="
+
+      assert_equal "remove", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "false", event_data[0]["external"]
+      assert_equal @root_url, event_data[0]["link_domain"]
+      assert_equal "primary click", event_data[0]["method"]
+      assert_equal "Clear filters", event_data[0]["text"]
+      assert_equal find_content_path, event_data[0]["url"]
     end
   end
 end
-
-# @draft_edition = FactoryBot.create(:answer_edition, :draft, title: "Test edition one", assigned_to: @author, updated_at: 1.day.ago)
-# @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Test edition two", assigned_to: @reviewer, updated_at: 2.days.ago)
-# @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "Test edition three", assigned_to: @author, updated_at: 3.days.ago)
-# @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Other edition one", assigned_to: @reviewer, updated_at: 4.days.ago)
