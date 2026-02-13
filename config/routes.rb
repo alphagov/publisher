@@ -183,6 +183,10 @@ Rails.application.routes.draw do
 
   get "by-content-id/:content_id" => "content_item#by_content_id"
 
+  namespace :api do
+    post "fact-check-response" => "fact_check_response#process_response"
+  end
+
   mount SidekiqGdsSsoMiddleware, at: "/sidekiq"
   mount GovukAdminTemplate::Engine, at: "/style-guide"
   mount Flipflop::Engine => "/flipflop"
