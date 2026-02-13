@@ -9,7 +9,12 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @artefact, url: artefacts_path, method: "post" do |form| %>
+    <%= form_with model: @artefact,
+                  url: artefacts_path,
+                  method: "post",
+                  data: { module: "slug-autofill",
+                          "title-input-id": "artefact_name", 
+                          "slug-input-id": "artefact_slug" } do |form| %>
       <%= render "govuk_publishing_components/components/input", {
         label: { text: "Title" },
         id: "artefact_name",
