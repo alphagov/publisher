@@ -10,12 +10,12 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
     # @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
     @draft_edition = FactoryBot.create(:answer_edition, :draft, title: "Test edition one", assigned_to: @author, updated_at: 1.day.ago)
-    @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Test edition two", updated_at: 2.days.ago)
+    @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Test edition two", assigned_to: @reviewer, updated_at: 2.days.ago)
     @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "Test edition three", assigned_to: @author, updated_at: 3.days.ago)
-    @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Other edition one", updated_at: 4.days.ago)
-    @draft_edition_2 = FactoryBot.create(:answer_edition, :draft, title: "Other edition two", updated_at: 5.day.ago)
-    @fact_check_edition_2 = FactoryBot.create(:guide_edition, :fact_check, title: "Other edition three", updated_at: 6.days.ago)
-    @in_review_edition_2 = FactoryBot.create(:answer_edition, :in_review, title: "Other edition three", updated_at: 7.days.ago)
+    @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Other edition one", assigned_to: @reviewer, updated_at: 4.days.ago)
+    @draft_edition_2 = FactoryBot.create(:answer_edition, :draft, title: "Other edition two", assigned_to: @reviewer, updated_at: 5.day.ago)
+    @fact_check_edition_2 = FactoryBot.create(:guide_edition, :fact_check, title: "Other edition three", assigned_to: @reviewer, updated_at: 6.days.ago)
+    @in_review_edition_2 = FactoryBot.create(:answer_edition, :in_review, title: "Other edition four", assigned_to: @reviewer, updated_at: 7.days.ago)
     # @ready_edition_2 = FactoryBot.create(:answer_edition, :ready, title: "Other edition one", updated_at: 8.days.ago)
 
     test_strategy = Flipflop::FeatureSet.current.test!
@@ -25,6 +25,12 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
   context "Find content page" do
     setup do
+      FilteredEditionsPresenter::ITEMS_PER_PAGE = 4
+
+      # print "==ITEMS_PER_PAGE=="
+      # print FilteredEditionsPresenter::ITEMS_PER_PAGE
+      # print "===="
+
       # test_strategy = Flipflop::FeatureSet.current.test!
       # test_strategy.switch!(:design_system_edit_phase_3b, true)
       visit find_content_path
@@ -50,7 +56,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       # print "===="
 
       assert_equal "view_item_list", search_data["event_name"]
-      assert_equal 4, search_data["results"]
+      assert_equal 7, search_data["results"]
 
       assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
       assert_equal base_url + @draft_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
@@ -76,12 +82,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     should "push 'event_data' values to the dataLayer when the user selects values in the filters and submits" do
       disable_form_submit
 
-      # FilteredEditionsPresenter::ITEMS_PER_PAGE = 3
-
-      # print "==ITEMS_PER_PAGE=="
-      # print FilteredEditionsPresenter::ITEMS_PER_PAGE
-      # print "===="
-
       fill_in "Title or slug", with: "search-term"
 
       within all(".gem-c-select-with-search")[0] do
@@ -101,7 +101,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
  
       click_button "Apply filters"
 
-      # event_data = get_event_data
+      event_data = get_event_data
 
       # print "==event_data=="
       # print event_data
