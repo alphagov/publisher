@@ -7,9 +7,7 @@ class Ga4TrackingHistoryNotesTest < JavascriptIntegrationTest
   setup do
     setup_users
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
-
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:ga4_form_tracking, true)
+    @test_strategy.switch!(:ga4_form_tracking, true)
   end
 
   context "Add edition note page" do

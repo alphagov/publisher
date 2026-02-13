@@ -1240,13 +1240,7 @@ class EditionTest < ActiveSupport::TestCase
 
   context "when 'restrict_access_by_org' feature toggle is enabled" do
     setup do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:restrict_access_by_org, true)
-    end
-
-    teardown do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:restrict_access_by_org, false)
+      @test_strategy.switch!(:restrict_access_by_org, true)
     end
 
     context "accessible_to scope" do
@@ -1368,8 +1362,7 @@ class EditionTest < ActiveSupport::TestCase
 
   context "when 'restrict_access_by_org' feature toggle is disabled" do
     setup do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:restrict_access_by_org, false)
+      @test_strategy.switch!(:restrict_access_by_org, false)
     end
 
     context "accessible_to scope" do

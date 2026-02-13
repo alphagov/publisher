@@ -8,9 +8,7 @@ class Ga4TrackingToggleTest < IntegrationTest
 
   context "'ga4_form_tracking' feature toggle is disabled" do
     setup do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:ga4_form_tracking, false)
-
+      @test_strategy.switch!(:ga4_form_tracking, false)
       visit edition_path(@edition)
     end
 
@@ -24,9 +22,7 @@ class Ga4TrackingToggleTest < IntegrationTest
 
   context "'ga4_form_tracking' feature toggle is enabled" do
     setup do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:ga4_form_tracking, true)
-
+      @test_strategy.switch!(:ga4_form_tracking, true)
       visit edition_path(@edition)
     end
 
