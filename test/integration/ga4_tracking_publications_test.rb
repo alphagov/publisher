@@ -6,9 +6,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
   setup do
     setup_users
-    # login_as_govuk_editor
 
-    # @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
     @draft_edition = FactoryBot.create(:answer_edition, :draft, title: "Test edition one", assigned_to: @author, updated_at: 1.day.ago)
     @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Test edition two", assigned_to: @reviewer, updated_at: 2.days.ago)
     @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "Test edition three", assigned_to: @author, updated_at: 3.days.ago)
@@ -16,7 +14,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     @draft_edition_2 = FactoryBot.create(:answer_edition, :draft, title: "Other edition two", assigned_to: @reviewer, updated_at: 5.day.ago)
     @fact_check_edition_2 = FactoryBot.create(:guide_edition, :fact_check, title: "Other edition three", assigned_to: @reviewer, updated_at: 6.days.ago)
     @in_review_edition_2 = FactoryBot.create(:answer_edition, :in_review, title: "Other edition four", assigned_to: @reviewer, updated_at: 7.days.ago)
-    # @ready_edition_2 = FactoryBot.create(:answer_edition, :ready, title: "Other edition one", updated_at: 8.days.ago)
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit_phase_3b, true)
@@ -27,44 +24,17 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     setup do
       FilteredEditionsPresenter::ITEMS_PER_PAGE = 4
 
-      # print "==ITEMS_PER_PAGE=="
-      # print FilteredEditionsPresenter::ITEMS_PER_PAGE
-      # print "===="
-
-      # test_strategy = Flipflop::FeatureSet.current.test!
-      # test_strategy.switch!(:design_system_edit_phase_3b, true)
       visit find_content_path
-      # disable_form_submit
-      # execute_script("document.querySelector('#states_filter').style.display='block !important'")
 
-      # @current_url = URI.parse(current_url).to_s # .split(':')[0]
       @root_url = URI.parse(current_host).to_s # @current_url.chomp(find_content_path)
       @base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
-
-      # print "==base_url=="
-      # print @base_url
-      # print "===="
-
-      # print "==root_url=="
-      # print @root_url
-      # print "===="
     end
 
     should "push 'search_data' values to the dataLayer on initial page load (no search term)" do
       disable_form_submit
 
-      # Forces the driver to wait for any async javascript to complete
-      # page.has_css?('[data-ga4-ecommerce-started="true"]')
-
       search_data = get_search_data
-      # event_data = get_event_data
       base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/" # + "/editions/" + @draft_edition.id # URI.parse(base_url).to_s
-
-      print "==search_data=="
-      print search_data
-      print "===="
-      # print URI.parse(base_url) # .to_s.chomp(find_content_path) + "/editions/" + @draft_edition.id
-      # print "===="
 
       assert_equal "view_item_list", search_data["event_name"]
       assert_equal 7, search_data["results"]
@@ -97,10 +67,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
       search_data = get_search_data
       base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/" # + "/editions/" + @draft_edition.id # URI.parse(base_url).to_s
-
-      print "==search_data=="
-      print search_data
-      print "===="
 
       assert_equal 4, search_data["ecommerce"]["items"][0]["index"]
       assert_equal base_url + @draft_edition_2.id, search_data["ecommerce"]["items"][0]["item_id"]
@@ -142,16 +108,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
       event_data = get_event_data
 
-      # print "==event_data=="
-      # print event_data
-      # print "===="
-
-      # search_data = get_search_data
-
-      # print "==search_data=="
-      # print search_data
-      # print "===="
-
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "Status", event_data[0]["section"]
@@ -179,37 +135,14 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "Find content", event_data[3]["section"]
       assert_equal "search-term", event_data[3]["text"]
       assert_equal "/find-content", event_data[3]["url"]
-
-      # assert_equal "view_item_list", search_data["event_name"]
-      # assert_equal 4, search_data["results"]
     end
 
     should "push 'search_data' values to the dataLayer when the user selects a value in the 'Title or slug' filter and submits" do
       fill_in "Title or slug", with: "Test"
-
-      # within all(".gem-c-select-with-search")[0] do
-      #   find("label").click
-      #   find("#choices--states_filter-item-choice-2").click
-      # end
-
-      # within all(".gem-c-select-with-search")[1] do
-      #   find("label").click
-      #   find("#choices--assignee_filter-item-choice-2").click
-      # end
- 
-      # within all(".gem-c-select-with-search")[2] do
-      #   find("label").click
-      #   find("#choices--content_type_filter-item-choice-2").click
-      # end
- 
       click_button "Apply filters"
 
       search_data = get_search_data
       base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
-
-      print "==search_data=="
-      print search_data
-      print "===="
 
       assert_equal "view_item_list", search_data["event_name"]
       assert_equal 3, search_data["results"]
@@ -231,32 +164,15 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     should "push 'search_data' values to the dataLayer when the user selects a value in the 'Status' filter and submits" do
-      # fill_in "Title or slug", with: "Test"
-
-      # Select Draft
       within all(".gem-c-select-with-search")[0] do
         find("label").click
         find("#choices--states_filter-item-choice-2").click
       end
 
-      # within all(".gem-c-select-with-search")[1] do
-      #   find("label").click
-      #   find("#choices--assignee_filter-item-choice-2").click
-      # end
-
-      # within all(".gem-c-select-with-search")[2] do
-      #   find("label").click
-      #   find("#choices--content_type_filter-item-choice-2").click
-      # end
-
       click_button "Apply filters"
 
       search_data = get_search_data
       base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
-
-      print "==search_data=="
-      print search_data
-      print "===="
 
       # Should get @draft_edition and @draft_edition_2
       assert_equal "view_item_list", search_data["event_name"]
@@ -274,33 +190,16 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     should "push 'search_data' values to the dataLayer when the user selects a value in the 'Assigned to' filter and submits" do
-      # fill_in "Title or slug", with: "Test"
-
-      # Select Draft
-      # within all(".gem-c-select-with-search")[0] do
-      #   find("label").click
-      #   find("#choices--states_filter-item-choice-2").click
-      # end
-
       # Select Author
       within all(".gem-c-select-with-search")[1] do
         find("label").click
         find("#choices--assignee_filter-item-choice-2").click
       end
 
-      # within all(".gem-c-select-with-search")[2] do
-      #   find("label").click
-      #   find("#choices--content_type_filter-item-choice-2").click
-      # end
-
       click_button "Apply filters"
 
       search_data = get_search_data
       base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
-
-      print "==search_data=="
-      print search_data
-      print "===="
 
       # Should get @draft_edition and @in_review_edition
       assert_equal "view_item_list", search_data["event_name"]
@@ -318,20 +217,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     should "push 'search_data' values to the dataLayer when the user selects a value in the 'Content type' filter and submits" do
-      # fill_in "Title or slug", with: "Test"
-
-      # Select Draft
-      # within all(".gem-c-select-with-search")[0] do
-      #   find("label").click
-      #   find("#choices--states_filter-item-choice-2").click
-      # end
-
-      # Select Author
-      # within all(".gem-c-select-with-search")[1] do
-      #   find("label").click
-      #   find("#choices--assignee_filter-item-choice-2").click
-      # end
-
       # Select Answer
       within all(".gem-c-select-with-search")[2] do
         find("label").click
@@ -342,10 +227,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
       search_data = get_search_data
       base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/"
-
-      print "==search_data=="
-      print search_data
-      print "===="
 
       # Should get @draft_edition, @draft_edition_2, @in_review_edition_2
       assert_equal "view_item_list", search_data["event_name"]
@@ -457,10 +338,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       click_link "Clear filters"
 
       event_data = get_event_data
-
-      print "==event_data=="
-      print event_data
-      print "===="
 
       assert_equal "remove", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
