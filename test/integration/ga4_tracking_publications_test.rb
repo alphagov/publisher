@@ -39,7 +39,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     # TODO: add pagination test to this one - use full number of items per page elsewhere and restrict it here
-    should "push values to the dataLayer on initial page load (no search term)" do
+    should "push 'search_data' values to the dataLayer on initial page load (no search term)" do
       disable_form_submit
 
       # Forces the driver to wait for any async javascript to complete
@@ -49,9 +49,9 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       # event_data = get_event_data
       base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/" # + "/editions/" + @draft_edition.id # URI.parse(base_url).to_s
 
-      # print "==search_data=="
-      # print search_data
-      # print "===="
+      print "==search_data=="
+      print search_data
+      print "===="
       # print URI.parse(base_url) # .to_s.chomp(find_content_path) + "/editions/" + @draft_edition.id
       # print "===="
 
@@ -77,6 +77,34 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal base_url + @ready_edition.id, search_data["ecommerce"]["items"][3]["item_id"]
       assert_equal @ready_edition.id, search_data["ecommerce"]["items"][3]["item_content_id"]
       assert_equal "Find content", search_data["ecommerce"]["items"][3]["item_list_name"]
+    end
+
+    should "push 'search_data' values to the dataLayer when the user navigates to the next page of results" do
+      within "nav.govuk-pagination" do
+        click_link "Next"
+      end
+
+      search_data = get_search_data
+      base_url = URI.parse(current_url).to_s.chomp(find_content_path) + "/editions/" # + "/editions/" + @draft_edition.id # URI.parse(base_url).to_s
+
+      print "==search_data=="
+      print search_data
+      print "===="
+
+      assert_equal 4, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal base_url + @draft_edition_2.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @draft_edition_2.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+
+      assert_equal 5, search_data["ecommerce"]["items"][1]["index"]
+      assert_equal base_url + @fact_check_edition_2.id, search_data["ecommerce"]["items"][1]["item_id"]
+      assert_equal @fact_check_edition_2.id, search_data["ecommerce"]["items"][1]["item_content_id"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][1]["item_list_name"]
+
+      assert_equal 6, search_data["ecommerce"]["items"][2]["index"]
+      assert_equal base_url + @in_review_edition_2.id, search_data["ecommerce"]["items"][2]["item_id"]
+      assert_equal @in_review_edition_2.id, search_data["ecommerce"]["items"][2]["item_content_id"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][2]["item_list_name"]
     end
 
     should "push 'event_data' values to the dataLayer when the user selects values in the filters and submits" do
