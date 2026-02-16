@@ -1,4 +1,4 @@
-<%= form_with url: find_content_path, method: :get, data: { module: "ga4-search-tracker", 'ga4-search-type': "index_additions", 'ga4-search-section': 'Find content', 'ga4-search-url': find_content_path } do %>
+<%= form_with url: find_content_path, method: :get, data: { 'ga4-search-type': "index_additions", 'ga4-search-section': 'Find content', 'ga4-search-url': find_content_path } do %>
   <div class="govuk-grid-row find-content">
     <div class="govuk-grid-column-one-quarter">
       <%= render "govuk_publishing_components/components/input", {
