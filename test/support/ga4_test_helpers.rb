@@ -1,14 +1,10 @@
 module Ga4TestHelpers
   def disable_form_submit
-    # Disable submission of the form so that all event data can be gathered
-    # including the data collected on the "Save" (or equivalent) button being clicked
     execute_script("document.querySelector('form').addEventListener('submit',function(e){e.preventDefault()})")
   end
 
   def disable_links
     execute_script("document.addEventListener('click',function(e){if(e.target.href)(e.preventDefault())})")
-    # execute_script("window.addEventListener('beforeunload',function(e){e.preventDefault();e.returnValue=false})")
-    # page.driver.browser.switch_to.alert.dismiss
   end
 
   def get_event_data
@@ -19,35 +15,22 @@ module Ga4TestHelpers
     data_layer_items.each do |item|
       if item["event_data"]
         event_data << item["event_data"]
-      # if item["event"]
-      #   event_data << item
       end
     end
 
     event_data
-    # data_layer_items
   end
 
   def get_search_data
     data_layer_items = evaluate_script("window.dataLayer")
-    # data_layer_items = evaluate_script("setTimeout(function(){window.dataLayer},1000)")
-
     search_data = []
 
     data_layer_items.each do |item|
-      # if item["search_data"]
       if item["event"] && item["event"]["search_results"]
-        # search_results = item["search_results"]["ecommerce"]["items"]
-        # if item["event"]["search_results"]
-          # search_data << item["search_data"]
-          # search_data << item["search_results"]["ecommerce"]["items"]
-          search_data = item["search_results"] # ["ecommerce"]["items"]
-        # end
+        search_data = item["search_results"]
       end
     end
 
     search_data
-    # data_layer_items
-    # evaluate_script("setTimeout(function(){window.dataLayer},1000)")
   end
 end
