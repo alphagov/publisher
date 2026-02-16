@@ -46,9 +46,10 @@
               { text: edition.format.underscore.humanize },
             ]
           end,
-          } %>
-      <%= paginate @presenter.editions %>
-        <% else %>
+        } %>
+
+        <%= paginate @presenter.editions %>
+      <% else %>
         <p class="govuk-body item-count" id="js-result-count">0 items</p>
       <% end %>
     </div>
