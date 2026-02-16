@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_08_27_080300) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_16_133713) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -29,6 +29,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_08_27_080300) do
     t.jsonb "request_details", default: {}
     t.string "request_type"
     t.bigint "requester_id"
+    t.string "requester_name"
     t.datetime "updated_at", null: false
     t.index ["edition_id"], name: "index_actions_on_edition_id"
     t.index ["recipient_id"], name: "index_actions_on_recipient_id"
