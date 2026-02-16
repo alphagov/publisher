@@ -3,8 +3,7 @@ require "test_helper"
 class FeatureConstraintTest < ActiveSupport::TestCase
   context "Feature 'feature_for_tests' is enabled by default" do
     setup do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:feature_for_tests, true)
+      @test_strategy.switch!(:feature_for_tests, true)
     end
 
     should "match when a request cookie explicitly enables feature" do
@@ -34,8 +33,7 @@ class FeatureConstraintTest < ActiveSupport::TestCase
 
   context "Feature 'feature_for_tests' is disabled by default" do
     setup do
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:feature_for_tests, false)
+      @test_strategy.switch!(:feature_for_tests, false)
     end
 
     should "match when a request cookie explicitly enables feature" do

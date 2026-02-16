@@ -4,7 +4,6 @@ class GetContentByContentIdTest < IntegrationTest
   def setup
     login_as_stub_user
     @artefact = FactoryBot.create(:artefact, name: "browser extension test")
-    @test_strategy = Flipflop::FeatureSet.current.test!
   end
 
   context "Content items that have only one edition, in the draft state" do

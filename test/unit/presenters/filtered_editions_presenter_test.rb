@@ -33,8 +33,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     [[true, "In 2i", "Fact check sent"], [false, "In review", "Out for fact check"]].each do |toggle_value, in_review_state_label, fact_check_state_label|
       context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
         setup do
-          test_strategy = Flipflop::FeatureSet.current.test!
-          test_strategy.switch!(:rename_edition_states, toggle_value)
+          @test_strategy.switch!(:rename_edition_states, toggle_value)
         end
 
         should "return all state options with 'Active statuses' selected when no state filter has been specified" do
@@ -144,13 +143,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
     context "when 'restrict_access_by_org' feature toggle is enabled" do
       setup do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:restrict_access_by_org, true)
-      end
-
-      teardown do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:restrict_access_by_org, false)
+        @test_strategy.switch!(:restrict_access_by_org, true)
       end
 
       should "filter out editions not accessible to the user" do

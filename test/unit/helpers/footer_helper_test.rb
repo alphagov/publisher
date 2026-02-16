@@ -4,8 +4,7 @@ class FooterHelperTest < ActionView::TestCase
   context "FooterHelper" do
     context "When design system 3b feature toggle is on" do
       setup do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:design_system_edit_phase_3b, true)
+        @test_strategy.switch!(:design_system_edit_phase_3b, true)
       end
 
       should "show design system footer links when user is an editor" do
@@ -45,8 +44,7 @@ class FooterHelperTest < ActionView::TestCase
     end
     context "When design system 3b feature toggle is off" do
       setup do
-        test_strategy = Flipflop::FeatureSet.current.test!
-        test_strategy.switch!(:design_system_edit_phase_3b, false)
+        @test_strategy.switch!(:design_system_edit_phase_3b, false)
       end
 
       should "show old footer links " do
