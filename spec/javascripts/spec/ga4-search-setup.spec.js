@@ -20,7 +20,7 @@ describe('GA4SearchSetup', function () {
   })
 
   describe('when initialised', function () {
-    it('should initialise Ga4SearchTracker', function() {
+    it('should initialise Ga4SearchTracker', function () {
       var ga4SearchTracker = window.GOVUK.Modules.Ga4SearchTracker
       var ga4SearchTrackerSpyInit = spyOn(ga4SearchTracker.prototype, 'init')
 

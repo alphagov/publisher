@@ -22,7 +22,7 @@ describe('GA4SearchResultsSetup', function () {
   })
 
   describe('when initialised', function () {
-    it('should initialise Ga4EcommerceTracker', function() {
+    it('should initialise Ga4EcommerceTracker', function () {
       var ga4EcommerceTracker = window.GOVUK.analyticsGa4.Ga4EcommerceTracker
       var ga4EcommerceTrackerSpyInit = spyOn(ga4EcommerceTracker, 'init')
 
