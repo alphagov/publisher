@@ -2,15 +2,15 @@ window.GOVUK = window.GOVUK || {}
 window.GOVUK.Modules = window.GOVUK.Modules || {};
 
 (function (Modules) {
-  let form
-
-  function ChapterSlugAutofill ($module) {
-    form = $module
+  function SlugAutofill ($module) {
+    this.module = $module
+    this.titleInputId = $module.dataset.titleInputId
+    this.slugInputId = $module.dataset.slugInputId
   }
 
-  ChapterSlugAutofill.prototype.init = function () {
-    const titleInput = form.querySelector('input[name="part[title]"]')
-    const slugInput = form.querySelector('input[name="part[slug]"]')
+  SlugAutofill.prototype.init = function () {
+    const titleInput = this.module.querySelector(`input[id="${this.titleInputId}"]`)
+    const slugInput = this.module.querySelector(`input[id="${this.slugInputId}"]`)
 
     titleInput.addEventListener('change', populateSlug)
 
@@ -30,5 +30,5 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
     }
   }
 
-  Modules.ChapterSlugAutofill = ChapterSlugAutofill
+  Modules.SlugAutofill = SlugAutofill
 })(window.GOVUK.Modules)

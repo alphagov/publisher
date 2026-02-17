@@ -1,27 +1,33 @@
 /* global GOVUK */
 
-describe('A chapter slug autofill module', function () {
+describe('A slug autofill module', function () {
   'use strict'
 
-  let chapterSlugAutofill, container, changeEvent, titleElement, slugElement
+  let slugAutofill, container, changeEvent, titleElement, slugElement
 
-  const formHtml = `<form>
-  <input name="part[title]" type="text" />
-  <input name="part[slug]" type="text" />
-</form>`
+  const moduleHtml = `
+    <div>
+      <input id="example-title-id" type="text" />
+      <input id="example-slug-id" type="text" />
+    </div>
+  `
+  const titleInputId = 'example-title-id'
+  const slugInputId = 'example-slug-id'
 
   beforeEach(function () {
     container = document.createElement('div')
-    container.innerHTML = formHtml
+    container.innerHTML = moduleHtml
+    container.setAttribute('data-title-input-id', titleInputId)
+    container.setAttribute('data-slug-input-id', slugInputId)
     document.body.appendChild(container)
 
-    chapterSlugAutofill = new GOVUK.Modules.ChapterSlugAutofill(container)
-    chapterSlugAutofill.init(container)
+    slugAutofill = new GOVUK.Modules.SlugAutofill(container)
+    slugAutofill.init(container)
 
     changeEvent = new Event('change')
 
-    titleElement = document.querySelector('input[name="part[title]"]')
-    slugElement = document.querySelector('input[name="part[slug]"]')
+    titleElement = document.getElementById(titleInputId)
+    slugElement = document.getElementById(slugInputId)
   })
 
   afterEach(function () {

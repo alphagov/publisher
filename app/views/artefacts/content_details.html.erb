@@ -9,26 +9,28 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @artefact, url: artefacts_path, method: "post" do |form| %>
-      <%= render "govuk_publishing_components/components/input", {
-        label: { text: "Title" },
-        id: "artefact_name",
-        name: "artefact[name]",
-        value: @artefact.name,
-        error_items: errors_for(@artefact.errors, :name, use_full_message: false),
-        heading_size: "m",
-      } %>
+    <%= form_with model: @artefact, url: artefacts_path,method: "post" do |form| %>
+      <div data-module="slug-autofill" data-title-input-id="artefact_name" data-slug-input-id="artefact_slug">
+        <%= render "govuk_publishing_components/components/input", {
+          label: { text: "Title" },
+          id: "artefact_name",
+          name: "artefact[name]",
+          value: @artefact.name,
+          error_items: errors_for(@artefact.errors, :name, use_full_message: false),
+          heading_size: "m",
+        } %>
 
-      <%= render "govuk_publishing_components/components/input", {
-        label: { text: "Slug" },
-        id: "artefact_slug",
-        name: "artefact[slug]",
-        value: @artefact.slug,
-        hint: "Must be written in the following format: lower-case-hyphen-separated",
-        error_items: errors_for(@artefact.errors, :slug, use_full_message: false),
-        prefix: slug_prefix,
-        heading_size: "m",
-      } %>
+        <%= render "govuk_publishing_components/components/input", {
+          label: { text: "Slug" },
+          id: "artefact_slug",
+          name: "artefact[slug]",
+          value: @artefact.slug,
+          hint: "Must be written in the following format: lower-case-hyphen-separated",
+          error_items: errors_for(@artefact.errors, :slug, use_full_message: false),
+          prefix: slug_prefix,
+          heading_size: "m",
+        } %>
+      </div>
 
       <%= render "govuk_publishing_components/components/radio", {
         heading: "Language",
