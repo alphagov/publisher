@@ -30,6 +30,49 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
     assert local_transaction.valid?
   end
 
+  [0, 10, 999].each do |integer|
+    should "allow valid integer #{integer} for LGIL code" do
+      local_transaction = FactoryBot.build(:local_transaction_edition, lgil_code: integer)
+
+      assert local_transaction.valid?
+    end
+  end
+
+  should "validate presence of LGIL code" do
+    local_transaction = FactoryBot.build(:local_transaction_edition, lgil_code: nil)
+
+    assert_not local_transaction.valid?
+    assert local_transaction.errors[:lgil_code].include? "Enter a LGIL code"
+  end
+
+  should "not allow negative integer for LGIL code" do
+    local_transaction = FactoryBot.build(:local_transaction_edition, lgil_code: -1)
+
+    assert_not local_transaction.valid?
+    assert local_transaction.errors[:lgil_code].include? "LGIL code can only be a whole number between 0 and 999"
+  end
+
+  should "not allow integer over 999 for LGIL code" do
+    local_transaction = FactoryBot.build(:local_transaction_edition, lgil_code: 1000)
+
+    assert_not local_transaction.valid?
+    assert local_transaction.errors[:lgil_code].include? "LGIL code can only be a whole number between 0 and 999"
+  end
+
+  should "not allow non-numbers for LGIL code" do
+    local_transaction = FactoryBot.build(:local_transaction_edition, lgil_code: "invalid")
+
+    assert_not local_transaction.valid?
+    assert local_transaction.errors[:lgil_code].include? "LGIL code can only be a whole number between 0 and 999"
+  end
+
+  should "not allow non-integers for LGIL code" do
+    local_transaction = FactoryBot.build(:local_transaction_edition, lgil_code: 3.2)
+
+    assert_not local_transaction.valid?
+    assert local_transaction.errors[:lgil_code].include? "LGIL code can only be a whole number between 0 and 999"
+  end
+
   should "copy the devolved administration availability fields when cloning an edition" do
     edition = FactoryBot.build(
       :local_transaction_edition,

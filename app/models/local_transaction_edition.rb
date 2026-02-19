@@ -17,10 +17,13 @@ class LocalTransactionEdition < ApplicationRecord
 
   GOVSPEAK_FIELDS = %i[introduction more_information need_to_know before_text after_text].freeze
 
+  validates :lgsl_code, presence: { message: "Enter a LGSL code" }
   validate :valid_lgsl_code, if: -> { lgsl_code.present? }
   validates :lgil_code, presence: { message: "Enter a LGIL code" }
-  validates :lgsl_code, presence: { message: "Enter a LGSL code" }
-  validates :lgil_code, numericality: { only_integer: true, message: "LGIL code can only be a whole number between 0 and 999" }, if: -> { lgil_code.present? }
+  validates :lgil_code, numericality: { only_integer: true,
+                                        greater_than_or_equal_to: 0,
+                                        less_than_or_equal_to: 999,
+                                        message: "LGIL code can only be a whole number between 0 and 999" }, if: -> { lgil_code.present? }
 
   def valid_lgsl_code
     unless service

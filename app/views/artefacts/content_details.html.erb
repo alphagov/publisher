@@ -44,6 +44,28 @@
         ],
       } %>
 
+      <% if @artefact.kind == "local_transaction" %>
+        <%= render "govuk_publishing_components/components/input", {
+          label: { text: "LGSL code" },
+          id: "artefact_lgsl_code",
+          name: "local_transaction_edition[lgsl_code]",
+          value: params.dig(:local_transaction_edition, :lgsl_code),
+          error_items: errors_for(@artefact.errors, :lgsl_code, use_full_message: false),
+          heading_size: "m",
+          width: 3,
+        } %>
+
+        <%= render "govuk_publishing_components/components/input", {
+          label: { text: "LGIL code" },
+          id: "artefact_lgil_code",
+          name: "local_transaction_edition[lgil_code]",
+          value: params.dig(:local_transaction_edition, :lgil_code),
+          error_items: errors_for(@artefact.errors, :lgil_code, use_full_message: false),
+          heading_size: "m",
+          width: 2,
+        } %>
+      <% end %>
+
       <%= form.hidden_field :kind, value: @artefact.kind %>
 
       <div class="govuk-button-group">
