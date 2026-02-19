@@ -22,7 +22,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit_phase_3b, true)
-    test_strategy.switch!(:ga4_form_tracking, true)
   end
 
   context "Find content page" do

@@ -1,12 +1,14 @@
 <% content_for :page_title, "Find content" %>
 <% content_for :title, "Find content" %>
 
+<% data_module_forms = ga4_form_tracking? ? "ga4-link-tracker" : "ga4-link-tracker ga4-form-setup ga4-index-section-setup" %>
+
 <div
   data-ga4-ecommerce
   data-ga4-list-title="Find content"
   data-ga4-search-query=""
   data-ga4-ecommerce-start-index="<%= page_start_index(params[:page]) %>"
-  data-module="ga4-search-results-setup ga4-search-setup"
+  data-module="ga4-search-results-setup ga4-search-setup <%= data_module_forms %>"
 >
   <%= render partial: "filtered_editions/find_content_filter" %>
 
