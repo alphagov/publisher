@@ -52,6 +52,10 @@ class FilteredEditionsPresenter
     @editions ||= query_editions
   end
 
+  def self.set_items_per_page(num)
+    const_set(:ITEMS_PER_PAGE, num)
+  end
+
 private
 
   def query_editions

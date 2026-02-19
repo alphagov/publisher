@@ -22,7 +22,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
   context "Find content page" do
     setup do
-      FilteredEditionsPresenter::ITEMS_PER_PAGE = 4
+      FilteredEditionsPresenter.set_items_per_page(4)
 
       visit find_content_path
 
