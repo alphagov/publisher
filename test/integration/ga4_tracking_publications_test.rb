@@ -26,7 +26,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
       visit find_content_path
 
-      @root_url = URI.parse(current_host).to_s # @current_url.chomp(find_content_path)
+      @root_url = URI.parse(current_host).to_s
       @base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
     end
 
@@ -164,6 +164,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     should "push 'search_data' values to the dataLayer when the user selects a value in the 'Status' filter and submits" do
+      # Select Draft
       within all(".gem-c-select-with-search")[0] do
         find("label").click
         find("#choices--states_filter-item-choice-2").click
