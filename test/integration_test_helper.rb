@@ -23,6 +23,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     # tests that cover the oauth interaction properly
     @author = FactoryBot.create(:user, :govuk_editor, name: "Author", email: "test@example.com")
     @reviewer = FactoryBot.create(:user, :govuk_editor, name: "Reviewer", email: "test@example.com")
+    @other = FactoryBot.create(:user, :govuk_editor, name: "Other", email: "test@example.com")
   end
 
   def login_as(user)
