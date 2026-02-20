@@ -14,8 +14,17 @@
     ],
     rows: editions.map do | edition |
       [
-        { text: link_to(edition.title, edit_edition_path(edition), class: "govuk-link govuk-link--no-visited-state") +
-          (sanitize("<p class='important-note'>#{edition.important_note.comment}</p>") if edition.important_note.present?) },
+        { text:
+          link_to(
+            edition.title, edit_edition_path(edition),
+            class: "govuk-link govuk-link--no-visited-state",
+            data: {
+              'ga4-link': '{
+                "event_name": "navigation",
+                "type": "link"
+              }'
+            }
+          ) + (sanitize("<p class='important-note'>#{edition.important_note.comment}</p>") if edition.important_note.present?) },
         { text: edition.format.underscore.humanize },
         { text: edition.assigned_to || "None" },
         { text: time_ago_in_words(edition.review_requested_at).capitalize },
