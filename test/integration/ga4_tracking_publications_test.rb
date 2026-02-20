@@ -347,4 +347,59 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal find_content_path, event_data[0]["url"]
     end
   end
+
+  context "2i queue page" do
+    setup do
+      visit two_eye_queue_path
+      disable_links
+    end
+
+    should "push 'event_data' values to the dataLayer when the user selects 'English' and 'Welsh' tabs" do
+      click_link "English"
+      click_link "Welsh"
+
+      event_data = get_event_data
+
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "tabs", event_data[0]["type"]
+      assert_equal "/2i-queue#english", event_data[0]["url"]
+      assert_equal "English", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "2", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "tabs", event_data[1]["type"]
+      assert_equal "/2i-queue#welsh", event_data[1]["url"]
+      assert_equal "Welsh", event_data[1]["text"]
+      assert_equal "2", event_data[1]["index"]["index_section"]
+      assert_equal "2", event_data[1]["index"]["index_section_count"]
+    end
+
+    should "push 'event_data' values to the dataLayer when the user clicks on the links to editions" do
+      # Get data for links for @in_review_edition & @in_review_edition_2
+      within all("tbody .govuk-table__row")[0] do
+        find("a").click
+      end
+
+      within all("tbody .govuk-table__row")[1] do
+        find("a").click
+      end
+
+      event_data = get_event_data
+
+      assert_equal "navigation", event_data[0]["event_name"]
+      assert_equal "false", event_data[0]["external"]
+      assert_equal current_host, event_data[0]["link_domain"]
+      assert_equal "Test edition three", event_data[0]["text"]
+      assert_equal "link", event_data[0]["type"]
+      assert_equal "/editions/#{@in_review_edition.id.to_s}", event_data[0]["url"]
+
+      assert_equal "navigation", event_data[1]["event_name"]
+      assert_equal "false", event_data[1]["external"]
+      assert_equal current_host, event_data[1]["link_domain"]
+      assert_equal "Other edition four", event_data[1]["text"]
+      assert_equal "link", event_data[1]["type"]
+      assert_equal "/editions/#{@in_review_edition_2.id.to_s}", event_data[1]["url"]
+    end
+  end
 end
