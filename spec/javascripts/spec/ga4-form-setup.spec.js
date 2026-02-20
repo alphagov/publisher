@@ -17,6 +17,9 @@ describe('GA4FormSetup', function () {
           </select>
         </form>
         <form data-module="some-other-module"></form>
+        <form>
+          <input type="search">
+        </form>
       </div>`
 
     module = document.createElement('div')
@@ -44,6 +47,11 @@ describe('GA4FormSetup', function () {
       formGA4Data = form.dataset
 
       expect(formGA4Data.module).toBe('some-other-module ga4-form-tracker')
+
+      form = module.querySelectorAll('form')[2]
+      formGA4Data = form.dataset
+
+      expect(formGA4Data.module).toBe(undefined)
     })
 
     it('adds the correct parameters to the form', function () {
