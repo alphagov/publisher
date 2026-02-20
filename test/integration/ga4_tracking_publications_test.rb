@@ -141,6 +141,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       fill_in "Title or slug", with: "Test"
       click_button "Apply filters"
 
+      assert page.has_css?("tbody .govuk-table__row", count: 3)
+
       search_data = get_search_data
       base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
 
@@ -199,6 +201,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
       click_button "Apply filters"
 
+      assert page.has_css?("tbody .govuk-table__row", count: 2)
+
       search_data = get_search_data
       base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
 
@@ -225,6 +229,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       end
 
       click_button "Apply filters"
+
+      assert page.has_css?("tbody .govuk-table__row", count: 3)
 
       search_data = get_search_data
       base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
@@ -332,6 +338,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     should "push 'event_data' values to the dataLayer when the user selects 'Clear filters'" do
       fill_in "Title or slug", with: "Title"
       click_button "Apply filters"
+
+      assert page.has_css?("tbody .govuk-table__row", count: 16)
 
       disable_links
 
