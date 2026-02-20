@@ -15,8 +15,19 @@
         rows: @presenter.editions.map do | edition |
           hint_text = edition_status_hint_text(edition)
           [
-            { text: link_to(edition.title, edit_edition_path(edition), class: "govuk-link govuk-link--no-visited-state") +
-              (render("govuk_publishing_components/components/hint", { text: hint_text, margin_bottom: 0 }) if hint_text) },
+            { text:
+              link_to(
+                edition.title,
+                edit_edition_path(edition),
+                class: "govuk-link govuk-link--no-visited-state",
+                data: {
+                  "ga4-link": {
+                    event_name: "navigation",
+                    type: "link"
+                  }
+                }
+              ) + (render("govuk_publishing_components/components/hint", { text: hint_text, margin_bottom: 0 }) if hint_text)
+            },
             { text: render("govuk_publishing_components/components/tag", { text: edition.human_state_name, colour: edition_status_tag_colour(edition) }) },
             { text: "#{time_ago_in_words(edition.updated_at).capitalize} ago" },
             { text: edition.format.underscore.humanize },
