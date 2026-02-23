@@ -20,9 +20,7 @@
     end)
   %>
 
-  <div
-    class="govuk-grid-row"
-  >
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-full find-content">
       <% if @presenter.editions.any? %>
         <%= render "govuk_publishing_components/components/table", {
@@ -38,13 +36,17 @@
           ],
           rows: @presenter.editions.map do | edition |
             [
-              { text: link_to(edition.title, edit_edition_path(edition), class: "govuk-link govuk-link--no-visited-state", data: {'ga4-ecommerce-content-id': edition.id, 'ga4-ecommerce-path': request.url.chomp(find_content_path) + edit_edition_path(edition)}) +
-                sanitize("<p class='govuk-body govuk-!-margin-bottom-0 find-content__title__slug' >/#{edition.slug}</p>")},
+              { 
+                text: link_to(edition.title, edit_edition_path(edition), 
+                  class: "govuk-link govuk-link--no-visited-state", 
+                  data: {
+                    'ga4-ecommerce-content-id': edition.id, 
+                    'ga4-ecommerce-path': request.url.chomp(find_content_path) + edit_edition_path(edition),
+                  }
+                ) + sanitize("<p class='govuk-body govuk-!-margin-bottom-0 find-content__title__slug' >/#{edition.slug}</p>")},
               { text: render("govuk_publishing_components/components/tag", { text: edition.human_state_name, colour: edition_status_tag_colour(edition) }) },
               { text: "#{time_ago_in_words(edition.updated_at).capitalize} ago" },
-              {
-                text: edition.assignee,
-              },
+              { text: edition.assignee },
               { text: edition.format.underscore.humanize },
             ]
           end,
