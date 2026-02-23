@@ -26,14 +26,11 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
   context "Find content page" do
     setup do
       visit find_content_path
-
-      @root_url = URI.parse(current_host).to_s
-      @base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
     end
 
     should "push 'search_data' values to the dataLayer on initial page load (no search term)" do
       search_data = get_search_data
-      base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       assert_equal "view_item_list", search_data["event_name"]
       assert_equal 23, search_data["results"]
@@ -65,7 +62,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       end
 
       search_data = get_search_data
-      base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       assert_equal 20, search_data["ecommerce"]["items"][0]["index"]
       assert_equal base_url + @draft_edition_2.id, search_data["ecommerce"]["items"][0]["item_id"]
@@ -143,7 +140,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert page.has_css?("tbody .govuk-table__row", count: 3)
 
       search_data = get_search_data
-      base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       assert_equal "view_item_list", search_data["event_name"]
       assert_equal 3, search_data["results"]
@@ -174,7 +171,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       click_button "Apply filters"
 
       search_data = get_search_data
-      base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       # Should get @draft_edition and @draft_edition_2
       assert_equal "view_item_list", search_data["event_name"]
@@ -203,7 +200,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert page.has_css?("tbody .govuk-table__row", count: 2)
 
       search_data = get_search_data
-      base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       # Should get @draft_edition and @in_review_edition
       assert_equal "view_item_list", search_data["event_name"]
@@ -232,7 +229,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert page.has_css?("tbody .govuk-table__row", count: 3)
 
       search_data = get_search_data
-      base_url = "#{URI.parse(current_url).to_s.chomp(find_content_path)}/editions/"
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       # Should get @draft_edition, @draft_edition_2, @in_review_edition_2
       assert_equal "view_item_list", search_data["event_name"]
@@ -264,11 +261,13 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       end
 
       search_data = get_search_data
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       assert_equal "select_item", search_data["event_name"]
       assert_equal 23, search_data["results"]
       assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
-      assert_equal @base_url + @draft_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      # assert_equal @base_url + @draft_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal base_url + @draft_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
       assert_equal @draft_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
       assert_equal "Test edition one", search_data["ecommerce"]["items"][0]["item_name"]
       assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
@@ -284,11 +283,12 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       end
 
       search_data = get_search_data
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       assert_equal "select_item", search_data["event_name"]
       assert_equal 23, search_data["results"]
       assert_equal 1, search_data["ecommerce"]["items"][0]["index"]
-      assert_equal @base_url + @fact_check_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal base_url + @fact_check_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
       assert_equal @fact_check_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
       assert_equal "Test edition two", search_data["ecommerce"]["items"][0]["item_name"]
       assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
@@ -304,11 +304,12 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       end
 
       search_data = get_search_data
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       assert_equal "select_item", search_data["event_name"]
       assert_equal 23, search_data["results"]
       assert_equal 2, search_data["ecommerce"]["items"][0]["index"]
-      assert_equal @base_url + @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal base_url + @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
       assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
       assert_equal "Test edition three", search_data["ecommerce"]["items"][0]["item_name"]
       assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
@@ -324,11 +325,12 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       end
 
       search_data = get_search_data
+      base_url = "#{current_url.chomp(find_content_path)}/editions/"
 
       assert_equal "select_item", search_data["event_name"]
       assert_equal 23, search_data["results"]
       assert_equal 3, search_data["ecommerce"]["items"][0]["index"]
-      assert_equal @base_url + @ready_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal base_url + @ready_edition.id, search_data["ecommerce"]["items"][0]["item_id"]
       assert_equal @ready_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
       assert_equal "Other edition one", search_data["ecommerce"]["items"][0]["item_name"]
       assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
@@ -349,7 +351,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "remove", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "false", event_data[0]["external"]
-      assert_equal @root_url, event_data[0]["link_domain"]
+      assert_equal current_host, event_data[0]["link_domain"]
       assert_equal "primary click", event_data[0]["method"]
       assert_equal "Clear filters", event_data[0]["text"]
       assert_equal find_content_path, event_data[0]["url"]
