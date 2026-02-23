@@ -50,7 +50,7 @@
         } %>
 
         <% if show_clear_filters_link? %>
-          <%= link_to "Clear filters", find_content_path, class: "govuk-link govuk-link--no-visited-state", data: { "ga4-link":"{\"action\":\"remove\",\"event_name\":\"select_content\",\"type\":\"publications\" }"} %>
+          <%= link_to "Clear filters", find_content_path, class: "govuk-link govuk-link--no-visited-state", data: { "ga4-link": { action: "remove",event_name: "select_content", type: "publications" } } %>
         <% end %>
       </div>
     </div>
