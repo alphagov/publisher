@@ -20,8 +20,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     @fact_check_edition_2 = FactoryBot.create(:guide_edition, :fact_check, title: "Other edition three", assigned_to: @reviewer, updated_at: 7.days.ago)
     @in_review_edition_2 = FactoryBot.create(:answer_edition, :in_review, title: "Other edition four", assigned_to: @reviewer, updated_at: 8.days.ago)
 
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_3b, true)
+    @test_strategy.switch!(:design_system_edit_phase_3b, true)
   end
 
   context "Find content page" do
