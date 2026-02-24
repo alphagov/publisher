@@ -1,0 +1,45 @@
+<%# locals: (edition:, part:) %>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Title",
+  },
+  id: "part_#{part.order}_title",
+  name: "edition[parts_attributes][][title]",
+  value: part.title,
+  heading_size: "s",
+  error_items: errors_for(part.errors, :title, use_full_message: false),
+} %>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Slug",
+  },
+  id: "part_#{part.order}_slug",
+  name: "edition[parts_attributes][][slug]",
+  value: part.slug,
+  heading_size: "s",
+  hint: "For example, title-of-chapter (no spaces, apostrophes or acronyms)",
+  error_items: errors_for(part.errors, :slug, use_full_message: false),
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "Body",
+  },
+  name: "edition[parts_attributes][][body]",
+  value: part.body,
+  rows: 14,
+  hint: ("Refer to the #{link_to("Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link govuk-link--no-visited-state")}").html_safe,
+} %>
+
+<%= hidden_field_tag "edition[parts_attributes][][id]", part.id %>
+
+<%= render "govuk_publishing_components/components/button",
+  {
+    text: "Delete chapter",
+    margin_bottom: 3,
+    destructive: true,
+    href: confirm_destroy_edition_guide_part_path(edition, part),
+} %>
