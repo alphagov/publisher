@@ -41,7 +41,7 @@
                   class: "govuk-link govuk-link--no-visited-state", 
                   data: {
                     'ga4-ecommerce-content-id': edition.id, 
-                    'ga4-ecommerce-path': request.url.chomp(find_content_path) + edit_edition_path(edition),
+                    'ga4-ecommerce-path': edition_url(edition),
                   }
                 ) + sanitize("<p class='govuk-body govuk-!-margin-bottom-0 find-content__title__slug' >/#{edition.slug}</p>")},
               { text: render("govuk_publishing_components/components/tag", { text: edition.human_state_name, colour: edition_status_tag_colour(edition) }) },
