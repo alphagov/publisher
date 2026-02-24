@@ -5,9 +5,7 @@ module Parted
     class_to_sym = klass.to_s.underscore.to_sym
     klass.has_many :parts, inverse_of: class_to_sym, dependent: :destroy
 
-    klass.accepts_nested_attributes_for :parts,
-                                        allow_destroy: true,
-                                        reject_if: proc { |attrs| attrs["title"].blank? && attrs["body"].blank? }
+    klass.accepts_nested_attributes_for :parts, allow_destroy: true
     klass.after_validation :merge_embedded_parts_errors
   end
 
