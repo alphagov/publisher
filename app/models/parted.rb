@@ -40,12 +40,14 @@ private
     return if parts.empty?
 
     if errors.any?
-      parts_errors = parts.each_with_object({}) do |part, result|
-        result["#{part.id}:#{part.order}"] = part.errors.messages if part.errors.present?
+      parts.sort_by(&:order).each do |part|
+        part.errors.each do |error|
+          errors.add(:"part_#{part.order}_#{error.attribute}", error.message)
+        end
       end
+
       errors.delete("parts.title")
       errors.delete("parts.slug")
-      errors.add(:parts, parts_errors)
     end
   end
 end
