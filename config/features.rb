@@ -14,6 +14,14 @@ Flipflop.configure do
             default: false,
             description: "Update the publications page to use the GOV.UK Design System with a multi-page design"
 
+    feature :design_system_edit_phase_4,
+            default: false,
+            description: "Update the 'Add artefact' page to use the GOV.UK Design System with a two-step process"
+
+    feature :rename_edition_states,
+            default: false,
+            description: "Changes the following edition state labels: 'In review' to 'In 2i', 'Fact check'/'Out for fact check' to 'Fact check sent', and 'Scheduled for publishing' to 'Scheduled'"
+
     feature :restrict_access_by_org,
             default: true,
             description: "Restrict access to editions based on the user's org and which org(s) own the edition"
@@ -25,17 +33,9 @@ Flipflop.configure do
     feature :ga4_form_tracking,
             default: false,
             description: "Add tracking to forms across publisher"
-
-    feature :rename_edition_states,
-            default: false,
-            description: "Changes the following edition state labels: 'In review' to 'In 2i', 'Fact check'/'Out for fact check' to 'Fact check sent', and 'Scheduled for publishing' to 'Scheduled'"
   end
 
   group "For developer only (These features are for use by developers only)" do
-    feature :design_system_edit_phase_4,
-            default: false,
-            description: "Update the 'Add artefact' page to use the GOV.UK Design System with a two-step process"
-
     feature :fact_check_manager_api,
             default: false,
             description: "Experimental: enables in-development fact-check-manager API features for testing"
