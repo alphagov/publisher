@@ -6,14 +6,26 @@
   } %>
 
  <% if edition.parts.presence %>
-  <%= tag.ul class: "govuk-list govuk-summary-list" do %>
+   <% if Flipflop.enabled?(:guide_chapter_accordion_interface) %>
+    <%= render "govuk_publishing_components/components/accordion", {
+      disable_ga4: true,
+      items: edition.parts.sort_by(&:order).map do |part|
+        { 
+          heading: { text: part.title }, 
+          content: { html: render(partial: "editions/secondary_nav_tabs/edit/readonly/components/part", locals: { part: }) },
+        }
+      end,
+    } %>
+  <% else %>
+    <%= tag.ul class: "govuk-list govuk-summary-list" do %>
       <% edition.parts.sort_by(&:order).each do |part| %>
-      <%= tag.li class: "govuk-summary-list__row" do %>
-        <%= tag.span class: "govuk-body" do %>
-          <%= part.title %>
-        <% end %>
-        <%= tag.span class: "govuk-body govuk-summary-list__actions" do %>
-          <%= link_to "View", edition_guide_part_path(edition, part), class: "govuk-link govuk-link--no-visited-state" %>
+        <%= tag.li class: "govuk-summary-list__row" do %>
+          <%= tag.span class: "govuk-body" do %>
+            <%= part.title %>
+          <% end %>
+          <%= tag.span class: "govuk-body govuk-summary-list__actions" do %>
+            <%= link_to "View", edition_guide_part_path(edition, part), class: "govuk-link govuk-link--no-visited-state" %>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>
