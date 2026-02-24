@@ -17,7 +17,7 @@
           destructive: true,
         } %>
 
-        <%= link_to("Cancel", edit_edition_guide_part_path(@edition, @part), class: "govuk-link govuk-link--no-visited-state") %>
+        <%= link_to("Cancel", Flipflop.enabled?(:guide_chapter_accordion_interface) ? edition_path(@edition) : edit_edition_guide_part_path(@edition, @part), class: "govuk-link govuk-link--no-visited-state") %>
       </div>
     <% end %>
   </div>
