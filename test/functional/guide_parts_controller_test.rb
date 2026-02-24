@@ -60,17 +60,56 @@ class GuidePartsControllerTest < ActionController::TestCase
       end
 
       context "when the edition is a draft" do
-        should "allow a new chapter to be added" do
-          edition = FactoryBot.create(:guide_edition, :draft)
+        context "when the 'guide_chapter_accordion_interface' feature toggle is on" do
+          setup do
+            @test_strategy.switch!(:guide_chapter_accordion_interface, true)
+          end
 
-          post :create, params: {
-            edition_id: edition.id,
-            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
-            save: "save and summary",
-          }
+          should "allow a new chapter to be added with 'save" do
+            edition = FactoryBot.create(:guide_edition, :draft)
 
-          assert_redirected_to edition_path(edition.id)
-          assert_equal "New chapter added successfully.", flash[:success]
+            post :create, params: {
+              edition_id: edition.id,
+              part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+              save: "save",
+            }
+
+            assert_redirected_to edition_path(edition.id)
+            assert_equal "New chapter added successfully.", flash[:success]
+          end
+        end
+
+        context "when the 'guide_chapter_accordion_interface' feature toggle is off" do
+          setup do
+            @test_strategy.switch!(:guide_chapter_accordion_interface, false)
+          end
+
+          should "allow a new chapter to be added with 'save and summary'" do
+            edition = FactoryBot.create(:guide_edition, :draft)
+
+            post :create, params: {
+              edition_id: edition.id,
+              part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+              save: "save and summary",
+            }
+
+            assert_redirected_to edition_path(edition.id)
+            assert_equal "New chapter added successfully.", flash[:success]
+          end
+
+          should "allow a new chapter to be added with 'save'" do
+            edition = FactoryBot.create(:guide_edition, :draft)
+
+            post :create, params: {
+              edition_id: edition.id,
+              part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+              save: "save",
+            }
+
+            part = Part.last
+            assert_redirected_to edit_edition_guide_part_path(edition, part)
+            assert_equal "New chapter added successfully.", flash[:success]
+          end
         end
 
         should "create a part with the correct details when guide has no parts" do
