@@ -1884,7 +1884,7 @@ class EditionsControllerTest < ActionController::TestCase
         },
       }
 
-      assert_template "show"
+      assert_redirected_to edition_path(@edition)
       assert_equal "Edition updated successfully.", flash[:success]
       @edition.reload
       assert_equal "The changed title", @edition.title
