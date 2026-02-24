@@ -1182,6 +1182,28 @@ class EditDraftEditionTest < IntegrationTest
           should "not show the 'Delete chapter' button'" do
             assert_no_link "Delete chapter"
           end
+
+          should "show the chapter fields as readonly" do
+            within all(".govuk-accordion__section")[0] do
+              assert_no_field "Title"
+              assert_no_field "Slug"
+              assert_no_field "Body"
+
+              assert_text @part_1.title
+              assert_text @part_1.slug
+              assert_text @part_1.body
+            end
+
+            within all(".govuk-accordion__section")[1] do
+              assert_no_field "Title"
+              assert_no_field "Slug"
+              assert_no_field "Body"
+
+              assert_text @part_2.title
+              assert_text @part_2.slug
+              assert_text @part_2.body
+            end
+          end
         end
 
         context "Delete chapter confirmation" do

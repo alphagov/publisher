@@ -1,0 +1,28 @@
+<%# locals: (part:) %>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Title",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p class="govuk-body"> <%= part.title.presence || "None added" %></p>
+</section>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Slug",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p class="govuk-body"><%= part.slug.presence || "None added" %></p>
+</section>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Body",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p class="govuk-body"><%= part.body.presence || "None added" %></p>
+</section>
