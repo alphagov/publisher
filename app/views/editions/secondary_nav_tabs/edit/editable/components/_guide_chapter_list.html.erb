@@ -7,7 +7,7 @@
 
  <% if edition.parts.presence %>
   <%= tag.ul class: "govuk-list govuk-summary-list" do %>
-    <% edition.order_parts.each do |part| %>
+      <% edition.parts.sort_by(&:order).each do |part| %>
       <%= tag.li class: "govuk-summary-list__row" do %>
         <%= tag.span class: "govuk-body" do %>
           <%= part.title %>
