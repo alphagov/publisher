@@ -3,8 +3,6 @@ module ErrorSummaryHelper
     case edition.editionable
     when SimpleSmartAnswerEdition
       smart_answer_errors(edition)
-    when GuideEdition
-      guide_errors(edition)
     else
       edition_errors(edition)
     end
@@ -55,22 +53,6 @@ private
       .map { |error, href| [error.message, href] }
   end
 
-  def guide_errors(guide)
-    edition_errors = top_level_errors(guide)
-
-    parts_errors = []
-
-    guide.parts.each do |part|
-      part.errors.each do |error|
-        parts_errors << [error, href_for_part(part, error.attribute)]
-      end
-    end
-
-    (edition_errors + parts_errors)
-      .reject { |error, _| error.attribute == :parts } # Errors with attributes of parts will be an error for a part as a whole (rather than the individual field) and not helpful
-      .map { |error, href| [error.message, href] }
-  end
-
   def href_for_node(node, attribute)
     "#edition_nodes_attributes_#{node.order - 1}_#{attribute}"
   end
@@ -78,9 +60,5 @@ private
   def href_for_option(option, node, attribute)
     attr = attribute == :next_node ? "node" : attribute
     "#edition_nodes_attributes_#{node.order - 1}_options_attributes_#{node.options.find_index(option)}_#{attr}"
-  end
-
-  def href_for_part(part, attribute)
-    "#edition_parts_attributes_#{part.guide_edition.parts.find_index(part)}_#{attribute}"
   end
 end

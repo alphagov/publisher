@@ -3,32 +3,6 @@ require "test_helper"
 class ErrorSummaryHelperTest < ActionView::TestCase
   include ErrorSummaryHelper
 
-  def guide_with_title_and_parts(title, parts)
-    editionable = GuideEdition.new(parts:)
-    Edition.new(title:, panopticon_id: "Some_id", editionable:)
-  end
-
-  context "A Guide Edition" do
-    should "For a Guide, errors_to_display returns useful error messages and correct hrefs for invalid fields" do
-      valid_part = Part.new(title: "some part", slug: "another-slug", order: 1)
-      invalid_part_1 = Part.new(title: "", slug: "invalid slug with spaces", order: 2)
-      invalid_part_2 = Part.new(title: "valid title", slug: "another invalid slug", order: 3)
-
-      guide_with_invalid_data = guide_with_title_and_parts("", [valid_part, invalid_part_1, invalid_part_2])
-
-      guide_with_invalid_data.valid?
-
-      expected_errors = [
-        ["Enter a title", "#edition_title"],
-        ["Enter a title for Chapter 2", "#edition_parts_attributes_1_title"],
-        ["Slug can only consist of lower case characters, numbers and hyphens", "#edition_parts_attributes_1_slug"],
-        ["Slug can only consist of lower case characters, numbers and hyphens", "#edition_parts_attributes_2_slug"],
-      ]
-
-      assert_equal expected_errors, errors_to_display(guide_with_invalid_data)
-    end
-  end
-
   context "A Simple Smart Answer" do
     should "errors_to_display returns useful error messages and correct hrefs for invalid fields" do
       valid_outcome_node = SimpleSmartAnswerEdition::Node.new(kind: "outcome", title: "Node 1", slug: "node-1", order: 1)
