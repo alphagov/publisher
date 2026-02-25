@@ -2,7 +2,15 @@
 <% content_for :title, "2i queue" %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full two-eye-queue">
+  <div 
+    class="govuk-grid-column-full two-eye-queue"
+    data-ga4-ecommerce
+    data-ga4-list-title="2i queue"
+    data-ga4-ecommerce-start-index="0"
+    data-module="ga4-search-results-setup"
+  >
+    <div class="temporary container" id="js-result-count">5 items</div>
+
 		<%= render "govuk_publishing_components/components/tabs", {
       panel_border: false,
 			tabs: [
