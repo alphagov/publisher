@@ -519,7 +519,7 @@ class EditDraftEditionTest < IntegrationTest
             assert page.has_field?("part[title]", with: "")
             assert page.has_field?("part[slug]", with: "part-one")
             assert page.has_field?("part[body]", with: "body-text")
-            assert page.has_content?("Enter a title for Chapter 1")
+            assert page.has_content?("Enter a title")
           end
 
           should "show validation error when Slug is empty" do
@@ -532,7 +532,7 @@ class EditDraftEditionTest < IntegrationTest
             assert page.has_field?("part[title]", with: "Part one")
             assert page.has_field?("part[slug]", with: "")
             assert page.has_field?("part[body]", with: "body-text")
-            assert page.has_content?("Enter a slug for Chapter 1")
+            assert page.has_content?("Enter a slug")
           end
 
           should "show validation error when Slug is invalid" do
@@ -668,7 +668,7 @@ class EditDraftEditionTest < IntegrationTest
             assert page.has_field?("part[title]", with: "Part two")
             assert page.has_field?("part[slug]", with: "@")
             assert page.has_field?("part[body]", with: "body-text")
-            assert page.has_content?("Slug can only consist of lower case characters, numbers and hyphens")
+            assert page.has_content?("Slug for Chapter 2 can only consist of lower case characters, numbers and hyphens")
           end
 
           should "redirect to guide edit page when back to summary link is clicked" do
