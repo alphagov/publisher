@@ -18,11 +18,15 @@
           link_to(
             edition.title, edit_edition_path(edition),
             class: "govuk-link govuk-link--no-visited-state",
+          # data: {
+          #   'ga4-link': '{
+          #     "event_name": "navigation",
+          #     "type": "link"
+          #   }'
+          # }
             data: {
-              'ga4-link': '{
-                "event_name": "navigation",
-                "type": "link"
-              }'
+              'ga4-ecommerce-content-id': edition.id, 
+              'ga4-ecommerce-path': edition_url(edition),
             }
           ) + (sanitize("<p class='important-note'>#{edition.important_note.comment}</p>") if edition.important_note.present?) },
         { text: edition.format.underscore.humanize },
