@@ -350,7 +350,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
   context "2i queue page" do
     setup do
-      visit two_eye_queue_path
+      # visit two_eye_queue_path
+      visit "/2i-queue"
       # @base_url = current_url.chomp(two_eye_queue_path)
       # disable_links
     end
@@ -374,7 +375,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     should "push 'event_data' values to the dataLayer when the user selects 'English' and 'Welsh' tabs" do
-      # skip()
       click_link "English"
       click_link "Welsh"
 
@@ -395,32 +395,46 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "2", event_data[1]["index"]["index_section_count"]
     end
 
-    should "push 'event_data' values to the dataLayer when the user clicks on the links to editions" do
-      skip()
+    should "push 'search_results' values to the dataLayer when the user clicks on the links to editions" do
+      assert page.has_css?("h1", text: "2i queue")
+      # skip()
       # Get data for links for @in_review_edition & @in_review_edition_2
-      within all("tbody .govuk-table__row")[0] do
-        find("a").click
+      # within all("tbody .govuk-table__row")[0] do
+      #   find("a").click
+      # end
+
+      disable_links
+
+      within "tbody" do
+        within all(".govuk-table__row")[0] do
+          find("a").click
+        end
       end
 
-      within all("tbody .govuk-table__row")[1] do
-        find("a").click
-      end
+      # within all("tbody .govuk-table__row")[1] do
+      #   find("a").click
+      # end
 
-      event_data = get_event_data
+      search_data = get_search_data
 
-      assert_equal "navigation", event_data[0]["event_name"]
-      assert_equal "false", event_data[0]["external"]
-      assert_equal current_host, event_data[0]["link_domain"]
-      assert_equal "Test edition three", event_data[0]["text"]
-      assert_equal "link", event_data[0]["type"]
-      assert_equal "/editions/#{@in_review_edition.id.to_s}", event_data[0]["url"]
+      puts "++search_data++"
+      puts search_data
+      puts "++++"
 
-      assert_equal "navigation", event_data[1]["event_name"]
-      assert_equal "false", event_data[1]["external"]
-      assert_equal current_host, event_data[1]["link_domain"]
-      assert_equal "Other edition four", event_data[1]["text"]
-      assert_equal "link", event_data[1]["type"]
-      assert_equal "/editions/#{@in_review_edition_2.id.to_s}", event_data[1]["url"]
+      assert_equal "select_item", search_data["event_name"]
+      assert_equal 23, search_data["results"]
+      assert_equal 2, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal edition_url(@in_review_edition, host: @base_url), search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "Test edition three", search_data["ecommerce"]["items"][0]["item_name"]
+      assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+
+      # assert_equal "navigation", search_data[1]["event_name"]
+      # assert_equal "false", search_data[1]["external"]
+      # assert_equal current_host, search_data[1]["link_domain"]
+      # assert_equal "Other edition four", search_data[1]["text"]
+      # assert_equal "link", search_data[1]["type"]
+      # assert_equal "/editions/#{@in_review_edition_2.id.to_s}", search_data[1]["url"]
     end
   end
 end
