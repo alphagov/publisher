@@ -375,4 +375,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal current_host, event_data[1]["link_domain"]
     end
   end
+
+  should "push 'event_data' values to the dataLayer when the user clicks on 'Claim 2i' button" do
+    # TO BE ADDED
+  end
 end
