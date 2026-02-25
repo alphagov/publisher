@@ -1,4 +1,4 @@
-<%= form_with url: find_content_path, method: :get do %>
+<%= form_with url: find_content_path, method: :get, data: { "ga4-search-type": "index_additions", "ga4-search-section": "Find content", "ga4-search-url": find_content_path } do %>
   <div class="govuk-grid-row find-content">
     <div class="govuk-grid-column-one-quarter">
       <%= render "govuk_publishing_components/components/input", {
@@ -8,6 +8,7 @@
         },
         name: "search_text",
         value: @presenter.search_text,
+        type: "search",
       } %>
     </div>
 
@@ -49,7 +50,7 @@
         } %>
 
         <% if show_clear_filters_link? %>
-          <%= link_to "Clear filters", find_content_path, class: "govuk-link govuk-link--no-visited-state" %>
+          <%= link_to "Clear filters", find_content_path, class: "govuk-link govuk-link--no-visited-state", data: { "ga4-link": { action: "remove", event_name: "select_content", type: "publications" } } %>
         <% end %>
       </div>
     </div>

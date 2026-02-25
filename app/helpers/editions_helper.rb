@@ -127,4 +127,10 @@ module EditionsHelper
   def edition_status_tag_colour(edition)
     EDITION_STATUS_TAG_COLOURS.fetch(edition.state.to_sym, nil)
   end
+
+  def page_start_index(page)
+    return 0 unless page
+
+    (page.to_i - 1) * FilteredEditionsPresenter::ITEMS_PER_PAGE
+  end
 end
