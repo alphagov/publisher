@@ -358,7 +358,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       click_link "Test edition one"
       click_link "Test edition three"
 
-      event_data = get_event_data
+      search_data = get_search_data
 
       assert_equal "navigation", event_data[0]["event_name"]
       assert_equal "generic_link", event_data[0]["type"]
