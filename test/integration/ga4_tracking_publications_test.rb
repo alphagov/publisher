@@ -374,7 +374,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     should "push 'event_data' values to the dataLayer when the user selects 'English' and 'Welsh' tabs" do
-      skip()
+      # skip()
       click_link "English"
       click_link "Welsh"
 
