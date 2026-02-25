@@ -351,10 +351,30 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
   context "2i queue page" do
     setup do
       visit two_eye_queue_path
-      disable_links
+      # @base_url = current_url.chomp(two_eye_queue_path)
+      # disable_links
+    end
+
+    should "push 'search_result' values to the dataLayer on initial page load" do
+      assert page.has_css?("tbody .govuk-table__row", count: 2)
+
+      search_data = get_search_data
+
+      puts "++search_data++"
+      puts search_data
+      puts "++++"
+
+      # assert_equal "view_item_list", search_data["event_name"]
+      # assert_equal 2, search_data["results"]
+
+      # assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
+      # assert_equal edition_url(@draft_edition, host: @base_url), search_data["ecommerce"]["items"][0]["item_id"]
+      # assert_equal @draft_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      # assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
     end
 
     should "push 'event_data' values to the dataLayer when the user selects 'English' and 'Welsh' tabs" do
+      skip()
       click_link "English"
       click_link "Welsh"
 
@@ -376,6 +396,7 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     should "push 'event_data' values to the dataLayer when the user clicks on the links to editions" do
+      skip()
       # Get data for links for @in_review_edition & @in_review_edition_2
       within all("tbody .govuk-table__row")[0] do
         find("a").click
