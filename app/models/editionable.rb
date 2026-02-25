@@ -29,4 +29,10 @@ module Editionable
   def published?
     edition.state == "published"
   end
+
+  def whole_body_hash
+    return if popular_links_edition? || !respond_to?(:whole_body)
+
+    { body: whole_body.presence || "" }
+  end
 end

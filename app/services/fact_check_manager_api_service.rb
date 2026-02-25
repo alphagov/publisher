@@ -13,8 +13,8 @@ class FactCheckManagerApiService
       source_title: edition.title,
       requester_name: requester.name,
       requester_email: requester.email,
-      current_content: edition.whole_body,
-      previous_content: edition.published_edition ? edition.published_edition.whole_body : nil,
+      current_content: edition.whole_body_hash,
+      previous_content: edition.published_edition ? edition.published_edition.whole_body_hash : nil,
       deadline: working_days_after(Date.current, how_many: 5).to_fs(:iso8601),
       recipients: email_addresses.split(",").map(&:strip) }
   end
