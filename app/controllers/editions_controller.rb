@@ -154,14 +154,15 @@ class EditionsController < InheritedResources::Base
 
     if @resource.save
       UpdateWorker.perform_async(resource.id.to_s)
-      flash.now[:success] = "Edition updated successfully."
+      flash[:success] = "Edition updated successfully."
+      redirect_to edition_path(@resource)
     else
       @artefact = @resource.artefact
+      render "show"
     end
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
-  ensure
     render "show"
   end
 
