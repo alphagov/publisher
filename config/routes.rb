@@ -91,7 +91,7 @@ Rails.application.routes.draw do
              }
       end
 
-      resources :guide_parts, only: %i[new create show edit update destroy] do
+      resources :guide_parts, only: %i[new create destroy] do
         collection do
           get "reorder"
           post "bulk_update_reorder"
@@ -101,6 +101,8 @@ Rails.application.routes.draw do
           get "confirm_destroy"
         end
       end
+
+      resources :guide_parts, only: %i[show edit update], constraints: ->(request) { !FeatureConstraint.new("guide_chapter_accordion_interface").matches?(request) }
     end
   end
 
