@@ -111,6 +111,7 @@ class ActiveSupport::TestCase
   extend PresenterTestHelpers
   include SignonApiHelpers
   include HostContentUpdateHelpers
+  include FactoryBot::Syntax::Methods
 
   Shoulda::Matchers.configure do |config|
     config.integrate do |with|
