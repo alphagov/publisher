@@ -14,7 +14,7 @@
       <p class="govuk-hint">Use the up and down buttons to reorder chapters, or select and hold on an item to reorder using drag and drop</p>
 
       <%= render "govuk_publishing_components/components/reorderable_list", {
-        items: @edition.order_parts.map do |part|
+        items: @edition.parts.sort_by(&:order).map do |part|
           {
             id: part["id"],
             title: part["title"],
