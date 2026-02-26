@@ -422,23 +422,41 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       puts "++++"
 
       assert_equal "select_item", search_data["event_name"]
-      assert_equal 23, search_data["results"]
-      assert_equal 2, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal 2, search_data["results"]
+      assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
       assert_equal edition_url(@in_review_edition, host: @base_url), search_data["ecommerce"]["items"][0]["item_id"]
       assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
       assert_equal "Test edition three", search_data["ecommerce"]["items"][0]["item_name"]
-      assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+      assert_equal "2i queue", search_data["ecommerce"]["items"][0]["item_list_name"]
 
-      # assert_equal "navigation", search_data[1]["event_name"]
-      # assert_equal "false", search_data[1]["external"]
-      # assert_equal current_host, search_data[1]["link_domain"]
-      # assert_equal "Other edition four", search_data[1]["text"]
-      # assert_equal "link", search_data[1]["type"]
-      # assert_equal "/editions/#{@in_review_edition_2.id.to_s}", search_data[1]["url"]
+      assert_equal "select_item", search_data["event_name"]
+      assert_equal 2, search_data["results"]
+      assert_equal 1, search_data["ecommerce"]["items"][1]["index"]
+      assert_equal edition_url(@in_review_edition_2, host: @base_url), search_data["ecommerce"]["items"][1]["item_id"]
+      assert_equal @in_review_edition_2.id, search_data["ecommerce"]["items"][1]["item_content_id"]
+      assert_equal "Other edition four", search_data["ecommerce"]["items"][1]["item_name"]
+      assert_equal "2i queue", search_data["ecommerce"]["items"][1]["item_list_name"]
     end
-  end
 
-  should "push 'event_data' values to the dataLayer when the user clicks on 'Claim 2i' button" do
-    # TO BE ADDED
+    should "push 'event_data' values to the dataLayer when the user clicks on 'Claim 2i' button" do
+      disable_form_submit
+
+      assert page.has_css?("h1", text: "2i queue")
+
+      click_button "Claim 2i"
+
+      event_data = get_event_data
+
+      puts "++event_data++"
+      puts event_data
+      puts "++++"
+
+      assert_equal "navigation", event_data[0]["event_name"]
+      assert_equal "false", event_data[0]["external"]
+      assert_equal current_host, event_data[0]["link_domain"]
+      assert_equal "primary click", event_data[0]["method"]
+      assert_equal "Claim 2i", event_data[0]["text"]
+      assert_equal two_eye_queue_path, event_data[0]["url"]
+    end
   end
 end
