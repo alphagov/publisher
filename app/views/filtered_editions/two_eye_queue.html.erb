@@ -9,7 +9,7 @@
     data-ga4-ecommerce-start-index="0"
     data-module="ga4-search-results-setup"
   >
-    <div class="temporary container" id="js-result-count">5 items</div>
+    <div class="govuk-!-display-none" id="js-result-count"><%= @english_editions.count + @welsh_editions.count %></div>
 
 		<%= render "govuk_publishing_components/components/tabs", {
       panel_border: false,
