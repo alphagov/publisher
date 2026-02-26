@@ -411,10 +411,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
       search_data = get_search_data
 
-      puts "++search_data++"
-      puts search_data
-      puts "++++"
-
       assert_equal "select_item", search_data["event_name"]
       assert_equal 2, search_data["results"]
       assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
@@ -436,21 +432,24 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       disable_form_submit
 
       assert page.has_css?("h1", text: "2i queue")
+      assert page.has_css?("a", text: "Other edition four")
+      assert page.has_css?("a", text: "Test edition three")
 
+      # @in_review_edition_2
       click_button "Claim 2i"
 
-      event_data = get_event_data
+      search_data = get_search_data
 
-      puts "++event_data++"
-      puts event_data
-      puts "++++"
+      # puts "++search_data++"
+      # puts search_data
+      # puts "++++"
 
-      assert_equal "navigation", event_data[0]["event_name"]
-      assert_equal "false", event_data[0]["external"]
-      assert_equal current_host, event_data[0]["link_domain"]
-      assert_equal "primary click", event_data[0]["method"]
-      assert_equal "Claim 2i", event_data[0]["text"]
-      assert_equal two_eye_queue_path, event_data[0]["url"]
+      assert_equal "select_item", search_data[0]["event_name"]
+      assert_equal "false", search_data[0]["external"]
+      assert_equal current_host, search_data[0]["link_domain"]
+      assert_equal "primary click", search_data[0]["method"]
+      assert_equal "Claim 2i", search_data[0]["text"]
+      assert_equal two_eye_queue_path, search_data[0]["url"]
     end
   end
 end
