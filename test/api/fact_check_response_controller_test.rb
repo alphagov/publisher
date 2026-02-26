@@ -9,6 +9,22 @@ class FactCheckResponseControllerTest < IntegrationTest
     [123, %w[invalid], { invalid: true }, true]
   end
 
+  context "in a production environment" do
+    setup do
+      Rails.env.stubs(:local?).returns(false)
+      Rails.env.stubs(:test?).returns(false)
+    end
+
+    should "return 400" do
+      ClimateControl.modify GOVUK_ENVIRONMENT: "production" do
+        post api_fact_check_response_path, params: { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: true }, as: :json
+
+        assert_response :bad_request
+        assert_includes response.parsed_body["errors"], "Not enabled on this environment"
+      end
+    end
+  end
+
   context "#process_response" do
     should "return a success response with valid params" do
       post api_fact_check_response_path, params: { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: true }, as: :json
