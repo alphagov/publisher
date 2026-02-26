@@ -350,10 +350,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
   context "2i queue page" do
     setup do
-      # visit two_eye_queue_path
-      visit "/2i-queue"
-      # @base_url = current_url.chomp(two_eye_queue_path)
-      # disable_links
+      visit two_eye_queue_path
+      @base_url = current_url.chomp(two_eye_queue_path)
     end
 
     should "push 'search_result' values to the dataLayer on initial page load" do
@@ -361,17 +359,18 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
       search_data = get_search_data
 
-      puts "++search_data++"
-      puts search_data
-      puts "++++"
+      assert_equal "view_item_list", search_data["event_name"]
+      assert_equal 2, search_data["results"]
 
-      # assert_equal "view_item_list", search_data["event_name"]
-      # assert_equal 2, search_data["results"]
+      assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal edition_url(@in_review_edition, host: @base_url), search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "2i queue", search_data["ecommerce"]["items"][0]["item_list_name"]
 
-      # assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
-      # assert_equal edition_url(@draft_edition, host: @base_url), search_data["ecommerce"]["items"][0]["item_id"]
-      # assert_equal @draft_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
-      # assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+      assert_equal 1, search_data["ecommerce"]["items"][1]["index"]
+      assert_equal edition_url(@in_review_edition_2, host: @base_url), search_data["ecommerce"]["items"][1]["item_id"]
+      assert_equal @in_review_edition_2.id, search_data["ecommerce"]["items"][1]["item_content_id"]
+      assert_equal "2i queue", search_data["ecommerce"]["items"][1]["item_list_name"]
     end
 
     should "push 'event_data' values to the dataLayer when the user selects 'English' and 'Welsh' tabs" do
@@ -396,13 +395,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     end
 
     should "push 'search_results' values to the dataLayer when the user clicks on the links to editions" do
-      assert page.has_css?("h1", text: "2i queue")
-      # skip()
-      # Get data for links for @in_review_edition & @in_review_edition_2
-      # within all("tbody .govuk-table__row")[0] do
-      #   find("a").click
-      # end
-
       disable_links
 
       within "tbody" do
@@ -411,9 +403,11 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
         end
       end
 
-      # within all("tbody .govuk-table__row")[1] do
-      #   find("a").click
-      # end
+      within "tbody" do
+        within all(".govuk-table__row")[1] do
+          find("a").click
+        end
+      end
 
       search_data = get_search_data
 
