@@ -17,7 +17,18 @@
     rows: editions.map do | edition |
       [
         { text: link_to(edition.title, edit_edition_path(edition), class: "govuk-link govuk-link--no-visited-state") },
-        { text: link_to("View response", history_edition_path(edition, anchor: "edition-#{edition.history.first.version_number}"), class: "govuk-link govuk-link--no-visited-state") },
+        { text:
+          link_to(
+            "View response",
+            history_edition_path(edition,
+            anchor: "edition-#{edition.history.first.version_number}"),
+            class: "govuk-link govuk-link--no-visited-state",
+            data: {
+              'ga4-ecommerce-content-id': edition.id,
+              'ga4-ecommerce-path': edition_url(edition),
+            }
+          )
+        },
         { text: "#{time_ago_in_words(edition.most_recent_action { it.request_type == "receive_fact_check" }.created_at).capitalize} ago" },
         { text: edition.assigned_to || "None" },
         { text: edition.format.underscore.humanize },
