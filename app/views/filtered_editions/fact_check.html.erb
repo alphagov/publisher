@@ -2,7 +2,13 @@
 <% content_for :title, "Fact check" %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full fact-check">
+  <div
+    class="govuk-grid-column-full fact-check"
+    data-ga4-ecommerce
+    data-ga4-list-title="Fact check"
+    data-ga4-ecommerce-start-index="0"
+    data-module="ga4-search-results-setup"
+  >
     <%= render "govuk_publishing_components/components/tabs", {
       panel_border: false,
       tabs: [
