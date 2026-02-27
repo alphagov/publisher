@@ -184,7 +184,7 @@ class PublicationsTableHelperTest < ActionView::TestCase
         assigned_to_id: another_user.id,
       )
 
-      assert_includes reviewer(edition, current_user), '<button class="gem-c-button govuk-button" type="submit">Claim 2i</button>'
+      assert_includes reviewer(edition, current_user), "<button class=\"gem-c-button govuk-button\" type=\"submit\" data-ga4-ecommerce-path=\"#{edition.id}\">Claim 2i</button>"
     end
 
     should "return nil when an edition assigned to another user is in review and has not been claimed and the current user may not do so" do

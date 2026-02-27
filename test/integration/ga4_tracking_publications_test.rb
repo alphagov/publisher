@@ -347,4 +347,109 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal find_content_path, event_data[0]["url"]
     end
   end
+
+  context "2i queue page" do
+    setup do
+      visit two_eye_queue_path
+      @base_url = current_url.chomp(two_eye_queue_path)
+    end
+
+    should "push 'search_result' values to the dataLayer on initial page load" do
+      assert page.has_css?("tbody .govuk-table__row", count: 2)
+
+      search_data = get_search_data
+
+      assert_equal "view_item_list", search_data["event_name"]
+      assert_equal 2, search_data["results"]
+
+      assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal edition_url(@in_review_edition, host: @base_url), search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "2i queue", search_data["ecommerce"]["items"][0]["item_list_name"]
+
+      assert_equal 1, search_data["ecommerce"]["items"][1]["index"]
+      assert_equal edition_url(@in_review_edition_2, host: @base_url), search_data["ecommerce"]["items"][1]["item_id"]
+      assert_equal @in_review_edition_2.id, search_data["ecommerce"]["items"][1]["item_content_id"]
+      assert_equal "2i queue", search_data["ecommerce"]["items"][1]["item_list_name"]
+    end
+
+    should "push 'event_data' values to the dataLayer when the user selects 'English' and 'Welsh' tabs" do
+      click_link "English"
+      click_link "Welsh"
+
+      event_data = get_event_data
+
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "tabs", event_data[0]["type"]
+      assert_equal "/2i-queue#english", event_data[0]["url"]
+      assert_equal "English", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "2", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "tabs", event_data[1]["type"]
+      assert_equal "/2i-queue#welsh", event_data[1]["url"]
+      assert_equal "Welsh", event_data[1]["text"]
+      assert_equal "2", event_data[1]["index"]["index_section"]
+      assert_equal "2", event_data[1]["index"]["index_section_count"]
+    end
+
+    should "push 'search_results' values to the dataLayer when the user clicks on the links to editions" do
+      disable_links
+
+      within "tbody" do
+        within all(".govuk-table__row")[0] do
+          find("a").click
+        end
+      end
+
+      within "tbody" do
+        within all(".govuk-table__row")[1] do
+          find("a").click
+        end
+      end
+
+      search_data = get_search_data
+
+      assert_equal "select_item", search_data["event_name"]
+      assert_equal 2, search_data["results"]
+      assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
+      assert_equal edition_url(@in_review_edition, host: @base_url), search_data["ecommerce"]["items"][0]["item_id"]
+      assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      assert_equal "Test edition three", search_data["ecommerce"]["items"][0]["item_name"]
+      assert_equal "2i queue", search_data["ecommerce"]["items"][0]["item_list_name"]
+
+      assert_equal "select_item", search_data["event_name"]
+      assert_equal 2, search_data["results"]
+      assert_equal 1, search_data["ecommerce"]["items"][1]["index"]
+      assert_equal edition_url(@in_review_edition_2, host: @base_url), search_data["ecommerce"]["items"][1]["item_id"]
+      assert_equal @in_review_edition_2.id, search_data["ecommerce"]["items"][1]["item_content_id"]
+      assert_equal "Other edition four", search_data["ecommerce"]["items"][1]["item_name"]
+      assert_equal "2i queue", search_data["ecommerce"]["items"][1]["item_list_name"]
+    end
+
+    should "push 'event_data' values to the dataLayer when the user clicks on 'Claim 2i' button" do
+      disable_form_submit
+
+      assert page.has_css?("h1", text: "2i queue")
+      assert page.has_css?("a", text: "Other edition four")
+      assert page.has_css?("a", text: "Test edition three")
+
+      # @in_review_edition_2
+      click_button "Claim 2i"
+
+      search_data = get_search_data
+
+      # puts "++search_data++"
+      # puts search_data
+      # puts "++++"
+
+      assert_equal "select_item", search_data[0]["event_name"]
+      assert_equal "false", search_data[0]["external"]
+      assert_equal current_host, search_data[0]["link_domain"]
+      assert_equal "primary click", search_data[0]["method"]
+      assert_equal "Claim 2i", search_data[0]["text"]
+      assert_equal two_eye_queue_path, search_data[0]["url"]
+    end
+  end
 end
