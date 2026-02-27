@@ -950,19 +950,6 @@ class EditionTest < ActiveSupport::TestCase
     assert_nil published_edition.reload.sibling_in_progress
   end
 
-  test "all subclasses except popular links should provide a working whole_body method for diffing" do
-    Edition.delegated_types.each do |klass|
-      next if klass == "PopularLinksEdition"
-
-      klass = Object.const_get(klass)
-
-      assert klass.instance_methods.include?(:whole_body), "#{klass} doesn't provide a whole_body"
-      assert_nothing_raised do
-        klass.new.whole_body
-      end
-    end
-  end
-
   test "should not allow any changes to an edition with an archived artefact" do
     user = FactoryBot.create(:user, :govuk_editor, uid: "123", name: "Ben")
     artefact = FactoryBot.build(:artefact)
@@ -978,6 +965,40 @@ class EditionTest < ActiveSupport::TestCase
 
   test "should return the artefact" do
     assert_equal "Foo bar", template_published_answer.artefact.name
+  end
+
+  context "whole body methods" do
+    should "all subclasses except popular links should provide a working whole_body method for diffing" do
+      Edition.delegated_types.each do |klass|
+        next if klass == "PopularLinksEdition"
+
+        klass = Object.const_get(klass)
+
+        assert klass.instance_methods.include?(:whole_body), "#{klass} doesn't provide a whole_body method"
+        assert_nothing_raised do
+          klass.new.whole_body
+        end
+      end
+    end
+
+    should "all subclasses that provide whole_body also provide whole_body_hash for Fact Check Manager requests" do
+      Edition.delegated_types.each do |klass|
+        next if klass == "PopularLinksEdition"
+
+        klass = Object.const_get(klass)
+
+        assert klass.instance_methods.include?(:whole_body_hash), "#{klass} doesn't provide a whole_body_hash method"
+        assert_nothing_raised do
+          klass.new.whole_body_hash
+        end
+      end
+    end
+
+    should "whole_body_hash should return an empty string value if whole_body is nil" do
+      edition = FactoryBot.create(:edition, body: nil)
+
+      assert_equal({ body: "" }, edition.whole_body_hash)
+    end
   end
 
   context "validating version_number" do
