@@ -347,4 +347,45 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal find_content_path, event_data[0]["url"]
     end
   end
+
+  context "My content page" do
+    setup do
+      visit my_content_path
+      # @base_url = current_url.chomp(find_content_path)
+    end
+
+    should "push 'search_data' values to the dataLayer on initial page load" do
+      assert page.has_css?("tbody .govuk-table__row", count: 2)
+      # page.has_css?("tbody .govuk-table__row", count: 2)
+
+      search_data = get_search_data
+
+      puts "++search_data++"
+      puts search_data
+      puts "++++"
+
+      # assert_equal "view_item_list", search_data["event_name"]
+      # assert_equal 23, search_data["results"]
+
+      # assert_equal 0, search_data["ecommerce"]["items"][0]["index"]
+      # assert_equal edition_url(@draft_edition, host: @base_url), search_data["ecommerce"]["items"][0]["item_id"]
+      # assert_equal @draft_edition.id, search_data["ecommerce"]["items"][0]["item_content_id"]
+      # assert_equal "Find content", search_data["ecommerce"]["items"][0]["item_list_name"]
+
+      # assert_equal 1, search_data["ecommerce"]["items"][1]["index"]
+      # assert_equal edition_url(@fact_check_edition, host: @base_url), search_data["ecommerce"]["items"][1]["item_id"]
+      # assert_equal @fact_check_edition.id, search_data["ecommerce"]["items"][1]["item_content_id"]
+      # assert_equal "Find content", search_data["ecommerce"]["items"][1]["item_list_name"]
+
+      # assert_equal 2, search_data["ecommerce"]["items"][2]["index"]
+      # assert_equal edition_url(@in_review_edition, host: @base_url), search_data["ecommerce"]["items"][2]["item_id"]
+      # assert_equal @in_review_edition.id, search_data["ecommerce"]["items"][2]["item_content_id"]
+      # assert_equal "Find content", search_data["ecommerce"]["items"][2]["item_list_name"]
+
+      # assert_equal 3, search_data["ecommerce"]["items"][3]["index"]
+      # assert_equal edition_url(@ready_edition, host: @base_url), search_data["ecommerce"]["items"][3]["item_id"]
+      # assert_equal @ready_edition.id, search_data["ecommerce"]["items"][3]["item_content_id"]
+      # assert_equal "Find content", search_data["ecommerce"]["items"][3]["item_list_name"]
+    end
+  end
 end
