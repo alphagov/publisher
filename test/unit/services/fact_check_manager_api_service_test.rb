@@ -32,7 +32,7 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
                              deadline: "2026-02-09",
                              recipients: ["stub@email.com"] }
 
-        assert payload == expected_payload
+        assert_equal expected_payload, payload
       end
     end
 
@@ -48,7 +48,8 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
     should "unpack multiple email addresses" do
       payload = FactCheckManagerApiService.build_post_payload(@edition, @user, "stub@email.com, stub2@email.com")
 
-      assert payload[:recipients] == %w[stub@email.com stub2@email.com]
+      expected_recipients = %w[stub@email.com stub2@email.com]
+      assert_equal expected_recipients, payload[:recipients]
     end
   end
 end
