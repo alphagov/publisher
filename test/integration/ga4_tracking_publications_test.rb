@@ -347,4 +347,32 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal find_content_path, event_data[0]["url"]
     end
   end
+
+  context "My content page" do
+    setup do
+      visit my_content_path
+      disable_links
+    end
+
+    should "push 'event_data' values to the dataLayer when the user clicks on a document link" do
+      click_link "Test edition one"
+      click_link "Test edition three"
+
+      event_data = get_event_data
+
+      assert_equal "navigation", event_data[0]["event_name"]
+      assert_equal "generic_link", event_data[0]["type"]
+      assert_equal "/editions/#{@draft_edition.id}", event_data[0]["url"]
+      assert_equal @draft_edition.title, event_data[0]["text"]
+      assert_equal "primary click", event_data[0]["method"]
+      assert_equal current_host, event_data[0]["link_domain"]
+
+      assert_equal "navigation", event_data[1]["event_name"]
+      assert_equal "generic_link", event_data[1]["type"]
+      assert_equal "/editions/#{@in_review_edition.id}", event_data[1]["url"]
+      assert_equal @in_review_edition.title, event_data[1]["text"]
+      assert_equal "primary click", event_data[1]["method"]
+      assert_equal current_host, event_data[1]["link_domain"]
+    end
+  end
 end
