@@ -2,8 +2,16 @@
 <% content_for :title, "My content" %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full my-content">
+  <div
+    class="govuk-grid-column-full my-content"
+    data-ga4-ecommerce
+    data-ga4-list-title="My content"
+    data-ga4-ecommerce-start-index="0"
+    data-module="ga4-search-results-setup"
+  >
     <% if @presenter.editions.any? %>
+      <div class="govuk-!-display-none" id="js-result-count"><%= @presenter.editions.count %></div>
+
       <%= render "govuk_publishing_components/components/table", {
         first_cell_is_header: true,
         head: [
@@ -21,10 +29,8 @@
                 edit_edition_path(edition),
                 class: "govuk-link govuk-link--no-visited-state",
                 data: {
-                  "ga4-link": {
-                    event_name: "navigation",
-                    type: "link"
-                  }
+                  'ga4-ecommerce-content-id': edition.id,
+                  'ga4-ecommerce-path': edition_url(edition)
                 }
               ) + (render("govuk_publishing_components/components/hint", { text: hint_text, margin_bottom: 0 }) if hint_text)
             },
@@ -33,9 +39,9 @@
             { text: edition.format.underscore.humanize },
           ]
         end,
-        } %>
-      <% else %>
-        <p class="govuk-body">You do not have any content assigned to you.</p>
-      <% end %>
+      } %>
+    <% else %>
+      <p class="govuk-body">You do not have any content assigned to you.</p>
+    <% end %>
   </div>
 </div>
