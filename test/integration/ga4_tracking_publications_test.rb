@@ -375,4 +375,49 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal current_host, event_data[1]["link_domain"]
     end
   end
+
+  context "2i queue page" do
+    setup do
+      visit two_eye_queue_path
+      disable_links
+    end
+
+    should "push 'event_data' values to the dataLayer when the user clicks on tabs" do
+      click_link "Welsh"
+      click_link "English"
+
+      event_data = get_event_data
+
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "tabs", event_data[0]["type"]
+      assert_equal "/2i-queue#welsh", event_data[0]["url"]
+      assert_equal "Welsh", event_data[0]["text"]
+
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "tabs", event_data[1]["type"]
+      assert_equal "/2i-queue#english", event_data[1]["url"]
+      assert_equal "English", event_data[1]["text"]
+    end
+
+    should "push 'event_data' values to the dataLayer when the user clicks on a document link" do
+      click_link "Test edition three"
+      click_link "Other edition four"
+
+      event_data = get_event_data
+
+      assert_equal "navigation", event_data[0]["event_name"]
+      assert_equal "generic_link", event_data[0]["type"]
+      assert_equal "/editions/#{@in_review_edition.id}", event_data[0]["url"]
+      assert_equal @in_review_edition.title, event_data[0]["text"]
+      assert_equal "primary click", event_data[0]["method"]
+      assert_equal current_host, event_data[0]["link_domain"]
+
+      assert_equal "navigation", event_data[1]["event_name"]
+      assert_equal "generic_link", event_data[1]["type"]
+      assert_equal "/editions/#{@in_review_edition_2.id}", event_data[1]["url"]
+      assert_equal @in_review_edition_2.title, event_data[1]["text"]
+      assert_equal "primary click", event_data[1]["method"]
+      assert_equal current_host, event_data[1]["link_domain"]
+    end
+  end
 end
