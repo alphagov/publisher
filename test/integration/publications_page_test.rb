@@ -136,7 +136,7 @@ class PublicationsPageTest < IntegrationTest
   context "2i-queue page" do
     setup do
       @claimed_edition = FactoryBot.create(:answer_edition, :in_review, title: "Claimed edition", assigned_to: @user, review_requested_at: 1.day.ago, reviewer: @other_user)
-      @unclaimed_edition = FactoryBot.create(:guide_edition, :in_review, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 1.month.ago)
+      @unclaimed_edition = FactoryBot.create(:guide_edition, :in_review, title: "Unclaimed edition", assigned_to: @user, review_requested_at: 30.days.ago)
       @other_user_edition = FactoryBot.create(:answer_edition,
                                               :in_review,
                                               title: "Other User's edition (English)",
@@ -473,10 +473,10 @@ class PublicationsPageTest < IntegrationTest
   context "fact-check page" do
     setup do
       @returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Returned edition", assigned_to: @user, received_at: 1.day.ago)
-      @other_user_returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Other User's edition", assigned_to: @other_user, received_at: 1.month.ago)
+      @other_user_returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Other User's edition", assigned_to: @other_user, received_at: 30.days.ago)
       @recent_returned_edition = FactoryBot.create(:edition, :fact_check_received, title: "Recent returned edition", assigned_to: @user, received_at: 1.hour.ago)
       @awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Awaiting response edition", assigned_to: @user, sent_out_at: 1.week.ago)
-      @other_user_awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Other User's edition", assigned_to: @other_user, sent_out_at: 1.month.ago)
+      @other_user_awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Other User's edition", assigned_to: @other_user, sent_out_at: 30.days.ago)
       @recent_awaiting_response_edition = FactoryBot.create(:edition, :fact_check, title: "Recent awaiting response edition", assigned_to: @user, sent_out_at: 1.hour.ago)
 
       visit "/fact-check"
