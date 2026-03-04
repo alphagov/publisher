@@ -8,8 +8,9 @@ class PartedTest < ActiveSupport::TestCase
     edition.parts.build(id: "103", order: "3", title: "Valid", slug: "valid")
     assert_not edition.valid?
 
-    assert_equal({ title: ["Enter a title"] }, edition.editionable.errors[:parts][0]["101:1"])
-    assert_equal 2, edition.editionable.errors[:parts][0].length
+    assert_equal(["Enter a title"], edition.editionable.errors[:part_1_title])
+    assert_equal(["Enter a slug"], edition.editionable.errors[:part_2_slug])
+    assert_equal 2, edition.editionable.errors.count
   end
 
   test "#whole_body returns ordered parts" do
