@@ -8,20 +8,18 @@ class Part < ApplicationRecord
 
   GOVSPEAK_FIELDS = [:body].freeze
 
-  validate :validate_title_is_present
-  validate :validate_slug_is_present
-  validates :slug, exclusion: { in: %w[video], message: "Can not be video" }
-  validates :slug, format: { with: /\A[a-z0-9-]+\Z/i, message: "Slug can only consist of lower case characters, numbers and hyphens" }, allow_blank: true
+  validates :title, presence: { message: ->(obj, _) { "Enter a title#{obj.send(:validation_message_chapter_number)}" } }
+  validates :slug, presence: { message: ->(obj, _) { "Enter a slug#{obj.send(:validation_message_chapter_number)}" } }
+  validates :slug, exclusion: { in: %w[video], message: ->(obj, _) { "Slug#{obj.send(:validation_message_chapter_number)} can not be 'video'" } }
+  validates :slug, format: { with: /\A[a-z0-9-]+\Z/i, message: ->(obj, _) { "Slug#{obj.send(:validation_message_chapter_number)} can only consist of lower case characters, numbers and hyphens" } }, allow_blank: true
   validates_with SafeHtml
   validates_with LinkValidator
 
 private
 
-  def validate_title_is_present
-    errors.add(:title, "Enter a title for Chapter #{guide_edition.parts.find_index(self) + 1}") if title.blank?
-  end
+  def validation_message_chapter_number
+    return unless persisted?
 
-  def validate_slug_is_present
-    errors.add(:slug, "Enter a slug for Chapter #{guide_edition.parts.find_index(self) + 1}") if slug.blank?
+    " for Chapter #{guide_edition.parts.in_order.find_index(self) + 1}"
   end
 end
