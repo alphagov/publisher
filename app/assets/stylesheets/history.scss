@@ -1,6 +1,7 @@
 .history {
   .gem-c-inset-text {
     padding-top: 0;
+    word-break: break-word;
   }
 
   // stylelint-disable scss/at-extend-no-missing-placeholder
@@ -15,7 +16,6 @@
     .govuk-inset-text {
       @extend .govuk-tag--light-blue;
       color: $govuk-text-colour;
-      word-break: break-word;
     }
   }
   // stylelint-enable scss/at-extend-no-missing-placeholder
