@@ -115,4 +115,30 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
       assert_equal @output[:routes], exact_routes
     end
   end
+
+  context ".render_for_fact_check_api" do
+    should "return a hash with the body content if present" do
+      edition = FactoryBot.create(:edition, body: "Move your body")
+
+      presenter = Formats::GenericEditionPresenter.new(edition)
+
+      assert_equal({ body: "Move your body" }, presenter.render_for_fact_check_manager_api)
+    end
+
+    should "return nil if edition does not respond to whole_body" do
+      edition = FactoryBot.create(:edition)
+      presenter = Formats::GenericEditionPresenter.new(edition)
+
+      edition.stub(:respond_to?, false) do
+        assert_nil presenter.render_for_fact_check_manager_api
+      end
+    end
+
+    should "return a hash with an empty string if body is nil" do
+      edition = FactoryBot.create(:edition, body: nil)
+      presenter = Formats::GenericEditionPresenter.new(edition)
+
+      assert_equal({ body: "" }, presenter.render_for_fact_check_manager_api)
+    end
+  end
 end
