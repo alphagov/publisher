@@ -50,6 +50,8 @@
       role="main"
       data-module="<%= data_module_main %>"
       data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+      data-ga4-track-links-only
+      data-ga4-limit-to-element-class="govuk-link"
       data-ga4-no-copy="true"
       data-ga4-section="<%= yield(:title) %>"
       data-ga4-tool-name="<%= @resource ? @resource.format.underscore.humanize : "Publisher" %>"

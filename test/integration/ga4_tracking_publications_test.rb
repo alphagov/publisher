@@ -20,6 +20,20 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
     @fact_check_edition_2 = FactoryBot.create(:guide_edition, :fact_check, title: "Other edition three", assigned_to: @reviewer, updated_at: 7.days.ago)
     @in_review_edition_2 = FactoryBot.create(:answer_edition, :in_review, title: "Other edition four", assigned_to: @reviewer, updated_at: 8.days.ago)
 
+    @fact_check_edition.actions.create!(
+      request_type: Action::SEND_FACT_CHECK,
+      requester_id: @reviewer.id,
+      created_at: Time.zone.now,
+      comment: "Requesting review",
+    )
+
+    @fact_check_edition_2.actions.create!(
+      request_type: Action::SEND_FACT_CHECK,
+      requester_id: @reviewer.id,
+      created_at: Time.zone.now,
+      comment: "Requesting review",
+    )
+
     @test_strategy.switch!(:design_system_edit_phase_3b, true)
   end
 
@@ -392,11 +406,15 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "tabs", event_data[0]["type"]
       assert_equal "/2i-queue#welsh", event_data[0]["url"]
       assert_equal "Welsh", event_data[0]["text"]
+      assert_equal "2", event_data[0]["index"]["index_section"]
+      assert_equal "2", event_data[0]["index"]["index_section_count"]
 
       assert_equal "select_content", event_data[1]["event_name"]
       assert_equal "tabs", event_data[1]["type"]
       assert_equal "/2i-queue#english", event_data[1]["url"]
       assert_equal "English", event_data[1]["text"]
+      assert_equal "1", event_data[1]["index"]["index_section"]
+      assert_equal "2", event_data[1]["index"]["index_section_count"]
     end
 
     should "push 'event_data' values to the dataLayer when the user clicks on a document link" do
@@ -418,6 +436,56 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal @in_review_edition_2.title, event_data[1]["text"]
       assert_equal "primary click", event_data[1]["method"]
       assert_equal current_host, event_data[1]["link_domain"]
+    end
+  end
+
+  context "Fact check page" do
+    setup do
+      visit fact_check_path
+      disable_links
+    end
+
+    should "push 'event_data' values to the dataLayer when the user clicks on tabs" do
+      click_link "Awaiting response"
+      click_link "Returned"
+
+      event_data = get_event_data
+
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "tabs", event_data[0]["type"]
+      assert_equal "/fact-check#sent_out", event_data[0]["url"]
+      assert_equal "Awaiting response", event_data[0]["text"]
+      assert_equal "2", event_data[0]["index"]["index_section"]
+      assert_equal "2", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "tabs", event_data[1]["type"]
+      assert_equal "/fact-check#received", event_data[1]["url"]
+      assert_equal "Returned", event_data[1]["text"]
+      assert_equal "1", event_data[1]["index"]["index_section"]
+      assert_equal "2", event_data[1]["index"]["index_section_count"]
+    end
+
+    should "push 'event_data' values to the dataLayer when the user clicks on a document link" do
+      click_link "Awaiting response"
+      click_link "Test edition two"
+      click_link "Other edition three"
+
+      event_data = get_event_data
+
+      assert_equal "navigation", event_data[1]["event_name"]
+      assert_equal "generic_link", event_data[1]["type"]
+      assert_equal "/editions/#{@fact_check_edition.id}", event_data[1]["url"]
+      assert_equal @fact_check_edition.title, event_data[1]["text"]
+      assert_equal "primary click", event_data[1]["method"]
+      assert_equal current_host, event_data[1]["link_domain"]
+
+      assert_equal "navigation", event_data[2]["event_name"]
+      assert_equal "generic_link", event_data[2]["type"]
+      assert_equal "/editions/#{@fact_check_edition_2.id}", event_data[2]["url"]
+      assert_equal @fact_check_edition_2.title, event_data[2]["text"]
+      assert_equal "primary click", event_data[2]["method"]
+      assert_equal current_host, event_data[2]["link_domain"]
     end
   end
 end
