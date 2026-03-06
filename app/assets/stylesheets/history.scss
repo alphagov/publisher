@@ -11,10 +11,14 @@
     }
   }
 
-  .govuk-inset-text {
-    @extend .govuk-tag--light-blue;
-    color: $govuk-text-colour;
+  &__action--receive_fact_check__commment {
+    .govuk-inset-text {
+      @extend .govuk-tag--light-blue;
+      color: $govuk-text-colour;
+    }
+  }
 
+  .govuk-inset-text {
     a {
       word-break: break-word;
     }
