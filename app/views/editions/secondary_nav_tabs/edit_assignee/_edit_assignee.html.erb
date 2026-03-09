@@ -1,5 +1,7 @@
 <%# locals: (title:, url:, radio_name:, available_assignees:) %>
 
+<% component_helper = GovukPublishingComponents::Presenters::ComponentWrapperHelper.new(local_assigns) %>
+
 <% content_for :title_context, @resource.title %>
 <% content_for :page_title, title %>
 <% content_for :title, title %>
@@ -7,12 +9,15 @@
 <%= form_for @resource, url: url, data: {module: ""} do %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      <%= tag.div(**component_helper.all_attributes) do %>
         <%= render "govuk_publishing_components/components/radio", {
           name: radio_name,
           heading: "Choose a person to assign",
           visually_hidden_heading: true,
           items: available_assignees,
+          classes: "js-ga4-redact-names",
         } %>
+      <% end %>
     </div>
 
     <div class="govuk-grid-column-one-third options-sidebar">

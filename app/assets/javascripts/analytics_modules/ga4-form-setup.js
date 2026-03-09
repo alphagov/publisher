@@ -55,14 +55,27 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     form.setAttribute('data-ga4-form', JSON.stringify(eventData))
 
     // If the form contains date-input components add ga4-form-section data-attributes
-    var dateInputs = form.querySelectorAll('.govuk-date-input') || null
+    var dateInputs = form.querySelectorAll('.govuk-date-input')
 
-    if (dateInputs) {
-      Array.from(dateInputs).forEach(function (dateInput) {
-        var fieldset = dateInput.closest('fieldset')
-        fieldset.setAttribute('data-ga4-form-section', fieldset.querySelector('legend').textContent)
+    Array.from(dateInputs).forEach(function (dateInput) {
+      var fieldset = dateInput.closest('fieldset')
+      fieldset.setAttribute('data-ga4-form-section', fieldset.querySelector('legend').textContent)
+    })
+
+    // If the form contains sections for redaction add required data-attributes
+    var redactNames = form.querySelectorAll('.js-ga4-redact-names')
+
+    Array.from(redactNames).forEach(function (container) {
+      var radios = container.querySelectorAll('input[type="radio"]')
+
+      Array.from(radios).forEach(function (radio) {
+        if (radio.value === 'none') {
+          radio.setAttribute('data-ga4-redact-permit', true)
+        }
       })
-    }
+
+      container.querySelector('fieldset').setAttribute('data-ga4-redact', true)
+    })
   }
 
   Ga4FormSetup.prototype.callFormChangeTracker = function (form) {

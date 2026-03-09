@@ -15,6 +15,12 @@ describe('GA4FormSetup', function () {
             <option></option>
             <option></option>
           </select>
+          <div class="js-ga4-redact-names">
+            <fieldset>
+              <input type="radio" value="User">
+              <input type="radio" value="none">
+            </fieldset>
+          </div>
         </form>
         <form data-module="some-other-module"></form>
         <form>
@@ -122,6 +128,19 @@ describe('GA4FormSetup', function () {
           expect(form.dataset.ga4FormUseSelectCount).not.toBeDefined()
         })
       })
+    })
+  })
+
+  describe('when the form contains a js-ga4-redact-names element', function () {
+    it('adds GA4 data-attributes to the fieldset and inputs', function () {
+      var form = module.querySelectorAll('form')[0]
+      var redactNamesContainer = form.querySelector('.js-ga4-redact-names')
+      var fieldset = redactNamesContainer.querySelector('fieldset')
+      var inputs = fieldset.querySelectorAll('input')
+
+      expect(fieldset.dataset.ga4Redact).toBe('true')
+      expect(inputs[0].dataset.ga4RedactPermit).toBe(undefined)
+      expect(inputs[1].dataset.ga4RedactPermit).toBe('true')
     })
   })
 })
