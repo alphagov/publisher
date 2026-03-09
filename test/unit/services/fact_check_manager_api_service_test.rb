@@ -27,19 +27,29 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
                              source_url: "#{Plek.find('publisher')}/editions/#{@edition.id}",
                              requester_name: "Ben",
                              requester_email: "joe1@bloggs.com",
-                             current_content: "some body",
+                             current_content: { body: "some body" },
                              previous_content: nil,
                              deadline: "2026-02-09",
                              recipients: ["stub@email.com"] }
 
-        assert payload == expected_payload
+        assert_equal expected_payload, payload
       end
+    end
+
+    should "include the previous_content if a published version of the edition exists" do
+      edition1 = FactoryBot.create(:answer_edition, :published)
+      edition2 = edition1.build_clone
+
+      payload = FactCheckManagerApiService.build_post_payload(edition2, @user, "stub@email.com")
+      expected_hash = { body: "some body" }
+      assert_equal expected_hash, payload[:previous_content]
     end
 
     should "unpack multiple email addresses" do
       payload = FactCheckManagerApiService.build_post_payload(@edition, @user, "stub@email.com, stub2@email.com")
 
-      assert payload[:recipients] == %w[stub@email.com stub2@email.com]
+      expected_recipients = %w[stub@email.com stub2@email.com]
+      assert_equal expected_recipients, payload[:recipients]
     end
   end
 end
