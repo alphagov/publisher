@@ -3,7 +3,7 @@ module Formats
     def render_for_fact_check_manager_api
       return unless @edition.respond_to?(:whole_body)
 
-      { body: @edition.whole_body.presence || "" }
+      HtmlRenderer.render_hash({ body: @edition.whole_body.presence || "" })
     end
 
   private
