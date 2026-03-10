@@ -124,18 +124,37 @@ class EditionEditTest < IntegrationTest
       end
     end
 
-    should "display the important note if an important note exists" do
-      note_text = "This is really really urgent!"
-      draft_edition = FactoryBot.create(:edition, :draft)
-      create_important_note_for_edition(draft_edition, note_text)
+    context "when an important note exists" do
+      setup do
+        @note_text = "This is really really urgent!"
+        @draft_edition = FactoryBot.create(:edition, :draft)
+        create_important_note_for_edition(@draft_edition, @note_text)
+      end
 
-      visit edition_path(draft_edition)
+      context "when the important note has a requester" do
+        should "display the important note notification banner" do
+          visit edition_path(@draft_edition)
 
-      within :css, ".govuk-notification-banner" do
-        assert page.has_text?("Important")
-        assert page.has_text?(note_text)
-        assert page.has_text?(@govuk_editor.name)
-        assert page.has_text?(Time.zone.today.to_date.to_fs(:govuk_date))
+          within :css, ".govuk-notification-banner" do
+            assert page.has_text?("Important")
+            assert page.has_text?(@note_text)
+            assert page.has_text?("#{@govuk_editor.name} added an important note on #{Time.zone.today.to_date.to_fs(:govuk_date)}")
+          end
+        end
+      end
+
+      context "when the important note has no requester" do
+        should "display the important note notification banner" do
+          @draft_edition.important_note.update!(requester_id: nil)
+
+          visit edition_path(@draft_edition)
+
+          within :css, ".govuk-notification-banner" do
+            assert page.has_text?("Important")
+            assert page.has_text?(@note_text)
+            assert page.has_text?("Important note added on #{Time.zone.today.to_date.to_fs(:govuk_date)}")
+          end
+        end
       end
     end
 
