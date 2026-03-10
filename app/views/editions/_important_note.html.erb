@@ -1,11 +1,11 @@
-<% note_author_name = User.find_by(id: @edition.important_note&.requester_id).name %>
+<% note_author_name = User.find_by(id: @edition.important_note&.requester_id)&.name %>
 <% note_date = @edition.important_note&.created_at&.to_date %>
 <% note_details = @edition.important_note&.comment %>
 <%= render "govuk_publishing_components/components/notice", {
   description_govspeak:
     sanitize("<div class='editions__important-note'>
       <p class='govuk-body govuk-!-font-weight-bold govuk-!-text-break-word editions__important-note__details'>#{h(note_details)}</p>
-      <p class='govuk-body-m'>#{h(note_author_name)} added an important note on
+      <p class='govuk-body-m'>#{note_author_name.present? ? "#{h(note_author_name)} added an important note on" : "Important note added on"}
       <time class='govuk-body' datetime='#{note_date}'>#{note_date.to_fs(:govuk_date)}</time></p>
       </div>"),
   show_banner_title: true,
