@@ -1,8 +1,7 @@
 $govuk-page-width: 1140px;
 
 // GOVUK Design System
-@import 'govuk_publishing_components/govuk_frontend_support';
-@import 'govuk_publishing_components/component_support';
+@import 'govuk_publishing_components/specific-components';
 @import 'govuk_publishing_components/components/accordion';
 @import 'govuk_publishing_components/components/add-another';
 @import 'govuk_publishing_components/components/back-link';
