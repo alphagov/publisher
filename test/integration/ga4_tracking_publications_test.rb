@@ -182,6 +182,8 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
 
       click_button "Apply filters"
 
+      assert page.has_css?("tbody .govuk-table__row", count: 2)
+
       search_data = get_search_data
 
       # Should get @draft_edition and @draft_edition_2
