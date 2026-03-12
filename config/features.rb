@@ -11,15 +11,15 @@ Flipflop.configure do
 
   group "For all users (These features are available to everyone)" do
     feature :design_system_edit_phase_3b,
-            default: false,
+            default: true,
             description: "Update the publications page to use the GOV.UK Design System with a multi-page design"
 
     feature :design_system_edit_phase_4,
-            default: false,
+            default: true,
             description: "Update the 'Add artefact' page to use the GOV.UK Design System with a two-step process"
 
     feature :rename_edition_states,
-            default: false,
+            default: true,
             description: "Changes the following edition state labels: 'In review' to 'In 2i', 'Fact check'/'Out for fact check' to 'Fact check sent', and 'Scheduled for publishing' to 'Scheduled'"
 
     feature :restrict_access_by_org,
