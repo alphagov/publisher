@@ -48,7 +48,7 @@ module RecordableActions
     end
 
     def superseded_at
-      subsequent_siblings.first&.published_at
+      @superseded_at ||= subsequent_siblings.first&.published_at
     end
 
   private
