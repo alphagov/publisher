@@ -9,6 +9,7 @@
   <% if Flipflop.enabled?(:guide_chapter_accordion_interface) %>
     <%= render "govuk_publishing_components/components/accordion", {
       disable_ga4: true,
+      heading_level: 4,
       items: edition.parts.sort_by(&:order).map do |part|
         { 
           heading: { text: part.title }, 

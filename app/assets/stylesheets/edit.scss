@@ -12,6 +12,13 @@
     }
   }
 
+  &--editable,
+  &--readonly {
+    .govuk-accordion__section-heading-text {
+      @include govuk-font-size($size: 19);
+    }
+  }
+
   &--resend-fact-check-email-page {
     &__message {
       @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
