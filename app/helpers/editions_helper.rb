@@ -133,4 +133,15 @@ module EditionsHelper
 
     (page.to_i - 1) * FilteredEditionsPresenter::ITEMS_PER_PAGE
   end
+
+  def cached_history_edition_item_content_html(edition, update_events)
+    update_events_cache_key = update_events.map(&:created_at).max
+
+    Rails.cache.fetch(
+      ["history-edition-item", edition.id, edition.actions.map(&:updated_at).max, update_events_cache_key],
+      expires_in: 1.day,
+    ) do
+      render "editions/secondary_nav_tabs/history_edition_item", { edition:, update_events: }
+    end
+  end
 end
