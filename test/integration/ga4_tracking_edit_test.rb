@@ -5,9 +5,15 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
   include Ga4TestHelpers
 
   setup do
-    FactoryBot.create(:user, :govuk_editor, name: "Test User")
-    @govuk_requester = FactoryBot.create(:user, :govuk_editor, :skip_review)
+    setup_users
+
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
+    @assigned_edition = FactoryBot.create(:edition, assigned_to: @author, created_at: 5.days.ago)
+    @in_review_edition = FactoryBot.create(:edition, :in_review, reviewer: @reviewer, created_at: 6.days.ago)
+
+    @assigned_edition.actions.create! request_type: Action::ASSIGN, requester_id: @author.id, created_at: 4.days.ago
+    @in_review_edition.actions.create! request_type: Action::REQUEST_REVIEW, requester_id: @author.id, created_at: 4.days.ago
+
     @test_strategy.switch!(:ga4_form_tracking, true)
   end
 
@@ -73,17 +79,14 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
   context "Edit assignee page" do
     setup do
-      visit edition_path(@edition)
-
-      within all(".govuk-summary-list__row")[0] do
-        click_link("Edit")
-      end
-
+      visit edit_assignee_edition_path(@assigned_edition)
       disable_form_submit
     end
 
-    should "push the correct values to the dataLayer when events are triggered" do
-      find("label", text: "Test User").click
+    should "push the correct values to the dataLayer when users are assigned to an edition" do
+      find("label", text: "None").click
+      click_button "Save"
+      find("label", text: "Author").click
       click_button "Save"
 
       event_data = get_event_data
@@ -91,40 +94,43 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "Choose a person to assign", event_data[0]["section"]
-      assert_equal "Test User", event_data[0]["text"]
+      assert_equal "None", event_data[0]["text"]
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "1", event_data[0]["index"]["index_section_count"]
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
       assert_equal "Assign person", event_data[1]["section"]
-      assert_equal "{\"Choose a person to assign\":\"Test User\"}", event_data[1]["text"]
+      assert_equal "{\"Choose a person to assign\":\"None\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
+
+      assert_equal "select", event_data[2]["action"]
+      assert_equal "select_content", event_data[2]["event_name"]
+      assert_equal "Choose a person to assign", event_data[2]["section"]
+      assert_equal "[REDACTED]", event_data[2]["text"]
+      assert_equal "1", event_data[2]["index"]["index_section"]
+      assert_equal "1", event_data[2]["index"]["index_section_count"]
+
+      assert_equal "Save", event_data[3]["action"]
+      assert_equal "form_response", event_data[3]["event_name"]
+      assert_equal "Assign person", event_data[3]["section"]
+      assert_equal "{\"Choose a person to assign\":\"[REDACTED]\"}", event_data[3]["text"]
+      assert_equal "Answer", event_data[3]["tool_name"]
+      assert_equal "edit", event_data[3]["type"]
     end
   end
 
   context "Assign 21 reviewer page" do
     setup do
-      @edition.state = "in_review"
-      @edition.review_requested_at = 1.day.ago
-      @edition.save!
-      @edition.actions.create!(
-        request_type: Action::REQUEST_AMENDMENTS,
-        requester_id: @govuk_requester.id,
-      )
-
-      visit edition_path(@edition)
-
-      within all(".govuk-summary-list__row")[3] do
-        click_link("Edit")
-      end
-
+      visit edit_reviewer_edition_path(@in_review_edition)
       disable_form_submit
     end
 
-    should "push the correct values to the dataLayer when events are triggered" do
-      page.find("label", text: "Test User").click
+    should "push the correct values to the dataLayer when users are assigned as a 2i reviewer" do
+      find("label", text: "None").click
+      click_button "Save"
+      find("label", text: "Author").click
       click_button "Save"
 
       event_data = get_event_data
@@ -132,25 +138,36 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "Choose a person to assign", event_data[0]["section"]
-      assert_equal "Test User", event_data[0]["text"]
+      assert_equal "None", event_data[0]["text"]
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "1", event_data[0]["index"]["index_section_count"]
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
       assert_equal "Assign 2i reviewer", event_data[1]["section"]
-      assert_equal "{\"Choose a person to assign\":\"Test User\"}", event_data[1]["text"]
+      assert_equal "{\"Choose a person to assign\":\"None\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
+
+      assert_equal "select", event_data[2]["action"]
+      assert_equal "select_content", event_data[2]["event_name"]
+      assert_equal "Choose a person to assign", event_data[2]["section"]
+      assert_equal "[REDACTED]", event_data[2]["text"]
+      assert_equal "1", event_data[2]["index"]["index_section"]
+      assert_equal "1", event_data[2]["index"]["index_section_count"]
+
+      assert_equal "Save", event_data[3]["action"]
+      assert_equal "form_response", event_data[3]["event_name"]
+      assert_equal "Assign 2i reviewer", event_data[3]["section"]
+      assert_equal "{\"Choose a person to assign\":\"[REDACTED]\"}", event_data[3]["text"]
+      assert_equal "Answer", event_data[3]["tool_name"]
+      assert_equal "edit", event_data[3]["type"]
     end
   end
 
   context "Send to 2i page" do
     setup do
-      visit edition_path(@edition)
-
-      click_link("Send to 2i")
-
+      visit send_to_2i_page_edition_path(@edition)
       disable_form_submit
     end
 
@@ -178,7 +195,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
   context "Skip review page" do
     setup do
-      login_as(@govuk_requester)
+      login_as(@other)
 
       visit skip_review_page_edition_path(@edition)
 
