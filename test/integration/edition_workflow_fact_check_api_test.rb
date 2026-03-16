@@ -74,4 +74,57 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       assert page.has_css?("input[value='fact-checker-one@example.com']")
     end
   end
+
+  context "Resend fact check email page with successful post requests" do
+    setup do
+      stub_post_resend_fact_check_emails(success: true)
+      @fact_check_edition = FactoryBot.create(:edition, :fact_check)
+      visit resend_fact_check_email_page_edition_path(@fact_check_edition)
+    end
+
+    should "render the page" do
+      assert page.has_text?(@fact_check_edition.title)
+      assert page.has_text?("Resend fact check email")
+      assert page.has_text?("Email addresses")
+      assert page.has_button?("Resend fact check email")
+      assert page.has_link?("Cancel")
+    end
+
+    should "redirect to edit tab when Cancel link is clicked" do
+      click_link("Cancel")
+      assert_current_path edition_path(@fact_check_edition.id)
+    end
+
+    should "redirect back to the edit tab on submit and show success message" do
+      click_button "Resend fact check email"
+
+      assert_current_path edition_path(@fact_check_edition.id)
+      assert page.has_text?("Fact check email re-sent")
+    end
+  end
+
+  context "Resend fact check email page with unsuccessful post requests" do
+    setup do
+      stub_post_resend_fact_check_emails(success: false)
+      @fact_check_edition = FactoryBot.create(:edition, :fact_check)
+      visit resend_fact_check_email_page_edition_path(@fact_check_edition)
+    end
+
+    should "re-render the page with an error message upon submit" do
+      click_button "Resend fact check email"
+
+      assert_current_path resend_fact_check_email_edition_path(@fact_check_edition)
+      assert page.has_text?("Due to a service problem, the request could not be made")
+      assert page.has_text?(@fact_check_edition.title)
+      assert page.has_text?("Resend fact check email")
+      assert page.has_text?("Email addresses")
+      assert page.has_button?("Resend fact check email")
+      assert page.has_link?("Cancel")
+    end
+
+    should "log the error" do
+      Rails.logger.expects(:error).with("Error GdsApi::HTTPErrorResponse Example error message")
+      click_button "Resend fact check email"
+    end
+  end
 end
