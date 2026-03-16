@@ -16,6 +16,16 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
     end
   end
 
+  context ".resend_fact_check_emails" do
+    should "call the fact check manager api adapter" do
+      Services.fact_check_manager_api.expects(:post_resend_emails)
+                                     .with(source_app: "publisher", source_id: @edition.id)
+                                     .returns("stub response")
+
+      FactCheckManagerApiService.resend_fact_check_emails(@edition)
+    end
+  end
+
   context ".build_post_payload" do
     should "build a properly formatted payload with one email address" do
       travel_to Time.zone.local(2026, 2, 2, 0, 0, 0) do
