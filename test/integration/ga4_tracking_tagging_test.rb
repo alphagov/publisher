@@ -231,4 +231,52 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "edit", event_data[1]["type"]
     end
   end
+
+  context "Reorder related content page" do
+    setup do
+      stub_linkables_with_data
+      visit tagging_reorder_related_content_page_edition_path(@edition)
+      disable_form_submit
+    end
+
+    should "add reorder related selection events to the dataLayer" do
+      # Click "Down" button on first item (company-tax-returns)
+      within all(".gem-c-reorderable-list__item")[0] do
+        click_button "Down"
+      end
+
+      # Click "Up" button on third item (corporation-tax)
+      within all(".gem-c-reorderable-list__item")[2] do
+        click_button "Up"
+      end
+
+      click_button "Update order"
+
+      event_data = get_event_data
+
+      assert_equal "Down", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "/company-tax-returns", event_data[0]["section"]
+      assert_equal "Down", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "4", event_data[0]["index"]["index_section_count"]
+      assert_equal "reorderable list", event_data[0]["type"]
+
+      assert_equal "Up", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "/corporation-tax", event_data[1]["section"]
+      assert_equal "Up", event_data[1]["text"]
+      assert_equal "2", event_data[1]["index"]["index_section"]
+      assert_equal "4", event_data[1]["index"]["index_section_count"]
+      assert_equal "reorderable list", event_data[1]["type"]
+
+      assert_equal "Save", event_data[2]["action"]
+      assert_equal "form_response", event_data[2]["event_name"]
+      assert_equal "Reorder related content", event_data[2]["section"]
+      # This requires work to be done in the "Reorderable list" component to return the correct data
+      # assert_equal "{\"Position for /prepare-file-annual-accounts-for-limited-company\":\"1\",\"Position for /corporation-tax\":\"2\",\"Position for /company-tax-returns\":\"3\",\"Position for /company-tax-returns\":\"4\"}", event_data[2]["text"].gsub(/[\"][[:space:]]+/, '"')
+      assert_equal "reorder", event_data[2]["type"]
+      assert_equal "Answer", event_data[2]["tool_name"]
+    end
+  end
 end
