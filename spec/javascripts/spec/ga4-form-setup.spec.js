@@ -22,7 +22,9 @@ describe('GA4FormSetup', function () {
             </fieldset>
           </div>
         </form>
-        <form data-module="some-other-module"></form>
+        <form data-module="some-other-module">
+          <div class="gem-c-reorderable-list"></div>
+        </form>
         <form>
           <input type="search">
         </form>
@@ -41,9 +43,9 @@ describe('GA4FormSetup', function () {
   })
 
   describe('when loaded', function () {
-    it('adds/updates the "data-module" parameter of the form', function () {
-      var form, formGA4Data
+    var form, formGA4Data, formEventData
 
+    it('adds/updates the "data-module" parameter of the form', function () {
       form = module.querySelectorAll('form')[0]
       formGA4Data = form.dataset
 
@@ -61,9 +63,9 @@ describe('GA4FormSetup', function () {
     })
 
     it('adds the correct parameters to the form', function () {
-      var form = module.querySelectorAll('form')[0]
-      var formGA4Data = form.dataset
-      var formEventData = JSON.parse(formGA4Data.ga4Form)
+      form = module.querySelectorAll('form')[0]
+      formGA4Data = form.dataset
+      formEventData = JSON.parse(formGA4Data.ga4Form)
 
       expect(formEventData.action).toBe('Save')
       expect(formEventData.event_name).toBe('form_response')
@@ -77,7 +79,7 @@ describe('GA4FormSetup', function () {
     })
 
     it('adds the correct parameters to the form elements', function () {
-      var form = module.querySelectorAll('form')[0]
+      form = module.querySelectorAll('form')[0]
 
       expect(form.querySelector('fieldset').dataset.ga4FormSection).toBe('Some date')
     })
@@ -141,6 +143,24 @@ describe('GA4FormSetup', function () {
       expect(fieldset.dataset.ga4Redact).toBe('true')
       expect(inputs[0].dataset.ga4RedactPermit).toBe(undefined)
       expect(inputs[1].dataset.ga4RedactPermit).toBe('true')
+    })
+  })
+
+  describe('when the form contains a reorderable-list component', function () {
+    it('adds the correct parameters to the form', function () {
+      var form = module.querySelectorAll('form')[1]
+      var formGA4Data = form.dataset
+      var formEventData = JSON.parse(formGA4Data.ga4Form)
+
+      expect(formEventData.action).toBe('Save')
+      expect(formEventData.event_name).toBe('form_response')
+      expect(formEventData.section).toBe('The section name')
+      expect(formEventData.tool_name).toBe('Answer')
+      expect(formEventData.type).toBe('reorder')
+      expect(Object.keys(formGA4Data)).toContain('ga4FormIncludeText')
+      expect(Object.keys(formGA4Data)).toContain('ga4FormChangeTracking')
+      expect(Object.keys(formGA4Data)).toContain('ga4FormRecordJson')
+      expect(Object.keys(formGA4Data)).toContain('ga4FormUseTextCount')
     })
   })
 })
