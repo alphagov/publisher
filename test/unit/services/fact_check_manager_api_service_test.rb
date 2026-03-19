@@ -27,7 +27,7 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
                              source_url: "#{Plek.find('publisher')}/editions/#{@edition.id}",
                              requester_name: "Ben",
                              requester_email: "joe1@bloggs.com",
-                             current_content: { body: "some body" },
+                             current_content: { body: "<p>some body</p>" },
                              previous_content: nil,
                              deadline: "2026-02-09",
                              recipients: ["stub@email.com"] }
@@ -41,7 +41,7 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
       edition2 = edition1.build_clone
 
       payload = FactCheckManagerApiService.build_post_payload(edition2, @user, "stub@email.com")
-      expected_hash = { body: "some body" }
+      expected_hash = { body: "<p>some body</p>" }
       assert_equal expected_hash, payload[:previous_content]
     end
 
