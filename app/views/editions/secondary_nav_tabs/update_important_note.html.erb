@@ -13,7 +13,7 @@
       To delete the important note, clear any comments and select ‘Save’.
     </p>
 
-    <%= form_for(:note, :url=> notes_path) do %>
+    <%= form_for(:note, :url=> notes_path, data: { module: "" }) do %>
       <%= hidden_field_tag :edition_id, @edition.id %>
       <%= hidden_field_tag "note[type]", Action::IMPORTANT_NOTE %>
 
