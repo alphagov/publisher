@@ -29,4 +29,15 @@ class FactCheckManagerApiService
       deadline: working_days_after(Date.current, how_many: 5).to_fs(:iso8601),
       recipients: email_addresses.split(",").map(&:strip) }
   end
+
+  def self.update_fact_check_content(edition)
+    current_content_presenter = Formats::GenericEditionPresenter.new(edition)
+
+    Services.fact_check_manager_api.patch_update_content(
+      source_app: "publisher",
+      source_id: edition.id,
+      source_title: edition.title,
+      current_content: current_content_presenter.render_for_fact_check_manager_api,
+    )
+  end
 end
