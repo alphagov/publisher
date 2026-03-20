@@ -10,8 +10,8 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # @option [string] source_url The url locating the content on the source application
   # @param [string] requester_name The username of the source app user submitting the request
   # @param [string] requester_email The email address of the source app user submitting the request
-  # @param [string] current_content String containing HTML content being fact checked
-  # @option [string] previous_content String containing HTML content of previous content version to check against
+  # @param [hash] current_content Hash containing HTML content being fact checked
+  # @option [hash] previous_content Hash containing HTML content of previous content version to check against
   # @option [string] deadline Date a response is requested by. Use iso8601 date format: "2026-02-09"
   # @param [array] recipients Array of emails to be notified of the request
   #
