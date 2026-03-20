@@ -21,27 +21,45 @@ class EventNotificationsTest < ActiveSupport::TestCase
       @user = FactoryBot.create(:user, :govuk_editor, uid: "123", name: "Ben")
       @other_user = FactoryBot.create(:user, :govuk_editor, uid: "321", name: "James")
 
-      @edition = @user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
-      request_review(@user, @edition)
-      approve_review(@other_user, @edition)
+      @edition = FactoryBot.create(:edition, :fact_check)
     end
 
-    should "resend the fact check email for an edition in fact check state" do
-      stub_calendars_has_no_bank_holidays(in_division: "england-and-wales")
+    context "fact_check_manager_api is not enabled" do
+      setup do
+        @test_strategy.switch!(:fact_check_manager_api, false)
+      end
 
-      send_fact_check(@user, @edition)
-      stubbed_fact_check_mail = stub("mailer", deliver_now: true)
-      EventNotifierService.expects(:request_fact_check).returns(stubbed_fact_check_mail)
-      resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
+      should "resend the fact check email via 'request_fact_check' for an edition in 'fact_check' state" do
+        stubbed_fact_check_mail = stub("mailer", deliver_now: true)
+        EventNotifierService.expects(:request_fact_check).returns(stubbed_fact_check_mail)
 
-      mail = EventNotifierService.resend_fact_check(resend_fact_check_action)
-      assert_equal stubbed_fact_check_mail, mail
+        resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
+        mail = EventNotifierService.resend_fact_check(resend_fact_check_action)
+
+        assert_equal stubbed_fact_check_mail, mail
+      end
+    end
+
+    context "fact_check_manager_api is enabled" do
+      setup do
+        @test_strategy.switch!(:fact_check_manager_api, true)
+      end
+
+      should "not attempt to resend the fact check email via 'request_fact_check' for an edition in 'fact_check' state" do
+        EventNotifierService.expects(:request_fact_check).never
+
+        resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
+        mail = EventNotifierService.resend_fact_check(resend_fact_check_action)
+
+        assert_nil mail
+      end
     end
 
     should "Logs the error if the edition is not in fact check state" do
       EventNotifierService.expects(:request_fact_check).never
-      resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
-      Rails.logger.expects(:info).with("Asked to resend fact check for #{@edition.content_id}, but its most recent status action is not a fact check, it's a #{@edition.latest_status_action.request_type}")
+      edition = FactoryBot.create(:edition, :in_review)
+      resend_fact_check_action = edition.new_action(@user, "resend_fact_check")
+      Rails.logger.expects(:info).with("Asked to resend fact check for #{edition.content_id}, but its most recent status action is not a fact check, it's a #{edition.latest_status_action.request_type}")
 
       EventNotifierService.resend_fact_check(resend_fact_check_action)
     end

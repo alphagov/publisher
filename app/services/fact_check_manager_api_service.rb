@@ -6,6 +6,10 @@ class FactCheckManagerApiService
     Services.fact_check_manager_api.post_fact_check(**payload)
   end
 
+  def self.resend_fact_check_emails(edition)
+    Services.fact_check_manager_api.post_resend_emails(source_app: "publisher", source_id: edition.id)
+  end
+
   def self.build_post_payload(edition, requester, email_addresses)
     current_content_presenter = Formats::GenericEditionPresenter.new(edition)
     previous_content = nil

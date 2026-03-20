@@ -41,119 +41,6 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
-  context "#resend_fact_check_email_page" do
-    context "user has govuk_editor permission" do
-      should "render the 'Resend fact check email' page" do
-        FactoryBot.create(
-          :action,
-          requester: @govuk_editor,
-          request_type: Action::SEND_FACT_CHECK,
-          edition: @edition,
-          email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
-          customised_message: "The customised message",
-        )
-
-        get :resend_fact_check_email_page, params: { id: @edition.id }
-        assert_template "secondary_nav_tabs/resend_fact_check_email_page"
-      end
-    end
-
-    context "user does not have govuk_editor permission" do
-      setup do
-        user = FactoryBot.create(:user)
-        login_as(user)
-      end
-
-      should "render an error message" do
-        get :resend_fact_check_email_page, params: { id: @edition.id }
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-    end
-  end
-
-  context "#resend_fact_check_email" do
-    %i[drafts in_review amends_needed fact_check_received ready scheduled published archived].each do |edition_state|
-      context "edition is not in a valid state to resend fact check email" do
-        setup do
-          @edition = FactoryBot.create(:answer_edition, state: edition_state)
-          FactoryBot.create(
-            :action,
-            requester: @govuk_editor,
-            request_type: Action::SEND_FACT_CHECK,
-            edition: @edition,
-            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
-            customised_message: "The customised message",
-          )
-        end
-
-        should "render an error" do
-          patch :resend_fact_check_email, params: {
-            id: @edition.id,
-          }
-
-          assert_equal "Edition is not in a state where fact check emails can be re-sent", flash[:danger]
-
-          @edition.reload
-          assert_equal edition_state.to_s, @edition.state
-        end
-      end
-    end
-
-    context "user has govuk_editor permission" do
-      setup do
-        @edition = FactoryBot.create(:answer_edition, state: "fact_check")
-        FactoryBot.create(
-          :action,
-          requester: @govuk_editor,
-          request_type: Action::SEND_FACT_CHECK,
-          edition: @edition,
-          email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
-          customised_message: "The customised message",
-        )
-      end
-
-      should "retain the edition status as 'fact_check' and save the action in 'History & notes'" do
-        patch :resend_fact_check_email, params: {
-          id: @edition.id,
-        }
-
-        assert_equal "Fact check email re-sent", flash[:success]
-        @edition.reload
-        assert_equal "fact-checker-one@example.com, fact-checker-two@example.com", @edition.latest_status_action.email_addresses
-        assert_equal "The customised message", @edition.latest_status_action.customised_message
-        assert_equal "fact_check", @edition.state
-      end
-
-      should "render 'resend_fact_check_email_page' template with an error when an error occurs" do
-        EditionProgressor.any_instance.expects(:progress).returns(false)
-
-        patch :resend_fact_check_email, params: {
-          id: @edition.id,
-        }
-
-        assert_template "secondary_nav_tabs/resend_fact_check_email_page"
-        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
-        @edition.reload
-        assert_equal "fact_check", @edition.state
-      end
-    end
-
-    context "user does not have govuk_editor permission" do
-      setup do
-        user = FactoryBot.create(:user)
-        login_as(user)
-      end
-
-      should "render an error message" do
-        patch :resend_fact_check_email, params: {
-          id: @edition.id,
-        }
-
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-    end
-  end
-
   context "#add_edition_note" do
     context "user has govuk_editor permission" do
       should "render the 'Add Edition Note' page" do
@@ -699,12 +586,125 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
-  context "#send_to_fact_check" do
-    context "fact_check_manager_api is not enabled" do
-      setup do
-        @test_strategy.switch!(:fact_check_manager_api, false)
+  context "fact_check_manager_api is not enabled" do
+    setup do
+      @test_strategy.switch!(:fact_check_manager_api, false)
+    end
+
+    context "#resend_fact_check_email_page" do
+      context "user has govuk_editor permission" do
+        should "render the 'Resend fact check email' page" do
+          FactoryBot.create(
+            :action,
+            requester: @govuk_editor,
+            request_type: Action::SEND_FACT_CHECK,
+            edition: @edition,
+            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            customised_message: "The customised message",
+          )
+
+          get :resend_fact_check_email_page, params: { id: @edition.id }
+          assert_template "secondary_nav_tabs/resend_fact_check_email_page"
+        end
       end
 
+      context "user does not have govuk_editor permission" do
+        setup do
+          user = FactoryBot.create(:user)
+          login_as(user)
+        end
+
+        should "render an error message" do
+          get :resend_fact_check_email_page, params: { id: @edition.id }
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+
+    context "#resend_fact_check_email" do
+      %i[drafts in_review amends_needed fact_check_received ready scheduled published archived].each do |edition_state|
+        context "edition is not in a valid state to resend fact check email" do
+          setup do
+            @edition = FactoryBot.create(:answer_edition, state: edition_state)
+            FactoryBot.create(
+              :action,
+              requester: @govuk_editor,
+              request_type: Action::SEND_FACT_CHECK,
+              edition: @edition,
+              email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+              customised_message: "The customised message",
+            )
+          end
+
+          should "render an error" do
+            patch :resend_fact_check_email, params: {
+              id: @edition.id,
+            }
+
+            assert_equal "Edition is not in a state where fact check emails can be re-sent", flash[:danger]
+
+            @edition.reload
+            assert_equal edition_state.to_s, @edition.state
+          end
+        end
+      end
+
+      context "user has govuk_editor permission" do
+        setup do
+          @edition = FactoryBot.create(:answer_edition, state: "fact_check")
+          FactoryBot.create(
+            :action,
+            requester: @govuk_editor,
+            request_type: Action::SEND_FACT_CHECK,
+            edition: @edition,
+            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            customised_message: "The customised message",
+          )
+        end
+
+        should "retain the edition status as 'fact_check' and save the action in 'History & notes'" do
+          patch :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "Fact check email re-sent", flash[:success]
+          @edition.reload
+          assert_equal "fact-checker-one@example.com, fact-checker-two@example.com", @edition.latest_status_action.email_addresses
+          assert_equal "The customised message", @edition.latest_status_action.customised_message
+          assert_equal "fact_check", @edition.state
+        end
+
+        should "render 'resend_fact_check_email_page' template with an error when an error occurs" do
+          EditionProgressor.any_instance.expects(:progress).returns(false)
+
+          patch :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_template "secondary_nav_tabs/resend_fact_check_email_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          @edition.reload
+          assert_equal "fact_check", @edition.state
+        end
+      end
+
+      context "user does not have govuk_editor permission" do
+        setup do
+          user = FactoryBot.create(:user)
+          login_as(user)
+        end
+
+        should "render an error message" do
+          patch :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+
+    context "#send_to_fact_check" do
       context "user is not a govuk_editor or welsh editor" do
         should "render an error message" do
           user = FactoryBot.create(:user)
@@ -846,13 +846,106 @@ class EditionsControllerTest < ActionController::TestCase
         end
       end
     end
+  end
 
-    context "fact_check_manager_api is enabled" do
-      setup do
-        @test_strategy.switch!(:fact_check_manager_api, true)
-        stub_post_new_fact_check_request(success: true)
+  context "fact_check_manager_api is enabled" do
+    setup do
+      @test_strategy.switch!(:fact_check_manager_api, true)
+      stub_post_new_fact_check_request(success: true)
+      stub_post_resend_fact_check_emails(success: true)
+    end
+
+    context "#resend_fact_check_email" do
+      %i[drafts in_review amends_needed fact_check_received ready scheduled published archived].each do |edition_state|
+        context "edition is not in a valid state to resend fact check email" do
+          setup do
+            @edition = FactoryBot.create(:answer_edition, state: edition_state)
+            FactoryBot.create(
+              :action,
+              requester: @govuk_editor,
+              request_type: Action::SEND_FACT_CHECK,
+              edition: @edition,
+              email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            )
+          end
+
+          should "render an error" do
+            post :resend_fact_check_email, params: {
+              id: @edition.id,
+            }
+
+            assert_equal "Edition is not in a state where fact check emails can be re-sent", flash[:danger]
+
+            @edition.reload
+            assert_equal edition_state.to_s, @edition.state
+          end
+        end
       end
 
+      context "user has govuk_editor permission" do
+        setup do
+          @edition = FactoryBot.create(:answer_edition, state: "fact_check")
+          FactoryBot.create(
+            :action,
+            requester: @govuk_editor,
+            request_type: Action::SEND_FACT_CHECK,
+            edition: @edition,
+            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            customised_message: "The customised message",
+          )
+        end
+
+        should "retain the edition status as 'fact_check' and save the action in 'History & notes'" do
+          post :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "Fact check email re-sent", flash[:success]
+          @edition.reload
+          assert_equal "fact-checker-one@example.com, fact-checker-two@example.com", @edition.latest_status_action.email_addresses
+          assert_equal "fact_check", @edition.state
+        end
+
+        should "render 'resend_fact_check_email_page' template with an error message when the API returns an error" do
+          stub_post_resend_fact_check_emails(success: false)
+
+          post :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_template "secondary_nav_tabs/resend_fact_check_email_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        end
+
+        should "render 'resend_fact_check_email_page' template with an error message when the edition progression is false" do
+          EditionProgressor.any_instance.stubs(:progress).returns(false)
+
+          post :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_template "secondary_nav_tabs/resend_fact_check_email_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        end
+      end
+
+      context "user does not have govuk_editor permission" do
+        setup do
+          user = FactoryBot.create(:user)
+          login_as(user)
+        end
+
+        should "render an error message" do
+          post :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+
+    context "#send_to_fact_check" do
       context "user has govuk_editor permission" do
         ["test@test.com", "test1@test.com, test2@test.com"].each do |email_addresses|
           context "using email address(es) '#{email_addresses}'" do

@@ -16,17 +16,19 @@
         <p class="govuk-body"><%= @edition.latest_status_action.email_addresses %></p>
       </section>
 
-      <section class="govuk-!-margin-bottom-6">
-        <%= render "govuk_publishing_components/components/heading", {
-          text: "Customised message",
-          heading_level: 2,
-          font_size: "s",
-        } %>
+      <% unless Flipflop.enabled?(:fact_check_manager_api) %>
+        <section class="govuk-!-margin-bottom-6">
+          <%= render "govuk_publishing_components/components/heading", {
+            text: "Customised message",
+            heading_level: 2,
+            font_size: "s",
+          } %>
 
-        <div class="edit--resend-fact-check-email-page__message">
-          <%= @edition.latest_status_action.customised_message.strip %>
-        </div>
-      </section>
+          <div class="edit--resend-fact-check-email-page__message">
+            <%= @edition.latest_status_action.customised_message.strip %>
+          </div>
+        </section>
+      <% end %>
 
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {

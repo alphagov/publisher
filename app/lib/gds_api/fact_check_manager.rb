@@ -33,4 +33,16 @@ class GdsApi::FactCheckManager < GdsApi::Base
       recipients:,
     )
   end
+
+  # Post a request to resend fact check emails for an existing fact check request
+  #
+  # Keyword Arguments:
+  # @param [string] source_app identifier for the application that created the request
+  # @param [uuid] source_id The unique ID for the content
+  #
+  # @return [GdsApi::Response] Basic response with code
+
+  def post_resend_emails(source_app:, source_id:)
+    post_json("#{endpoint}/api/requests/#{source_app}/#{source_id}/resend-emails")
+  end
 end
