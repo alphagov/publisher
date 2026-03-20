@@ -45,4 +45,20 @@ class GdsApi::FactCheckManager < GdsApi::Base
   def post_resend_emails(source_app:, source_id:)
     post_json("#{endpoint}/api/requests/#{source_app}/#{source_id}/resend-emails")
   end
+
+  # Patch a request to update the content for an existing fact check request
+  #
+  # Keyword Arguments:
+  # @param [string] source_app identifier for the application sending the request
+  # @param [uuid] source_id The unique ID for the content
+  # @param [hash] current_content
+  # @option [string] source_title The title of the content (optional)
+  def patch_update_content(source_app:, source_id:, current_content:, source_title: nil)
+    payload = {
+      source_title:,
+      current_content:,
+    }.compact
+
+    patch_json("#{endpoint}/api/requests/#{source_app}/#{source_id}", payload)
+  end
 end
