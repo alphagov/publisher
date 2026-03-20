@@ -37,4 +37,32 @@ class Ga4TrackingHistoryNotesTest < JavascriptIntegrationTest
       assert_equal "edit", event_data[1]["type"]
     end
   end
+
+  context "Update important note page" do
+    setup do
+      visit history_update_important_note_edition_path(@edition)
+      disable_form_submit
+    end
+
+    should "add important note selection events to the dataLayer" do
+      fill_in "Important note", with: "This is an important note"
+      click_button "Save"
+
+      event_data = get_event_data
+
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Important note", event_data[0]["section"]
+      assert_equal "25", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "Save", event_data[1]["action"]
+      assert_equal "form_response", event_data[1]["event_name"]
+      assert_equal "Update important note", event_data[1]["section"]
+      assert_equal "{\"Important note\":\"25\"}", event_data[1]["text"]
+      assert_equal "Answer", event_data[1]["tool_name"]
+      assert_equal "edit", event_data[1]["type"]
+    end
+  end
 end
