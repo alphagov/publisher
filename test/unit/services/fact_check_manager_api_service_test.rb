@@ -26,6 +26,16 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
     end
   end
 
+  context ".update_fact_check_content" do
+    should "call the fact check manager api adapter" do
+      Services.fact_check_manager_api.expects(:patch_update_content)
+              .with(source_app: "publisher", source_id: @edition.id, source_title: "New Title", current_content: { body: "some body" })
+              .returns("stub response")
+
+      FactCheckManagerApiService.update_fact_check_content(@edition)
+    end
+  end
+
   context ".build_post_payload" do
     should "build a properly formatted payload with one email address" do
       travel_to Time.zone.local(2026, 2, 2, 0, 0, 0) do
