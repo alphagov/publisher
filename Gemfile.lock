@@ -888,13 +888,13 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    state_machines (0.100.4)
-    state_machines-activemodel (0.101.0)
+    state_machines (0.101.0)
+    state_machines-activemodel (0.102.0)
       activemodel (>= 7.2)
-      state_machines (>= 0.100.4)
-    state_machines-activerecord (0.100.0)
+      state_machines (>= 0.101.0)
+    state_machines-activerecord (0.102.0)
       activerecord (>= 7.2)
-      state_machines-activemodel (>= 0.100.0)
+      state_machines-activemodel (>= 0.102.0)
     state_machines-graphviz (0.0.2)
       ruby-graphviz
       state_machines
