@@ -1,5 +1,5 @@
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds" data-ga4-section="Related external links">
     <%= header_for("Related external links") %>
     <% if current_user.has_editor_permissions?(@resource) %>
       <%= form_for @edition.artefact, url: update_related_external_links_edition_path(@resource), data: {module: "unsaved-changes-prompt"} do %>
