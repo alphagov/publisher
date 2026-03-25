@@ -23,7 +23,7 @@
       text: "If you delete this edition it cannot be undone.",
     } %>
 
-    <%= form_for @edition, url: admin_delete_edition_path(@edition), method: :delete do %>
+    <%= form_for @edition, url: admin_delete_edition_path(@edition), method: :delete, data: { module: "" } do %>
       <p class="govuk-body govuk-!-margin-bottom-7">Are you sure you want to delete this edition?</p>
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
