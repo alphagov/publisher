@@ -20,10 +20,11 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
   context "Edit page" do
     setup do
       visit edition_path(@edition)
-      disable_form_submit
     end
 
     should "push the correct values to the dataLayer when events are triggered" do
+      disable_form_submit
+
       fill_in "Title", with: "The title"
       fill_in "Meta tag description", with: "the-meta-tag-description"
       fill_in "Body", with: "The body text"
@@ -74,6 +75,19 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "{\"Title\":\"9\",\"Meta tag description\":\"24\",\"Body\":\"13\",\"Is this beta content?\":\"No\"}", event_data[5]["text"]
       assert_equal "Answer", event_data[5]["tool_name"]
       assert_equal "edit", event_data[5]["type"]
+    end
+
+    should "push the correct event_data values to the dataLayer when a success message is rendered" do
+      fill_in "Title", with: "The title"
+      click_button "Save"
+
+      event_data = get_event_data
+
+      assert_equal "flash_notice", event_data[0]["event_name"]
+      assert_equal "<Error name>", event_data[0]["type"]
+      assert_equal "Edition updated successfully.", event_data[0]["text"]
+      assert_equal "<content section where message appears>", event_data[0]["section"]
+      assert_equal "success_alerts", event_data[0]["action"]
     end
   end
 
