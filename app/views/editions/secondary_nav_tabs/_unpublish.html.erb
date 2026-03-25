@@ -1,5 +1,5 @@
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds" data-ga4-section="Unpublish">
     <% @edition = @resource %>
     <%= header_for("Unpublish") %>
 
@@ -7,7 +7,7 @@
       text: "If you unpublish a page from GOV.UK it cannot be undone.",
     } %>
 
-    <%= form_for @edition, url: confirm_unpublish_edition_path, method: "get" do |f| %>
+    <%= form_for @edition, url: confirm_unpublish_edition_path, method: "get", data: { module: "" } do |f| %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
           text: "Redirect to URL",
