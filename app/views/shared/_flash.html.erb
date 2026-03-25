@@ -1,15 +1,49 @@
+<% component_helper = GovukPublishingComponents::Presenters::ComponentWrapperHelper.new(local_assigns) %>
+
 <% [:success, :info, :warning, :danger, :notice, :alert].select { |k| flash[k].present? }.each do |k| %>
   <% if k == :warning || k == :danger || k == :alert %>
-    <%= render "govuk_publishing_components/components/error_alert", {
-      message: sanitize(flash[k]),
-    } %>
+    <%= tag.div(**component_helper.all_attributes) do %>
+      <%= render "govuk_publishing_components/components/error_alert", {
+        message: sanitize(flash[k]),
+        data_attributes: {
+          module: "ga4-auto-tracker",
+          'ga4-auto': {
+            event_name: k == :danger ? "flash_danger" : "event name",
+            action: k == :danger ? "danger_alerts" : "an action",
+            text: sanitize(flash[k])
+          }
+        }
+      } %>
+    <% end %>
   <% elsif k == :notice || k == :info %>
-    <%= render "govuk_publishing_components/components/notice", {
-      description: sanitize(flash[k]),
-    } %>
+    <%= tag.div(**component_helper.all_attributes) do %>
+      <%= render "govuk_publishing_components/components/notice", {
+        description: sanitize(flash[k]),
+        data_attributes: {
+          module: "ga4-auto-tracker",
+          'ga4-auto': {
+            event_name: "event name",
+            type: "a type",
+            section: "a section",
+            action: "an action",
+            tool_name: "a tool name"
+          }
+        }
+      } %>
+    <% end %>
   <% elsif k == :success %>
-    <%= render "govuk_publishing_components/components/success_alert", {
-      message: sanitize(flash[k]),
-    } %>
+    <%= tag.div(**component_helper.all_attributes) do %>
+      <%= render "govuk_publishing_components/components/success_alert", {
+        message: sanitize(flash[k]),
+        data_attributes: {
+          module: "ga4-auto-tracker",
+          'ga4-auto': {
+            event_name: "flash_success",
+            action: "success_alerts",
+            text: sanitize(flash[k])
+          }
+        }
+      } %>
+    <% end %>
   <% end %>
 <% end %>
