@@ -40,11 +40,11 @@
         data_attributes: {
           module: "ga4-auto-tracker",
           'ga4-auto': {
-            event_name: "event name",
-            type: "a type",
-            section: "a section",
-            action: "an action",
-            tool_name: "a tool name"
+            event_name: "flash_notice",
+            type: "<Error name>",
+            text: sanitize(flash[k]),
+            section: "<content section where message appears>",
+            action: "success_alerts"
           }
         }
       } %>
