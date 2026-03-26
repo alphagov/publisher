@@ -60,56 +60,17 @@ class GuidePartsControllerTest < ActionController::TestCase
       end
 
       context "when the edition is a draft" do
-        context "when the 'guide_chapter_accordion_interface' feature toggle is on" do
-          setup do
-            @test_strategy.switch!(:guide_chapter_accordion_interface, true)
-          end
+        should "allow a new chapter to be added with 'save'" do
+          edition = FactoryBot.create(:guide_edition, :draft)
 
-          should "allow a new chapter to be added with 'save'" do
-            edition = FactoryBot.create(:guide_edition, :draft)
+          post :create, params: {
+            edition_id: edition.id,
+            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+            save: "save",
+          }
 
-            post :create, params: {
-              edition_id: edition.id,
-              part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
-              save: "save",
-            }
-
-            assert_redirected_to edition_path(edition.id)
-            assert_equal "New chapter added successfully.", flash[:success]
-          end
-        end
-
-        context "when the 'guide_chapter_accordion_interface' feature toggle is off" do
-          setup do
-            @test_strategy.switch!(:guide_chapter_accordion_interface, false)
-          end
-
-          should "allow a new chapter to be added with 'save and summary'" do
-            edition = FactoryBot.create(:guide_edition, :draft)
-
-            post :create, params: {
-              edition_id: edition.id,
-              part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
-              save: "save and summary",
-            }
-
-            assert_redirected_to edition_path(edition.id)
-            assert_equal "New chapter added successfully.", flash[:success]
-          end
-
-          should "allow a new chapter to be added with 'save'" do
-            edition = FactoryBot.create(:guide_edition, :draft)
-
-            post :create, params: {
-              edition_id: edition.id,
-              part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
-              save: "save",
-            }
-
-            part = Part.last
-            assert_redirected_to edit_edition_guide_part_path(edition, part)
-            assert_equal "New chapter added successfully.", flash[:success]
-          end
+          assert_redirected_to edition_path(edition.id)
+          assert_equal "New chapter added successfully.", flash[:success]
         end
 
         should "create a part with the correct details when guide has no parts" do
@@ -166,199 +127,6 @@ class GuidePartsControllerTest < ActionController::TestCase
           assert_equal 3, edition.parts.count
           assert_equal 3, created_part.order
         end
-      end
-    end
-  end
-
-  context "editing an existing chapter" do
-    context "when user has editor permissions" do
-      setup do
-        @edition = FactoryBot.create(:guide_edition_with_two_parts, :draft)
-        login_as_govuk_editor
-      end
-
-      should "be able to render edit page for an existing chapter" do
-        get :edit, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-        }
-
-        assert_response :ok
-        assert_select "h2", "Edit chapter"
-      end
-
-      should "be able to update an existing chapter" do
-        UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
-
-        patch :update, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-          part: {
-            title: "Part2",
-            slug: "a",
-          },
-          save: "save",
-        }
-
-        assert_redirected_to edit_edition_guide_part_path(@edition.id, @edition.parts.first.id)
-        assert_equal "Chapter updated successfully.", flash[:success]
-      end
-
-      should "be able to update an existing chapter and redirect to edit guide page" do
-        UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
-
-        patch :update, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-          part: {
-            title: "Part2",
-            slug: "a",
-          },
-          save: "save and summary",
-        }
-
-        assert_redirected_to edition_path(@edition.id)
-        assert_equal "Chapter updated successfully.", flash[:success]
-      end
-
-      should "allow the 'confirm destroy' page to be displayed" do
-        get :confirm_destroy, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-        }
-
-        assert_response :ok
-        assert_select "h2", "Are you sure you want to delete this chapter?"
-      end
-
-      should "allow an existing chapter to be deleted" do
-        part = @edition.parts.first
-        UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
-
-        delete :destroy, params: {
-          edition_id: @edition.id,
-          id: part.id,
-        }
-
-        @edition.reload
-        assert_redirected_to edition_path(@edition.id)
-        assert_equal "Chapter deleted successfully", flash[:success]
-        assert @edition.parts.exclude? part
-      end
-    end
-
-    context "when user has no editor permissions" do
-      setup do
-        @edition = FactoryBot.create(:guide_edition_with_two_parts, :draft)
-        user = FactoryBot.create(:user)
-        login_as(user)
-      end
-
-      should "prevent an existing chapter being edited" do
-        patch :update, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-          part: {
-            title: "Part2",
-            slug: "a",
-          },
-          save: "save",
-        }
-
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-
-      should "prevent the 'edit chapter' page from being displayed" do
-        get :edit, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-        }
-
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-
-      should "prevent the 'confirm destroy' page from being displayed" do
-        get :confirm_destroy, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-        }
-
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-
-      should "prevent an existing chapter from being deleted" do
-        part = @edition.parts.first
-
-        delete :destroy, params: {
-          edition_id: @edition.id,
-          id: part.id,
-        }
-
-        @edition.reload
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-        assert @edition.parts.include? part
-      end
-
-      should "show view chapter page" do
-        get :show, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-        }
-
-        assert_response :ok
-        assert_select "h2", "View chapter"
-      end
-    end
-
-    context "when user has editor permissions and edition is published" do
-      setup do
-        @edition = FactoryBot.create(:guide_edition_with_two_parts, :published)
-        login_as_govuk_editor
-      end
-
-      should "prevent an existing chapter being edited" do
-        patch :update, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-          part: {
-            title: "Part2",
-            slug: "a",
-          },
-          save: "save",
-        }
-
-        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
-      end
-
-      should "prevent the 'edit chapter' page from being displayed" do
-        get :edit, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-        }
-
-        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
-      end
-
-      should "prevent the 'confirm destroy' page from being displayed" do
-        get :confirm_destroy, params: {
-          edition_id: @edition.id,
-          id: @edition.parts.first.id,
-        }
-
-        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
-      end
-
-      should "prevent an existing chapter from being deleted" do
-        part = @edition.parts.first
-
-        delete :destroy, params: {
-          edition_id: @edition.id,
-          id: part.id,
-        }
-
-        @edition.reload
-        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
-        assert @edition.parts.include? part
       end
     end
   end
@@ -477,24 +245,6 @@ class GuidePartsControllerTest < ActionController::TestCase
       end
     end
 
-    context "GET action: edit chapter" do
-      should "return a 404 when requesting the edit chapter action on an edition owned by a different organisation and user has departmental_editor permission" do
-        login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
-
-        get :edit, params: { edition_id: @edition_with_parts.id, id: @edition_with_parts.parts.first.id }
-
-        assert_response :not_found
-      end
-
-      should "return a 200 when requesting the edit chapter action on an edition owned by a different organisation and user does not have departmental_editor permission" do
-        login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
-
-        get :edit, params: { edition_id: @edition_with_parts.id, id: @edition_with_parts.parts.first.id }
-
-        assert_response :ok
-      end
-    end
-
     context "GET action: reorder chapter" do
       should "return a 404 when requesting the reorder action on an edition owned by a different organisation and user has departmental_editor permission" do
         login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
@@ -539,42 +289,6 @@ class GuidePartsControllerTest < ActionController::TestCase
           @edition.reload
           assert_equal "a", @edition.parts.first.title
         end
-      end
-    end
-
-    context "PATCH action: update chapter" do
-      should "return a 404 when requesting the update chapter action on an edition owned by a different organisation and user has departmental_editor permission" do
-        login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
-
-        patch :update, params: {
-          edition_id: @edition_with_parts.id,
-          id: @edition_with_parts.parts.first.id,
-          part: {
-            title: "Part2",
-            slug: "a",
-          },
-          save: "save and summary",
-        }
-
-        assert_response :not_found
-      end
-
-      should "return a 302 when requesting the update chapter action on an edition owned by a different organisation and user does not have departmental_editor permission" do
-        login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
-
-        patch :update, params: {
-          edition_id: @edition_with_parts.id,
-          id: @edition_with_parts.parts.first.id,
-          part: {
-            title: "Part2",
-            slug: "a",
-          },
-          save: "save and summary",
-        }
-
-        assert_response :redirect
-        @edition_with_parts.reload
-        assert_equal "Part2", @edition_with_parts.parts.first.title
       end
     end
 

@@ -45,10 +45,10 @@ class EditionEditJSTest < JavascriptIntegrationTest
 
           assert page.has_content?("Chapter order updated")
 
-          within all(".govuk-summary-list__row")[3] do
+          within all(".govuk-accordion__section")[0] do
             assert page.has_text?("PART !!")
           end
-          within all(".govuk-summary-list__row")[4] do
+          within all(".govuk-accordion__section")[1] do
             assert page.has_text?("PART !")
           end
         end
@@ -67,10 +67,10 @@ class EditionEditJSTest < JavascriptIntegrationTest
 
           click_link "Cancel"
 
-          within all(".govuk-summary-list__row")[3] do
+          within all(".govuk-accordion__section")[0] do
             assert page.has_text?("PART !")
           end
-          within all(".govuk-summary-list__row")[4] do
+          within all(".govuk-accordion__section")[1] do
             assert page.has_text?("PART !!")
           end
         end

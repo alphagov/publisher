@@ -98,8 +98,6 @@ Rails.application.routes.draw do
           get "confirm_destroy"
         end
       end
-
-      resources :guide_parts, only: %i[show edit update], constraints: ->(request) { !FeatureConstraint.new("guide_chapter_accordion_interface").matches?(request) }
     end
   end
 

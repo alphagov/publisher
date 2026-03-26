@@ -27,9 +27,5 @@ Flipflop.configure do
     feature :fact_check_manager_api,
             default: false,
             description: "Experimental: enables in-development fact-check-manager API features for testing"
-
-    feature :guide_chapter_accordion_interface,
-            default: true,
-            description: "Enable accordion editing interface for guide chapters"
   end
 end

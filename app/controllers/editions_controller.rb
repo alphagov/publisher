@@ -637,7 +637,7 @@ private
     when :guide_edition
       [
         :hide_chapter_navigation,
-        ({ parts_attributes: %i[id title slug body] } if Flipflop.enabled?(:guide_chapter_accordion_interface)),
+        { parts_attributes: %i[id title slug body] },
       ]
     else
       # answer_edition, help_page_edition
