@@ -537,8 +537,6 @@ class Edition < ApplicationRecord
   end
 
   def human_state_name
-    return super unless Flipflop.enabled?(:rename_edition_states)
-
     case state
     when "in_review"
       "in 2i"

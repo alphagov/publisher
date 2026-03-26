@@ -10,10 +10,6 @@ Flipflop.configure do
   end
 
   group "For all users (These features are available to everyone)" do
-    feature :rename_edition_states,
-            default: true,
-            description: "Changes the following edition state labels: 'In review' to 'In 2i', 'Fact check'/'Out for fact check' to 'Fact check sent', and 'Scheduled for publishing' to 'Scheduled'"
-
     feature :restrict_access_by_org,
             default: true,
             description: "Restrict access to editions based on the user's org and which org(s) own the edition"

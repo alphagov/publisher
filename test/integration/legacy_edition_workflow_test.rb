@@ -99,79 +99,71 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     assert_match(/reply is being sent to #{Regexp.escape @simple_smart_answer.fact_check_email_address}\./, fact_check_email.body.to_s)
   end
 
-  [[true, "Fact check sent"], [false, "Fact check"]].each do |toggle_value, fact_check_state_label|
-    context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
-      setup do
-        @test_strategy.switch!(:rename_edition_states, toggle_value)
-      end
+  should "be able to send simple smart answer to fact-check when in ready state" do
+    @simple_smart_answer.update!(state: "ready")
+    visit_edition @simple_smart_answer
 
-      should "be able to send simple smart answer to fact-check when in ready state" do
-        @simple_smart_answer.update!(state: "ready")
-        visit_edition @simple_smart_answer
+    click_link("Fact check")
 
-        click_link("Fact check")
+    ActionMailer::Base.deliveries.clear
 
-        ActionMailer::Base.deliveries.clear
-
-        within "#send_fact_check_form" do
-          fill_in "Customised message", with: "Blah"
-          fill_in "Email address", with: "user@example.com"
-          click_on "Send"
-        end
-
-        assert page.has_css?(".label", text: fact_check_state_label)
-
-        click_on "History and notes"
-        assert page.has_content? "Send fact check by Alice"
-        assert page.has_content? "Request sent to user@example.com"
-
-        @simple_smart_answer.reload
-        assert @simple_smart_answer.fact_check?
-
-        fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
-        assert fact_check_email
-        assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email.subject)
-        assert_equal "Blah", fact_check_email.body.to_s
-      end
-
-      should "be able to send simple smart answer to several fact-check recipients with comma separated emails" do
-        @simple_smart_answer.update!(state: "ready")
-        visit_edition @simple_smart_answer
-
-        click_link("Fact check")
-
-        ActionMailer::Base.deliveries.clear
-
-        within "#send_fact_check_form" do
-          fill_in "Customised message", with: "Blah"
-          fill_in "Email address", with: "user1@example.com, user2@example.com"
-          click_on "Send"
-        end
-
-        assert page.has_css?(".label", text: fact_check_state_label)
-        @simple_smart_answer.reload
-        assert @simple_smart_answer.fact_check?
-
-        fact_check_email1 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
-        assert fact_check_email1
-        fact_check_email2 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user2@example.com" }.last
-        assert fact_check_email2
-        assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email1.subject)
-        assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email2.subject)
-        assert_equal "Blah", fact_check_email1.body.to_s
-        assert_equal "Blah", fact_check_email2.body.to_s
-      end
-
-      should "be able to go back to fact-check from fact-check received" do
-        @simple_smart_answer.update!(state: "fact_check_received")
-
-        visit_edition @simple_smart_answer
-        send_for_fact_check @simple_smart_answer
-        visit_edition @simple_smart_answer
-
-        assert page.has_css?(".label", text: fact_check_state_label)
-      end
+    within "#send_fact_check_form" do
+      fill_in "Customised message", with: "Blah"
+      fill_in "Email address", with: "user@example.com"
+      click_on "Send"
     end
+
+    assert page.has_css?(".label", text: "Fact check sent")
+
+    click_on "History and notes"
+    assert page.has_content? "Send fact check by Alice"
+    assert page.has_content? "Request sent to user@example.com"
+
+    @simple_smart_answer.reload
+    assert @simple_smart_answer.fact_check?
+
+    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
+    assert fact_check_email
+    assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email.subject)
+    assert_equal "Blah", fact_check_email.body.to_s
+  end
+
+  should "be able to send simple smart answer to several fact-check recipients with comma separated emails" do
+    @simple_smart_answer.update!(state: "ready")
+    visit_edition @simple_smart_answer
+
+    click_link("Fact check")
+
+    ActionMailer::Base.deliveries.clear
+
+    within "#send_fact_check_form" do
+      fill_in "Customised message", with: "Blah"
+      fill_in "Email address", with: "user1@example.com, user2@example.com"
+      click_on "Send"
+    end
+
+    assert page.has_css?(".label", text: "Fact check sent")
+    @simple_smart_answer.reload
+    assert @simple_smart_answer.fact_check?
+
+    fact_check_email1 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
+    assert fact_check_email1
+    fact_check_email2 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user2@example.com" }.last
+    assert fact_check_email2
+    assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email1.subject)
+    assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email2.subject)
+    assert_equal "Blah", fact_check_email1.body.to_s
+    assert_equal "Blah", fact_check_email2.body.to_s
+  end
+
+  should "be able to go back to fact-check from fact-check received" do
+    @simple_smart_answer.update!(state: "fact_check_received")
+
+    visit_edition @simple_smart_answer
+    send_for_fact_check @simple_smart_answer
+    visit_edition @simple_smart_answer
+
+    assert page.has_css?(".label", text: "Fact check sent")
   end
 
   test "the fact-check form validates emails and won't send if they are mangled" do
@@ -295,24 +287,16 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     end
   end
 
-  [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
-    context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
-      setup do
-        @test_strategy.switch!(:rename_edition_states, toggle_value)
-      end
+  should "be able to send simple smart answer for review" do
+    @simple_smart_answer.assigned_to = bob
 
-      should "be able to send simple smart answer for review" do
-        @simple_smart_answer.assigned_to = bob
+    visit_edition @simple_smart_answer
+    send_action @simple_smart_answer, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
 
-        visit_edition @simple_smart_answer
-        send_action @simple_smart_answer, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
-        assert page.has_content?("updated")
+    view_filtered_list "In 2i"
 
-        view_filtered_list in_review_state_label
-
-        assert page.has_content? @simple_smart_answer.title
-      end
-    end
+    assert page.has_content? @simple_smart_answer.title
   end
 
   test "cannot review own simple smart answer" do

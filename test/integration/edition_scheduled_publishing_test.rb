@@ -48,7 +48,7 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
     stub_register_published_content
 
     visit_edition edition
-    assert page.has_css?(".label", text: "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
+    assert page.has_css?(".label", text: "Scheduled on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
     click_on "Publish now"
 
     within "#publish_form" do
@@ -63,7 +63,7 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
     edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing)
 
     visit_edition edition
-    assert page.has_css?(".label", text: "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
+    assert page.has_css?(".label", text: "Scheduled on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
     click_on "Cancel scheduled publishing"
 
     within "#cancel_scheduled_publishing_form" do
