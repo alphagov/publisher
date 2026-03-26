@@ -8,7 +8,6 @@ class AddArtefactTest < IntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
-    @test_strategy.switch!(:design_system_edit_phase_4, true)
   end
 
   slug_prefix_for_kind = [%w[help_page help/], %w[completed_transaction done/]] +

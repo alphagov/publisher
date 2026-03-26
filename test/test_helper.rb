@@ -48,7 +48,6 @@ class ActiveSupport::TestCase
     FactoryBot.rewind_sequences
 
     @test_strategy = Flipflop::FeatureSet.current.test!
-    @test_strategy.switch!(:design_system_edit_phase_4, false)
     @test_strategy.switch!(:rename_edition_states, false)
     @test_strategy.switch!(:guide_chapter_accordion_interface, false)
     @test_strategy.switch!(:fact_check_manager_api, false)

@@ -1,37 +1,6 @@
 require "test_helper"
 
 class LegacyArtefactsControllerTest < ActionController::TestCase
-  context "#new" do
-    should "allow creation if govuk_editor" do
-      login_as_govuk_editor
-
-      get :new
-
-      assert_response :ok
-    end
-
-    should "not allow creation if welsh_editor" do
-      login_as_welsh_editor
-
-      get :new
-
-      assert_response :redirect
-      assert_redirected_to root_path
-      assert_includes flash[:danger], "You do not have permission to see this page."
-    end
-
-    should "not allow creation if no permissions" do
-      user = FactoryBot.create(:user, name: "Non-editor")
-      login_as(user)
-
-      get :new
-
-      assert_response :redirect
-      assert_redirected_to root_path
-      assert_includes flash[:danger], "You do not have permission to see this page."
-    end
-  end
-
   context "#update" do
     should "allow update if govuk_editor" do
       edition = FactoryBot.create(:simple_smart_answer_edition)
