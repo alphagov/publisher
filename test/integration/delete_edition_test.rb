@@ -26,7 +26,7 @@ class DeleteEditionTest < LegacyIntegrationTest
 
       click_button "Delete this edition – #1"
 
-      within(".alert-success") do
+      within(".govuk-notification-banner--success") do
         assert page.has_content?("Edition deleted")
       end
     end
@@ -45,7 +45,7 @@ class DeleteEditionTest < LegacyIntegrationTest
 
       click_button "Delete this edition – #2"
 
-      within(".alert-success") do
+      within(".govuk-notification-banner--success") do
         assert page.has_content?("Edition deleted")
       end
     end

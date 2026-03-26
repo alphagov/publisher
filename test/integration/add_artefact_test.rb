@@ -8,7 +8,6 @@ class AddArtefactTest < IntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
-    @test_strategy.switch!(:design_system_edit_phase_3b, true)
     @test_strategy.switch!(:design_system_edit_phase_4, true)
   end
 

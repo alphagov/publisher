@@ -10,10 +10,6 @@ Flipflop.configure do
   end
 
   group "For all users (These features are available to everyone)" do
-    feature :design_system_edit_phase_3b,
-            default: true,
-            description: "Update the publications page to use the GOV.UK Design System with a multi-page design"
-
     feature :design_system_edit_phase_4,
             default: true,
             description: "Update the 'Add artefact' page to use the GOV.UK Design System with a two-step process"

@@ -222,7 +222,6 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "Needs more work", "Request amendments", "You need to fix some stuff"
     assert page.has_content?("updated")
 
-    filter_for_all_users
     view_filtered_list "Amends needed"
 
     assert page.has_content? @simple_smart_answer.title
@@ -235,7 +234,6 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "Needs more work", "Request amendments", "You need to fix some stuff"
     assert page.has_content?("updated")
 
-    filter_for_all_users
     view_filtered_list "Amends needed"
 
     assert page.has_content? @simple_smart_answer.title
@@ -310,8 +308,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
         send_action @simple_smart_answer, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
         assert page.has_content?("updated")
 
-        filter_for_all_users
-        click_link in_review_state_label
+        view_filtered_list in_review_state_label
 
         assert page.has_content? @simple_smart_answer.title
       end
@@ -396,7 +393,6 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "Needs more work", "Request amendments", "You need to fix some stuff"
     assert page.has_content?("updated")
 
-    filter_for_all_users
     view_filtered_list "Amends needed"
 
     assert page.has_content? @simple_smart_answer.title
@@ -410,7 +406,6 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "No changes needed", "No changes needed", "Yup, looks good"
     assert page.has_content?("updated")
 
-    filter_for_all_users
     view_filtered_list "Ready"
     assert page.has_content? @simple_smart_answer.title
   end
@@ -426,7 +421,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     # This information is not quite correct but it is the current behaviour.
     # Adding this test as an aid to future improvements
     assert page.has_content? "Fact check was skipped for this edition."
-    filter_for_all_users
+
     view_filtered_list "Ready"
     assert page.has_content? @simple_smart_answer.title
 
@@ -442,81 +437,9 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "No more work needed", "Approve fact check", "Hurrah!"
     assert page.has_content?("updated")
 
-    filter_for_all_users
     view_filtered_list "Ready"
 
     assert page.has_content? @simple_smart_answer.title
-  end
-
-  test "can create a new edition from the listings screens" do
-    @simple_smart_answer.update!(state: "published")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-
-    assert page.has_content? "New edition created"
-  end
-
-  test "Welsh editors cannot create a new edition from the listings screen" do
-    @simple_smart_answer.update!(state: "published")
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    assert page.has_no_content? "Create new edition"
-  end
-
-  test "Welsh editors can create a new Welsh edition from the listings screen" do
-    @simple_smart_answer.update!(state: "published")
-    @simple_smart_answer.artefact.update!(language: "cy")
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-
-    assert page.has_content? "New edition created"
-  end
-
-  test "Welsh editors cannot edit a newer edition from the listings screen" do
-    @simple_smart_answer.update!(state: "published")
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-    assert page.has_content? "New edition created"
-
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-
-    assert page.has_no_content? "Edit newer edition"
-  end
-
-  test "Welsh editors can edit a newer Welsh edition from the listings screen" do
-    @simple_smart_answer.update!(state: "published")
-    @simple_smart_answer.artefact.update!(language: "cy")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-
-    click_on "Edit newer edition"
-
-    assert_equal page.current_path, edition_path(@simple_smart_answer.artefact.latest_edition)
   end
 
   test "Welsh editors cannot create new editions from the edition page" do
@@ -791,8 +714,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
   test "should show an alert if another person has created a newer edition" do
     @simple_smart_answer.update!(state: "published")
 
-    filter_for_all_users
-    view_filtered_list "Published"
+    visit_edition @simple_smart_answer
 
     # Simulate that someone has clicked on 'Create new edition'
     # while current user has been viewing the list of published editions
@@ -847,23 +769,12 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     url.split("#").last
   end
 
-  def filter_for_all_users
-    visit "/"
-    within :css, ".user-filter-form" do
-      select2 "All", from: "ASSIGNEE"
-      click_on "Filter publications"
-    end
-    assert page.has_content?("Publications")
-  end
-
   def view_filtered_list(filter_label)
-    visit "/"
-    filter_link = find(:xpath, "//a[contains(., '#{filter_label}')]")
-    assert_not filter_link.nil?, "Tab link #{filter_label} not found"
-    assert_not filter_link["href"].nil?, "Tab link #{filter_label} has no target"
-
-    filter_link.click
-
-    assert page.has_content?(filter_label)
+    visit find_content_path
+    find(".choices__item", text: "Active statuses").click
+    within(".choices__list--dropdown .choices__list") do
+      find(".choices__item", text: filter_label).click
+    end
+    click_button("Apply filters")
   end
 end

@@ -37,20 +37,10 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
     end
     assert page.has_content?("edition was successfully updated", exact: false)
 
-    visit_editions
-    within(:css, "div.sidebar-nav li.scheduled_for_publishing") do
-      assert page.has_link?("Scheduled")
-      assert page.has_content?("1")
+    visit find_content_path
 
-      click_on "Scheduled"
-    end
-
-    # only one scheduled edition
-    assert page.has_css? "#publication-list-container table tbody tr", count: 1
-
-    edition.reload
     assert page.has_content? edition.title
-    assert page.has_content?("12:15pm, #{day} #{month} #{year}"), "Scheduled time is not showing-up as expected"
+    assert page.has_content?("Scheduled")
   end
 
   test "should allow a scheduled edition to be published now" do

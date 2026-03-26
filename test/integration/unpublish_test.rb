@@ -33,7 +33,7 @@ class UnpublishTest < LegacyIntegrationTest
 
     assert current_url, root_path
 
-    within(".alert-success") do
+    within(".govuk-notification-banner__content") do
       assert page.has_content?("Content unpublished")
     end
 
@@ -61,7 +61,7 @@ class UnpublishTest < LegacyIntegrationTest
 
       assert current_url, root_path
 
-      within(".alert-success") do
+      within(".govuk-notification-banner__content") do
         assert page.has_content?("Content unpublished and redirected")
       end
     end

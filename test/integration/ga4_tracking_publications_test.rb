@@ -33,8 +33,6 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       created_at: Time.zone.now,
       comment: "Requesting review",
     )
-
-    @test_strategy.switch!(:design_system_edit_phase_3b, true)
   end
 
   context "Find content page" do
