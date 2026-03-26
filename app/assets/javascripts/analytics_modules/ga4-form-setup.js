@@ -31,9 +31,18 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     var section = form.closest('[data-ga4-section]').getAttribute('data-ga4-section')
     var toolName = form.closest('[data-ga4-tool-name]').getAttribute('data-ga4-tool-name')
     var dataModule = form.dataset.module || null
-    var eventData = {
+    var type
+    var eventData
+
+    if (form.querySelector('.gem-c-reorderable-list')) {
+      type = 'reorder'
+    } else {
+      type = 'edit'
+    }
+
+    eventData = {
       event_name: 'form_response',
-      type: 'edit',
+      type: type,
       section: section,
       action: 'Save',
       tool_name: toolName
