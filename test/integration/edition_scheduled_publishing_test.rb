@@ -37,10 +37,9 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
     end
     assert page.has_content?("edition was successfully updated", exact: false)
 
-    visit find_content_path
+    edition.reload
 
-    assert page.has_content? edition.title
-    assert page.has_content?("Scheduled")
+    assert edition.scheduled_for_publishing?
   end
 
   test "should allow a scheduled edition to be published now" do
