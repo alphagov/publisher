@@ -99,7 +99,7 @@ class EditDraftGuideEditionJsTest < JavascriptIntegrationTest
 
       within ".govuk-error-summary" do
         assert_text "There is a problem"
-        assert_link "Enter a title for Chapter 1", href: "#part_1_title"
+        assert_link "Enter a title for Chapter 1", href: "#edition_part_1_title"
       end
 
       within all(".govuk-accordion__section")[0] do

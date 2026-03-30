@@ -670,10 +670,10 @@ class EditDraftEditionTest < IntegrationTest
 
             within ".govuk-error-summary" do
               assert_text "There is a problem"
-              assert_link "Enter a title for Chapter 1", href: "#part_1_title"
-              assert_link "Enter a slug for Chapter 1", href: "#part_1_slug"
-              assert_link "Enter a title for Chapter 2", href: "#part_2_title"
-              assert_link "Slug for Chapter 2 can only consist of lower case characters, numbers and hyphens", href: "#part_2_slug"
+              assert_link "Enter a title for Chapter 1", href: "#edition_part_1_title"
+              assert_link "Enter a slug for Chapter 1", href: "#edition_part_1_slug"
+              assert_link "Enter a title for Chapter 2", href: "#edition_part_2_title"
+              assert_link "Slug for Chapter 2 can only consist of lower case characters, numbers and hyphens", href: "#edition_part_2_slug"
             end
           end
 
@@ -696,7 +696,7 @@ class EditDraftEditionTest < IntegrationTest
 
             within ".govuk-error-summary" do
               assert_text "There is a problem"
-              assert_link "Enter a title for Chapter 2", href: "#part_2_title"
+              assert_link "Enter a title for Chapter 2", href: "#edition_part_2_title"
             end
           end
 
@@ -719,7 +719,7 @@ class EditDraftEditionTest < IntegrationTest
 
             within ".govuk-error-summary" do
               assert_text "There is a problem"
-              assert_link "Enter a slug for Chapter 2", href: "#part_2_slug"
+              assert_link "Enter a slug for Chapter 2", href: "#edition_part_2_slug"
             end
           end
 
@@ -742,7 +742,7 @@ class EditDraftEditionTest < IntegrationTest
 
             within ".govuk-error-summary" do
               assert_text "There is a problem"
-              assert_link "Slug for Chapter 2 can only consist of lower case characters, numbers and hyphens", href: "#part_2_slug"
+              assert_link "Slug for Chapter 2 can only consist of lower case characters, numbers and hyphens", href: "#edition_part_2_slug"
             end
           end
 
