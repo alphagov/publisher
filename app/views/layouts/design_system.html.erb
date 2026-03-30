@@ -44,6 +44,8 @@
       <%= render "govuk_publishing_components/components/back_link", { href: yield(:back_link) } %>
     <% end %>
 
+    <% ga4_tool_name = @resource ? @resource.format.underscore.humanize : "Publisher" %>
+
     <main
       id="main-content"
       class="govuk-main-wrapper govuk-main-wrapper--auto-spacing"
@@ -55,7 +57,7 @@
       data-ga4-do-not-redact
       data-ga4-no-copy="true"
       data-ga4-section="<%= yield(:title) %>"
-      data-ga4-tool-name="<%= @resource ? @resource.format.underscore.humanize : "Publisher" %>"
+      data-ga4-tool-name="<%= ga4_tool_name %>"
     >
       <%= render "shared/flash", flash: flash %>
 
