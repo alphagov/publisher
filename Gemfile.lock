@@ -888,7 +888,7 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    state_machines (0.100.4)
+    state_machines (0.101.0)
     state_machines-activemodel (0.101.0)
       activemodel (>= 7.2)
       state_machines (>= 0.100.4)
