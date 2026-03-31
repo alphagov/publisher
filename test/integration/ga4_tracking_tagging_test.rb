@@ -58,10 +58,11 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
     setup do
       stub_linkables_with_data
       visit tagging_remove_breadcrumb_page_edition_path(@edition)
-      disable_form_submit
     end
 
     should "add breadcrumb removal events to the dataLayer" do
+      disable_form_submit
+
       # Select an option
       find("label", text: "Yes, remove the breadcrumb").click
       # Select a different option
@@ -94,6 +95,19 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "{\"Are you sure you want to remove the breadcrumb?\":\"No, keep the breadcrumb\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]
+    end
+
+    should "push the correct values to the dataLayer when a form error is triggered" do
+      click_button "Save"
+
+      event_data = get_event_data
+
+      assert_equal "error", event_data[0]["action"]
+      assert_equal "form_error", event_data[0]["event_name"]
+      assert_equal "Edit edition", event_data[0]["type"]
+      assert_equal "Select an option", event_data[0]["text"]
+      assert_equal "Remove parent", event_data[0]["section"]
+      assert_equal "Answer", event_data[0]["tool_name"]
     end
   end
 
