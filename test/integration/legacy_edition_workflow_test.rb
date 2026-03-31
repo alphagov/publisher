@@ -14,7 +14,6 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
     @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")
-    @welsh_editor = FactoryBot.create(:user, :welsh_editor, name: "WelshEditor")
 
     @simple_smart_answer = FactoryBot.create(:simple_smart_answer_edition)
     login_as "Alice"
@@ -99,79 +98,71 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     assert_match(/reply is being sent to #{Regexp.escape @simple_smart_answer.fact_check_email_address}\./, fact_check_email.body.to_s)
   end
 
-  [[true, "Fact check sent"], [false, "Fact check"]].each do |toggle_value, fact_check_state_label|
-    context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
-      setup do
-        @test_strategy.switch!(:rename_edition_states, toggle_value)
-      end
+  should "be able to send simple smart answer to fact-check when in ready state" do
+    @simple_smart_answer.update!(state: "ready")
+    visit_edition @simple_smart_answer
 
-      should "be able to send simple smart answer to fact-check when in ready state" do
-        @simple_smart_answer.update!(state: "ready")
-        visit_edition @simple_smart_answer
+    click_link("Fact check")
 
-        click_link("Fact check")
+    ActionMailer::Base.deliveries.clear
 
-        ActionMailer::Base.deliveries.clear
-
-        within "#send_fact_check_form" do
-          fill_in "Customised message", with: "Blah"
-          fill_in "Email address", with: "user@example.com"
-          click_on "Send"
-        end
-
-        assert page.has_css?(".label", text: fact_check_state_label)
-
-        click_on "History and notes"
-        assert page.has_content? "Send fact check by Alice"
-        assert page.has_content? "Request sent to user@example.com"
-
-        @simple_smart_answer.reload
-        assert @simple_smart_answer.fact_check?
-
-        fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
-        assert fact_check_email
-        assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email.subject)
-        assert_equal "Blah", fact_check_email.body.to_s
-      end
-
-      should "be able to send simple smart answer to several fact-check recipients with comma separated emails" do
-        @simple_smart_answer.update!(state: "ready")
-        visit_edition @simple_smart_answer
-
-        click_link("Fact check")
-
-        ActionMailer::Base.deliveries.clear
-
-        within "#send_fact_check_form" do
-          fill_in "Customised message", with: "Blah"
-          fill_in "Email address", with: "user1@example.com, user2@example.com"
-          click_on "Send"
-        end
-
-        assert page.has_css?(".label", text: fact_check_state_label)
-        @simple_smart_answer.reload
-        assert @simple_smart_answer.fact_check?
-
-        fact_check_email1 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
-        assert fact_check_email1
-        fact_check_email2 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user2@example.com" }.last
-        assert fact_check_email2
-        assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email1.subject)
-        assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email2.subject)
-        assert_equal "Blah", fact_check_email1.body.to_s
-        assert_equal "Blah", fact_check_email2.body.to_s
-      end
-
-      should "be able to go back to fact-check from fact-check received" do
-        @simple_smart_answer.update!(state: "fact_check_received")
-
-        visit_edition @simple_smart_answer
-        send_for_fact_check @simple_smart_answer
-        visit_edition @simple_smart_answer
-
-        assert page.has_css?(".label", text: fact_check_state_label)
-      end
+    within "#send_fact_check_form" do
+      fill_in "Customised message", with: "Blah"
+      fill_in "Email address", with: "user@example.com"
+      click_on "Send"
     end
+
+    assert page.has_css?(".label", text: "Fact check sent")
+
+    click_on "History and notes"
+    assert page.has_content? "Send fact check by Alice"
+    assert page.has_content? "Request sent to user@example.com"
+
+    @simple_smart_answer.reload
+    assert @simple_smart_answer.fact_check?
+
+    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
+    assert fact_check_email
+    assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email.subject)
+    assert_equal "Blah", fact_check_email.body.to_s
+  end
+
+  should "be able to send simple smart answer to several fact-check recipients with comma separated emails" do
+    @simple_smart_answer.update!(state: "ready")
+    visit_edition @simple_smart_answer
+
+    click_link("Fact check")
+
+    ActionMailer::Base.deliveries.clear
+
+    within "#send_fact_check_form" do
+      fill_in "Customised message", with: "Blah"
+      fill_in "Email address", with: "user1@example.com, user2@example.com"
+      click_on "Send"
+    end
+
+    assert page.has_css?(".label", text: "Fact check sent")
+    @simple_smart_answer.reload
+    assert @simple_smart_answer.fact_check?
+
+    fact_check_email1 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
+    assert fact_check_email1
+    fact_check_email2 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user2@example.com" }.last
+    assert fact_check_email2
+    assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email1.subject)
+    assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email2.subject)
+    assert_equal "Blah", fact_check_email1.body.to_s
+    assert_equal "Blah", fact_check_email2.body.to_s
+  end
+
+  should "be able to go back to fact-check from fact-check received" do
+    @simple_smart_answer.update!(state: "fact_check_received")
+
+    visit_edition @simple_smart_answer
+    send_for_fact_check @simple_smart_answer
+    visit_edition @simple_smart_answer
+
+    assert page.has_css?(".label", text: "Fact check sent")
   end
 
   test "the fact-check form validates emails and won't send if they are mangled" do
@@ -222,10 +213,8 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "Needs more work", "Request amendments", "You need to fix some stuff"
     assert page.has_content?("updated")
 
-    filter_for_all_users
-    view_filtered_list "Amends needed"
-
-    assert page.has_content? @simple_smart_answer.title
+    @simple_smart_answer.reload
+    assert_equal "amends_needed", @simple_smart_answer.state
   end
 
   test "a simple smart answer in the fact-check state can be requested to make more amendments" do
@@ -235,10 +224,8 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "Needs more work", "Request amendments", "You need to fix some stuff"
     assert page.has_content?("updated")
 
-    filter_for_all_users
-    view_filtered_list "Amends needed"
-
-    assert page.has_content? @simple_smart_answer.title
+    @simple_smart_answer.reload
+    assert_equal "amends_needed", @simple_smart_answer.state
   end
 
   test "a simple smart answer in the fact-check state can resend the email" do
@@ -255,7 +242,6 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     ActionMailer::Base.deliveries.clear
 
-    visit_edition @simple_smart_answer
     send_for_generic_action @simple_smart_answer, "Resend fact check email" do
       assert page.has_content? "Blah blah fact check message"
       assert page.has_content? "user-to-ask-for-fact-check@example.com"
@@ -263,7 +249,6 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     end
     assert page.has_content?("updated")
 
-    visit_edition @simple_smart_answer
     click_on "History and notes"
     assert page.has_content? "Resend fact check by Alice"
 
@@ -297,25 +282,15 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     end
   end
 
-  [[true, "In 2i"], [false, "In review"]].each do |toggle_value, in_review_state_label|
-    context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
-      setup do
-        @test_strategy.switch!(:rename_edition_states, toggle_value)
-      end
+  should "be able to send simple smart answer for review" do
+    @simple_smart_answer.assigned_to = bob
 
-      should "be able to send simple smart answer for review" do
-        @simple_smart_answer.assigned_to = bob
+    visit_edition @simple_smart_answer
+    send_action @simple_smart_answer, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
 
-        visit_edition @simple_smart_answer
-        send_action @simple_smart_answer, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
-        assert page.has_content?("updated")
-
-        filter_for_all_users
-        click_link in_review_state_label
-
-        assert page.has_content? @simple_smart_answer.title
-      end
-    end
+    @simple_smart_answer.reload
+    assert_equal "in_review", @simple_smart_answer.state
   end
 
   test "cannot review own simple smart answer" do
@@ -396,10 +371,8 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "Needs more work", "Request amendments", "You need to fix some stuff"
     assert page.has_content?("updated")
 
-    filter_for_all_users
-    view_filtered_list "Amends needed"
-
-    assert page.has_content? @simple_smart_answer.title
+    @simple_smart_answer.reload
+    assert_equal "amends_needed", @simple_smart_answer.state
   end
 
   test "review passed" do
@@ -410,9 +383,8 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "No changes needed", "No changes needed", "Yup, looks good"
     assert page.has_content?("updated")
 
-    filter_for_all_users
-    view_filtered_list "Ready"
-    assert page.has_content? @simple_smart_answer.title
+    @simple_smart_answer.reload
+    assert_equal "ready", @simple_smart_answer.state
   end
 
   test "can skip fact-check" do
@@ -426,9 +398,9 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     # This information is not quite correct but it is the current behaviour.
     # Adding this test as an aid to future improvements
     assert page.has_content? "Fact check was skipped for this edition."
-    filter_for_all_users
-    view_filtered_list "Ready"
-    assert page.has_content? @simple_smart_answer.title
+
+    @simple_smart_answer.reload
+    assert_equal "ready", @simple_smart_answer.state
 
     visit_edition @simple_smart_answer
     assert page.has_content? "Request this edition to be amended further."
@@ -442,86 +414,13 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_action @simple_smart_answer, "No more work needed", "Approve fact check", "Hurrah!"
     assert page.has_content?("updated")
 
-    filter_for_all_users
-    view_filtered_list "Ready"
-
-    assert page.has_content? @simple_smart_answer.title
-  end
-
-  test "can create a new edition from the listings screens" do
-    @simple_smart_answer.update!(state: "published")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-
-    assert page.has_content? "New edition created"
-  end
-
-  test "Welsh editors cannot create a new edition from the listings screen" do
-    @simple_smart_answer.update!(state: "published")
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    assert page.has_no_content? "Create new edition"
-  end
-
-  test "Welsh editors can create a new Welsh edition from the listings screen" do
-    @simple_smart_answer.update!(state: "published")
-    @simple_smart_answer.artefact.update!(language: "cy")
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-
-    assert page.has_content? "New edition created"
-  end
-
-  test "Welsh editors cannot edit a newer edition from the listings screen" do
-    @simple_smart_answer.update!(state: "published")
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-    assert page.has_content? "New edition created"
-
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-
-    assert page.has_no_content? "Edit newer edition"
-  end
-
-  test "Welsh editors can edit a newer Welsh edition from the listings screen" do
-    @simple_smart_answer.update!(state: "published")
-    @simple_smart_answer.artefact.update!(language: "cy")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-    click_on "Create new edition"
-
-    login_as("WelshEditor")
-
-    visit "/"
-    filter_for_all_users
-    view_filtered_list "Published"
-
-    click_on "Edit newer edition"
-
-    assert_equal page.current_path, edition_path(@simple_smart_answer.artefact.latest_edition)
+    @simple_smart_answer.reload
+    assert_equal "ready", @simple_smart_answer.state
   end
 
   test "Welsh editors cannot create new editions from the edition page" do
     @simple_smart_answer.update!(state: "published")
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit edition_path(@simple_smart_answer)
     assert page.has_no_content? "Create new edition"
@@ -530,7 +429,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
   test "Welsh editors can create new Welsh editions from the edition page" do
     @simple_smart_answer.update!(state: "published")
     @simple_smart_answer.artefact.update!(language: "cy")
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit edition_path(@simple_smart_answer)
     click_on "Create new edition"
@@ -540,10 +439,9 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors cannot edit existing newer editions from the edition page" do
     @simple_smart_answer.update!(state: "published")
-    visit edition_path(@simple_smart_answer)
-    click_on "Create new edition"
+    FactoryBot.create(:simple_smart_answer_edition, panopticon_id: @simple_smart_answer.artefact.id)
+    login_as_welsh_editor
 
-    login_as("WelshEditor")
     visit edition_path(@simple_smart_answer)
 
     assert page.has_no_content? "Edit existing newer edition"
@@ -556,7 +454,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     visit edition_path(@simple_smart_answer)
     click_on "Create new edition"
 
-    login_as("WelshEditor")
+    login_as_welsh_editor
     visit edition_path(@simple_smart_answer)
 
     click_on "Edit existing newer edition"
@@ -565,7 +463,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot update editions" do
-    login_as("WelshEditor")
+    login_as_welsh_editor
     visit edition_path(@simple_smart_answer)
 
     assert page.has_no_content? "Save"
@@ -574,7 +472,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
   test "Welsh editors can update Welsh editions" do
     @simple_smart_answer.artefact.update!(language: "cy")
 
-    login_as("WelshEditor")
+    login_as_welsh_editor
     visit edition_path(@simple_smart_answer)
 
     fill_in "edition[title]", with: "Updated Welsh Title"
@@ -585,7 +483,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
   test "Welsh editors can assign users to Welsh editions" do
     @simple_smart_answer.artefact.update!(language: "cy")
 
-    login_as("WelshEditor")
+    login_as_welsh_editor
     visit edition_path(@simple_smart_answer)
 
     select2 "Bob", from: "Assigned to"
@@ -598,7 +496,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot assign users to non-Welsh editions" do
-    login_as("WelshEditor")
+    login_as_welsh_editor
     visit edition_path(@simple_smart_answer)
 
     assert page.has_no_content? "Assigned to"
@@ -606,7 +504,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors may not see buttons to respond to fact checks" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check_received)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -617,7 +515,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors may see buttons to respond to fact checks for Welsh editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check_received, :welsh)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -628,7 +526,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors may not request more work for fact checked edition" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -638,7 +536,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors may request more work for fact checked Welsh edition" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check, :welsh)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -648,7 +546,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors may not request more work for 'ready' non-Welsh editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :ready)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -658,7 +556,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors may request more work for 'ready' Welsh editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :ready, :welsh)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -668,7 +566,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors cannot see publishing buttons for non-Welsh 'ready' editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :ready, panopticon_id: FactoryBot.create(:artefact).id)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -678,7 +576,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors can see publishing buttons for Welsh 'ready' editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :ready, :welsh)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -688,7 +586,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors cannot see publishing buttons for non-Welsh 'scheduled' editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, panopticon_id: FactoryBot.create(:artefact).id)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -698,7 +596,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors can see publishing buttons for Welsh 'scheduled' editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, :welsh)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -708,7 +606,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors cannot see review buttons for non-Welsh editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -718,7 +616,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors can see review buttons for Welsh editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :in_review, :welsh)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -728,7 +626,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors cannot see buttons to request a review for non-Welsh editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :draft, panopticon_id: FactoryBot.create(:artefact).id)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
 
@@ -737,7 +635,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   test "Welsh editors can see buttons to request a review for Welsh editions" do
     edition = FactoryBot.create(:simple_smart_answer_edition, :draft, :welsh)
-    login_as("WelshEditor")
+    login_as_welsh_editor
 
     visit_edition edition
     find_link("2nd pair of eyes", href: "#request_review_form").click
@@ -791,8 +689,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
   test "should show an alert if another person has created a newer edition" do
     @simple_smart_answer.update!(state: "published")
 
-    filter_for_all_users
-    view_filtered_list "Published"
+    visit_edition @simple_smart_answer
 
     # Simulate that someone has clicked on 'Create new edition'
     # while current user has been viewing the list of published editions
@@ -845,25 +742,5 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
   def path_segment(url)
     url.split("#").last
-  end
-
-  def filter_for_all_users
-    visit "/"
-    within :css, ".user-filter-form" do
-      select2 "All", from: "ASSIGNEE"
-      click_on "Filter publications"
-    end
-    assert page.has_content?("Publications")
-  end
-
-  def view_filtered_list(filter_label)
-    visit "/"
-    filter_link = find(:xpath, "//a[contains(., '#{filter_label}')]")
-    assert_not filter_link.nil?, "Tab link #{filter_label} not found"
-    assert_not filter_link["href"].nil?, "Tab link #{filter_label} has no target"
-
-    filter_link.click
-
-    assert page.has_content?(filter_label)
   end
 end

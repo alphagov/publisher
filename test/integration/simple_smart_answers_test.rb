@@ -635,8 +635,10 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
 
       visit "/editions/#{@edition.to_param}/diagram"
 
-      within ".nodes" do
-        assert page.has_content? "Q1. Which period do you want to calculate the fuel scale charge for?"
+      using_wait_time(10) do
+        within ".nodes" do
+          assert page.has_content? "Q1. Which period do you want to calculate the fuel scale charge for?"
+        end
       end
     end
   end

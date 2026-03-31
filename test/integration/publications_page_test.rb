@@ -6,7 +6,6 @@ class PublicationsPageTest < IntegrationTest
   setup do
     @other_user = FactoryBot.create(:user, name: "Other User")
     login_as_govuk_editor
-    @test_strategy.switch!(:design_system_edit_phase_3b, true)
   end
 
   context "my_content page" do
@@ -16,48 +15,40 @@ class PublicationsPageTest < IntegrationTest
       assert_current_path my_content_path
     end
 
-    [[true, "In 2i", "Fact check sent"], [false, "In review", "Fact check"]].each do |toggle_value, in_review_state_label, fact_check_state_label|
-      context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
-        setup do
-          @test_strategy.switch!(:rename_edition_states, toggle_value)
-        end
+    should "display publications assigned to the current user" do
+      @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+      @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago, assigned_to: @user)
+      @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
+      @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @user)
 
-        should "display publications assigned to the current user" do
-          @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
-          @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago, assigned_to: @user)
-          @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
-          @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @user)
+      visit my_content_path
 
-          visit my_content_path
+      within find(".govuk-table__row", text: "Draft edition") do
+        assert_link "Draft edition", href: edition_path(@draft_edition)
+        assert_css ".govuk-tag--yellow", text: "Draft"
+        assert_text "1 day ago"
+        assert_text "Answer"
+      end
 
-          within find(".govuk-table__row", text: "Draft edition") do
-            assert_link "Draft edition", href: edition_path(@draft_edition)
-            assert_css ".govuk-tag--yellow", text: "Draft"
-            assert_text "1 day ago"
-            assert_text "Answer"
-          end
+      within find(".govuk-table__row", text: "Fact check edition") do
+        assert_link "Fact check edition", href: edition_path(@fact_check_edition)
+        assert page.has_css?(".govuk-tag--purple", text: "Fact check sent")
+        assert_text "2 days ago"
+        assert_text "Guide"
+      end
 
-          within find(".govuk-table__row", text: "Fact check edition") do
-            assert_link "Fact check edition", href: edition_path(@fact_check_edition)
-            assert page.has_css?(".govuk-tag--purple", text: fact_check_state_label)
-            assert_text "2 days ago"
-            assert_text "Guide"
-          end
+      within find(".govuk-table__row", text: "In review edition") do
+        assert_link "In review edition", href: edition_path(@in_review_edition)
+        assert page.has_css?(".govuk-tag--grey", text: "In 2i")
+        assert_text "3 days ago"
+        assert_text "Help page"
+      end
 
-          within find(".govuk-table__row", text: "In review edition") do
-            assert_link "In review edition", href: edition_path(@in_review_edition)
-            assert page.has_css?(".govuk-tag--grey", text: in_review_state_label)
-            assert_text "3 days ago"
-            assert_text "Help page"
-          end
-
-          within find(".govuk-table__row", text: "Ready edition") do
-            assert_link "Ready edition", href: edition_path(@ready_edition)
-            assert page.has_css?(".govuk-tag--green", text: "Ready")
-            assert_text "4 days ago"
-            assert_text "Transaction"
-          end
-        end
+      within find(".govuk-table__row", text: "Ready edition") do
+        assert_link "Ready edition", href: edition_path(@ready_edition)
+        assert page.has_css?(".govuk-tag--green", text: "Ready")
+        assert_text "4 days ago"
+        assert_text "Transaction"
       end
     end
 
@@ -258,102 +249,94 @@ class PublicationsPageTest < IntegrationTest
   end
 
   context "find_content page" do
+    setup do
+      @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+      @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago, assigned_to: @other_user)
+      @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
+      @scheduled_edition = FactoryBot.create(:transaction_edition, :scheduled_for_publishing, title: "Scheduled edition", updated_at: 4.days.ago, assigned_to: @other_user)
+
+      visit find_content_path
+    end
+
     should "redirect to the find-content page when find content link in the navigation bar is clicked" do
       visit "/find-content"
 
       assert_current_path find_content_path
     end
 
-    [[true, "In 2i", "Fact check sent", "Scheduled"], [false, "In review", "Fact check", "Scheduled for publishing"]].each do |toggle_value, in_review_state_label, fact_check_state_label, scheduled_for_publishing_state_label|
-      context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
-        setup do
-          @test_strategy.switch!(:rename_edition_states, toggle_value)
-          @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
-          @fact_check_edition = FactoryBot.create(:guide_edition, :fact_check, title: "Fact check edition", updated_at: 2.days.ago, assigned_to: @other_user)
-          @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
-          @scheduled_edition = FactoryBot.create(:transaction_edition, :scheduled_for_publishing, title: "Scheduled edition", updated_at: 4.days.ago, assigned_to: @other_user)
+    should "display publications data for find content page" do
+      within find(".govuk-table__row", text: "Draft edition") do
+        assert_link "Draft edition", href: edition_path(@draft_edition)
+        assert_css ".govuk-tag--yellow", text: "Draft"
+        assert_text "1 day ago"
+        assert_text "Answer"
+      end
 
-          visit find_content_path
-        end
+      within find(".govuk-table__row", text: "Fact check edition") do
+        assert_link "Fact check edition", href: edition_path(@fact_check_edition)
+        assert page.has_css?(".govuk-tag--purple", text: "Fact check sent")
+        assert_text "2 days ago"
+        assert_text "Guide"
+      end
 
-        should "display publications data for find content page" do
-          within find(".govuk-table__row", text: "Draft edition") do
-            assert_link "Draft edition", href: edition_path(@draft_edition)
-            assert_css ".govuk-tag--yellow", text: "Draft"
-            assert_text "1 day ago"
-            assert_text "Answer"
-          end
+      within find(".govuk-table__row", text: "In review edition") do
+        assert_link "In review edition", href: edition_path(@in_review_edition)
+        assert page.has_css?(".govuk-tag--grey", text: "In 2i")
+        assert_text "3 days ago"
+        assert_text "Help page"
+      end
 
-          within find(".govuk-table__row", text: "Fact check edition") do
-            assert_link "Fact check edition", href: edition_path(@fact_check_edition)
-            assert page.has_css?(".govuk-tag--purple", text: fact_check_state_label)
-            assert_text "2 days ago"
-            assert_text "Guide"
-          end
+      within find(".govuk-table__row", text: "Scheduled edition") do
+        assert_link "Scheduled edition", href: edition_path(@scheduled_edition)
+        assert page.has_css?(".govuk-tag--turquoise", text: "Scheduled")
+        assert_text "4 days ago"
+        assert_text "Transaction"
+      end
+    end
 
-          within find(".govuk-table__row", text: "In review edition") do
-            assert_link "In review edition", href: edition_path(@in_review_edition)
-            assert page.has_css?(".govuk-tag--grey", text: in_review_state_label)
-            assert_text "3 days ago"
-            assert_text "Help page"
-          end
+    should "allow filtering of publications with the 'in_review' state" do
+      select "In 2i", from: "Status"
+      click_button("Apply filters")
 
-          within find(".govuk-table__row", text: "Scheduled edition") do
-            assert_link "Scheduled edition", href: edition_path(@scheduled_edition)
-            assert page.has_css?(".govuk-tag--turquoise", text: scheduled_for_publishing_state_label)
-            assert_text "4 days ago"
-            assert_text "Transaction"
-          end
-        end
+      assert_link "Clear filters"
 
-        should "allow filtering of publications with the 'in_review' state" do
-          select in_review_state_label, from: "Status"
-          click_button("Apply filters")
+      within find(".govuk-table") do
+        assert_text "In 2i"
+        assert_no_text "Scheduled"
+        assert_no_text "Fact check sent"
+        assert_no_text "Draft"
+      end
+    end
 
-          assert_link "Clear filters"
+    should "allow filtering of publications with the 'fact_check' state" do
+      select "Fact check sent", from: "Status"
+      click_button("Apply filters")
 
-          within find(".govuk-table") do
-            assert_text in_review_state_label
-            assert_no_text scheduled_for_publishing_state_label
-            assert_no_text fact_check_state_label
-            assert_no_text "Draft"
-          end
-        end
+      assert_link "Clear filters"
 
-        should "allow filtering of publications with the 'fact_check' state" do
-          fact_check_state_option = fact_check_state_label == "Fact check" ? "Out for fact check" : fact_check_state_label
-          select fact_check_state_option, from: "Status"
-          click_button("Apply filters")
+      within find(".govuk-table") do
+        assert_text "Fact check sent"
+        assert_no_text "Scheduled"
+        assert_no_text "In 2i"
+        assert_no_text "Draft"
+      end
+    end
 
-          assert_link "Clear filters"
+    should "allow filtering of publications with the 'scheduled_for_publishing' state" do
+      select "Scheduled", from: "Status"
+      click_button("Apply filters")
 
-          within find(".govuk-table") do
-            assert_text fact_check_state_label
-            assert_no_text scheduled_for_publishing_state_label
-            assert_no_text in_review_state_label
-            assert_no_text "Draft"
-          end
-        end
+      assert_link "Clear filters"
 
-        should "allow filtering of publications with the 'scheduled_for_publishing' state" do
-          select "Scheduled", from: "Status"
-          click_button("Apply filters")
-
-          assert_link "Clear filters"
-
-          within find(".govuk-table") do
-            assert_text scheduled_for_publishing_state_label
-            assert_no_text fact_check_state_label
-            assert_no_text in_review_state_label
-            assert_no_text "Draft"
-          end
-        end
+      within find(".govuk-table") do
+        assert_text "Scheduled"
+        assert_no_text "Fact check sent"
+        assert_no_text "In 2i"
+        assert_no_text "Draft"
       end
     end
 
     should "display the correct hint text with title" do
-      @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
-
       visit find_content_path
 
       within find(".govuk-table__row", text: "Draft edition") do
@@ -397,7 +380,6 @@ class PublicationsPageTest < IntegrationTest
       end
 
       should "filter publications data by title text" do
-        @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
         @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @other_user)
 
         visit find_content_path

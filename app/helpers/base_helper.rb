@@ -27,8 +27,6 @@ module BaseHelper
   end
 
   def humanize_state(state)
-    return state.humanize unless Flipflop.enabled?(:rename_edition_states)
-
     case state
     when "in_review"
       "In 2i"

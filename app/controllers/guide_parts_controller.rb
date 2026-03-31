@@ -47,11 +47,7 @@ class GuidePartsController < InheritedResources::Base
         redirect_to edition_path(@edition)
       elsif params[:save] == "save"
         flash[:success] = "New chapter added successfully."
-        if Flipflop.enabled?(:guide_chapter_accordion_interface)
-          redirect_to edition_path(@edition)
-        else
-          redirect_to edit_edition_guide_part_path(@edition, @part)
-        end
+        redirect_to edition_path(@edition)
       end
     else
       render "new"

@@ -5,6 +5,7 @@ Capybara.register_driver :headless_chrome do |app|
   chrome_options.add_argument("--disable-web-security")
   chrome_options.add_argument("--no-sandbox")
   chrome_options.add_argument("--disable-dev-shm-usage")
+  chrome_options.add_argument("--disable-gpu")
 
   Capybara::Selenium::Driver.new(
     app,

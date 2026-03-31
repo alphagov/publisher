@@ -48,7 +48,7 @@ class EditionEditTest < IntegrationTest
 
       row = find_all(".govuk-summary-list__row")
       assert_equal 4, row.count, "Expected four rows in the summary"
-      assert row[2].has_text?(/Scheduled for publishing$/)
+      assert row[2].has_text?("Scheduled")
       assert row[3].has_text?("Scheduled")
       assert row[3].has_text?("5:16pm, 4 March 2025")
     end

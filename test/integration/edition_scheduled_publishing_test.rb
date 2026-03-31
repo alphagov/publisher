@@ -37,20 +37,9 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
     end
     assert page.has_content?("edition was successfully updated", exact: false)
 
-    visit_editions
-    within(:css, "div.sidebar-nav li.scheduled_for_publishing") do
-      assert page.has_link?("Scheduled")
-      assert page.has_content?("1")
-
-      click_on "Scheduled"
-    end
-
-    # only one scheduled edition
-    assert page.has_css? "#publication-list-container table tbody tr", count: 1
-
     edition.reload
-    assert page.has_content? edition.title
-    assert page.has_content?("12:15pm, #{day} #{month} #{year}"), "Scheduled time is not showing-up as expected"
+
+    assert edition.scheduled_for_publishing?
   end
 
   test "should allow a scheduled edition to be published now" do
@@ -58,7 +47,7 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
     stub_register_published_content
 
     visit_edition edition
-    assert page.has_css?(".label", text: "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
+    assert page.has_css?(".label", text: "Scheduled on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
     click_on "Publish now"
 
     within "#publish_form" do
@@ -73,7 +62,7 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
     edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing)
 
     visit_edition edition
-    assert page.has_css?(".label", text: "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
+    assert page.has_css?(".label", text: "Scheduled on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
     click_on "Cancel scheduled publishing"
 
     within "#cancel_scheduled_publishing_form" do

@@ -240,30 +240,16 @@ class EditPublishedEditionTest < IntegrationTest
       assert page.has_css?("h3", text: "Meta tag description")
       assert page.has_css?("p", text: published_guide_edition_with_parts.overview)
       assert page.has_css?(".govuk-heading-m", text: "Chapters")
-      assert page.has_css?(".govuk-summary-list__row", text: "PART !")
-      assert page.has_css?(".govuk-summary-list__row", text: "PART !!")
-      assert page.has_css?(".govuk-summary-list__actions", text: "View", minimum: 2)
+      assert page.has_css?(".govuk-accordion__section-heading", text: "PART !")
+      assert page.has_css?("p", text: "part-one")
+      assert page.has_css?("p", text: "This is some version text.")
+      assert page.has_css?(".govuk-accordion__section-heading", text: "PART !!")
+      assert page.has_css?("p", text: "part-two")
+      assert page.has_css?("p", text: "This is some more version text.")
       assert_not page.has_css?(".govuk-button", text: "Add new chapter")
       assert page.has_css?("h3", text: "Is every chapter part of a step by step?")
       assert page.has_css?("h3", text: "Is this beta content?")
       assert page.has_css?("p", text: "Yes", count: 2)
-    end
-
-    should "show View chapter page when View chapter link is clicked" do
-      published_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, :published)
-      visit edition_path(published_guide_edition_with_parts)
-
-      within all(".govuk-summary-list__row").last do
-        click_link("View")
-      end
-
-      assert page.has_content?("View chapter")
-      assert page.has_css?("h3", text: "Title")
-      assert page.has_css?("p", text: "PART !!")
-      assert page.has_css?("h3", text: "Slug")
-      assert page.has_css?("p", text: "part-two")
-      assert page.has_css?("h3", text: "Body")
-      assert page.has_css?("p", text: "This is some more version text.")
     end
 
     should "show 'None added' for empty fields in guide edition" do

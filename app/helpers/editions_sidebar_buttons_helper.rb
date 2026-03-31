@@ -153,19 +153,6 @@ module EditionsSidebarButtonsHelper
         },
       )
 
-      unless Flipflop.enabled?(:guide_chapter_accordion_interface)
-        buttons << render(
-          "govuk_publishing_components/components/button",
-          {
-            text: "Save and go to summary",
-            margin_bottom: 3,
-            secondary_solid: true,
-            name: "save",
-            value: "save and summary",
-          },
-        )
-      end
-
       buttons << render(
         "govuk_publishing_components/components/button",
         {

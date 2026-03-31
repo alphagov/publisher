@@ -30,35 +30,27 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
   end
 
   context "#state_options" do
-    [[true, "In 2i", "Fact check sent"], [false, "In review", "Out for fact check"]].each do |toggle_value, in_review_state_label, fact_check_state_label|
-      context "when the 'rename_edition_states' feature toggle is '#{toggle_value}'" do
-        setup do
-          @test_strategy.switch!(:rename_edition_states, toggle_value)
-        end
+    should "return all state options with 'Active statuses' selected when no state filter has been specified" do
+      state_options = FilteredEditionsPresenter.new(a_gds_user).state_options
 
-        should "return all state options with 'Active statuses' selected when no state filter has been specified" do
-          state_options = FilteredEditionsPresenter.new(a_gds_user).state_options
+      assert_equal(10, state_options.count)
+      assert_includes(state_options, { text: "Active statuses", value: "", selected: true })
+      assert_includes(state_options, { text: "Draft", value: :draft, selected: false })
+      assert_includes(state_options, { text: "In 2i", value: :in_review, selected: false })
+      assert_includes(state_options, { text: "Amends needed", value: :amends_needed, selected: false })
+      assert_includes(state_options, { text: "Fact check sent", value: :fact_check, selected: false })
+      assert_includes(state_options, { text: "Fact check received", value: :fact_check_received, selected: false })
+      assert_includes(state_options, { text: "Ready", value: :ready, selected: false })
+      assert_includes(state_options, { text: "Scheduled", value: :scheduled_for_publishing, selected: false })
+      assert_includes(state_options, { text: "Published", value: :published, selected: false })
+      assert_includes(state_options, { text: "Archived", value: :archived, selected: false })
+    end
 
-          assert_equal(10, state_options.count)
-          assert_includes(state_options, { text: "Active statuses", value: "", selected: true })
-          assert_includes(state_options, { text: "Draft", value: :draft, selected: false })
-          assert_includes(state_options, { text: in_review_state_label, value: :in_review, selected: false })
-          assert_includes(state_options, { text: "Amends needed", value: :amends_needed, selected: false })
-          assert_includes(state_options, { text: fact_check_state_label, value: :fact_check, selected: false })
-          assert_includes(state_options, { text: "Fact check received", value: :fact_check_received, selected: false })
-          assert_includes(state_options, { text: "Ready", value: :ready, selected: false })
-          assert_includes(state_options, { text: "Scheduled", value: :scheduled_for_publishing, selected: false })
-          assert_includes(state_options, { text: "Published", value: :published, selected: false })
-          assert_includes(state_options, { text: "Archived", value: :archived, selected: false })
-        end
+    should "mark the relevant state as selected when a state filter has been specified" do
+      state_options = FilteredEditionsPresenter.new(a_gds_user, states_filter: %w[in_review]).state_options
 
-        should "mark the relevant state as selected when a state filter has been specified" do
-          state_options = FilteredEditionsPresenter.new(a_gds_user, states_filter: %w[in_review]).state_options
-
-          assert_includes(state_options, { text: in_review_state_label, value: :in_review, selected: true })
-          assert_includes(state_options, { text: "Published", value: :published, selected: false }) # Not selected
-        end
-      end
+      assert_includes(state_options, { text: "In 2i", value: :in_review, selected: true })
+      assert_includes(state_options, { text: "Published", value: :published, selected: false }) # Not selected
     end
   end
 

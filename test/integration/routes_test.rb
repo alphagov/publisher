@@ -48,61 +48,20 @@ class RoutesTest < LegacyIntegrationTest
       end
     end
 
-    context "when the 'design_system_phase_4' feature toggle is on" do
-      setup do
-        @test_strategy.switch!(:design_system_edit_phase_4, true)
-      end
-
-      should "route to artefacts controller" do
-        assert_routing("/artefacts/new", controller: "artefacts", action: "new")
-        assert_routing({ method: "post", path: "/artefacts/new/content-details" }, controller: "artefacts", action: "content_details")
-        assert_routing({ method: "post", path: "/artefacts" }, controller: "artefacts", action: "create")
-      end
-
-      should "route update to legacy_artefacts controller" do
-        edition = FactoryBot.create(:edition)
-        assert_routing({ method: "patch", path: "/artefacts/#{edition.id}" }, controller: "legacy_artefacts", action: "update", id: edition.id)
-      end
+    should "route to artefacts controller" do
+      assert_routing("/artefacts/new", controller: "artefacts", action: "new")
+      assert_routing({ method: "post", path: "/artefacts/new/content-details" }, controller: "artefacts", action: "content_details")
+      assert_routing({ method: "post", path: "/artefacts" }, controller: "artefacts", action: "create")
     end
 
-    context "when the 'design_system_phase_4' feature toggle is off" do
-      setup do
-        @test_strategy.switch!(:design_system_edit_phase_4, false)
-      end
-
-      should "route to legacy_artefacts controller" do
-        edition = FactoryBot.create(:edition)
-
-        assert_routing("/artefacts/new", controller: "legacy_artefacts", action: "new")
-        assert_routing({ method: "post", path: "/artefacts" }, controller: "legacy_artefacts", action: "create")
-        assert_routing({ method: "patch", path: "/artefacts/#{edition.id}" }, controller: "legacy_artefacts", action: "update", id: edition.id)
-      end
+    should "route update to legacy_artefacts controller" do
+      edition = FactoryBot.create(:edition)
+      assert_routing({ method: "patch", path: "/artefacts/#{edition.id}" }, controller: "legacy_artefacts", action: "update", id: edition.id)
     end
 
-    context "when the 'guide_chapter_accordion_interface' feature toggle is off" do
-      setup do
-        @test_strategy.switch!(:guide_chapter_accordion_interface, false)
-        @edition = FactoryBot.create(:guide_edition_with_two_parts)
-        @part = @edition.parts.first
-      end
-
-      should "route to guide_parts_controller#show action method" do
-        assert_routing("/editions/#{@edition.id}/guide_parts/#{@part.id}", controller: "guide_parts", action: "show", edition_id: @edition.id, id: @part.id.to_s)
-      end
-
-      should "route to guide_parts_controller#edit action method" do
-        assert_routing("/editions/#{@edition.id}/guide_parts/#{@part.id}/edit", controller: "guide_parts", action: "edit", edition_id: @edition.id, id: @part.id.to_s)
-      end
-
-      should "route to guide_parts_controller#update action method" do
-        assert_routing({ method: "patch", path: "/editions/#{@edition.id}/guide_parts/#{@part.id}" }, controller: "guide_parts", action: "update", edition_id: @edition.id, id: @part.id.to_s)
-      end
-    end
-
-    context "when the 'guide_chapter_accordion_interface' feature toggle is on" do
+    context "guide parts controller" do
       setup do
         setup_users
-        @test_strategy.switch!(:guide_chapter_accordion_interface, true)
         @edition = FactoryBot.create(:guide_edition_with_two_parts)
         @part = @edition.parts.first
       end

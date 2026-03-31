@@ -10,18 +10,6 @@ Flipflop.configure do
   end
 
   group "For all users (These features are available to everyone)" do
-    feature :design_system_edit_phase_3b,
-            default: true,
-            description: "Update the publications page to use the GOV.UK Design System with a multi-page design"
-
-    feature :design_system_edit_phase_4,
-            default: true,
-            description: "Update the 'Add artefact' page to use the GOV.UK Design System with a two-step process"
-
-    feature :rename_edition_states,
-            default: true,
-            description: "Changes the following edition state labels: 'In review' to 'In 2i', 'Fact check'/'Out for fact check' to 'Fact check sent', and 'Scheduled for publishing' to 'Scheduled'"
-
     feature :restrict_access_by_org,
             default: true,
             description: "Restrict access to editions based on the user's org and which org(s) own the edition"
@@ -39,9 +27,5 @@ Flipflop.configure do
     feature :fact_check_manager_api,
             default: false,
             description: "Experimental: enables in-development fact-check-manager API features for testing"
-
-    feature :guide_chapter_accordion_interface,
-            default: true,
-            description: "Enable accordion editing interface for guide chapters"
   end
 end

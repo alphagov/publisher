@@ -3,8 +3,6 @@ require "integration_test_helper"
 class AddArtefactJsTest < JavascriptIntegrationTest
   setup do
     setup_users
-    @test_strategy.switch!(:design_system_edit_phase_3b, true)
-    @test_strategy.switch!(:design_system_edit_phase_4, true)
   end
 
   context "auto-population of an artefact's slug from its title when JS is enabled" do

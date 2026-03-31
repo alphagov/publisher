@@ -12,7 +12,7 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
 
   context "viewing the history and notes tab" do
     setup do
-      @edition = FactoryBot.create(:simple_smart_answer_edition, state: "published", slug: "test-slug")
+      @edition = FactoryBot.create(:simple_smart_answer_edition, state: "published")
 
       @edition.new_action(@author, Action::SEND_FACT_CHECK, comment: "first", email_addresses: "a@a.com, b@b.com")
       @edition.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "second")
@@ -36,7 +36,7 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
       click_on "History and notes"
 
       assert page.has_css?("#edition-history p.add-bottom-margin", text: "View this on the GOV.UK website")
-      assert page.has_link?("/test-slug", href: "#{Plek.website_root}/#{@edition.slug}")
+      assert page.has_link?("/#{@edition.slug}", href: "#{Plek.website_root}/#{@edition.slug}")
     end
 
     should "not show the view link for archived editions" do
@@ -96,23 +96,23 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
 
     context "Important note" do
       should "be able to add and resolve a note" do
+        visit_edition @edition_clone
+        click_on "History and notes"
         add_important_note("This is an important note. Take note.")
 
-        visit_edition @edition_clone
         assert page.has_content? "This is an important note. Take note."
         assert page.has_css?(".callout-important-note")
 
         click_on "History and notes"
         click_on "Delete important note"
-        visit_edition @edition_clone
         assert page.has_no_css?(".callout-important-note")
       end
 
       should "prepopulate with an existing note" do
-        add_important_note("This is an important note. Take note.")
-
         visit_edition @edition_clone
         click_on "History and notes"
+        add_important_note("This is an important note. Take note.")
+
         click_on "Update important note"
 
         within "#update-important-note" do
@@ -121,6 +121,8 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
       end
 
       should "resolve an important note if an empty one is saved" do
+        visit_edition @edition_clone
+        click_on "History and notes"
         add_important_note("Note")
         add_important_note("")
 
@@ -128,6 +130,8 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
       end
 
       should "have clickable links and zendesk tickets" do
+        visit_edition @edition_clone
+        click_on "History and notes"
         add_important_note("Note http://www.google.com zen 123456")
         assert page.has_css?(".callout-important-note .callout-body a", count: 2)
       end
@@ -156,6 +160,8 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
       end
 
       should "not show important notes in edition history" do
+        visit_edition @edition_clone
+        click_on "History and notes"
         add_important_note("Note")
         add_important_note("")
         add_important_note("Another note")
@@ -165,6 +171,8 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
       end
 
       should "shows a history of important notes behind a toggle when there are modifications" do
+        visit_edition @edition_clone
+        click_on "History and notes"
         add_important_note("First note")
         assert page.has_content?("Note created")
 
@@ -227,8 +235,6 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
   end
 
   def add_important_note(note)
-    visit_edition @edition_clone
-    click_on "History and notes"
     click_on "Update important note"
 
     within "#update-important-note" do
