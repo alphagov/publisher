@@ -5,18 +5,7 @@
 <% content_for :title, edition.title %>
 
 <% if !edition.errors.empty? || !part.errors.empty? %>
-  <% content_for :error_summary do %>
-    <%= render("govuk_publishing_components/components/error_summary", {
-      id: "error-summary",
-      title: "There is a problem",
-      items: part.errors.map do |error|
-        {
-          text: error.message,
-          href: "##{error.attribute.to_s}",
-        }
-      end,
-    }) %>
-  <% end %>
+  <% content_for :error_summary, render("shared/error_summary", { object: part, full_messages: false }) %>
 <% end %>
 
 <%= render partial: "document_summary", locals: { edition:, reviewer: } %>
@@ -40,12 +29,12 @@
 <%= form_with url: form_url, method: form_method, data: { module: "unsaved-changes-prompt" } do %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <div data-module="slug-autofill" data-title-input-id="title" data-slug-input-id="slug">
+      <div data-module="slug-autofill" data-title-input-id="part_title" data-slug-input-id="part_slug">
         <%= render "govuk_publishing_components/components/input", {
           label: {
             text: "Title",
           },
-          id: "title",
+          id: "part_title",
           name: "part[title]",
           value: part.title,
           heading_size: "s",
@@ -57,7 +46,7 @@
           label: {
             text: "Slug",
           },
-          id: "slug",
+          id: "part_slug",
           name: "part[slug]",
           value: part.slug,
           heading_size: "s",
