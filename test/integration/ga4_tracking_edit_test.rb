@@ -8,6 +8,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
     setup_users
 
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
+    @guide_edition = FactoryBot.create(:guide_edition, title: "Guide edition")
     @assigned_edition = FactoryBot.create(:edition, assigned_to: @author, created_at: 5.days.ago)
     @in_review_edition = FactoryBot.create(:edition, :in_review, reviewer: @reviewer, created_at: 6.days.ago)
 
@@ -20,7 +21,6 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
   context "Edit page" do
     setup do
       visit edition_path(@edition)
-      # disable_form_submit
     end
 
     should "push the correct values to the dataLayer when events are triggered" do
@@ -90,6 +90,35 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "Enter a title", event_data[0]["text"]
       assert_equal "Title", event_data[0]["section"]
       assert_equal "Answer", event_data[0]["tool_name"]
+    end
+  end
+
+  context "Edit a guide page" do
+    setup do
+      visit edition_path(@guide_edition)
+      click_on "Add a new chapter"
+    end
+
+    should "push the correct values to the dataLayer when a form error is triggered on a Guide part page" do
+      fill_in "Title", with: ""
+      fill_in "Slug", with: ""
+      click_button "Save"
+
+      event_data = get_event_data
+
+      assert_equal "error", event_data[0]["action"]
+      assert_equal "form_error", event_data[0]["event_name"]
+      assert_equal "Edit edition", event_data[0]["type"]
+      assert_equal "Enter a title", event_data[0]["text"]
+      assert_equal "Title", event_data[0]["section"]
+      assert_equal "Guide", event_data[0]["tool_name"]
+
+      assert_equal "error", event_data[1]["action"]
+      assert_equal "form_error", event_data[1]["event_name"]
+      assert_equal "Edit edition", event_data[1]["type"]
+      assert_equal "Enter a slug", event_data[1]["text"]
+      assert_equal "Slug", event_data[1]["section"]
+      assert_equal "Guide", event_data[1]["tool_name"]
     end
   end
 
