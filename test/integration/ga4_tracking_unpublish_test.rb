@@ -13,10 +13,11 @@ class Ga4TrackingUnpublishTest < JavascriptIntegrationTest
   context "Unpublish tab" do
     setup do
       visit unpublish_edition_path(@edition)
-      disable_form_submit
     end
 
     should "add unpublish events to the dataLayer" do
+      disable_form_submit
+
       fill_in "Redirect to URL", with: "https://www.gov.uk/redirect"
       click_button "Continue"
 
@@ -35,6 +36,20 @@ class Ga4TrackingUnpublishTest < JavascriptIntegrationTest
       assert_equal "{\"Redirect to URL\":\"27\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
+    end
+
+    should "push the correct values to the dataLayer when a form error is triggered" do
+      fill_in "Redirect to URL", with: "an-invalid-value"
+      click_button "Continue"
+
+      event_data = get_event_data
+
+      assert_equal "error", event_data[0]["action"]
+      assert_equal "form_error", event_data[0]["event_name"]
+      assert_equal "Edit edition", event_data[0]["type"]
+      assert_equal "Redirect path is invalid. Answer can not be unpublished.", event_data[0]["text"]
+      assert_equal "Redirect URL", event_data[0]["section"]
+      assert_equal "Answer", event_data[0]["tool_name"]
     end
   end
 end
