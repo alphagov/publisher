@@ -591,6 +591,93 @@ class EditionsControllerTest < ActionController::TestCase
       @test_strategy.switch!(:fact_check_manager_api, false)
     end
 
+    context "#update" do
+      context "user has govuk_editor permission" do
+        should "show update and success message and render show template when saved" do
+          post :update, params: {
+            id: @edition.id,
+            edition: {
+              title: "The changed title",
+            },
+          }
+
+          assert_redirected_to edition_path(@edition)
+          assert_includes flash[:success], "Edition updated successfully."
+          @edition.reload
+          assert_equal "The changed title", @edition.title
+        end
+
+        should "show error message and render show template when title field is blank" do
+          post :update, params: {
+            id: @edition.id,
+            edition: {
+              title: "",
+            },
+          }
+
+          assert_template "show"
+          assert_select ".gem-c-error-summary__list-item", "Enter a title"
+        end
+
+        should "show error message and render show template when the edition could not be updated" do
+          Edition.any_instance.stubs(:save).raises(StandardError)
+          post :update, params: {
+            id: @edition.id,
+            edition: {
+              title: "A title",
+            },
+          }
+
+          assert_template "show"
+          assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be updated"
+        end
+
+        should "call update worker with edition id when saved" do
+          UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
+
+          post :update, params: {
+            id: @edition.id,
+            edition: {
+              title: "The changed title",
+            },
+          }
+        end
+
+        should "not call FactCheckManagerApiService if the edition to be saved is in 'fact_check' state" do
+          edition = FactoryBot.create(:edition, :fact_check)
+          FactCheckManagerApiService.expects(:update_fact_check_content).never
+
+          patch :update, params: {
+            id: edition.id,
+            edition: {
+              title: "A new title",
+              body: "Some really long text goes here",
+            },
+          }
+
+          assert_equal "Edition updated successfully.", flash[:success]
+        end
+      end
+
+      context "user does not have govuk_editor permission" do
+        setup do
+          user = FactoryBot.create(:user)
+          login_as(user)
+        end
+
+        should "render an error message" do
+          post :update, params: {
+            id: @edition.id,
+            edition: {
+              title: "The changed title",
+            },
+          }
+
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+
     context "#resend_fact_check_email_page" do
       context "user has govuk_editor permission" do
         should "render the 'Resend fact check email' page" do
@@ -622,10 +709,10 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     context "#resend_fact_check_email" do
-      %i[drafts in_review amends_needed fact_check_received ready scheduled published archived].each do |edition_state|
+      %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |edition_state|
         context "edition is not in a valid state to resend fact check email" do
           setup do
-            @edition = FactoryBot.create(:answer_edition, state: edition_state)
+            @edition = FactoryBot.create(:answer_edition, edition_state)
             FactoryBot.create(
               :action,
               requester: @govuk_editor,
@@ -853,13 +940,99 @@ class EditionsControllerTest < ActionController::TestCase
       @test_strategy.switch!(:fact_check_manager_api, true)
       stub_post_new_fact_check_request(success: true)
       stub_post_resend_fact_check_emails(success: true)
+      stub_patch_update_fact_check_content(success: true, source_id: @edition.id)
+    end
+
+    context "#update" do
+      %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |edition_state|
+        context "edition is not in 'fact_check' 'state" do
+          should "not call FactCheckManagerApiService if the edition is not in 'fact_check' state" do
+            @edition = FactoryBot.create(:edition, edition_state)
+            FactCheckManagerApiService.expects(:update_fact_check_content).never
+
+            patch :update, params: {
+              id: @edition.id,
+              edition: {
+                title: "A new title",
+                body: "Some really long text goes here",
+              },
+            }
+          end
+        end
+      end
+
+      context "user has govuk_editor permission" do
+        should "show update and success message and render show template when saved" do
+          post :update, params: {
+            id: @edition.id,
+            edition: {
+              title: "The changed title",
+            },
+          }
+
+          assert_redirected_to edition_path(@edition)
+          assert_includes flash[:success], "Edition updated successfully."
+          @edition.reload
+          assert_equal "The changed title", @edition.title
+        end
+
+        should "call FactCheckManagerApiService if the edition to be saved is in 'fact_check' state" do
+          FactCheckManagerApiService.expects(:update_fact_check_content).with(@edition)
+
+          patch :update, params: {
+            id: @edition.id,
+            edition: {
+              title: "A new title",
+              body: "Some really long text goes here",
+            },
+          }
+
+          assert_includes flash[:success], "Fact check request updated."
+        end
+
+        should "render an error if the FactCheckManagerApiService call fails" do
+          stub_patch_update_fact_check_content(success: false, source_id: @edition.id)
+
+          patch :update, params: {
+            id: @edition.id,
+            edition: {
+              title: "A new title",
+              body: "Some really long text goes here",
+            },
+          }
+
+          assert_template "govuk_publishing_components/components/_error_summary"
+          assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the fact check request could not be updated. The edition was successfully saved"
+        end
+      end
+
+      context "user does not have govuk_editor permission" do
+        setup do
+          user = FactoryBot.create(:user)
+          login_as(user)
+        end
+
+        should "render an error message and not call FactCheckManagerApiService" do
+          FactCheckManagerApiService.expects(:update_fact_check_content).never
+
+          patch :update, params: {
+            id: @edition.id,
+            edition: {
+              title: "A new title",
+              body: "Some really long text goes here",
+            },
+          }
+
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
     end
 
     context "#resend_fact_check_email" do
-      %i[drafts in_review amends_needed fact_check_received ready scheduled published archived].each do |edition_state|
+      %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |edition_state|
         context "edition is not in a valid state to resend fact check email" do
           setup do
-            @edition = FactoryBot.create(:answer_edition, state: edition_state)
+            @edition = FactoryBot.create(:edition, edition_state)
             FactoryBot.create(
               :action,
               requester: @govuk_editor,
@@ -1965,58 +2138,6 @@ class EditionsControllerTest < ActionController::TestCase
         @welsh_edition.reload
         assert_equal "ready", @welsh_edition.state
       end
-    end
-  end
-
-  context "#update" do
-    should "show update and success message and render show template when saved" do
-      post :update, params: {
-        id: @edition.id,
-        edition: {
-          title: "The changed title",
-        },
-      }
-
-      assert_redirected_to edition_path(@edition)
-      assert_equal "Edition updated successfully.", flash[:success]
-      @edition.reload
-      assert_equal "The changed title", @edition.title
-    end
-
-    should "show error message and render show template when title field is blank" do
-      post :update, params: {
-        id: @edition.id,
-        edition: {
-          title: "",
-        },
-      }
-
-      assert_template "show"
-      assert_select ".gem-c-error-summary__list-item", "Enter a title"
-    end
-
-    should "show error message and render show template when the edition could not be updated" do
-      Edition.any_instance.stubs(:save).raises(StandardError)
-      post :update, params: {
-        id: @edition.id,
-        edition: {
-          title: "A title",
-        },
-      }
-
-      assert_template "show"
-      assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be updated"
-    end
-
-    should "call update worker with edition id when saved" do
-      UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
-
-      post :update, params: {
-        id: @edition.id,
-        edition: {
-          title: "The changed title",
-        },
-      }
     end
   end
 

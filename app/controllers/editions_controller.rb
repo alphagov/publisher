@@ -154,8 +154,14 @@ class EditionsController < InheritedResources::Base
 
     if @resource.save
       UpdateWorker.perform_async(resource.id.to_s)
-      flash[:success] = "Edition updated successfully."
-      redirect_to edition_path(@resource)
+
+      # TODO: when we fully migrate to the new fact check manager, remove this FlipFlop check
+      if @resource.can_resend_fact_check? && Flipflop.enabled?(:fact_check_manager_api)
+        update_fact_check
+      else
+        flash[:success] = "Edition updated successfully."
+        redirect_to edition_path(@resource)
+      end
     else
       @artefact = @resource.artefact
       render "show"
@@ -468,6 +474,17 @@ protected
   end
 
 private
+
+  def update_fact_check
+    FactCheckManagerApiService.update_fact_check_content(@resource)
+  rescue GdsApi::HTTPErrorResponse => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    @resource.errors.add(:show, "Due to a service problem, the fact check request could not be updated. The edition was successfully saved")
+    render "show"
+  else
+    flash[:success] = "Edition updated successfully. <br> Fact check request updated."
+    redirect_to edition_path(@resource)
+  end
 
   def populate_tagging_form_values_from_publishing_api
     @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_publishing_api(
