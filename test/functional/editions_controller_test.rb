@@ -709,10 +709,10 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     context "#resend_fact_check_email" do
-      %i[drafts in_review amends_needed fact_check_received ready scheduled published archived].each do |edition_state|
+      %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |edition_state|
         context "edition is not in a valid state to resend fact check email" do
           setup do
-            @edition = FactoryBot.create(:answer_edition, state: edition_state)
+            @edition = FactoryBot.create(:answer_edition, edition_state)
             FactoryBot.create(
               :action,
               requester: @govuk_editor,
@@ -1029,10 +1029,10 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     context "#resend_fact_check_email" do
-      %i[drafts in_review amends_needed fact_check_received ready scheduled published archived].each do |edition_state|
+      %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |edition_state|
         context "edition is not in a valid state to resend fact check email" do
           setup do
-            @edition = FactoryBot.create(:answer_edition, state: edition_state)
+            @edition = FactoryBot.create(:edition, edition_state)
             FactoryBot.create(
               :action,
               requester: @govuk_editor,
