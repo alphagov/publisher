@@ -5,18 +5,7 @@
 <% content_for :title, edition.title %>
 
 <% if !edition.errors.empty? || !part.errors.empty? %>
-  <% content_for :error_summary do %>
-    <%= render("govuk_publishing_components/components/error_summary", {
-      id: "error-summary",
-      title: "There is a problem",
-      items: part.errors.map do |error|
-        {
-          text: error.message,
-          href: "##{error.attribute.to_s}",
-        }
-      end,
-    }) %>
-  <% end %>
+  <% content_for :error_summary, render("shared/error_summary", { object: part, full_messages: false }) %>
 <% end %>
 
 <%= render partial: "document_summary", locals: { edition:, reviewer: } %>
@@ -45,7 +34,7 @@
           label: {
             text: "Title",
           },
-          id: "title",
+          id: "part_title",
           name: "part[title]",
           value: part.title,
           heading_size: "s",
@@ -57,7 +46,7 @@
           label: {
             text: "Slug",
           },
-          id: "slug",
+          id: "part_slug",
           name: "part[slug]",
           value: part.slug,
           heading_size: "s",
