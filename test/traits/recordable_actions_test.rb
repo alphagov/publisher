@@ -63,4 +63,28 @@ class RecordableActionsTest < ActiveSupport::TestCase
       assert_nil object_under_test.superseded_at
     end
   end
+
+  describe "#latest_status_action" do
+    it "returns the action of that type even when a newer action of a different type exists" do
+      edition = FactoryBot.create(:edition, :in_review)
+      edition.new_action(user, Action::SEND_FACT_CHECK)
+
+      assert_equal Action::REQUEST_REVIEW, edition.latest_status_action(Action::REQUEST_REVIEW).request_type
+    end
+
+    it "returns nil when no action of that type exists" do
+      edition = FactoryBot.create(:edition, :in_review)
+
+      assert_nil edition.latest_status_action(Action::SEND_FACT_CHECK)
+    end
+
+    it "returns the latest status action when no type argument provided" do
+      edition = FactoryBot.create(:edition, :in_review)
+      edition.new_action(user, Action::SEND_FACT_CHECK)
+      edition.new_action(user, Action::REQUEST_AMENDMENTS)
+      edition.new_action(user, Action::IMPORTANT_NOTE)
+
+      assert_equal Action::REQUEST_AMENDMENTS, edition.latest_status_action.request_type
+    end
+  end
 end
