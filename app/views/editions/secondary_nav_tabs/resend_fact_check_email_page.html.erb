@@ -13,7 +13,7 @@
           font_size: "s",
         } %>
 
-        <p class="govuk-body"><%= @edition.latest_status_action.email_addresses %></p>
+        <p class="govuk-body"><%= @edition.latest_status_action(Action::SEND_FACT_CHECK)&.email_addresses %></p>
       </section>
 
       <% unless Flipflop.enabled?(:fact_check_manager_api) %>
@@ -25,7 +25,7 @@
           } %>
 
           <div class="edit--resend-fact-check-email-page__message">
-            <%= @edition.latest_status_action.customised_message.strip %>
+            <%= @edition.latest_status_action(Action::SEND_FACT_CHECK)&.customised_message&.strip %>
           </div>
         </section>
       <% end %>

@@ -42,6 +42,15 @@ class EditFactCheckEditionTest < IntegrationTest
     assert_current_path request_amendments_page_edition_path(@fact_check_edition.id)
   end
 
+  context "when a newer status action by a different requester exists" do
+    should "indicate the user that requested a review" do
+      FactoryBot.create(:action, edition: @fact_check_edition, requester: @govuk_requester, request_type: Action::REQUEST_REVIEW)
+      visit edition_path(@fact_check_edition)
+
+      assert page.has_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+    end
+  end
+
   context "when a welsh editor" do
     setup do
       @welsh_editor = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
@@ -66,6 +75,15 @@ class EditFactCheckEditionTest < IntegrationTest
       should "navigate to the 'Request amendments' page when the link is clicked" do
         click_link("Request amendments")
         assert_current_path request_amendments_page_edition_path(@welsh_edition.id)
+      end
+
+      context "when a newer status action by a different requester exists" do
+        should "indicate the user that requested a review" do
+          FactoryBot.create(:action, edition: @welsh_edition, requester: @govuk_editor, request_type: Action::REQUEST_REVIEW)
+          visit edition_path(@welsh_edition)
+
+          assert page.has_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+        end
       end
     end
 
