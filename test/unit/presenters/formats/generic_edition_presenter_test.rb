@@ -122,7 +122,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
 
       presenter = Formats::GenericEditionPresenter.new(edition)
 
-      assert_equal({ body: "Move your body" }, presenter.render_for_fact_check_manager_api)
+      assert_equal({ body: "<p>Move your body</p>" }, presenter.render_for_fact_check_manager_api)
     end
 
     should "return nil if edition does not respond to whole_body" do
