@@ -5,6 +5,7 @@
     title: "There is a problem",
     items: object.errors.map do |error|
       model = object.class
+ 
       {
         text: full_messages ? error.full_message : error.message,
         href: "##{model.to_s.underscore + "_" + error.attribute.to_s}",
@@ -16,7 +17,7 @@
             text: error.message,
             section: error.attribute.to_s.humanize,
             action: "error",
-            tool_name: @edition.format
+            tool_name: @edition ? @edition.format : "Publisher"
           }
         }
       }
