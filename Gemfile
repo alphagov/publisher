@@ -5,6 +5,7 @@ gem "rails", "8.1.2.1"
 gem "aws-sdk-s3", "~> 1"
 gem "bootsnap", require: false
 gem "bootstrap-kaminari-views"
+gem "content_block_tools"
 gem "csv"
 gem "dartsass-rails"
 gem "diffy"
