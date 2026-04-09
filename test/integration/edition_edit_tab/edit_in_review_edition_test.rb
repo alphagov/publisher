@@ -64,6 +64,15 @@ class EditInReviewEditionTest < IntegrationTest
       should "not show the 'Skip review' link when the user does not have the 'skip_review' permission" do
         assert page.has_no_link?("Skip review")
       end
+
+      context "when a newer status action by a different requester exists" do
+        should "indicate the user that requested a review" do
+          FactoryBot.create(:action, edition: @in_review_edition, requester: @govuk_editor, request_type: Action::SEND_FACT_CHECK)
+          visit edition_path(@in_review_edition)
+
+          assert page.has_text?("You've sent this edition to be reviewed")
+        end
+      end
     end
 
     context "current user is not the requester" do
@@ -112,6 +121,16 @@ class EditInReviewEditionTest < IntegrationTest
         visit edition_path(@in_review_edition)
 
         assert page.has_no_link?("Skip review")
+      end
+
+      context "when a newer status action by a different requester exists" do
+        should "indicate the user that requested a review" do
+          FactoryBot.create(:action, edition: @in_review_edition, requester: @govuk_editor, request_type: Action::SEND_FACT_CHECK)
+
+          visit edition_path(@in_review_edition)
+
+          assert page.has_text?("Stub requester sent this edition to be reviewed")
+        end
       end
     end
   end
@@ -207,6 +226,16 @@ class EditInReviewEditionTest < IntegrationTest
       should "not show the 'Skip review' link when the user does not have the 'skip_review' permission" do
         assert page.has_no_link?("Skip review")
       end
+
+      context "when a newer status action by a different requester exists" do
+        should "indicate the user that requested a review" do
+          FactoryBot.create(:action, edition: @welsh_edition, requester: @govuk_editor, request_type: Action::SEND_FACT_CHECK)
+
+          visit edition_path(@welsh_edition)
+
+          assert page.has_text?("You've sent this edition to be reviewed")
+        end
+      end
     end
 
     context "when viewing a welsh edition as a non-requester" do
@@ -254,6 +283,16 @@ class EditInReviewEditionTest < IntegrationTest
         visit edition_path(@welsh_edition)
 
         assert page.has_no_link?("Skip review")
+      end
+
+      context "when a newer status action by a different requester exists" do
+        should "indicate the user that requested a review" do
+          FactoryBot.create(:action, edition: @welsh_edition, requester: @govuk_editor, request_type: Action::SEND_FACT_CHECK)
+
+          visit edition_path(@welsh_edition)
+
+          assert page.has_text?("Stub requester sent this edition to be reviewed")
+        end
       end
     end
 
