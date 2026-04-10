@@ -5,17 +5,7 @@
 
 <% if !@tagging_update_form_values.errors.empty? %>
   <div class="govuk-grid-row">
-    <% content_for :error_summary do %>
-      <%= render("govuk_publishing_components/components/error_summary", {
-        id: "error-summary",
-        title: "There is a problem",
-        items: @tagging_update_form_values.errors.map do |error|
-          {
-            text: error.message,
-          }
-        end,
-      }) %>
-    <% end %>
+    <% content_for :error_summary, render("shared/error_summary", { object: @tagging_update_form_values, full_messages: false }) %>
   </div>
 <% end %>
 

@@ -8,6 +8,7 @@
 //= require govuk_publishing_components/components/table
 
 // Analytics modules
+//= require govuk_publishing_components/analytics-ga4/ga4-auto-tracker
 //= require govuk_publishing_components/analytics-ga4/ga4-ecommerce-tracker
 //= require govuk_publishing_components/analytics-ga4/ga4-form-change-tracker
 //= require govuk_publishing_components/analytics-ga4/ga4-search-tracker

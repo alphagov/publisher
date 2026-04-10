@@ -57,11 +57,13 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
   context "Remove GOVUK breadcrumb page" do
     setup do
       stub_linkables_with_data
-      visit tagging_remove_breadcrumb_page_edition_path(@edition)
-      disable_form_submit
+      visit tagging_edition_path(@edition)
+      click_on("Remove")
     end
 
     should "add breadcrumb removal events to the dataLayer" do
+      disable_form_submit
+
       # Select an option
       find("label", text: "Yes, remove the breadcrumb").click
       # Select a different option
@@ -94,6 +96,21 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "{\"Are you sure you want to remove the breadcrumb?\":\"No, keep the breadcrumb\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]
+    end
+
+    should "push the correct values to the dataLayer when a form error is triggered" do
+      click_button "Save"
+
+      assert page.has_css?("h1", text: "Are you sure you want to remove the breadcrumb?")
+
+      event_data = get_event_data
+
+      assert_equal "error", event_data[0]["action"]
+      assert_equal "form_error", event_data[0]["event_name"]
+      assert_equal "Edit edition", event_data[0]["type"]
+      assert_equal "Select an option", event_data[0]["text"]
+      assert_equal "Remove parent", event_data[0]["section"]
+      assert_equal "Answer", event_data[0]["tool_name"]
     end
   end
 
@@ -235,11 +252,13 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
   context "Tag to related content page" do
     setup do
       stub_linkables
-      visit tagging_related_content_page_edition_path(@edition)
-      disable_form_submit
+      visit tagging_edition_path(@edition)
+      click_on("Tag to related content")
     end
 
     should "add related content selection events to the dataLayer" do
+      disable_form_submit
+
       # Fill in value for Related content 1
       within all(".js-add-another__fieldset")[0] do
         fill_in "URL or path", with: "/pay-vat"
@@ -335,6 +354,24 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # assert_equal "{\"Tag related content\":\"17,20\"}", event_data[6]["text"]
       assert_equal "Answer", event_data[6]["tool_name"]
       assert_equal "edit", event_data[6]["type"]
+    end
+
+    should "push the correct values to the dataLayer when a form error is triggered" do
+      within all(".js-add-another__fieldset")[0] do
+        fill_in "URL or path", with: "/an-invalid-value"
+      end
+      click_button "Save"
+
+      assert page.has_css?("h1", text: "Tag related content")
+
+      event_data = get_event_data
+
+      assert_equal "error", event_data[0]["action"]
+      assert_equal "form_error", event_data[0]["event_name"]
+      assert_equal "Edit edition", event_data[0]["type"]
+      assert_equal "/an-invalid-value is not a known URL on GOV.UK, check URL or path is correctly entered.", event_data[0]["text"]
+      assert_equal "Ordered related items", event_data[0]["section"]
+      assert_equal "Answer", event_data[0]["tool_name"]
     end
   end
 
