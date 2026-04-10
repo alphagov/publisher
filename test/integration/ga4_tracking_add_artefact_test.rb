@@ -11,11 +11,9 @@ class Ga4TrackingAddArtefactTest < JavascriptIntegrationTest
   end
 
   context "Create new content page one" do
-    setup do
-      visit new_artefact_path
-    end
-
     should "push the correct values to the dataLayer when a form error is triggered" do
+      visit new_artefact_path
+
       click_button "Continue"
 
       assert page.has_css?(".gem-c-error-summary")
@@ -29,12 +27,42 @@ class Ga4TrackingAddArtefactTest < JavascriptIntegrationTest
       assert_equal "Kind", event_data[0]["section"]
       assert_equal "Publisher", event_data[0]["tool_name"]
     end
+
+    should "push the correct values to the dataLayer when welsh_editor attempts to navigate to the 'Create new content' page" do
+      login_as_welsh_editor
+
+      visit new_artefact_path
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have permission to see this page.", event_data[0]["text"]
+    end
+
+    should "push the correct values to the dataLayer when user with no permissions attempts to navigate to the 'Create new content' page" do
+      visit new_artefact_path
+
+      login_as(@user_no_permissions)
+
+      click_button "Continue"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have permission to see this page.", event_data[0]["text"]
+    end
   end
 
   context "Create new content page two" do
     setup do
       FactoryBot.create(:local_service, lgsl_code: 1)
-
+ 
       visit new_artefact_path
       find("label", text: "Local transaction").click
       click_button "Continue"
@@ -74,6 +102,40 @@ class Ga4TrackingAddArtefactTest < JavascriptIntegrationTest
       assert_equal "Enter a LGIL code", event_data[3]["text"]
       assert_equal "Lgil code", event_data[3]["section"]
       assert_equal "Publisher", event_data[3]["tool_name"]
+    end
+
+    should "push the correct values to the dataLayer when welsh_editor attempts to navigate to the second 'Create new content' page" do
+      login_as_welsh_editor
+
+      fill_in "Title", with: "The title"
+      fill_in "Slug", with: "the-title"
+
+      click_button "Create content"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have permission to see this page.", event_data[0]["text"]
+    end
+
+    should "push the correct values to the dataLayer when user with no permissions attempts to navigate to the second 'Create new content' page" do
+      login_as(@user_no_permissions)
+
+      fill_in "Title", with: "The title"
+      fill_in "Slug", with: "the-title"
+
+      click_button "Create content"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have permission to see this page.", event_data[0]["text"]
     end
   end
 end
