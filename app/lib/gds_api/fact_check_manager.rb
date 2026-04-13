@@ -10,8 +10,13 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # @option [string] source_url The url locating the content on the source application
   # @param [string] requester_name The username of the source app user submitting the request
   # @param [string] requester_email The email address of the source app user submitting the request
-  # @param [hash] current_content Hash containing HTML content being fact checked
-  # @option [hash] previous_content Hash containing HTML content of previous content version to check against
+  # @param [hash] current_content Hash of current content to be compared in HTML format
+  #   For simple single-part documents format: { id: { heading: "heading string", body: "HTML content string" } }
+  #   For complex multi-part/multi-chapter documents format: { id: { heading: "heading string", body: "HTML content string" }, id2: { heading: "heading string", body: "HTML content string" }, ...}.
+  #   Heading or body may change between current_content and previous_content, but the ID for the parts must match to allow for comparison.
+  #   If a part has been deleted entirely, do not provide its ID in current_content.
+  # @option [hash] previous_content Same format as current_content
+  #   If a new part has been added to the document, do not provide its ID in previous_content.
   # @option [string] deadline Date a response is requested by. Use iso8601 date format: "2026-02-09"
   # @param [array] recipients Array of emails to be notified of the request
   # @option [uuid] draft_auth_bypass_id The edition's auth_bypass_id for draft origin preview access
@@ -58,7 +63,10 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # Keyword Arguments:
   # @param [string] source_app identifier for the application sending the request
   # @param [uuid] source_id The unique ID for the content
-  # @param [hash] current_content
+  # @param [hash] current_content Hash of current content to be compared in HTML format
+  #   For simple single-part documents format: { id: { heading: "heading string", body: "HTML content string" } }
+  #   For complex multi-part/multi-chapter documents format: { id: { heading: "heading string", body: "HTML content string" }, id2: { heading: "heading string", body: "HTML content string" }, ...}.
+  #   If a part has been deleted entirely, do not provide its ID in current_content.
   # @option [string] source_title The title of the content (optional)
   # @option [uuid] draft_auth_bypass_id The edition's auth_bypass_id for draft origin preview access (optional)
   # @option [string] draft_slug The edition's slug for the draft origin preview URL path (optional)
