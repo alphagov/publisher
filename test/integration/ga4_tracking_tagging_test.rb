@@ -101,7 +101,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
     should "push the correct values to the dataLayer when a form error is triggered" do
       click_button "Save"
 
-      assert page.has_css?("h1", text: "Are you sure you want to remove the breadcrumb?")
+      assert page.has_css?(".gem-c-error-summary")
 
       event_data = get_event_data
 
@@ -362,7 +362,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       end
       click_button "Save"
 
-      assert page.has_css?("h1", text: "Tag related content")
+      assert page.has_css?(".gem-c-error-summary")
 
       event_data = get_event_data
 

@@ -82,7 +82,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       fill_in "Title", with: ""
       click_button "Save"
 
-      assert page.has_css?("h2", text: "Edit")
+      assert page.has_css?(".gem-c-error-summary")
 
       event_data = get_event_data
 
@@ -107,7 +107,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       fill_in "Slug", with: ""
       click_button "Save"
 
-      assert page.has_css?(".gem-c-heading__context", text: "Guide")
+      assert page.has_css?(".gem-c-error-summary")
 
       event_data = get_event_data
 
