@@ -43,7 +43,7 @@ class Ga4TrackingUnpublishTest < JavascriptIntegrationTest
       fill_in "Redirect to URL", with: "an-invalid-value"
       click_button "Continue"
 
-      assert page.has_css?("h2", text: "Unpublish")
+      assert page.has_css?(".gem-c-error-summary")
 
       event_data = get_event_data
 

@@ -18,7 +18,7 @@ class Ga4TrackingAddArtefactTest < JavascriptIntegrationTest
     should "push the correct values to the dataLayer when a form error is triggered" do
       click_button "Continue"
 
-      assert page.has_css?("h1", text: "Create new content")
+      assert page.has_css?(".gem-c-error-summary")
 
       event_data = get_event_data
 
@@ -43,7 +43,7 @@ class Ga4TrackingAddArtefactTest < JavascriptIntegrationTest
     should "push the correct values to the dataLayer when a form error is triggered" do
       click_button "Create content"
 
-      assert page.has_css?(".gem-c-heading__context", text: "Create new content")
+      assert page.has_css?(".gem-c-error-summary")
 
       event_data = get_event_data
 

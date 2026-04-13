@@ -20,9 +20,9 @@ class Ga4DowntimeTest < JavascriptIntegrationTest
     should "push the correct values to the dataLayer when a form error is triggered" do
       click_button "Save"
 
-      event_data = get_event_data
+      assert page.has_css?(".gem-c-error-summary")
 
-      assert page.has_css?("h1", text: "Add downtime message")
+      event_data = get_event_data
 
       assert_equal "error", event_data[0]["action"]
       assert_equal "form_error", event_data[0]["event_name"]
@@ -67,7 +67,7 @@ class Ga4DowntimeTest < JavascriptIntegrationTest
 
       click_button "Save"
 
-      assert page.has_css?("h1", text: "Edit downtime message")
+      assert page.has_css?(".gem-c-error-summary")
 
       event_data = get_event_data
 
