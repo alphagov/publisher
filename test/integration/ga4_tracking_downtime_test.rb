@@ -10,6 +10,21 @@ class Ga4DowntimeTest < JavascriptIntegrationTest
     @test_strategy.switch!(:ga4_form_tracking, true)
   end
 
+  context "Downtime messages page" do
+    should "push the correct values to the dataLayer when a welsh_editor attempts to navigate to the 'Downtime messages' page" do
+      login_as_welsh_editor
+      visit downtimes_path
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have permission to see this page.", event_data[0]["text"]
+    end
+  end
+
   context "Add downtime message" do
     setup do
       visit root_path
