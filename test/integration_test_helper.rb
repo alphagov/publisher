@@ -25,6 +25,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     @reviewer = FactoryBot.create(:user, :govuk_editor, name: "Reviewer", email: "test@example.com")
     @other = FactoryBot.create(:user, :govuk_editor, :skip_review, name: "Other", email: "test@example.com")
     @user_no_permissions = FactoryBot.create(:user)
+    @requester = FactoryBot.create(:user, :skip_review, name: "Stub Requester")
   end
 
   def login_as(user)
