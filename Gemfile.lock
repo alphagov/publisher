@@ -837,7 +837,7 @@ GEM
     sassc (2.4.0)
       ffi (~> 1.9)
     securerandom (0.4.1)
-    select2-rails (3.5.11)
+    select2-rails (4.0.13)
     selenium-webdriver (4.38.0)
       base64 (~> 0.2)
       logger (~> 1.4)
@@ -997,7 +997,7 @@ DEPENDENCIES
   rails_autolink
   rest-client
   rubocop-govuk
-  select2-rails (~> 3.5.9)
+  select2-rails (~> 4.0.13)
   sentry-sidekiq
   shoulda
   sidekiq (< 8)

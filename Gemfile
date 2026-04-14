@@ -36,7 +36,7 @@ gem "plek"
 gem "prometheus-client"
 gem "rails_autolink"
 gem "rest-client", require: false
-gem "select2-rails", "~> 3.5.9" # Updating this will mean updating the styling as 4 & > have a new approach to class names.
+gem "select2-rails", "~> 4.0.13" # Updating this will mean updating the styling as 4 & > have a new approach to class names.
 gem "sentry-sidekiq"
 gem "sidekiq", "< 8" # Disables Sidekiq 7 beta opt-in.
 gem "sprockets-rails"
