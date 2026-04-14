@@ -775,6 +775,22 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "flash_danger", event_data[0]["event_name"]
       assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
     end
+
+    should "push the correct flash message values to the dataLayer when the edition is not in a valid state to resend fact check email" do
+      @edition.state = "draft"
+      @edition.save!
+
+      visit resend_fact_check_email_page_edition_path(@edition.id)
+      click_button "Resend fact check email"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Edition is not in a state where fact check emails can be re-sent", event_data[0]["text"]
+    end
   end
 
   context "Schedule publication page" do
