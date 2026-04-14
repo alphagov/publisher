@@ -746,13 +746,11 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
         email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
         customised_message: "The customised message",
       )
-
-      visit resend_fact_check_email_page_edition_path(@edition.id)
-
-      disable_form_submit
     end
 
     should "push the correct values to the dataLayer when events are triggered" do
+      visit resend_fact_check_email_page_edition_path(@edition.id)
+      disable_form_submit
       click_button "Resend fact check email"
 
       event_data = get_event_data
@@ -763,6 +761,19 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "{}", event_data[0]["text"]
       assert_equal "Answer", event_data[0]["tool_name"]
       assert_equal "edit", event_data[0]["type"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the user does not have govuk_editor permission" do
+      login_as(@user_no_permissions)
+      visit resend_fact_check_email_page_edition_path(@edition.id)
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
     end
   end
 
