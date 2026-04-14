@@ -330,7 +330,7 @@ GEM
       sprockets-rails
     govuk_schemas (6.2.3)
       json-schema (>= 2.8, < 6.3)
-    govuk_sidekiq (11.0.1)
+    govuk_sidekiq (11.1.2)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
       redis-client (>= 0.22.2)
@@ -349,7 +349,7 @@ GEM
       nokogiri (>= 1.0, < 2.0)
     htmlentities (4.4.2)
     http-accept (1.7.0)
-    http-cookie (1.1.0)
+    http-cookie (1.1.4)
       domain_name (~> 0.5)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
@@ -424,7 +424,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2026.0303)
+    mime-types-data (3.2026.0407)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
     minitest (5.27.0)
@@ -485,9 +485,9 @@ GEM
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
       omniauth (~> 2.0)
-    opentelemetry-api (1.8.0)
+    opentelemetry-api (1.9.0)
       logger
-    opentelemetry-common (0.23.0)
+    opentelemetry-common (0.24.0)
       opentelemetry-api (~> 1.0)
     opentelemetry-exporter-otlp (0.31.1)
       google-protobuf (>= 3.18)
@@ -600,7 +600,7 @@ GEM
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-lmdb (0.25.0)
       opentelemetry-instrumentation-base (~> 0.25)
-    opentelemetry-instrumentation-mongo (0.25.0)
+    opentelemetry-instrumentation-mongo (0.25.1)
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-mysql2 (0.33.0)
       opentelemetry-helpers-mysql
@@ -650,14 +650,15 @@ GEM
       opentelemetry-helpers-sql-processor
       opentelemetry-instrumentation-base (~> 0.25)
       opentelemetry-semantic_conventions (>= 1.8.0)
-    opentelemetry-registry (0.4.0)
+    opentelemetry-registry (0.5.0)
       opentelemetry-api (~> 1.1)
-    opentelemetry-sdk (1.10.0)
+    opentelemetry-sdk (1.11.0)
+      logger
       opentelemetry-api (~> 1.1)
       opentelemetry-common (~> 0.20)
       opentelemetry-registry (~> 0.2)
       opentelemetry-semantic_conventions
-    opentelemetry-semantic_conventions (1.36.0)
+    opentelemetry-semantic_conventions (1.37.0)
       opentelemetry-api (~> 1.0)
     os (1.1.4)
     ostruct (0.6.3)
@@ -757,7 +758,7 @@ GEM
       tsort
     redis (5.4.1)
       redis-client (>= 0.22.0)
-    redis-client (0.27.0)
+    redis-client (0.28.0)
       connection_pool
     regexp_parser (2.11.3)
     reline (0.6.3)
