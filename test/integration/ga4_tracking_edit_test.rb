@@ -11,9 +11,10 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
     @guide_edition = FactoryBot.create(:guide_edition, title: "Guide edition")
     @assigned_edition = FactoryBot.create(:edition, assigned_to: @author, created_at: 5.days.ago)
     @in_review_edition = FactoryBot.create(:edition, :in_review, reviewer: @reviewer, created_at: 6.days.ago)
+    @ready_edition = FactoryBot.create(:edition, :ready, created_at: 6.days.ago)
 
     @assigned_edition.actions.create! request_type: Action::ASSIGN, requester_id: @author.id, created_at: 4.days.ago
-    @in_review_edition.actions.create! request_type: Action::REQUEST_REVIEW, requester_id: @author.id, created_at: 4.days.ago
+    @in_review_edition.actions.create! request_type: Action::REQUEST_REVIEW, requester_id: @requester.id, created_at: Time.zone.now, comment: "Requesting review"
 
     @test_strategy.switch!(:ga4_form_tracking, true)
   end
@@ -216,12 +217,9 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
   end
 
   context "Send to 2i page" do
-    setup do
+    should "push the correct values to the dataLayer when events are triggered" do
       visit send_to_2i_page_edition_path(@edition)
       disable_form_submit
-    end
-
-    should "push the correct values to the dataLayer when events are triggered" do
       fill_in "Comment (optional)", with: "Some comment"
       click_button "Send to 2i"
 
@@ -241,18 +239,98 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
     end
+
+    should "push the correct flash message values to the dataLayer when the user navigates to the page without govuk_editor permission" do
+      login_as(@user_no_permissions)
+      visit send_to_2i_page_edition_path(@edition)
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the user has welsh_editor permission and the edition is not Welsh" do
+      login_as_welsh_editor
+      visit send_to_2i_page_edition_path(@edition)
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the form on success" do
+      visit send_to_2i_page_edition_path(@edition)
+      fill_in "Comment (optional)", with: "Some comment"
+      click_button "Send to 2i"
+
+      assert page.has_css?(".gem-c-success-alert")
+
+      event_data = get_event_data
+
+      assert_equal "success_alerts", event_data[0]["action"]
+      assert_equal "flash_success", event_data[0]["event_name"]
+      assert_equal "Sent to 2i", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer on a server error" do
+      EditionProgressor.any_instance.expects(:progress).returns(false)
+
+      visit send_to_2i_page_edition_path(@edition)
+      fill_in "Comment (optional)", with: "Some comment"
+      click_button "Send to 2i"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Due to a service problem, the request could not be made", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the user submits form without govuk_editor permission" do
+      visit send_to_2i_page_edition_path(@edition)
+      fill_in "Comment (optional)", with: "Some comment"
+      login_as(@user_no_permissions)
+      click_button "Send to 2i"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the edition is not in a valid state to be sent to 2i" do
+      visit send_to_2i_page_edition_path(@ready_edition)
+      fill_in "Comment (optional)", with: "Some comment"
+      click_button "Send to 2i"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Edition is not in a state where it can be sent to 2i", event_data[0]["text"]
+    end
   end
 
   context "Skip review page" do
-    setup do
-      login_as(@other)
-
-      visit skip_review_page_edition_path(@edition)
-
-      disable_form_submit
-    end
-
     should "push the correct values to the dataLayer when events are triggered" do
+      login_as(@other)
+      visit skip_review_page_edition_path(@edition)
+      disable_form_submit
       fill_in "Comment (optional)", with: "Comment on skipping review"
       click_button "Skip review"
 
@@ -272,16 +350,119 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
     end
+
+    should "push the correct flash message values to the dataLayer when user does not have skip_review permission" do
+      login_as(@user_no_permissions)
+      visit skip_review_page_edition_path(@edition)
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer on success" do
+      login_as(@requester)
+
+      visit skip_review_page_edition_path(@in_review_edition)
+      fill_in "Comment (optional)", with: "Comment on skipping review"
+      click_button "Skip review"
+
+      assert page.has_css?(".gem-c-success-alert")
+
+      event_data = get_event_data
+
+      assert_equal "success_alerts", event_data[0]["action"]
+      assert_equal "flash_success", event_data[0]["event_name"]
+      assert_equal "2i review skipped", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when a server error occurs on submission" do
+      EditionProgressor.any_instance.expects(:progress).returns(false)
+
+      login_as(@requester)
+      visit skip_review_page_edition_path(@in_review_edition)
+      fill_in "Comment (optional)", with: "Comment on skipping review"
+      click_button "Skip review"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Due to a service problem, the request could not be made", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when edition is not in a valid state to skip review" do
+      login_as(@requester)
+      visit skip_review_page_edition_path(@edition)
+      fill_in "Comment (optional)", with: "Comment on skipping review"
+      click_button "Skip review"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Edition is not in a state where review can be skipped", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the user is not the requester" do
+      login_as(@other)
+
+      visit skip_review_page_edition_path(@in_review_edition)
+      fill_in "Comment (optional)", with: "Comment on skipping review"
+      click_button "Skip review"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Due to a service problem, the request could not be made", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the user user does not have 'skip_review' permission" do
+      login_as(@other)
+      visit skip_review_page_edition_path(@in_review_edition)
+      fill_in "Comment (optional)", with: "Comment on skipping review"
+      login_as(@author)
+
+      click_button "Skip review"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
   end
 
   context "Request amendments page" do
-    setup do
+    should "push the correct values to the dataLayer when user visits page without govuk_editor permission" do
+      login_as(@user_no_permissions)
       visit request_amendments_page_edition_path(@edition.id)
 
-      disable_form_submit
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
     end
 
     should "push the correct values to the dataLayer when events are triggered" do
+      visit request_amendments_page_edition_path(@edition.id)
+      disable_form_submit
       fill_in "Amendment details (optional)", with: "Some amendment details"
       click_button "Request amendments"
 
@@ -301,16 +482,70 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
     end
+
+    should "push the correct values to the dataLayer when edition is not in a valid state to request amendments" do
+      visit request_amendments_page_edition_path(@edition.id)
+      click_button "Request amendments"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Edition is not in a state where amendments can be requested", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when events are triggered" do
+      visit request_amendments_page_edition_path(@in_review_edition.id)
+      fill_in "Amendment details (optional)", with: "Some amendment details"
+      click_button "Request amendments"
+
+      assert page.has_css?(".gem-c-success-alert")
+
+      event_data = get_event_data
+
+      assert_equal "success_alerts", event_data[0]["action"]
+      assert_equal "flash_success", event_data[0]["event_name"]
+      assert_equal "Amendments requested", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when a server error occurs" do
+      EditionProgressor.any_instance.expects(:progress).returns(false)
+
+      visit request_amendments_page_edition_path(@in_review_edition.id)
+      fill_in "Amendment details (optional)", with: "Some amendment details"
+      click_button "Request amendments"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Due to a service problem, the request could not be made", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when user requests amendments without govuk_editor permission" do
+      visit request_amendments_page_edition_path(@edition.id)
+      fill_in "Amendment details (optional)", with: "Some amendment details"
+      login_as(@user_no_permissions)
+      click_button "Request amendments"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
   end
 
   context "No changes needed page" do
-    setup do
-      visit no_changes_needed_page_edition_path(@edition.id)
-
-      disable_form_submit
-    end
-
     should "push the correct values to the dataLayer when events are triggered" do
+      visit no_changes_needed_page_edition_path(@edition.id)
+      disable_form_submit
       fill_in "Comment (optional)", with: "Some comment or other"
       click_button "Approve 2i"
 
@@ -330,6 +565,91 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
     end
+
+    should "push the correct flash message values to the dataLayer when user does not have govuk_editor permission" do
+      login_as(@user_no_permissions)
+      visit no_changes_needed_page_edition_path(@edition.id)
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when user has welsh_editor permission and edition is not Welsh" do
+      login_as_welsh_editor
+      visit no_changes_needed_page_edition_path(@edition.id)
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer on success" do
+      visit no_changes_needed_page_edition_path(@in_review_edition.id)
+      fill_in "Comment (optional)", with: "Some comment or other"
+      click_button "Approve 2i"
+
+      assert page.has_css?(".gem-c-success-alert")
+
+      event_data = get_event_data
+
+      assert_equal "success_alerts", event_data[0]["action"]
+      assert_equal "flash_success", event_data[0]["event_name"]
+      assert_equal "2i approved", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when a server error occurs" do
+      EditionProgressor.any_instance.expects(:progress).returns(false)
+
+      visit no_changes_needed_page_edition_path(@in_review_edition.id)
+      fill_in "Comment (optional)", with: "Some comment or other"
+      click_button "Approve 2i"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Due to a service problem, the request could not be made", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when user submits without govuk_editor permission" do
+      visit no_changes_needed_page_edition_path(@in_review_edition.id)
+      fill_in "Comment (optional)", with: "Some comment or other"
+      login_as(@user_no_permissions)
+      click_button "Approve 2i"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when edition is not in a valid state to approve review" do
+      visit no_changes_needed_page_edition_path(@edition.id)
+      fill_in "Comment (optional)", with: "Some comment or other"
+      click_button "Approve 2i"
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Edition is not in a state where a review can be approved", event_data[0]["text"]
+    end
   end
 
   context "Send to fact check page" do
@@ -337,13 +657,11 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       stub_holidays_used_by_fact_check
       @edition.state = "ready"
       @edition.save!
-
-      visit send_to_fact_check_page_edition_path(@edition.id)
-
-      disable_form_submit
     end
 
     should "push the correct values to the dataLayer when events are triggered" do
+      visit send_to_fact_check_page_edition_path(@edition.id)
+      disable_form_submit
       fill_in "Email addresses", with: "fact-checker-one@example.com"
       fill_in "Customised message", with: "Some message"
       click_button "Send to fact check"
@@ -370,6 +688,47 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "{\"Email addresses\":\"28\",\"Customised message\":\"12\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the user does not have govuk_editor permission" do
+      login_as(@user_no_permissions)
+      visit send_to_fact_check_page_edition_path(@edition.id)
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the user user has welsh_editor permission" do
+      login_as_welsh_editor
+      visit send_to_fact_check_page_edition_path(@edition.id)
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "You do not have correct editor permissions for this action.", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when the edition is not in a valid state to be sent to fact check" do
+      @edition.state = "draft"
+      @edition.save!
+
+      visit send_to_fact_check_page_edition_path(@edition.id)
+
+      assert page.has_css?(".gem-c-error-alert")
+
+      event_data = get_event_data
+
+      assert_equal "danger_alerts", event_data[0]["action"]
+      assert_equal "flash_danger", event_data[0]["event_name"]
+      assert_equal "Edition is not in a state where it can be sent to fact check", event_data[0]["text"]
     end
   end
 
