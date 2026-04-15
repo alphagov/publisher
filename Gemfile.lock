@@ -240,7 +240,7 @@ GEM
       plek (>= 1.9.0)
       rack (>= 2.2.0)
       rest-client (~> 2.0)
-    gds-sso (22.1.1)
+    gds-sso (22.3.0)
       oauth2 (~> 2.0)
       omniauth (~> 2.1)
       omniauth-oauth2 (~> 1.8)
@@ -344,7 +344,8 @@ GEM
       actionpack (>= 7.0)
       activesupport (>= 7.0)
     hashdiff (1.2.1)
-    hashie (5.0.0)
+    hashie (5.1.0)
+      logger
     html2text (0.4.0)
       nokogiri (>= 1.0, < 2.0)
     htmlentities (4.4.2)
@@ -482,8 +483,8 @@ GEM
       logger
       rack (>= 2.2.3)
       rack-protection
-    omniauth-oauth2 (1.8.0)
-      oauth2 (>= 1.4, < 3)
+    omniauth-oauth2 (1.9.0)
+      oauth2 (>= 2.0.2, < 3)
       omniauth (~> 2.0)
     opentelemetry-api (1.9.0)
       logger
