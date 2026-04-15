@@ -116,7 +116,6 @@ class EditionsControllerTest < ActionController::TestCase
         }
 
         assert_equal "Edition is not in a state where amendments can be requested", flash[:danger]
-
         @edition.reload
         assert_equal "draft", @edition.state
       end
@@ -770,6 +769,7 @@ class EditionsControllerTest < ActionController::TestCase
 
           assert_template "secondary_nav_tabs/resend_fact_check_email_page"
           assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+# replicated to here in GA4 tests for Flash messages
           @edition.reload
           assert_equal "fact_check", @edition.state
         end
