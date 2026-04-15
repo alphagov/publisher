@@ -14,11 +14,15 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # @option [hash] previous_content Hash containing HTML content of previous content version to check against
   # @option [string] deadline Date a response is requested by. Use iso8601 date format: "2026-02-09"
   # @param [array] recipients Array of emails to be notified of the request
+  # @option [uuid] draft_auth_bypass_id The edition's auth_bypass_id for draft origin preview access
+  # @option [uuid] draft_content_id The edition's content_id for draft origin preview access
+  # @option [string] draft_slug The edition's slug for the draft origin preview URL path
   #
   # @return [GdsApi::Response] Basic response with code
 
   def post_fact_check(source_app:, source_id:, requester_name:, requester_email:, current_content:,
-                      recipients:, source_title: nil, source_url: nil, previous_content: nil, deadline: nil)
+                      recipients:, source_title: nil, source_url: nil, previous_content: {}, deadline: nil,
+                      draft_auth_bypass_id: nil, draft_content_id: nil, draft_slug: nil)
     post_json(
       "#{endpoint}/api/requests",
       source_app:,
@@ -31,6 +35,9 @@ class GdsApi::FactCheckManager < GdsApi::Base
       previous_content:,
       deadline:,
       recipients:,
+      draft_auth_bypass_id:,
+      draft_content_id:,
+      draft_slug:,
     )
   end
 
@@ -53,10 +60,14 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # @param [uuid] source_id The unique ID for the content
   # @param [hash] current_content
   # @option [string] source_title The title of the content (optional)
-  def patch_update_content(source_app:, source_id:, current_content:, source_title: nil)
+  # @option [uuid] draft_auth_bypass_id The edition's auth_bypass_id for draft origin preview access (optional)
+  # @option [string] draft_slug The edition's slug for the draft origin preview URL path (optional)
+  def patch_update_content(source_app:, source_id:, current_content:, source_title: nil, draft_auth_bypass_id: nil, draft_slug: nil)
     payload = {
       source_title:,
       current_content:,
+      draft_auth_bypass_id:,
+      draft_slug:,
     }.compact
 
     patch_json("#{endpoint}/api/requests/#{source_app}/#{source_id}", payload)
