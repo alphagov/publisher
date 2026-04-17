@@ -19,7 +19,7 @@ Flipflop.configure do
             description: "Shows link to Content Block Manager from Mainstream editor"
 
     feature :ga4_form_tracking,
-            default: false,
+            default: true,
             description: "Add tracking to forms across publisher"
   end
 
