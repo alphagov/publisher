@@ -162,7 +162,7 @@ class Edition < ApplicationRecord
   end
 
   def history
-    series.order([version_number: :desc])
+    series.order([{ version_number: :desc }])
   end
 
   def siblings
