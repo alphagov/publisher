@@ -115,7 +115,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bigdecimal (4.1.1)
+    bigdecimal (4.1.2)
     bootsnap (1.23.0)
       msgpack (~> 1.2)
     bootstrap-kaminari-views (0.0.5)
@@ -302,7 +302,7 @@ GEM
       jquery-rails (~> 4.3)
       plek (>= 2.1)
       rails (>= 6)
-    govuk_app_config (9.23.10)
+    govuk_app_config (9.23.11)
       connection_pool (< 3)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.34)
@@ -372,7 +372,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (8.0.0)
       railties (>= 3.2.16)
-    json (2.19.3)
+    json (2.19.4)
     json-schema (6.2.0)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
@@ -968,7 +968,7 @@ DEPENDENCIES
   google-apis-gmail_v1
   govspeak
   govuk_admin_template
-  govuk_app_config (~> 9.23.10)
+  govuk_app_config (~> 9.23.11)
   govuk_publishing_components
   govuk_schemas
   govuk_sidekiq
