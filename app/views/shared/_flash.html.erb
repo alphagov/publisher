@@ -1,15 +1,35 @@
+<% component_helper = GovukPublishingComponents::Presenters::ComponentWrapperHelper.new(local_assigns) %>
+
 <% [:success, :info, :warning, :danger, :notice, :alert].select { |k| flash[k].present? }.each do |k| %>
+  <% data_attributes = {
+    module: "ga4-auto-tracker",
+    "ga4-auto": {
+      event_name: "flash_#{k.to_s}",
+      action: "#{k.to_s}_alerts",
+      text: sanitize(flash[k]),
+    },
+  } %>
+
   <% if k == :warning || k == :danger || k == :alert %>
-    <%= render "govuk_publishing_components/components/error_alert", {
-      message: sanitize(flash[k]),
-    } %>
+    <%= tag.div(**component_helper.all_attributes) do %>
+      <%= render "govuk_publishing_components/components/error_alert", {
+        message: sanitize(flash[k]),
+        data_attributes: data_attributes,
+      } %>
+    <% end %>
   <% elsif k == :notice || k == :info %>
-    <%= render "govuk_publishing_components/components/notice", {
-      description: sanitize(flash[k]),
-    } %>
+    <%= tag.div(**component_helper.all_attributes) do %>
+      <%= render "govuk_publishing_components/components/notice", {
+        description: sanitize(flash[k]),
+        data_attributes: data_attributes,
+      } %>
+    <% end %>
   <% elsif k == :success %>
-    <%= render "govuk_publishing_components/components/success_alert", {
-      message: sanitize(flash[k]),
-    } %>
+    <%= tag.div(**component_helper.all_attributes) do %>
+      <%= render "govuk_publishing_components/components/success_alert", {
+        message: sanitize(flash[k]),
+        data_attributes: data_attributes,
+      } %>
+    <% end %>
   <% end %>
 <% end %>
