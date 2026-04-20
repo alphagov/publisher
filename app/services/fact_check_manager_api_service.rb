@@ -14,7 +14,7 @@ class FactCheckManagerApiService
 
   def self.build_post_payload(edition, requester, email_addresses)
     current_content_presenter = Formats::GenericEditionPresenter.new(edition)
-    previous_content = nil
+    previous_content = {}
     if edition.published_edition
       previous_content_presenter = Formats::GenericEditionPresenter.new(edition.published_edition)
       previous_content = previous_content_presenter.render_for_fact_check_manager_api
@@ -29,7 +29,10 @@ class FactCheckManagerApiService
       current_content: current_content_presenter.render_for_fact_check_manager_api,
       previous_content: previous_content,
       deadline: working_days_after(Date.current, how_many: 5).to_fs(:iso8601),
-      recipients: email_addresses.split(",").map(&:strip) }
+      recipients: email_addresses.split(",").map(&:strip),
+      draft_auth_bypass_id: edition.auth_bypass_id,
+      draft_content_id: edition.content_id,
+      draft_slug: edition.slug }
   end
 
   def self.update_fact_check_content(edition)
@@ -40,6 +43,8 @@ class FactCheckManagerApiService
       source_id: edition.id,
       source_title: edition.title,
       current_content: current_content_presenter.render_for_fact_check_manager_api,
+      draft_auth_bypass_id: edition.auth_bypass_id,
+      draft_slug: edition.slug,
     )
   end
 end
