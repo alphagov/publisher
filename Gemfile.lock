@@ -233,7 +233,7 @@ GEM
     flipflop (2.8.0)
       activesupport (>= 4.0)
       terminal-table (>= 1.8)
-    gds-api-adapters (103.3.0)
+    gds-api-adapters (103.3.1)
       addressable
       link_header
       null_logger
@@ -350,7 +350,7 @@ GEM
       nokogiri (>= 1.0, < 2.0)
     htmlentities (4.4.2)
     http-accept (1.7.0)
-    http-cookie (1.1.4)
+    http-cookie (1.1.6)
       domain_name (~> 0.5)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
