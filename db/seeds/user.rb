@@ -4,6 +4,7 @@ if User.where(name: "Test user").blank?
 
   User.create!(
     name: "Test user",
+    email: "test@example.com",
     uid: user_id,
     permissions: %w[signin govuk_editor skip_review],
     organisation_content_id: gds_organisation_id,
