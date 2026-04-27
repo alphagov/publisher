@@ -227,6 +227,15 @@ FactoryBot.define do
       major_change { true }
       change_note { "Default major change note" }
     end
+
+    trait :with_previous_published_edition do
+      after :build do |edition|
+        previous_edition = create(:edition, :published)
+
+        edition.panopticon_id = previous_edition.panopticon_id
+        edition.body = "Some updated body"
+      end
+    end
   end
 
   factory :answer_edition, class: "Edition" do
@@ -621,5 +630,14 @@ FactoryBot.define do
     edition
     requester { FactoryBot.create(:user) }
     comment { "Default comment" }
+  end
+
+  factory :fact_check_request_form do
+    edition { FactoryBot.create(:edition, :draft) }
+    user { FactoryBot.create(:user, :govuk_editor) }
+    email_addresses { "stub@email.com" }
+    deadline { 5.days.from_now }
+    reason_for_change { "because" }
+    zendesk_number { 1_234_567 }
   end
 end
