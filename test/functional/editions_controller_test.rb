@@ -773,6 +773,15 @@ class EditionsControllerTest < ActionController::TestCase
           @edition.reload
           assert_equal "fact_check", @edition.state
         end
+
+        should "not call Services.fact_check_manager_api" do
+          patch :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "Fact check email re-sent", flash[:success]
+          Services.fact_check_manager_api.expects(:post_resend_emails).never
+        end
       end
 
       context "user does not have govuk_editor permission" do
@@ -1098,6 +1107,16 @@ class EditionsControllerTest < ActionController::TestCase
 
           assert_template "secondary_nav_tabs/resend_fact_check_email_page"
           assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        end
+
+        should "call Services.fact_check_manager_api" do
+          Services.fact_check_manager_api.expects(:post_resend_emails).with(source_app: "publisher", source_id: @edition.id).returns(GdsApi::Response.new(code: 200))
+
+          post :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "Fact check email re-sent", flash[:success]
         end
       end
 

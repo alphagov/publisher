@@ -173,10 +173,11 @@ class EditionsController < InheritedResources::Base
   end
 
   def resend_fact_check_email
+    form = FactCheckRequestForm.new({ edition: @resource, user: current_user })
     if !@resource.can_resend_fact_check?
       flash.now[:danger] = "Edition is not in a state where fact check emails can be re-sent"
       render "secondary_nav_tabs/resend_fact_check_email_page"
-    elsif resend_fact_check_email_for_edition(resource)
+    elsif form.valid?(:resend) && resend_fact_check_email_for_edition(resource, form)
       flash[:success] = "Fact check email re-sent"
       redirect_to edition_path(resource)
     else
@@ -508,8 +509,8 @@ private
     progress_edition(resource, { request_type: "approve_review", comment: comment })
   end
 
-  def resend_fact_check_email_for_edition(resource)
-    progress_edition(resource, { request_type: "resend_fact_check" })
+  def resend_fact_check_email_for_edition(resource, fact_check_request_form)
+    progress_edition(resource, { request_type: "resend_fact_check", fact_check_request_form: })
   end
 
   def send_to_2i_for_edition(resource, comment)
