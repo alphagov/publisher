@@ -476,10 +476,17 @@ protected
 private
 
   def update_fact_check
-    FactCheckManagerApiService.update_fact_check_content(@resource)
+    form = FactCheckRequestForm.new({ edition: @resource, user: current_user })
+
+    unless form.valid?(:update) && form.update_fact_check_content
+      Rails.logger.error "Request form validation errors: #{form.errors.full_messages.join(', ')}"
+      flash[:danger] = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved"
+      render "show"
+      return
+    end
   rescue GdsApi::HTTPErrorResponse => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    @resource.errors.add(:show, "Due to a service problem, the fact check request could not be updated. The edition was successfully saved")
+    Rails.logger.error "API Error Response for Edition id #{@resource.id}: #{e.class} #{e.message}"
+    flash[:danger] = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved"
     render "show"
   else
     flash[:success] = "Edition updated successfully. <br> Fact check request updated."
