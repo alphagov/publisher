@@ -66,6 +66,7 @@ class EditionsController < InheritedResources::Base
   helper_method :locale_to_language
 
   SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the request could not be made".freeze
+  FACT_CHECK_SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved".freeze
 
   def index
     redirect_to root_path
@@ -173,10 +174,11 @@ class EditionsController < InheritedResources::Base
   end
 
   def resend_fact_check_email
+    form = FactCheckRequestForm.new({ edition: @resource, user: current_user })
     if !@resource.can_resend_fact_check?
       flash.now[:danger] = "Edition is not in a state where fact check emails can be re-sent"
       render "secondary_nav_tabs/resend_fact_check_email_page"
-    elsif resend_fact_check_email_for_edition(resource)
+    elsif form.valid?(:resend) && resend_fact_check_email_for_edition(resource, form)
       flash[:success] = "Fact check email re-sent"
       redirect_to edition_path(resource)
     else
@@ -480,13 +482,13 @@ private
 
     unless form.valid?(:update) && form.update_fact_check_content
       Rails.logger.error "Request form validation errors: #{form.errors.full_messages.join(', ')}"
-      flash[:danger] = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved"
+      flash.now[:danger] = FACT_CHECK_SERVICE_REQUEST_ERROR_MESSAGE
       render "show"
       return
     end
   rescue GdsApi::HTTPErrorResponse => e
     Rails.logger.error "API Error Response for Edition id #{@resource.id}: #{e.class} #{e.message}"
-    flash[:danger] = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved"
+    flash.now[:danger] = FACT_CHECK_SERVICE_REQUEST_ERROR_MESSAGE
     render "show"
   else
     flash[:success] = "Edition updated successfully. <br> Fact check request updated."
@@ -508,8 +510,8 @@ private
     progress_edition(resource, { request_type: "approve_review", comment: comment })
   end
 
-  def resend_fact_check_email_for_edition(resource)
-    progress_edition(resource, { request_type: "resend_fact_check" })
+  def resend_fact_check_email_for_edition(resource, fact_check_request_form)
+    progress_edition(resource, { request_type: "resend_fact_check", fact_check_request_form: })
   end
 
   def send_to_2i_for_edition(resource, comment)
