@@ -212,8 +212,8 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
     end
   end
 
-  context ".request_fact_check" do
-    should "build payload and call the fact check manager api adapter" do
+  context ".post_new_request_payload" do
+    should "build and format the payload" do
       expected_payload = { source_app: "publisher",
                            source_id: @edition.id,
                            source_title: "New title",
@@ -230,12 +230,10 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
                            draft_auth_bypass_id: @edition.auth_bypass_id,
                            draft_slug: @edition.slug }
 
-      Services.fact_check_manager_api.expects(:post_fact_check).with(**expected_payload).returns("stub response")
-
-      @form.request_fact_check
+      assert_equal expected_payload, @form.post_new_request_payload
     end
 
-    should "build the payload and call the fact check manager api adapter with no previous content" do
+    should "build and format the payload with no previous content" do
       @new_draft_edition = FactoryBot.build(:edition, :draft, title: "New title")
       @form.edition = @new_draft_edition
       expected_payload = { source_app: "publisher",
@@ -254,34 +252,29 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
                            draft_auth_bypass_id: @new_draft_edition.auth_bypass_id,
                            draft_slug: @new_draft_edition.slug }
 
-      Services.fact_check_manager_api.expects(:post_fact_check).with(**expected_payload).returns("stub response")
-
-      @form.request_fact_check
+      assert_equal expected_payload, @form.post_new_request_payload
     end
   end
 
-  context ".resend_fact_check_emails" do
-    should "call the fact check manager api adapter" do
-      Services.fact_check_manager_api.expects(:post_resend_emails)
-              .with(source_app: "publisher", source_id: @edition.id)
-              .returns("stub response")
+  context ".resend_emails_payload" do
+    should "build and format the payload" do
+      expected_payload = { source_app: "publisher",
+                           source_id: @edition.id }
 
-      @form.resend_fact_check_emails
+      assert_equal expected_payload, @form.resend_emails_payload
     end
   end
 
-  context ".update_fact_check_content" do
-    should "build the payload and call the fact check manager api adapter" do
-      Services.fact_check_manager_api.expects(:patch_update_content)
-              .with(source_app: "publisher",
-                    source_id: @edition.id,
-                    source_title: "New title",
-                    current_content: { content: { heading: "Body", body: "<p>Some updated body</p>" } },
-                    draft_auth_bypass_id: @edition.auth_bypass_id,
-                    draft_slug: @edition.slug)
-              .returns("stub response")
+  context ".update_content_payloaad" do
+    should "build and format the payload" do
+      expected_payload = { source_app: "publisher",
+                           source_id: @edition.id,
+                           source_title: "New title",
+                           current_content: { content: { heading: "Body", body: "<p>Some updated body</p>" } },
+                           draft_auth_bypass_id: @edition.auth_bypass_id,
+                           draft_slug: @edition.slug }
 
-      @form.update_fact_check_content
+      assert_equal expected_payload, @form.update_content_payload
     end
   end
 end

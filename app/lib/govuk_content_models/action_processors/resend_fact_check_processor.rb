@@ -4,8 +4,9 @@ module GovukContentModels
       def process
         return false unless edition.latest_status_action.is_fact_check_request?
 
-        if Flipflop.enabled?(:fact_check_manager_api) && !action_attributes[:fact_check_request_form].resend_fact_check_emails
-          return false
+        if Flipflop.enabled?(:fact_check_manager_api)
+          form = action_attributes[:fact_check_request_form]
+          return false unless form.valid?(:resend) && Services.fact_check_manager_api.post_resend_emails(**form.resend_emails_payload)
         end
 
         edition.resend_fact_check

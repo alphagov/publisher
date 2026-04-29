@@ -178,7 +178,7 @@ class EditionsController < InheritedResources::Base
     if !@resource.can_resend_fact_check?
       flash.now[:danger] = "Edition is not in a state where fact check emails can be re-sent"
       render "secondary_nav_tabs/resend_fact_check_email_page"
-    elsif form.valid?(:resend) && resend_fact_check_email_for_edition(resource, form)
+    elsif resend_fact_check_email_for_edition(resource, form)
       flash[:success] = "Fact check email re-sent"
       redirect_to edition_path(resource)
     else
@@ -504,7 +504,7 @@ private
   def update_fact_check
     form = FactCheckRequestForm.new({ edition: @resource, user: current_user })
 
-    unless form.valid?(:update) && form.update_fact_check_content
+    unless form.valid?(:update) && Services.fact_check_manager_api.patch_update_content(**form.update_content_payload)
       Rails.logger.error "Request form validation errors: #{form.errors.full_messages.join(', ')}"
       flash[:danger] = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved"
       render "show"
