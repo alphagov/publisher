@@ -48,7 +48,7 @@ module TabbedNavHelper
   def reviewer_edit_link(edition)
     if current_user.has_editor_permissions?(edition)
       {
-        href: edit_reviewer_edition_path,
+        href: edit_reviewer_edition_path(edition),
         link_text: "Edit",
       }
     else
