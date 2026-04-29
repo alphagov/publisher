@@ -100,6 +100,7 @@ class EditionsController < InheritedResources::Base
   end
 
   def send_to_fact_check_page
+    @form ||= FactCheckRequestForm.new
     render "secondary_nav_tabs/send_to_fact_check_page"
   end
 
@@ -240,13 +241,37 @@ class EditionsController < InheritedResources::Base
 
   def send_to_fact_check
     begin
+      # TODO: Leave as is for now until retiring legacy flow, but why is this a variable and not hardcoded into send_to_fact_check_for_edition?
       comment = "Sent to fact check"
-      if !send_to_fact_check_params_valid?
-        error_message = Flipflop.enabled?(:fact_check_manager_api) ? "Enter email addresses" : "Enter email addresses and/or customised message"
-        flash.now[:danger] = error_message
+
+      # Separating this entirely from the legacy flow below for readability
+      if Flipflop.enabled?(:fact_check_manager_api)
+        @form = FactCheckRequestForm.new(
+          permitted_fact_check_request_form_params.merge(
+            edition: @resource,
+            user: current_user,
+          ),
+        )
+
+        if @form.valid?(:send) && send_to_fact_check_for_edition(@resource, @form, comment)
+          flash[:success] = "Sent to fact check"
+          redirect_to edition_path(resource)
+          return
+        end
+
+        flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE if @form.errors.none?
+
+        # TODO: These two lines not required once below block for legacy flow is removed.
         render "secondary_nav_tabs/send_to_fact_check_page"
         return
-      elsif send_to_fact_check_for_edition(@resource, params[:email_addresses], comment, params[:customised_message])
+      end
+
+      # TODO: Delete this block when retiring legacy flow
+      if !send_to_fact_check_params_valid?
+        flash.now[:danger] = "Enter email addresses and/or customised message"
+        render "secondary_nav_tabs/send_to_fact_check_page"
+        return
+      elsif legacy_send_to_fact_check_for_edition(@resource, params[:email_addresses], comment, params[:customised_message])
         flash[:success] = "Sent to fact check"
         redirect_to edition_path(resource)
         return
@@ -517,8 +542,12 @@ private
     progress_edition(resource, { request_type: "request_review", comment: comment })
   end
 
-  def send_to_fact_check_for_edition(resource, email_addresses, comment, customised_message = "")
+  def legacy_send_to_fact_check_for_edition(resource, email_addresses, comment, customised_message = "")
     progress_edition(resource, { request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
+  end
+
+  def send_to_fact_check_for_edition(resource, fact_check_request_form, comment)
+    progress_edition(resource, { request_type: "send_fact_check", comment:, email_addresses: fact_check_request_form.email_addresses, fact_check_request_form: })
   end
 
   def skip_review_for_edition(resource, comment)
@@ -549,11 +578,7 @@ private
   end
 
   def send_to_fact_check_params_valid?
-    if Flipflop.enabled?(:fact_check_manager_api)
-      params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses])
-    else
-      params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses]) && params[:customised_message].present?
-    end
+    params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses]) && params[:customised_message].present?
   end
 
   def invalid_email_addresses?(addresses)
@@ -613,6 +638,13 @@ private
   def permitted_update_params
     subtype = @resource.editionable.class.to_s.underscore.to_sym
     params.require(:edition).permit(type_specific_params(subtype) + common_params)
+  end
+
+  def permitted_fact_check_request_form_params
+    params.require(:fact_check_request_form).permit(:email_addresses,
+                                                    :reason_for_change,
+                                                    :zendesk_number,
+                                                    deadline: %w[1i 2i 3i])
   end
 
   def type_specific_params(subtype)

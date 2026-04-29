@@ -4,16 +4,26 @@ module GovukContentModels
       def process
         return false if action_attributes[:email_addresses].blank?
 
-        if Flipflop.enabled?(:fact_check_manager_api) && FactCheckManagerApiService.request_fact_check(@edition, @actor, action_attributes[:email_addresses]).is_a?(GdsApi::HTTPErrorResponse)
+        if Flipflop.enabled?(:fact_check_manager_api) && !action_attributes[:fact_check_request_form].request_fact_check
           return false
         end
 
         action_attributes[:comment] ||= "Fact check requested"
 
         edition.send_fact_check
+      rescue GdsApi::HTTPErrorResponse => e
+        Rails.logger.error "API Error Response for Edition id #{edition.id}: #{e.class} #{e.message}"
+        false
       end
 
     private
+
+      def record_action
+        # Request form does not need to be persisted in the Action record
+        action_attributes.delete(:fact_check_request_form)
+
+        super
+      end
 
       def notify_about_event(new_action)
         super

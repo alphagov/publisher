@@ -5,6 +5,7 @@ class FactCheckRequestForm
   SOURCE_APP = "publisher".freeze
 
   attr_accessor :edition, :user
+  attr_reader :deadline_autofill
 
   attribute :email_addresses, :string
   attribute :deadline, :date
@@ -22,7 +23,31 @@ class FactCheckRequestForm
 
   validate :user_has_editor_permissions
   validate :valid_email_addresses, on: :send
+  validate :deadline_invalid_characters, on: :send
   validate :deadline_in_range, on: :send
+
+  def initialize(*args)
+    super
+  end
+
+  def deadline=(deadline)
+    deadline = nil unless deadline.is_a?(Date) || deadline.is_a?(Hash)
+
+    if deadline.is_a?(Hash)
+      begin
+        # Preserves raw date hash to re-fill form on a validation failure
+        @deadline_autofill = deadline
+
+        deadline = if %w[1i 2i 3i].all? { |k| deadline[k].present? }
+                     Time.zone.local(deadline["1i"].to_i, deadline["2i"].to_i, deadline["3i"].to_i).to_date
+                   end
+      rescue ArgumentError, TypeError
+        deadline = nil
+      end
+    end
+
+    super(deadline)
+  end
 
   def request_fact_check
     return false unless valid?(:send)

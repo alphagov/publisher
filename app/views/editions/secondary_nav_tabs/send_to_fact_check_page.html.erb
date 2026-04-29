@@ -6,22 +6,106 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <% if Flipflop.enabled?(:fact_check_manager_api) %>
 
-    <%= form_for(:edition, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "" }) do %>
-      <%= render "govuk_publishing_components/components/input", {
-        label: {
-          heading_size: "m",
-          text: "Email addresses",
-        },
-        name: "email_addresses",
-        id: "email_addresses",
-        value: params[:email_addresses],
-        type: "email",
-        hint: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com",
-      } %>
+      <% unless @form.errors.empty? %>
+        <% content_for :error_summary, render("shared/error_summary", { object: @form, full_messages: false }) %>
+      <% end %>
 
-      <% unless Flipflop.enabled?(:fact_check_manager_api) %>
+      <%= form_with model: @form, scope: :fact_check_request_form, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "" } do %>
 
+        <%= render "govuk_publishing_components/components/input", {
+          label: {
+            heading_size: "m",
+            text: "Email addresses",
+          },
+          name: "fact_check_request_form[email_addresses]",
+          id: "email_addresses",
+          value: @form.email_addresses,
+          type: "email",
+          hint: "Separate multiple email addresses with a comma or semi-colon, followed by a space",
+          error_items: errors_for(@form&.errors, :email_addresses, use_full_message: false),
+        } %>
+
+        <%= render "govuk_publishing_components/components/textarea", {
+          label: {
+            heading_size: "s",
+            text: "Reason for change (optional)",
+          },
+          name: "fact_check_request_form[reason_for_change]",
+          id: "reason_for_change",
+          value: @form.reason_for_change,
+          rows: 14,
+          hint: ("This is shown in the email sent to the department"),
+          error_items: errors_for(@form&.errors, :reason_for_change, use_full_message: false),
+        } %>
+
+        <%= render "govuk_publishing_components/components/input", {
+          label: {
+            heading_size: "m",
+            text: "Zendesk number",
+          },
+          name: "fact_check_request_form[zendesk_number]",
+          id: "zendesk_number",
+          value: @form.zendesk_number,
+          prefix: "https://govuk.zendesk.com/tickets/",
+          error_items: errors_for(@form&.errors, :zendesk_number, use_full_message: false),
+        } %>
+
+        <% deadline_autofill = @form.deadline_autofill || working_days_after(Date.current, how_many: 5) %>
+
+        <%= render "govuk_publishing_components/components/date_input", {
+          label: {
+            heading_size: "m",
+            text: "Deadline",
+          },
+          name: "fact_check_request_form[deadline]",
+          items: [
+            {
+              label: "Day",
+              name: "3i",
+              width: 2,
+              value: deadline_autofill.is_a?(Hash) ? deadline_autofill["3i"] : deadline_autofill.day,
+            },
+            {
+              label: "Month",
+              name: "2i",
+              width: 2,
+              value: deadline_autofill.is_a?(Hash) ? deadline_autofill["2i"] : deadline_autofill.month,
+            },
+            {
+              label: "Year",
+              name: "1i",
+              width: 4,
+              value: deadline_autofill.is_a?(Hash) ? deadline_autofill["1i"] : deadline_autofill.year,
+            },
+          ],
+          hint: "This defaults to 5 working days from today",
+          error_items: errors_for(@form&.errors, :deadline, use_full_message: false),
+        } %>
+
+        <div class="govuk-button-group">
+          <%= render "govuk_publishing_components/components/button", {
+            text: "Send to fact check",
+          } %>
+          <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+        </div>
+      <% end %>
+
+    <% else %>
+
+      <%= form_for(:edition, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "" }) do %>
+          <%= render "govuk_publishing_components/components/input", {
+            label: {
+              heading_size: "m",
+              text: "Email addresses",
+            },
+            name: "email_addresses",
+            id: "email_addresses",
+            value: params[:email_addresses],
+            type: "email",
+            hint: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com",
+          } %>
 
         <%= render "govuk_publishing_components/components/textarea", {
             label: {
@@ -34,14 +118,14 @@
             rows: 14,
           } %>
 
-      <% end %>
+        <div class="govuk-button-group">
+          <%= render "govuk_publishing_components/components/button", {
+            text: "Send to fact check",
+          } %>
+          <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+        </div>
 
-    <div class="govuk-button-group">
-      <%= render "govuk_publishing_components/components/button", {
-          text: "Send to fact check",
-        } %>
-      <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
-    </div>
+      <% end %>
     <% end %>
   </div>
 </div>
