@@ -29,7 +29,7 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
   context ".update_fact_check_content" do
     should "call the fact check manager api adapter" do
       Services.fact_check_manager_api.expects(:patch_update_content)
-              .with(source_app: "publisher", source_id: @edition.id, source_title: "New Title", current_content: { body: "some body" }, draft_auth_bypass_id: @edition.auth_bypass_id, draft_slug: @edition.slug)
+              .with(source_app: "publisher", source_id: @edition.id, source_title: "New Title", current_content: { content: { heading: "Body", body: "<p>some body</p>" } }, draft_auth_bypass_id: @edition.auth_bypass_id, draft_slug: @edition.slug)
               .returns("stub response")
 
       FactCheckManagerApiService.update_fact_check_content(@edition)
@@ -43,16 +43,16 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
 
         expected_payload = { source_app: "publisher",
                              source_id: @edition.id,
-                             source_title: "New Title",
                              source_url: "#{Plek.find('publisher')}/editions/#{@edition.id}",
+                             source_title: "New Title",
                              requester_name: "Ben",
                              requester_email: "joe1@bloggs.com",
-                             current_content: { body: "some body" },
+                             current_content: { content: { heading: "Body", body: "<p>some body</p>" } },
                              previous_content: {},
                              deadline: "2026-02-09",
                              recipients: ["stub@email.com"],
-                             draft_content_id: @edition.content_id,
                              draft_auth_bypass_id: @edition.auth_bypass_id,
+                             draft_content_id: @edition.content_id,
                              draft_slug: @edition.slug }
 
         assert_equal expected_payload, payload
@@ -64,7 +64,7 @@ class FactCheckManagerApiServiceTest < ActiveSupport::TestCase
       edition2 = edition1.build_clone
 
       payload = FactCheckManagerApiService.build_post_payload(edition2, @user, "stub@email.com")
-      expected_hash = { body: "some body" }
+      expected_hash = { content: { heading: "Body", body: "<p>some body</p>" } }
       assert_equal expected_hash, payload[:previous_content]
     end
 

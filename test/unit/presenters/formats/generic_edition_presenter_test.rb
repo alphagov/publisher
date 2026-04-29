@@ -116,13 +116,13 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
     end
   end
 
-  context ".render_for_fact_check_api" do
+  context ".render_for_fact_check_manager_api" do
     should "return a hash with the body content if present" do
       edition = FactoryBot.create(:edition, body: "Move your body")
 
       presenter = Formats::GenericEditionPresenter.new(edition)
 
-      assert_equal({ body: "Move your body" }, presenter.render_for_fact_check_manager_api)
+      assert_equal({ content: { heading: "Body", body: "<p>Move your body</p>" } }, presenter.render_for_fact_check_manager_api)
     end
 
     should "return nil if edition does not respond to whole_body" do
@@ -138,7 +138,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
       edition = FactoryBot.create(:edition, body: nil)
       presenter = Formats::GenericEditionPresenter.new(edition)
 
-      assert_equal({ body: "" }, presenter.render_for_fact_check_manager_api)
+      assert_equal({ content: { heading: "Body", body: "" } }, presenter.render_for_fact_check_manager_api)
     end
   end
 end
