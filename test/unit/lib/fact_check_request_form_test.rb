@@ -137,7 +137,7 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
     context "#deadline_in_range" do
       should "be valid when deadline is at extremes of the accepted range" do
         freeze_time do
-          [Date.current, 15.days.from_now, 30.days.from_now].each do |date|
+          [Time.zone.today, 15.days.from_now.to_date, 30.days.from_now.to_date].each do |date|
             @form.deadline = date
 
             assert @form.valid?(:send), "Expected #{date} to be invalid"
@@ -148,7 +148,7 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
 
       should "raise an error when deadline is in the past" do
         freeze_time do
-          @form.deadline = 1.day.ago
+          @form.deadline = 1.day.ago.to_date
 
           assert_not @form.valid?(:send)
           assert_not_empty @form.errors[:deadline]
@@ -158,13 +158,57 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
 
       should "raise an error when deadline is too far in the future" do
         freeze_time do
-          @form.deadline = 31.days.from_now
+          @form.deadline = 31.days.from_now.to_date
 
           assert_not @form.valid?(:send)
           assert_not_empty @form.errors[:deadline]
           assert_includes @form.errors[:deadline], "The date must be today or up to 30 days in the future"
         end
       end
+    end
+  end
+
+  context ".deadline=" do
+    should "accept input which is a Date" do
+      @form.deadline = Time.zone.tomorrow
+
+      assert_equal Time.zone.tomorrow, @form.deadline
+    end
+
+    should "cast an invalid data type to nil" do
+      [%w[invalid], "invalid", 123].each do |invalid|
+        @form.deadline = invalid
+
+        assert_nil @form.deadline, "#{invalid} should result in nil"
+      end
+    end
+
+    should "process a correctly formatted deadline hash, and preserve the raw hash" do
+      Timecop.freeze(Time.zone.now) do
+        date = Time.zone.today
+        input_hash = { "3i" => date.day, "2i" => date.month, "1i" => date.year }
+        @form.deadline = input_hash
+
+        assert_equal Time.zone.today, @form.deadline
+        assert_equal input_hash, @form.deadline_autofill
+      end
+    end
+
+    should "recover gracefully from invalid hashes and return nil" do
+      [{}, { "1i" => 1, "2i" => 2 }, { "1i" => [], "2i" => false, "3i" => nil }].each do |invalid_hash|
+        @form.deadline = invalid_hash
+
+        assert_nil @form.deadline
+        assert_equal invalid_hash, @form.deadline_autofill
+      end
+    end
+
+    should "reject a correctly formatted deadline hash with invalid ints, and preserve the raw hash" do
+      input_hash = { "1i" => 999, "2i" => 999, "3i" => 999 }
+      @form.deadline = input_hash
+
+      assert_nil @form.deadline
+      assert_equal input_hash, @form.deadline_autofill
     end
   end
 
@@ -178,7 +222,7 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
                            requester_email: "joe1@bloggs.com",
                            current_content: { content: { heading: "Body", body: "<p>Some updated body</p>" } },
                            previous_content: { content: { heading: "Body", body: "<p>Some body text</p>" } },
-                           deadline: "2026-05-02",
+                           deadline: (Time.zone.today + 5.days).iso8601,
                            reason_for_change: "because",
                            zendesk_number: "1234567",
                            recipients: ["stub@email.com"],
@@ -202,7 +246,7 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
                            requester_email: "joe1@bloggs.com",
                            current_content: { content: { heading: "Body", body: "<p>Some body text</p>" } },
                            previous_content: nil,
-                           deadline: "2026-05-02",
+                           deadline: (Time.zone.today + 5.days).iso8601,
                            reason_for_change: "because",
                            zendesk_number: "1234567",
                            recipients: ["stub@email.com"],
