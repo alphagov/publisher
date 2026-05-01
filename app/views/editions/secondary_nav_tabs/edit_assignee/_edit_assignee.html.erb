@@ -6,7 +6,7 @@
 <% content_for :page_title, title %>
 <% content_for :title, title %>
 
-<%= form_for @resource, url: url, data: {module: ""} do %>
+<%= form_for @resource, url: url, data: {module: "", ga4_section: "Edit"} do %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <%= tag.div(**component_helper.all_attributes) do %>
