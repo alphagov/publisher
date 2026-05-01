@@ -72,7 +72,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[5]["action"]
       assert_equal "form_response", event_data[5]["event_name"]
-      assert_equal "Answer edition", event_data[5]["section"]
+      assert_equal "Edit", event_data[5]["section"]
       assert_equal "{\"Title\":\"9\",\"Meta tag description\":\"24\",\"Body\":\"13\",\"Is this beta content?\":\"No\"}", event_data[5]["text"]
       assert_equal "Answer", event_data[5]["tool_name"]
       assert_equal "edit", event_data[5]["type"]
@@ -150,7 +150,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Assign person", event_data[1]["section"]
+      assert_equal "Edit", event_data[1]["section"]
       assert_equal "{\"Choose a person to assign\":\"None\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
@@ -164,7 +164,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[3]["action"]
       assert_equal "form_response", event_data[3]["event_name"]
-      assert_equal "Assign person", event_data[3]["section"]
+      assert_equal "Edit", event_data[3]["section"]
       assert_equal "{\"Choose a person to assign\":\"[REDACTED]\"}", event_data[3]["text"]
       assert_equal "Answer", event_data[3]["tool_name"]
       assert_equal "edit", event_data[3]["type"]
@@ -194,7 +194,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Assign 2i reviewer", event_data[1]["section"]
+      assert_equal "Edit", event_data[1]["section"]
       assert_equal "{\"Choose a person to assign\":\"None\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
@@ -208,7 +208,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[3]["action"]
       assert_equal "form_response", event_data[3]["event_name"]
-      assert_equal "Assign 2i reviewer", event_data[3]["section"]
+      assert_equal "Edit", event_data[3]["section"]
       assert_equal "{\"Choose a person to assign\":\"[REDACTED]\"}", event_data[3]["text"]
       assert_equal "Answer", event_data[3]["tool_name"]
       assert_equal "edit", event_data[3]["type"]
@@ -236,7 +236,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Send to 2i", event_data[1]["section"]
+      assert_equal "Edit", event_data[1]["section"]
       assert_equal "{\"Comment (optional)\":\"12\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
@@ -267,7 +267,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Skip review", event_data[1]["section"]
+      assert_equal "Edit", event_data[1]["section"]
       assert_equal "{\"Comment (optional)\":\"26\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
@@ -296,7 +296,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Request amendments", event_data[1]["section"]
+      assert_equal "Edit", event_data[1]["section"]
       assert_equal "{\"Amendment details (optional)\":\"22\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
@@ -325,7 +325,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "No changes needed", event_data[1]["section"]
+      assert_equal "Edit", event_data[1]["section"]
       assert_equal "{\"Comment (optional)\":\"21\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
@@ -366,7 +366,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[2]["action"]
       assert_equal "form_response", event_data[2]["event_name"]
-      assert_equal "Send to fact check", event_data[2]["section"]
+      assert_equal "Edit", event_data[2]["section"]
       assert_equal "{\"Email addresses\":\"28\",\"Customised message\":\"12\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]
@@ -400,7 +400,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[0]["action"]
       assert_equal "form_response", event_data[0]["event_name"]
-      assert_equal "Resend fact check email", event_data[0]["section"]
+      assert_equal "Edit", event_data[0]["section"]
       assert_equal "{}", event_data[0]["text"]
       assert_equal "Answer", event_data[0]["tool_name"]
       assert_equal "edit", event_data[0]["type"]
@@ -451,7 +451,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[3]["action"]
       assert_equal "form_response", event_data[3]["event_name"]
-      assert_equal "Schedule publication", event_data[3]["section"]
+      assert_equal "Edit", event_data[3]["section"]
       assert_equal "{\"Comment (optional)\":\"26\",\"Publication date - Day\":\"1\",\"Publication date - Month\":\"12\",\"Publication date - Year\":\"2026\",\"Publication time - Hour\":\"09\",\"Publication time - Minute\":\"01\"}", event_data[3]["text"]
       assert_equal "Answer", event_data[3]["tool_name"]
       assert_equal "edit", event_data[3]["type"]
@@ -484,7 +484,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Cancel scheduled publishing", event_data[1]["section"]
+      assert_equal "Edit", event_data[1]["section"]
       assert_equal "{\"Comment (optional)\":\"39\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
@@ -513,7 +513,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Send to publish", event_data[1]["section"]
+      assert_equal "Edit", event_data[1]["section"]
       assert_equal "{\"Comment (optional)\":\"34\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
