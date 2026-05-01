@@ -1,7 +1,8 @@
 <% @edition = @resource %>
+<% title = "Send to 2i" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Send to 2i" %>
-<% content_for :title, "Send to 2i" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 
 <%= render "editions/secondary_nav_tabs/progress_with_comment", {
   form_url: send_to_2i_edition_path(@edition),
@@ -10,4 +11,5 @@
     #{link_to("Read guidance on writing good change notes (opens in new tab)", "https://gov-uk.atlassian.net/l/cp/dwn06raQ", target: "_blank", rel: "noopener noreferrer", class: "govuk-link govuk-link--no-visited-state")}".html_safe,
   comment_label_text: "Comment (optional)" ,
   submit_button_text: "Send to 2i",
+  title:,
 } %>

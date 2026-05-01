@@ -1,4 +1,4 @@
-<%# locals: (form_url:, comment_label_text:, submit_button_text:, text: nil, schedule_fields: nil) %>
+<%# locals: (title:, form_url:, comment_label_text:, submit_button_text:, text: nil, schedule_fields: nil) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -9,7 +9,7 @@
       </p>
     <% end %>
 
-    <%= form_for(:edition, url: form_url, data: {module: ""}) do %>
+    <%= form_for(:edition, url: form_url, data: { module: "", ga4_section: "Edit - #{title}" }) do %>
       <%= render "govuk_publishing_components/components/textarea", {
         label: {
           heading_size: "m",

@@ -1,11 +1,12 @@
 <% @edition = @resource %>
+<% title = "Resend fact check email" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Resend fact check email" %>
-<% content_for :title, "Resend fact check email" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds edit--resend-fact-check-email-page">
-    <%= form_for @resource, url: resend_fact_check_email_edition_path(@resource), data: { module: ""} do %>
+    <%= form_for @resource, url: resend_fact_check_email_edition_path(@resource), data: { module: "", ga4_section: "Edit - #{title}" } do %>
       <section class="govuk-!-margin-bottom-6">
         <%= render "govuk_publishing_components/components/heading", {
           text: "Email addresses",

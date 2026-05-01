@@ -1,7 +1,8 @@
 <% @edition = @resource %>
+<% title = "Send to fact check" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Send for fact check" %>
-<% content_for :title, "Send for fact check" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 <% template = render template: "event_mailer/request_fact_check", formats: [:text] %>
 
 <div class="govuk-grid-row">
@@ -12,7 +13,7 @@
         <% content_for :error_summary, render("shared/error_summary", { object: @form, full_messages: false }) %>
       <% end %>
 
-      <%= form_with model: @form, scope: :fact_check_request_form, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "" } do %>
+      <%= form_with model: @form, scope: :fact_check_request_form, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "", ga4_section: "Edit - #{title}" } do %>
 
         <%= render "govuk_publishing_components/components/input", {
           label: {
@@ -96,7 +97,7 @@
 
     <% else %>
 
-      <%= form_for(:edition, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "" }) do %>
+      <%= form_for(:edition, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "", ga4_section: "Edit - #{title}" }) do %>
           <%= render "govuk_publishing_components/components/input", {
             label: {
               heading_size: "m",
