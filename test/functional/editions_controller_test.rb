@@ -643,9 +643,9 @@ class EditionsControllerTest < ActionController::TestCase
           }
         end
 
-        should "not call FactCheckManagerApiService if the edition to be saved is in 'fact_check' state" do
+        should "not call Services.fact_check_manager_api if the edition to be saved is in 'fact_check' state" do
           edition = FactoryBot.create(:edition, :fact_check)
-          FactCheckManagerApiService.expects(:update_fact_check_content).never
+          Services.fact_check_manager_api.expects(:patch_update_content).never
 
           patch :update, params: {
             id: edition.id,
@@ -772,6 +772,15 @@ class EditionsControllerTest < ActionController::TestCase
           assert_equal "Due to a service problem, the request could not be made", flash[:danger]
           @edition.reload
           assert_equal "fact_check", @edition.state
+        end
+
+        should "not call Services.fact_check_manager_api" do
+          patch :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "Fact check email re-sent", flash[:success]
+          Services.fact_check_manager_api.expects(:post_resend_emails).never
         end
       end
 
@@ -938,17 +947,17 @@ class EditionsControllerTest < ActionController::TestCase
   context "fact_check_manager_api is enabled" do
     setup do
       @test_strategy.switch!(:fact_check_manager_api, true)
-      stub_post_new_fact_check_request(success: true)
-      stub_post_resend_fact_check_emails(success: true)
+      stub_post_new_fact_check_request(success: true, source_id: @edition.id)
+      stub_post_resend_fact_check_emails(success: true, source_id: @edition.id)
       stub_patch_update_fact_check_content(success: true, source_id: @edition.id)
     end
 
     context "#update" do
       %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |edition_state|
         context "edition is not in 'fact_check' 'state" do
-          should "not call FactCheckManagerApiService if the edition is not in 'fact_check' state" do
+          should "not call Services.fact_check_manager_api if the edition is not in 'fact_check' state" do
             @edition = FactoryBot.create(:edition, edition_state)
-            FactCheckManagerApiService.expects(:update_fact_check_content).never
+            Services.fact_check_manager_api.expects(:patch_update_content).never
 
             patch :update, params: {
               id: @edition.id,
@@ -976,8 +985,8 @@ class EditionsControllerTest < ActionController::TestCase
           assert_equal "The changed title", @edition.title
         end
 
-        should "call FactCheckManagerApiService if the edition to be saved is in 'fact_check' state" do
-          FactCheckManagerApiService.expects(:update_fact_check_content).with(@edition)
+        should "call Services.fact_check_manager_api if the edition to be saved is in 'fact_check' state" do
+          Services.fact_check_manager_api.expects(:patch_update_content).with(has_entries(source_id: @edition.id)).returns(GdsApi::Response.new(code: 200))
 
           patch :update, params: {
             id: @edition.id,
@@ -990,7 +999,7 @@ class EditionsControllerTest < ActionController::TestCase
           assert_includes flash[:success], "Fact check request updated."
         end
 
-        should "render an error if the FactCheckManagerApiService call fails" do
+        should "render an error if the Services.fact_check_manager_api.patch_update_content call fails" do
           stub_patch_update_fact_check_content(success: false, source_id: @edition.id)
 
           patch :update, params: {
@@ -1001,8 +1010,7 @@ class EditionsControllerTest < ActionController::TestCase
             },
           }
 
-          assert_template "govuk_publishing_components/components/_error_summary"
-          assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the fact check request could not be updated. The edition was successfully saved"
+          assert_equal "Due to a service problem, the fact check request could not be updated. The edition was successfully saved", flash[:danger]
         end
       end
 
@@ -1012,8 +1020,8 @@ class EditionsControllerTest < ActionController::TestCase
           login_as(user)
         end
 
-        should "render an error message and not call FactCheckManagerApiService" do
-          FactCheckManagerApiService.expects(:update_fact_check_content).never
+        should "render an error message and not call Services.fact_check_manager_api" do
+          Services.fact_check_manager_api.expects(:patch_update_content).never
 
           patch :update, params: {
             id: @edition.id,
@@ -1100,6 +1108,16 @@ class EditionsControllerTest < ActionController::TestCase
           assert_template "secondary_nav_tabs/resend_fact_check_email_page"
           assert_equal "Due to a service problem, the request could not be made", flash[:danger]
         end
+
+        should "call Services.fact_check_manager_api" do
+          Services.fact_check_manager_api.expects(:post_resend_emails).with(source_app: "publisher", source_id: @edition.id).returns(GdsApi::Response.new(code: 200))
+
+          post :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "Fact check email re-sent", flash[:success]
+        end
       end
 
       context "user does not have govuk_editor permission" do
@@ -1119,6 +1137,9 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     context "#send_to_fact_check" do
+      setup do
+      end
+
       context "user has govuk_editor permission" do
         ["test@test.com", "test1@test.com, test2@test.com"].each do |email_addresses|
           context "using email address(es) '#{email_addresses}'" do
@@ -1127,7 +1148,10 @@ class EditionsControllerTest < ActionController::TestCase
 
               post :send_to_fact_check, params: {
                 id: edition.id,
-                email_addresses: email_addresses,
+                fact_check_request_form: { email_addresses:,
+                                           deadline: parametrised_deadline,
+                                           zendesk_number: 1_234_567,
+                                           reason_for_change: "A reason" },
               }
 
               assert_equal "Sent to fact check", flash[:success]
@@ -1139,17 +1163,33 @@ class EditionsControllerTest < ActionController::TestCase
           end
         end
 
+        should "call Services.fact_check_manager_api if the edition to be saved is in 'ready' state" do
+          edition = FactoryBot.create(:edition, :ready)
+          Services.fact_check_manager_api.expects(:post_fact_check).with(has_entries(source_id: edition.id)).returns(GdsApi::Response.new(code: 200))
+
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            fact_check_request_form: { email_addresses: "stub@email.com",
+                                       deadline: parametrised_deadline,
+                                       zendesk_number: 1_234_567,
+                                       reason_for_change: "A reason" },
+          }
+
+          assert_includes flash[:success], "Sent to fact check"
+        end
+
         should "not update the edition state and render an error message when no email addresses are provided" do
           edition = FactoryBot.create(:edition, :ready)
 
           post :send_to_fact_check, params: {
             id: edition.id,
-            email_addresses: "",
+            fact_check_request_form: { deadline: parametrised_deadline },
             customised_message: "Please fact check this",
           }
 
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
-          assert_equal "Enter email addresses", flash[:danger]
+          assert_template "govuk_publishing_components/components/_error_summary"
+          assert_select ".gem-c-error-summary__list-item", "Enter one or more email addresses"
           edition.reload
           assert_equal "ready", edition.state
         end
@@ -1159,11 +1199,61 @@ class EditionsControllerTest < ActionController::TestCase
 
           post :send_to_fact_check, params: {
             id: edition.id,
-            email_addresses: "user1@example.com, another-user AT example DOT com",
+            fact_check_request_form: { email_addresses: "user1@example.com, another-user AT example DOT com", deadline: parametrised_deadline },
           }
 
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
-          assert_equal "Enter email addresses", flash[:danger]
+          assert_template "govuk_publishing_components/components/_error_summary"
+          assert_select ".gem-c-error-summary__list-item", "Email addresses are invalid"
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+
+        should "not update the edition state and render an error message when no deadline is provided" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            fact_check_request_form: { email_addresses: "stub@email.com", deadline: nil },
+            customised_message: "Please fact check this",
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_template "govuk_publishing_components/components/_error_summary"
+          assert_select ".gem-c-error-summary__list-item", "Enter a deadline"
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+
+        should "not update the edition state and render an error message when deadline is not valid" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            fact_check_request_form: { deadline: { "3i" => 999, "2i" => 999, "1i" => 999 } },
+            customised_message: "Please fact check this",
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_template "govuk_publishing_components/components/_error_summary"
+          assert_select ".gem-c-error-summary__list-item", "Enter a deadline"
+          edition.reload
+          assert_equal "ready", edition.state
+        end
+
+        should "not update the edition state and render an error message when zendesk number is provided but not valid" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          post :send_to_fact_check, params: {
+            id: edition.id,
+            fact_check_request_form: { email_addresses: "stub@email.com", deadline: parametrised_deadline, zendesk_number: "notanumber" },
+
+            customised_message: "Please fact check this",
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_template "govuk_publishing_components/components/_error_summary"
+          assert_select ".gem-c-error-summary__list-item", "Zendesk number must be a number at least 7 digits long"
           edition.reload
           assert_equal "ready", edition.state
         end
@@ -1174,7 +1264,7 @@ class EditionsControllerTest < ActionController::TestCase
 
           post :send_to_fact_check, params: {
             id: edition.id,
-            email_addresses: "user1@example.com",
+            fact_check_request_form: { email_addresses: "test@test.com", deadline: parametrised_deadline },
           }
 
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
@@ -1189,7 +1279,7 @@ class EditionsControllerTest < ActionController::TestCase
           edition = FactoryBot.create(:edition, :ready)
           post :send_to_fact_check, params: {
             id: edition.id,
-            email_addresses: "test@test.com",
+            fact_check_request_form: { email_addresses: "test@test.com", deadline: parametrised_deadline },
           }
 
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
@@ -1204,7 +1294,7 @@ class EditionsControllerTest < ActionController::TestCase
           edition = FactoryBot.create(:edition, :ready)
           post :send_to_fact_check, params: {
             id: edition.id,
-            email_addresses: "test@test.com",
+            fact_check_request_form: { email_addresses: "test@test.com", deadline: parametrised_deadline },
           }
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
           assert_equal "Due to a service problem, the request could not be made", flash[:danger]
@@ -2574,5 +2664,11 @@ private
 
   def description(edition)
     edition.format.underscore.humanize.downcase
+  end
+
+  def parametrised_deadline
+    date = Time.zone.today + 5.days
+
+    { "3i" => date.day, "2i" => date.month, "1i" => date.year }
   end
 end

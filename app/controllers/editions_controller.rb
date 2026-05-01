@@ -100,6 +100,7 @@ class EditionsController < InheritedResources::Base
   end
 
   def send_to_fact_check_page
+    @form ||= FactCheckRequestForm.new
     render "secondary_nav_tabs/send_to_fact_check_page"
   end
 
@@ -173,10 +174,11 @@ class EditionsController < InheritedResources::Base
   end
 
   def resend_fact_check_email
+    form = FactCheckRequestForm.new({ edition: @resource, user: current_user })
     if !@resource.can_resend_fact_check?
       flash.now[:danger] = "Edition is not in a state where fact check emails can be re-sent"
       render "secondary_nav_tabs/resend_fact_check_email_page"
-    elsif resend_fact_check_email_for_edition(resource)
+    elsif resend_fact_check_email_for_edition(resource, form)
       flash[:success] = "Fact check email re-sent"
       redirect_to edition_path(resource)
     else
@@ -239,13 +241,37 @@ class EditionsController < InheritedResources::Base
 
   def send_to_fact_check
     begin
+      # TODO: Leave as is for now until retiring legacy flow, but why is this a variable and not hardcoded into send_to_fact_check_for_edition?
       comment = "Sent to fact check"
-      if !send_to_fact_check_params_valid?
-        error_message = Flipflop.enabled?(:fact_check_manager_api) ? "Enter email addresses" : "Enter email addresses and/or customised message"
-        flash.now[:danger] = error_message
+
+      # Separating this entirely from the legacy flow below for readability
+      if Flipflop.enabled?(:fact_check_manager_api)
+        @form = FactCheckRequestForm.new(
+          permitted_fact_check_request_form_params.merge(
+            edition: @resource,
+            user: current_user,
+          ),
+        )
+
+        if @form.valid?(:send) && send_to_fact_check_for_edition(@resource, @form, comment)
+          flash[:success] = "Sent to fact check"
+          redirect_to edition_path(resource)
+          return
+        end
+
+        flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE if @form.errors.none?
+
+        # TODO: These two lines not required once below block for legacy flow is removed.
         render "secondary_nav_tabs/send_to_fact_check_page"
         return
-      elsif send_to_fact_check_for_edition(@resource, params[:email_addresses], comment, params[:customised_message])
+      end
+
+      # TODO: Delete this block when retiring legacy flow
+      if !send_to_fact_check_params_valid?
+        flash.now[:danger] = "Enter email addresses and/or customised message"
+        render "secondary_nav_tabs/send_to_fact_check_page"
+        return
+      elsif legacy_send_to_fact_check_for_edition(@resource, params[:email_addresses], comment, params[:customised_message])
         flash[:success] = "Sent to fact check"
         redirect_to edition_path(resource)
         return
@@ -476,10 +502,17 @@ protected
 private
 
   def update_fact_check
-    FactCheckManagerApiService.update_fact_check_content(@resource)
+    form = FactCheckRequestForm.new({ edition: @resource, user: current_user })
+
+    unless form.valid?(:update) && Services.fact_check_manager_api.patch_update_content(**form.update_content_payload)
+      Rails.logger.error "Request form validation errors: #{form.errors.full_messages.join(', ')}"
+      flash[:danger] = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved"
+      render "show"
+      return
+    end
   rescue GdsApi::HTTPErrorResponse => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    @resource.errors.add(:show, "Due to a service problem, the fact check request could not be updated. The edition was successfully saved")
+    Rails.logger.error "API Error Response for Edition id #{@resource.id}: #{e.class} #{e.message}"
+    flash[:danger] = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved"
     render "show"
   else
     flash[:success] = "Edition updated successfully. <br> Fact check request updated."
@@ -501,16 +534,20 @@ private
     progress_edition(resource, { request_type: "approve_review", comment: comment })
   end
 
-  def resend_fact_check_email_for_edition(resource)
-    progress_edition(resource, { request_type: "resend_fact_check" })
+  def resend_fact_check_email_for_edition(resource, fact_check_request_form)
+    progress_edition(resource, { request_type: "resend_fact_check", fact_check_request_form: })
   end
 
   def send_to_2i_for_edition(resource, comment)
     progress_edition(resource, { request_type: "request_review", comment: comment })
   end
 
-  def send_to_fact_check_for_edition(resource, email_addresses, comment, customised_message = "")
+  def legacy_send_to_fact_check_for_edition(resource, email_addresses, comment, customised_message = "")
     progress_edition(resource, { request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
+  end
+
+  def send_to_fact_check_for_edition(resource, fact_check_request_form, comment)
+    progress_edition(resource, { request_type: "send_fact_check", comment:, email_addresses: fact_check_request_form.email_addresses, fact_check_request_form: })
   end
 
   def skip_review_for_edition(resource, comment)
@@ -541,15 +578,11 @@ private
   end
 
   def send_to_fact_check_params_valid?
-    if Flipflop.enabled?(:fact_check_manager_api)
-      params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses])
-    else
-      params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses]) && params[:customised_message].present?
-    end
+    params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses]) && params[:customised_message].present?
   end
 
   def invalid_email_addresses?(addresses)
-    email_regex = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/
+    email_regex = /\A[\w+\-%.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/
     addresses.split(",").any? do |address|
       address.strip !~ email_regex
     end
@@ -605,6 +638,13 @@ private
   def permitted_update_params
     subtype = @resource.editionable.class.to_s.underscore.to_sym
     params.require(:edition).permit(type_specific_params(subtype) + common_params)
+  end
+
+  def permitted_fact_check_request_form_params
+    params.require(:fact_check_request_form).permit(:email_addresses,
+                                                    :reason_for_change,
+                                                    :zendesk_number,
+                                                    deadline: %w[1i 2i 3i])
   end
 
   def type_specific_params(subtype)

@@ -10,6 +10,7 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # @option [string] source_url The url locating the content on the source application
   # @param [string] requester_name The username of the source app user submitting the request
   # @param [string] requester_email The email address of the source app user submitting the request
+  # @param [array] recipients Array of emails to be notified of the request
   # @param [hash] current_content Hash of current content to be compared in HTML format
   #   For simple single-part documents format: { id: { heading: "heading string", body: "HTML content string" } }
   #   For complex multi-part/multi-chapter documents format: { id: { heading: "heading string", body: "HTML content string" }, id2: { heading: "heading string", body: "HTML content string" }, ...}.
@@ -17,8 +18,9 @@ class GdsApi::FactCheckManager < GdsApi::Base
   #   If a part has been deleted entirely, do not provide its ID in current_content.
   # @option [hash] previous_content Same format as current_content
   #   If a new part has been added to the document, do not provide its ID in previous_content.
-  # @option [string] deadline Date a response is requested by. Use iso8601 date format: "2026-02-09"
-  # @param [array] recipients Array of emails to be notified of the request
+  # @param [string] deadline Date a response is requested by. Use iso8601 date format: "2026-02-09"
+  # @option [string] reason_for_change optional free-text response of why the change has been made, to populate the notification email. Line breaks are retained.
+  # @option [integer] zendesk_number optional number for zendesk ticket linked to the change
   # @option [uuid] draft_auth_bypass_id The edition's auth_bypass_id for draft origin preview access
   # @option [uuid] draft_content_id The edition's content_id for draft origin preview access
   # @option [string] draft_slug The edition's slug for the draft origin preview URL path
@@ -26,7 +28,7 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # @return [GdsApi::Response] Basic response with code
 
   def post_fact_check(source_app:, source_id:, requester_name:, requester_email:, current_content:,
-                      recipients:, source_title: nil, source_url: nil, previous_content: {}, deadline: nil,
+                      recipients:, deadline:, source_title: nil, source_url: nil, previous_content: {}, reason_for_change: nil, zendesk_number: nil,
                       draft_auth_bypass_id: nil, draft_content_id: nil, draft_slug: nil)
     post_json(
       "#{endpoint}/api/requests",
@@ -39,6 +41,8 @@ class GdsApi::FactCheckManager < GdsApi::Base
       current_content:,
       previous_content:,
       deadline:,
+      reason_for_change:,
+      zendesk_number:,
       recipients:,
       draft_auth_bypass_id:,
       draft_content_id:,
