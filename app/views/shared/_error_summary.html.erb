@@ -10,7 +10,7 @@
         text: full_messages ? error.full_message : error.message,
         href: "##{model.to_s.underscore + "_" + error.attribute.to_s}",
         data_attributes: {
-          module: ga4_form_tracking? ? "ga4-auto-tracker" : nil,
+          module: "ga4-auto-tracker",
           "ga4-auto": {
             event_name: "form_error",
             type: "Edit edition",

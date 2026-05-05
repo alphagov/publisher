@@ -7,7 +7,6 @@ class Ga4TrackingAdminTest < JavascriptIntegrationTest
   setup do
     setup_users
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
-    @test_strategy.switch!(:ga4_form_tracking, true)
   end
 
   context "Delete edition page" do
