@@ -34,19 +34,17 @@ class ApplicationController < ActionController::Base
   end
 
   def notify_bad_request(exception)
-    # TODO: control this via the log level rather than an environment variable
-    if %w[integration staging].include?(ENV["GOVUK_ENVIRONMENT"]) && exception.message =~ /team-only API key/
-      # in production we care about all errors
-      # in staging and integration the team-only error may be encountered by
-      # end-users who should see a more helpful error message
-      raise
-    else
+    # If we use a team-only Notify API key in future for staging and integration
+    # the team-only error may be encountered, this logs a more helpful message
+    if GovukEnvironment.current != "production" && exception.message =~ /team-only API key/
       error = <<~ERROR
         Error: One or more recipients not in GOV.UK Notify team (code: 400).
         This error will not occur in Production.
       ERROR
 
-      render plain: error, status: :bad_request
+      Rails.logger.error("#{error}, code: #{exception.code}")
+    else
+      raise
     end
   end
 
