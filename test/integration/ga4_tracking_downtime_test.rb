@@ -7,7 +7,6 @@ class Ga4DowntimeTest < JavascriptIntegrationTest
   setup do
     setup_users
     @edition = FactoryBot.create(:transaction_edition, :published)
-    @test_strategy.switch!(:ga4_form_tracking, true)
   end
 
   context "Add downtime message" do

@@ -7,7 +7,6 @@ class Ga4TrackingUnpublishTest < JavascriptIntegrationTest
   setup do
     setup_users
     @edition = FactoryBot.create(:answer_edition, state: "published", title: "Answer edition")
-    @test_strategy.switch!(:ga4_form_tracking, true)
   end
 
   context "Unpublish tab" do

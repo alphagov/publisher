@@ -8,7 +8,6 @@ class Ga4TrackingMetadataTest < JavascriptIntegrationTest
     FactoryBot.create(:user, :govuk_editor, name: "Test User")
     @govuk_requester = FactoryBot.create(:user, :govuk_editor, :skip_review)
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
-    @test_strategy.switch!(:ga4_form_tracking, true)
   end
 
   context "Metadata tab" do

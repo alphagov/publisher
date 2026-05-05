@@ -14,8 +14,6 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
     @assigned_edition.actions.create! request_type: Action::ASSIGN, requester_id: @author.id, created_at: 4.days.ago
     @in_review_edition.actions.create! request_type: Action::REQUEST_REVIEW, requester_id: @author.id, created_at: 4.days.ago
-
-    @test_strategy.switch!(:ga4_form_tracking, true)
   end
 
   context "Edit page" do

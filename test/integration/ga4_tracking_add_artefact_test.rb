@@ -6,8 +6,6 @@ class Ga4TrackingAddArtefactTest < JavascriptIntegrationTest
 
   setup do
     setup_users
-
-    @test_strategy.switch!(:ga4_form_tracking, true)
   end
 
   context "Create new content page one" do
