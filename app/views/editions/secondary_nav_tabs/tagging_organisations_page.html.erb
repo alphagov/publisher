@@ -1,14 +1,15 @@
 <% @edition = @resource %>
+<% title = "Tag organisations" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Tag organisations" %>
-<% content_for :title, "Tag organisations" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <p class="govuk-body">Tagging a page to an organisation makes it appear in searches filtered by that organisation.</p>
     <p class="govuk-body">For example, <%= link_to "a search for documents published by HMRC", "https://www.gov.uk/search/all?keywords=taxes&order=relevance&organisations%5B%5D=hm-revenue-customs", class: "govuk-link" %>.</p>
 
-    <%= form_with model: @tagging_update_form_values, url: update_organisations_edition_path(@resource), data: { module: "" } do |f| %>
+    <%= form_with model: @tagging_update_form_values, url: update_organisations_edition_path(@resource), data: { module: "", ga4_section: "Tagging - #{title}" } do |f| %>
       <%= f.hidden_field :previous_version %>
 
       <%= render "govuk_publishing_components/components/select_with_search", {
