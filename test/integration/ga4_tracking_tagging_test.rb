@@ -46,7 +46,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # Form submitted with "Capital Gains Tax" selected
       assert_equal "Save", event_data[2]["action"]
       assert_equal "form_response", event_data[2]["event_name"]
-      assert_equal "Set GOV.UK breadcrumb", event_data[2]["section"]
+      assert_equal "Tagging - Set GOV.UK breadcrumb", event_data[2]["section"]
       assert_equal "{\"Tax\":\"Capital Gains Tax\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]
@@ -91,7 +91,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # Form submitted with "No, keep the breadcrumb" selected
       assert_equal "Save", event_data[2]["action"]
       assert_equal "form_response", event_data[2]["event_name"]
-      assert_equal "Are you sure you want to remove the breadcrumb?", event_data[2]["section"]
+      assert_equal "Tagging - Are you sure you want to remove the breadcrumb?", event_data[2]["section"]
       assert_equal "{\"Are you sure you want to remove the breadcrumb?\":\"No, keep the breadcrumb\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]
@@ -166,7 +166,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # Form submitted with "Benefits and financial support for families (draft)" and "Capital Gains Tax" selected
       assert_equal "Save", event_data[4]["action"]
       assert_equal "form_response", event_data[4]["event_name"]
-      assert_equal "Tag browse pages", event_data[4]["section"]
+      assert_equal "Tagging - Tag browse pages", event_data[4]["section"]
       assert_equal "{\"Benefits\":\"Benefits and financial support for families (draft)\",\"Tax\":\"Capital Gains Tax\"}", event_data[4]["text"]
       assert_equal "Answer", event_data[4]["tool_name"]
       assert_equal "edit", event_data[4]["type"]
@@ -213,7 +213,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # Form submitted with "Department for Education" and "Student Loans Company" selected
       assert_equal "Save", event_data[2]["action"]
       assert_equal "form_response", event_data[2]["event_name"]
-      assert_equal "Tag organisations", event_data[2]["section"]
+      assert_equal "Tagging - Tag organisations", event_data[2]["section"]
       assert_equal "{\"Organisations\":\"2\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]
@@ -241,7 +241,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # Form submitted with "Student Loans Company" selected
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Tag organisations", event_data[1]["section"]
+      assert_equal "Tagging - Tag organisations", event_data[1]["section"]
       assert_equal "{\"Organisations\":\"Student Loans Company\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
@@ -348,7 +348,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       # form submitted with "/universal-credit" and "/company-tax-returns" selected
       assert_equal "Save", event_data[6]["action"]
       assert_equal "form_response", event_data[6]["event_name"]
-      assert_equal "Tag related content", event_data[6]["section"]
+      assert_equal "Tagging - Tag related content", event_data[6]["section"]
       # Requires change in add-another.js to retrieve this value
       # assert_equal "{\"Tag related content\":\"17,20\"}", event_data[6]["text"]
       assert_equal "Answer", event_data[6]["tool_name"]
@@ -414,7 +414,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[2]["action"]
       assert_equal "form_response", event_data[2]["event_name"]
-      assert_equal "Reorder related content", event_data[2]["section"]
+      assert_equal "Tagging - Reorder related content", event_data[2]["section"]
       # This requires work to be done in the "Reorderable list" component to return the correct data
       # assert_equal "{\"Position for /prepare-file-annual-accounts-for-limited-company\":\"1\",\"Position for /corporation-tax\":\"2\",\"Position for /company-tax-returns\":\"3\",\"Position for /company-tax-returns\":\"4\"}", event_data[2]["text"].gsub(/[\"][[:space:]]+/, '"')
       assert_equal "reorder", event_data[2]["type"]
