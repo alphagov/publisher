@@ -30,7 +30,7 @@ class Ga4TrackingHistoryNotesTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Add edition note", event_data[1]["section"]
+      assert_equal "History and notes - Add edition note", event_data[1]["section"]
       assert_equal "{\"Edition note\":\"26\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
@@ -58,7 +58,7 @@ class Ga4TrackingHistoryNotesTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
-      assert_equal "Update important note", event_data[1]["section"]
+      assert_equal "History and notes - Update important note", event_data[1]["section"]
       assert_equal "{\"Important note\":\"25\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
