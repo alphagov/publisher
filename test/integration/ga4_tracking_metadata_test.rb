@@ -55,7 +55,7 @@ class Ga4TrackingMetadataTest < JavascriptIntegrationTest
       # Form submitted with "Slug" field filled in and "English" selected from the Language field
       assert_equal "Save", event_data[3]["action"]
       assert_equal "form_response", event_data[3]["event_name"]
-      assert_equal "Answer edition", event_data[3]["section"]
+      assert_equal "Metadata - Answer edition", event_data[3]["section"]
       assert_equal "{\"Slug\":\"12\",\"Language\":\"English\"}", event_data[3]["text"]
       assert_equal "Answer", event_data[3]["tool_name"]
       assert_equal "edit", event_data[3]["type"]
