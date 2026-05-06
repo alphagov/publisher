@@ -1,7 +1,8 @@
 <% @edition = @resource %>
+<% title = "Update important note" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Update important note" %>
-<% content_for :title, "Update important note" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -13,7 +14,7 @@
       To delete the important note, clear any comments and select ‘Save’.
     </p>
 
-    <%= form_for(:note, :url=> notes_path, data: { module: "" }) do %>
+    <%= form_for(:note, :url=> notes_path, data: { module: "", ga4_section: "History and notes - #{title}" }) do %>
       <%= hidden_field_tag :edition_id, @edition.id %>
       <%= hidden_field_tag "note[type]", Action::IMPORTANT_NOTE %>
 
