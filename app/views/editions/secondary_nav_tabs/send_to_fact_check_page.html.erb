@@ -29,7 +29,7 @@
 
         <%= render "govuk_publishing_components/components/textarea", {
           label: {
-            heading_size: "s",
+            heading_size: "m",
             text: "Reason for change (optional)",
           },
           name: "fact_check_request_form[reason_for_change]",
@@ -43,7 +43,7 @@
         <%= render "govuk_publishing_components/components/input", {
           label: {
             heading_size: "m",
-            text: "Zendesk number",
+            text: "Zendesk ticket number (optional)",
           },
           name: "fact_check_request_form[zendesk_number]",
           id: "zendesk_number",
@@ -54,35 +54,38 @@
 
         <% deadline_autofill = @form.deadline_autofill || working_days_after(Date.current, how_many: 5) %>
 
-        <%= render "govuk_publishing_components/components/date_input", {
-          label: {
-            heading_size: "m",
-            text: "Deadline",
-          },
-          name: "fact_check_request_form[deadline]",
-          items: [
-            {
-              label: "Day",
-              name: "3i",
-              width: 2,
-              value: deadline_autofill.is_a?(Hash) ? deadline_autofill["3i"] : deadline_autofill.day,
-            },
-            {
-              label: "Month",
-              name: "2i",
-              width: 2,
-              value: deadline_autofill.is_a?(Hash) ? deadline_autofill["2i"] : deadline_autofill.month,
-            },
-            {
-              label: "Year",
-              name: "1i",
-              width: 4,
-              value: deadline_autofill.is_a?(Hash) ? deadline_autofill["1i"] : deadline_autofill.year,
-            },
-          ],
-          hint: "This defaults to 5 working days from today",
-          error_items: errors_for(@form.errors, :deadline, use_full_message: false),
-        } %>
+        <%= render "govuk_publishing_components/components/fieldset", {
+        legend_text: "Deadline",
+        heading_size: "m",
+        } do
+          render "govuk_publishing_components/components/date_input", {
+            name: "fact_check_request_form[deadline]",
+            id: "deadline",
+            items: [
+              {
+                label: "Day",
+                name: "3i",
+                width: 2,
+                value: deadline_autofill.is_a?(Hash) ? deadline_autofill["3i"] : deadline_autofill.day,
+              },
+              {
+                label: "Month",
+                name: "2i",
+                width: 2,
+                value: deadline_autofill.is_a?(Hash) ? deadline_autofill["2i"] : deadline_autofill.month,
+              },
+              {
+                label: "Year",
+                name: "1i",
+                width: 4,
+                value: deadline_autofill.is_a?(Hash) ? deadline_autofill["1i"] : deadline_autofill.year,
+              },
+            ],
+            hint: "This defaults to 5 working days from today",
+            error_items: errors_for(@form.errors, :deadline, use_full_message: false),
+          }
+          end
+          %>
 
         <div class="govuk-button-group">
           <%= render "govuk_publishing_components/components/button", {

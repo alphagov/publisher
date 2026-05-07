@@ -24,7 +24,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       assert page.has_text?("Send to fact check")
       assert page.has_text?("Email addresses")
       assert page.has_text?("Reason for change (optional)")
-      assert page.has_text?("Zendesk number")
+      assert page.has_text?("Zendesk ticket number (optional)")
       assert page.has_css?(".gem-c-hint", text: "Separate multiple email addresses with a comma or semi-colon, followed by a space")
       assert page.has_css?(".gem-c-hint", text: "This is shown in the email sent to the department")
       assert page.has_css?(".gem-c-hint", text: "This defaults to 5 working days from today")
@@ -67,7 +67,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       date = 1.day.from_now
 
       fill_in "Email addresses", with: "fact-checker-one@example.com"
-      fill_in "Zendesk number", with: 1_234_567
+      fill_in "Zendesk ticket number (optional)", with: 1_234_567
       fill_in "Reason for change", with: "Reason"
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
@@ -82,7 +82,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       date = 1.day.from_now
 
       fill_in "Email addresses", with: "fact-checker-one.com"
-      fill_in "Zendesk number", with: 1_234_567
+      fill_in "Zendesk ticket number (optional)", with: 1_234_567
       fill_in "Reason for change", with: "Reason"
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
@@ -97,7 +97,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
 
     should "abort state change and display an error message if the deadline is invalid" do
       fill_in "Email addresses", with: "fact-checker-one@example.com"
-      fill_in "Zendesk number", with: 1_234_567
+      fill_in "Zendesk ticket number (optional)", with: 1_234_567
       fill_in "Reason for change", with: "Reason"
       fill_in "Day", with: 999
       fill_in "Month", with: 999
@@ -114,7 +114,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       date = 1.day.from_now
 
       fill_in "Email addresses", with: "fact-checker-one@example.com"
-      fill_in "Zendesk number", with: "notanumber"
+      fill_in "Zendesk ticket number (optional)", with: "notanumber"
       fill_in "Reason for change", with: "Reason"
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
@@ -139,7 +139,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       date = 1.day.from_now
 
       fill_in "Email addresses", with: "fact-checker-one.com"
-      fill_in "Zendesk number", with: 1_234_567
+      fill_in "Zendesk ticket number (optional)", with: 1_234_567
       fill_in "Reason for change", with: "A reason"
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
@@ -176,7 +176,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       date = 1.day.from_now
 
       fill_in "Email addresses", with: "fact-checker-one@example.com"
-      fill_in "Zendesk number", with: 1_234_567
+      fill_in "Zendesk ticket number (optional)", with: 1_234_567
       fill_in "Reason for change", with: "A reason"
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
@@ -198,7 +198,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       date = 1.day.from_now
 
       fill_in "Email addresses", with: "fact-checker-one@example.com"
-      fill_in "Zendesk number", with: 1_234_567
+      fill_in "Zendesk ticket number (optional)", with: 1_234_567
       fill_in "Reason for change", with: "A reason"
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
