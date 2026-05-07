@@ -13,7 +13,6 @@ class FactCheckRequestForm
   # If this is typecast to integer, then non-integer values would be cast to 0 and accepted. Numericality handles non-int strings.
   attribute :zendesk_number, :string, default: nil
 
-  validates :edition, :user, presence: true
   validates :deadline, presence: { message: "Enter a deadline" }, on: :send
   validates :email_addresses, presence: { message: "Enter one or more email addresses" }, on: :send
   validates :zendesk_number, numericality: { only_integer: true,
@@ -21,7 +20,6 @@ class FactCheckRequestForm
                                              message: "Zendesk number must be a number at least 7 digits long",
                                              allow_blank: true }, on: :send
 
-  validate :user_has_editor_permissions
   validate :valid_email_addresses, on: :send
   validate :deadline_in_range, on: :send
 

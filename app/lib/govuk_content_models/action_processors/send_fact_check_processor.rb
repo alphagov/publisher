@@ -6,7 +6,7 @@ module GovukContentModels
 
         if Flipflop.enabled?(:fact_check_manager_api)
           form = action_attributes[:fact_check_request_form]
-          return false unless form.valid?(:send) && Services.fact_check_manager_api.post_fact_check(**form.post_new_request_payload)
+          return false unless Services.fact_check_manager_api.post_fact_check(**form.post_new_request_payload)
         end
 
         action_attributes[:comment] ||= "Fact check requested"

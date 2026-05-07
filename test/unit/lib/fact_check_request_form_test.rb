@@ -8,9 +8,6 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
   end
   context "standard validations" do
     context "validations without action" do
-      should validate_presence_of(:edition)
-      should validate_presence_of(:user)
-
       should_not validate_presence_of(:deadline)
       should_not validate_presence_of(:email_addresses)
       should_not validate_presence_of(:zendesk_number)
@@ -18,8 +15,6 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
     end
 
     context "validations on :send" do
-      should validate_presence_of(:edition).on(:send)
-      should validate_presence_of(:user).on(:send)
       should validate_presence_of(:deadline).on(:send).with_message("Enter a deadline")
       should validate_presence_of(:email_addresses).on(:send).with_message("Enter one or more email addresses")
 
@@ -35,9 +30,6 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
     end
 
     context "validations on :update" do
-      should validate_presence_of(:edition).on(:update)
-      should validate_presence_of(:user).on(:update)
-
       should_not validate_presence_of(:deadline).on(:update)
       should_not validate_presence_of(:email_addresses).on(:update)
       should_not validate_presence_of(:zendesk_number).on(:update)
@@ -45,9 +37,6 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
     end
 
     context "validations on :resend" do
-      should validate_presence_of(:edition).on(:resend)
-      should validate_presence_of(:user).on(:resend)
-
       should_not validate_presence_of(:deadline).on(:resend)
       should_not validate_presence_of(:email_addresses).on(:resend)
       should_not validate_presence_of(:zendesk_number).on(:resend)
@@ -55,35 +44,6 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
     end
   end
 
-  context "custom validations on all actions" do
-    context "#user_has_editor_permissions" do
-      # Scenario of govuk_editor user is covered by other tests
-
-      should "return true for welsh_editor on welsh content" do
-        @form.user = FactoryBot.create(:user, :welsh_editor)
-        @form.edition = FactoryBot.create(:edition, :welsh)
-
-        assert @form.valid?
-        assert_empty @form.errors[:user]
-      end
-
-      should "return false for welsh_editor on non-welsh content" do
-        @form.user = FactoryBot.create(:user, :welsh_editor)
-
-        assert_not @form.valid?
-        assert_not_empty @form.errors[:user]
-        assert_includes @form.errors[:user], "You do not have permission to edit this content"
-      end
-
-      should "return false for non-editor" do
-        @form.user = FactoryBot.create(:user)
-
-        assert_not @form.valid?
-        assert_not_empty @form.errors[:user]
-        assert_includes @form.errors[:user], "You do not have permission to edit this content"
-      end
-    end
-  end
   context "custom validations on :send" do
     context "#valid_email_addresses" do
       should "validate a single email address" do

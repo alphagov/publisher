@@ -1162,7 +1162,9 @@ class EditionsControllerTest < ActionController::TestCase
 
         should "call Services.fact_check_manager_api if the edition to be saved is in 'ready' state" do
           edition = FactoryBot.create(:edition, :ready)
-          Services.fact_check_manager_api.expects(:post_fact_check).with(has_entries(source_id: edition.id)).returns(GdsApi::Response.new(code: 200))
+          Services.fact_check_manager_api.expects(:post_fact_check)
+                  .with(has_entries(source_id: edition.id, deadline: processed_deadline, recipients: ["stub@email.com"]))
+                  .returns(GdsApi::Response.new(code: 200))
 
           post :send_to_fact_check, params: {
             id: edition.id,
@@ -2667,5 +2669,11 @@ private
     date = Time.zone.today + 5.days
 
     { "3i" => date.day, "2i" => date.month, "1i" => date.year }
+  end
+
+  def processed_deadline
+    date = parameterised_deadline
+    date = Date.new(date["1i"], date["2i"], date["3i"])
+    date.strftime("%Y-%m-%d")
   end
 end
