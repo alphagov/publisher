@@ -548,7 +548,7 @@ private
   end
 
   def send_to_fact_check_for_edition(resource, fact_check_request_form, comment)
-    progress_edition(resource, { request_type: "send_fact_check", comment:, email_addresses: fact_check_request_form.email_addresses, fact_check_request_form: })
+    progress_edition(resource, { request_type: "send_fact_check", comment:, email_addresses: fact_check_request_form.email_addresses, api_payload: fact_check_request_form.post_new_request_payload })
   end
 
   def skip_review_for_edition(resource, comment)

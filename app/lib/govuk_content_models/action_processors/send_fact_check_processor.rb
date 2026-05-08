@@ -5,8 +5,8 @@ module GovukContentModels
         return false if action_attributes[:email_addresses].blank?
 
         if Flipflop.enabled?(:fact_check_manager_api)
-          form = action_attributes[:fact_check_request_form]
-          return false unless Services.fact_check_manager_api.post_fact_check(**form.post_new_request_payload)
+          api_payload = action_attributes[:api_payload]
+          return false unless Services.fact_check_manager_api.post_fact_check(**api_payload)
         end
 
         action_attributes[:comment] ||= "Fact check requested"
@@ -20,8 +20,8 @@ module GovukContentModels
     private
 
       def record_action
-        # Request form does not need to be persisted in the Action record
-        action_attributes.delete(:fact_check_request_form)
+        # API payload does not need to be persisted in the Action record
+        action_attributes.delete(:api_payload)
 
         super
       end
