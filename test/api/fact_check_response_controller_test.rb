@@ -66,6 +66,21 @@ class FactCheckResponseControllerTest < IntegrationTest
       assert_includes response.parsed_body["errors"], "comment must be provided if the fact check is rejected"
     end
 
+    should "return 422 when rejected with an empty comment" do
+      post api_fact_check_response_path, params: { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: false, comment: "" }, as: :json
+
+      assert_response :unprocessable_entity
+      assert_includes response.parsed_body["errors"], "comment must be provided if the fact check is rejected"
+    end
+
+    should "return a success response when accepted with an empty comment" do
+      post api_fact_check_response_path, params: { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: true, comment: "" }, as: :json
+      @edition.reload
+
+      assert_response :success
+      assert @edition.actions.last.comment == "Changes are correct."
+    end
+
     %i[edition_id responder_name accepted].each do |param|
       should "return 422 when missing #{param}" do
         params = { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: true }
