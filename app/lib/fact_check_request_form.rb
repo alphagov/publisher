@@ -5,15 +5,16 @@ class FactCheckRequestForm
   SOURCE_APP = "publisher".freeze
 
   attr_accessor :edition, :user
-  attr_reader :deadline_autofill
 
   attribute :email_addresses, :string
-  attribute :deadline, :date
+
+  attribute :deadline_1i, :string
+  attribute :deadline_2i, :string
+  attribute :deadline_3i, :string
   attribute :reason_for_change, :string, default: nil
   # If this is typecast to integer, then non-integer values would be cast to 0 and accepted. Numericality handles non-int strings.
   attribute :zendesk_number, :string, default: nil
 
-  validates :deadline, presence: { message: "Enter a deadline" }, on: :send
   validates :email_addresses, presence: { message: "Enter one or more email addresses" }, on: :send
   validates :zendesk_number, numericality: { only_integer: true,
                                              greater_than: 999_999,
@@ -22,26 +23,16 @@ class FactCheckRequestForm
 
   validate :valid_email_addresses, on: :send
   validate :deadline_in_range, on: :send
+  validate :deadline_present, on: :send
 
   EMAIL_REGEX = /\A[\w+\-%.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/
 
-  def deadline=(deadline)
-    deadline = nil unless deadline.is_a?(Date) || deadline.is_a?(Hash)
+  def deadline
+    return unless deadline_1i.present? && deadline_2i.present? && deadline_3i.present?
 
-    if deadline.is_a?(Hash)
-      begin
-        # Preserves raw date hash to re-fill form on a validation failure
-        @deadline_autofill = deadline
-
-        deadline = if %w[1i 2i 3i].all? { |k| deadline[k].present? }
-                     Time.zone.local(deadline["1i"].to_i, deadline["2i"].to_i, deadline["3i"].to_i).to_date
-                   end
-      rescue ArgumentError, TypeError
-        deadline = nil
-      end
-    end
-
-    super(deadline)
+    Date.new(deadline_1i.to_s.to_i, deadline_2i.to_s.to_i, deadline_3i.to_s.to_i)
+  rescue Date::Error
+    nil
   end
 
   def post_new_request_payload
@@ -102,6 +93,10 @@ private
     if deadline < Date.current || deadline > 30.days.from_now
       errors.add(:deadline, "The date must be today or up to 30 days in the future")
     end
+  end
+
+  def deadline_present
+    errors.add(:deadline, "Enter a deadline") if deadline.blank?
   end
 
   def split_email_addresses

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class EditionsControllerTest < ActionController::TestCase
@@ -1146,7 +1148,9 @@ class EditionsControllerTest < ActionController::TestCase
               post :send_to_fact_check, params: {
                 id: edition.id,
                 fact_check_request_form: { email_addresses:,
-                                           deadline: parameterised_deadline,
+                                           deadline_1i: default_test_deadline.year,
+                                           deadline_2i: default_test_deadline.month,
+                                           deadline_3i: default_test_deadline.day,
                                            zendesk_number: 1_234_567,
                                            reason_for_change: "A reason" },
               }
@@ -1169,7 +1173,9 @@ class EditionsControllerTest < ActionController::TestCase
           post :send_to_fact_check, params: {
             id: edition.id,
             fact_check_request_form: { email_addresses: "stub@email.com",
-                                       deadline: parameterised_deadline,
+                                       deadline_1i: default_test_deadline.year,
+                                       deadline_2i: default_test_deadline.month,
+                                       deadline_3i: default_test_deadline.day,
                                        zendesk_number: 1_234_567,
                                        reason_for_change: "A reason" },
           }
@@ -1182,7 +1188,9 @@ class EditionsControllerTest < ActionController::TestCase
 
           post :send_to_fact_check, params: {
             id: edition.id,
-            fact_check_request_form: { deadline: parameterised_deadline },
+            fact_check_request_form: { deadline_3i: default_test_deadline.day,
+                                       deadline_2i: default_test_deadline.month,
+                                       deadline_1i: default_test_deadline.year },
             customised_message: "Please fact check this",
           }
 
@@ -1198,7 +1206,10 @@ class EditionsControllerTest < ActionController::TestCase
 
           post :send_to_fact_check, params: {
             id: edition.id,
-            fact_check_request_form: { email_addresses: "user1@example.com, another-user AT example DOT com", deadline: parameterised_deadline },
+            fact_check_request_form: { email_addresses: "user1@example.com, another-user AT example DOT com",
+                                       deadline_3i: default_test_deadline.day,
+                                       deadline_2i: default_test_deadline.month,
+                                       deadline_1i: default_test_deadline.year },
           }
 
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
@@ -1245,7 +1256,11 @@ class EditionsControllerTest < ActionController::TestCase
 
           post :send_to_fact_check, params: {
             id: edition.id,
-            fact_check_request_form: { email_addresses: "stub@email.com", deadline: parameterised_deadline, zendesk_number: "notanumber" },
+            fact_check_request_form: { email_addresses: "stub@email.com",
+                                       deadline_3i: default_test_deadline.day,
+                                       deadline_2i: default_test_deadline.month,
+                                       deadline_1i: default_test_deadline.day,
+                                       zendesk_number: "notanumber" },
 
             customised_message: "Please fact check this",
           }
@@ -1263,7 +1278,10 @@ class EditionsControllerTest < ActionController::TestCase
 
           post :send_to_fact_check, params: {
             id: edition.id,
-            fact_check_request_form: { email_addresses: "test@test.com", deadline: parameterised_deadline },
+            fact_check_request_form: { email_addresses: "test@test.com",
+                                       deadline_3i: default_test_deadline.day,
+                                       deadline_2i: default_test_deadline.month,
+                                       deadline_1i: default_test_deadline.year },
           }
 
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
@@ -1278,7 +1296,10 @@ class EditionsControllerTest < ActionController::TestCase
           edition = FactoryBot.create(:edition, :ready)
           post :send_to_fact_check, params: {
             id: edition.id,
-            fact_check_request_form: { email_addresses: "test@test.com", deadline: parameterised_deadline },
+            fact_check_request_form: { email_addresses: "test@test.com",
+                                       deadline_3i: default_test_deadline.day,
+                                       deadline_2i: default_test_deadline.month,
+                                       deadline_1i: default_test_deadline.year },
           }
 
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
@@ -1293,7 +1314,10 @@ class EditionsControllerTest < ActionController::TestCase
           edition = FactoryBot.create(:edition, :ready)
           post :send_to_fact_check, params: {
             id: edition.id,
-            fact_check_request_form: { email_addresses: "test@test.com", deadline: parameterised_deadline },
+            fact_check_request_form: { email_addresses: "test@test.com",
+                                       deadline_3i: default_test_deadline.day,
+                                       deadline_2i: default_test_deadline.month,
+                                       deadline_1i: default_test_deadline.year },
           }
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
           assert_equal "Due to a service problem, the request could not be made", flash[:danger]
@@ -2665,15 +2689,12 @@ private
     edition.format.underscore.humanize.downcase
   end
 
-  def parameterised_deadline
-    date = Time.zone.today + 5.days
-
-    { "3i" => date.day, "2i" => date.month, "1i" => date.year }
+  def default_test_deadline
+    Time.zone.today + 5.days
   end
 
   def processed_deadline
-    date = parameterised_deadline
-    date = Date.new(date["1i"], date["2i"], date["3i"])
+    date = default_test_deadline
     date.strftime("%Y-%m-%d")
   end
 end

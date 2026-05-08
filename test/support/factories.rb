@@ -636,7 +636,9 @@ FactoryBot.define do
     edition { FactoryBot.create(:edition, :draft) }
     user { FactoryBot.create(:user, :govuk_editor) }
     email_addresses { "stub@email.com" }
-    deadline { 5.days.from_now.to_date }
+    deadline_1i { 5.days.from_now.to_date.year }
+    deadline_2i { 5.days.from_now.to_date.month }
+    deadline_3i { 5.days.from_now.to_date.day }
     reason_for_change { "because" }
     zendesk_number { 1_234_567 }
   end

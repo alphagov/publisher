@@ -52,40 +52,38 @@
           error_items: errors_for(@form.errors, :zendesk_number, use_full_message: false),
         } %>
 
-        <% deadline_autofill = @form.deadline_autofill || working_days_after(Date.current, how_many: 5) %>
+        <% deadline_autofill = working_days_after(Date.current, how_many: 5) %>
 
         <%= render "govuk_publishing_components/components/fieldset", {
-        legend_text: "Deadline",
-        heading_size: "m",
+          legend_text: "Deadline",
+          heading_size: "m",
         } do
           render "govuk_publishing_components/components/date_input", {
-            name: "fact_check_request_form[deadline]",
-            id: "deadline",
             items: [
               {
                 label: "Day",
-                name: "3i",
+                name: "fact_check_request_form[deadline_3i]",
                 width: 2,
-                value: deadline_autofill.is_a?(Hash) ? deadline_autofill["3i"] : deadline_autofill.day,
+                value: @form.deadline_3i.presence || deadline_autofill.day,
               },
               {
                 label: "Month",
-                name: "2i",
+                name: "fact_check_request_form[deadline_2i]",
                 width: 2,
-                value: deadline_autofill.is_a?(Hash) ? deadline_autofill["2i"] : deadline_autofill.month,
+                value: @form.deadline_2i.presence || deadline_autofill.month,
               },
               {
                 label: "Year",
-                name: "1i",
+                name: "fact_check_request_form[deadline_1i]",
                 width: 4,
-                value: deadline_autofill.is_a?(Hash) ? deadline_autofill["1i"] : deadline_autofill.year,
+                value: @form.deadline_1i.presence || deadline_autofill.year,
               },
             ],
             hint: "This defaults to 5 working days from today",
             error_items: errors_for(@form.errors, :deadline, use_full_message: false),
           }
-          end
-          %>
+        end
+        %>
 
         <div class="govuk-button-group">
           <%= render "govuk_publishing_components/components/button", {

@@ -645,7 +645,9 @@ private
     params.require(:fact_check_request_form).permit(:email_addresses,
                                                     :reason_for_change,
                                                     :zendesk_number,
-                                                    deadline: %w[1i 2i 3i])
+                                                    :deadline_3i,
+                                                    :deadline_2i,
+                                                    :deadline_1i)
   end
 
   def type_specific_params(subtype)
