@@ -140,5 +140,25 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
 
       assert_equal({ content: { heading: "Body", body: "" } }, presenter.render_for_fact_check_manager_api)
     end
+
+    should "return a hash keyed by part id for parted editions" do
+      edition = FactoryBot.create(:guide_edition_with_two_parts)
+      presenter = Formats::GenericEditionPresenter.new(edition)
+
+      part_one, part_two = edition.parts.in_order.to_a
+      expected = {
+        part_one.slug => { heading: "PART !", body: "<p>This is some version text.</p>" },
+        part_two.slug => { heading: "PART !!", body: "<p>This is some more version text.</p>" },
+      }
+
+      assert_equal expected, presenter.render_for_fact_check_manager_api
+    end
+
+    should "return a hash with an empty string if no parts" do
+      edition = FactoryBot.create(:guide_edition)
+      presenter = Formats::GenericEditionPresenter.new(edition)
+
+      assert_equal({ content: { heading: "Body", body: "" } }, presenter.render_for_fact_check_manager_api)
+    end
   end
 end
