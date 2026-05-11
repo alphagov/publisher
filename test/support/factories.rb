@@ -169,6 +169,10 @@ FactoryBot.define do
       end
     end
 
+    trait :auth_bypass_id do
+      auth_bypass_id { SecureRandom.uuid }
+    end
+
     trait :welsh do
       panopticon_id { create(:artefact, language: "cy", kind: kind_for_artefact).id }
     end
