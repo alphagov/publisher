@@ -10,7 +10,7 @@ namespace :fact_check do
       edition.save!
 
       UpdateWorker.perform_async(id)
-      FactCheckManagerApiService.update_fact_check_content(edition)
+      Services.fact_check_manager_api.patch_update_content(edition)
     end
   end
 end
