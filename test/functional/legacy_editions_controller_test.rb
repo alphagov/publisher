@@ -711,7 +711,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
         post :update,
              params: {
                id: @welsh_edition.id,
-               commit: "Send to Fact check",
+               commit: "Send for fact check",
                edition: {
                  activity_send_fact_check_attributes: {
                    request_type: "send_fact_check",
@@ -734,7 +734,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
         post :update,
              params: {
                id: @edition.id,
-               commit: "Send to Fact check",
+               commit: "Send for fact check",
                edition: {
                  activity_send_fact_check_attributes: {
                    request_type: "send_fact_check",

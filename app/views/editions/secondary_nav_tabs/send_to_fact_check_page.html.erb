@@ -1,7 +1,7 @@
 <% @edition = @resource %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Send to fact check" %>
-<% content_for :title, "Send to fact check" %>
+<% content_for :page_title, "Send for fact check" %>
+<% content_for :title, "Send for fact check" %>
 <% template = render template: "event_mailer/request_fact_check", formats: [:text] %>
 
 <div class="govuk-grid-row">
@@ -35,7 +35,7 @@
           name: "fact_check_request_form[reason_for_change]",
           id: "reason_for_change",
           value: @form.reason_for_change,
-          rows: 14,
+          rows: 5,
           hint: ("This is shown in the email sent to the department"),
           error_items: errors_for(@form.errors, :reason_for_change, use_full_message: false),
         } %>
@@ -49,6 +49,7 @@
           id: "zendesk_number",
           value: @form.zendesk_number,
           prefix: "https://govuk.zendesk.com/tickets/",
+          hint: ("This will generate a link to the ticket in the email"),
           error_items: errors_for(@form.errors, :zendesk_number, use_full_message: false),
         } %>
 
@@ -87,7 +88,7 @@
 
         <div class="govuk-button-group">
           <%= render "govuk_publishing_components/components/button", {
-            text: "Send to fact check",
+            text: "Send for fact check",
           } %>
           <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
         </div>
@@ -121,7 +122,7 @@
 
         <div class="govuk-button-group">
           <%= render "govuk_publishing_components/components/button", {
-            text: "Send to fact check",
+            text: "Send for fact check",
           } %>
           <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
         </div>

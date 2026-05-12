@@ -344,7 +344,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
     should "push the correct values to the dataLayer when events are triggered" do
       fill_in "Email addresses", with: "fact-checker-one@example.com"
       fill_in "Customised message", with: "Some message"
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       event_data = get_event_data
 
@@ -364,7 +364,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[2]["action"]
       assert_equal "form_response", event_data[2]["event_name"]
-      assert_equal "Send to fact check", event_data[2]["section"]
+      assert_equal "Send for fact check", event_data[2]["section"]
       assert_equal "{\"Email addresses\":\"28\",\"Customised message\":\"12\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]

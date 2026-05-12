@@ -77,7 +77,7 @@ class Edition < ApplicationRecord
         }
 
   ACTIONS = {
-    send_fact_check: "Send to Fact check",
+    send_fact_check: "Send for fact check",
     resend_fact_check: "Resend fact check email",
     request_review: "Send to 2nd pair of eyes",
     schedule_for_publishing: "Schedule for publishing",

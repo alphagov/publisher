@@ -21,7 +21,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
 
     should "render the page" do
       assert page.has_text?(@ready_edition.title)
-      assert page.has_text?("Send to fact check")
+      assert page.has_text?("Send for fact check")
       assert page.has_text?("Email addresses")
       assert page.has_text?("Reason for change (optional)")
       assert page.has_text?("Zendesk ticket number (optional)")
@@ -29,7 +29,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       assert page.has_css?(".gem-c-hint", text: "This is shown in the email sent to the department")
       assert page.has_css?(".gem-c-hint", text: "This defaults to 5 working days from today")
       assert page.has_css?(".govuk-input__prefix", text: "https://govuk.zendesk.com/tickets/")
-      assert page.has_button?("Send to fact check")
+      assert page.has_button?("Send for fact check")
       assert page.has_link?("Cancel")
     end
 
@@ -57,7 +57,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
@@ -72,7 +72,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
@@ -87,7 +87,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send to fact check"
+      click_button "Send for fact check"
       @ready_edition.reload
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
@@ -102,7 +102,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: 999
       fill_in "Month", with: 999
       fill_in "Year", with: 999
-      click_button "Send to fact check"
+      click_button "Send for fact check"
       @ready_edition.reload
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
@@ -119,7 +119,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send to fact check"
+      click_button "Send for fact check"
       @ready_edition.reload
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
@@ -144,7 +144,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Email addresses are invalid")
@@ -162,7 +162,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: "not"
       fill_in "Month", with: "a"
       fill_in "Year", with: "number"
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Enter a deadline")
@@ -181,7 +181,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Due to a service problem, the request could not be made")
@@ -203,7 +203,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send to fact check"
+      click_button "Send for fact check"
     end
   end
 
