@@ -31,7 +31,7 @@ module EditionsHelper
   end
 
   def legacy_format_conversion_select_options(edition)
-    possible_target_formats = Edition.convertible_formats - [edition.artefact.kind]
+    possible_target_formats = Edition.convertible_formats - [edition.format.underscore]
     possible_target_formats.map { |format_name| [format_name.humanize, format_name] }
   end
 
@@ -46,7 +46,7 @@ module EditionsHelper
       "transaction" => "Start page for a service",
     }
 
-    possible_target_formats = Edition.convertible_formats - [edition.artefact.kind]
+    possible_target_formats = Edition.convertible_formats - [edition.format.underscore]
     possible_target_formats.map do |format_name|
       {
         text: format_name.humanize,
