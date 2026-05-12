@@ -1,7 +1,8 @@
 <% @edition = @resource %>
+<% title = "Are you sure you want to remove the breadcrumb?" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :title, "Are you sure you want to remove the breadcrumb?" %>
-<% content_for :page_title, "Are you sure you want to remove the breadcrumb?" %>
+<% content_for :title, title %>
+<% content_for :page_title, title %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -9,7 +10,7 @@
       <% content_for :error_summary, render("shared/error_summary", { object: @edition, full_messages: false }) %>
     <% end %>
 
-    <%= form_with model: @tagging_update_form_values, url: remove_breadcrumb_edition_path(@resource), data: { module: "" } do |f| %>
+    <%= form_with model: @tagging_update_form_values, url: remove_breadcrumb_edition_path(@resource), data: { module: "", ga4_section: "Tagging - #{title}" } do |f| %>
       <%= f.hidden_field :previous_version %>
 
       <%= render "govuk_publishing_components/components/radio", {

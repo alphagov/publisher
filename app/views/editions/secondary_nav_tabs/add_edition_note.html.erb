@@ -1,13 +1,14 @@
 <% @edition = @resource %>
+<% title =  "Add edition note" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Add edition note" %>
-<% content_for :title, "Add edition note" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <p class="govuk-body">Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Jira card. You can also add an edition note when you send the edition for 2i review. <%= link_to "Read guidance on writing good change notes (opens in new tab)", "https://www.gov.uk/guidance/content-design/writing-for-gov-uk#change-notes", target: "_blank", rel: "noopener", class: "govuk-link--no-visited-state" %>.</p>
 
-    <%= form_for(:note, :url=> notes_path, data: { module: "" }) do |f| %>
+    <%= form_for(:note, :url=> notes_path, data: { module: "", ga4_section: "History and notes - #{title}" }) do |f| %>
       <%= hidden_field_tag :edition_id, resource.id %>
 
       <%= render "govuk_publishing_components/components/textarea", {

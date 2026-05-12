@@ -1,12 +1,14 @@
 <% @edition = @resource %>
+<% title = "Schedule publication" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Schedule publication" %>
-<% content_for :title, "Schedule publication" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 
 <%= render "editions/secondary_nav_tabs/progress_with_comment", {
   form_url: schedule_edition_path(@edition),
   comment_label_text: "Comment (optional)",
   submit_button_text: "Schedule",
+  title:,
   schedule_fields: (render "govuk_publishing_components/components/fieldset", {
     legend_text: "Publication date",
     heading_size: "m",

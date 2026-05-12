@@ -22,7 +22,7 @@ class Ga4TrackingAdminTest < JavascriptIntegrationTest
 
       assert_equal "Save", event_data[0]["action"]
       assert_equal "form_response", event_data[0]["event_name"]
-      assert_equal "Delete edition", event_data[0]["section"]
+      assert_equal "Admin - Delete edition", event_data[0]["section"]
       assert_equal "Answer", event_data[0]["tool_name"]
       assert_equal "edit", event_data[0]["type"]
     end
