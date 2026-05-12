@@ -70,7 +70,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     within "#send_fact_check_form" do
       fill_in "Email address", with: "user@example.com"
-      click_on "Send to Fact check"
+      click_on "Send for fact check"
     end
     assert page.has_content?("Simple smart answer updated")
 
@@ -89,7 +89,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     within "#send_fact_check_form" do
       fill_in "Email address", with: "user@example.com"
-      click_on "Send to Fact check"
+      click_on "Send for fact check"
     end
     assert page.has_content?("Simple smart answer updated")
 
@@ -726,7 +726,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_for_generic_action(simple_smart_answer, button_text) do
       fill_in "Email", with: email
       fill_in "Customised message", with: message
-      click_on "Send to Fact check"
+      click_on "Send for fact check"
     end
     assert page.has_content?("updated")
   end

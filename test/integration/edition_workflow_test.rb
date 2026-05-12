@@ -378,12 +378,12 @@ class EditionWorkflowTest < IntegrationTest
 
     should "render the page" do
       assert page.has_text?(@ready_edition.title)
-      assert page.has_text?("Send to fact check")
+      assert page.has_text?("Send for fact check")
       assert page.has_text?("Email addresses")
       assert page.has_css?(".gem-c-hint", text: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com")
       assert page.has_text?("Customised message")
       assert page.has_text?("The GOV.UK Content Team made the changes because")
-      assert page.has_button?("Send to fact check")
+      assert page.has_button?("Send for fact check")
       assert page.has_link?("Cancel")
     end
 
@@ -395,7 +395,7 @@ class EditionWorkflowTest < IntegrationTest
     should "redirect back to the edit tab on submit and show success message" do
       fill_in "Email addresses", with: "fact-checker-one@example.com"
       fill_in "Customised message", with: "Please check this"
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
@@ -405,7 +405,7 @@ class EditionWorkflowTest < IntegrationTest
       assert page.has_text?("The GOV.UK Content Team made the changes because")
 
       fill_in "Email addresses", with: "fact-checker-one@example.com"
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
@@ -414,7 +414,7 @@ class EditionWorkflowTest < IntegrationTest
     should "display an error message if an email address is invalid" do
       fill_in "Email addresses", with: "fact-checker-one.com"
       fill_in "Customised message", with: "Please check this"
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Enter email addresses and/or customised message")
@@ -423,7 +423,7 @@ class EditionWorkflowTest < IntegrationTest
     should "display an error message if customised message is empty" do
       fill_in "Email addresses", with: "fact-checker-one@example.com"
       fill_in "Customised message", with: ""
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Enter email addresses and/or customised message")
@@ -432,7 +432,7 @@ class EditionWorkflowTest < IntegrationTest
     should "keep user inputs when there is an error" do
       fill_in "Email addresses", with: "fact-checker-one.com"
       fill_in "Customised message", with: "Please check this"
-      click_button "Send to fact check"
+      click_button "Send for fact check"
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Enter email addresses and/or customised message")
