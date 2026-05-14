@@ -169,4 +169,30 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       assert_equal uid, result[:last_edited_by_editor_id]
     end
   end
+
+  context ".render_for_fact_check_manager_api" do
+    should "return a hash with the body content if present" do
+      edition = FactoryBot.create(:edition, body: "Move your body")
+
+      presenter = Formats::EditionFormatPresenter.new(edition)
+
+      assert_equal({ content: { heading: "Body", body: "<h1 id=\"a-key-answer-to-your-question-1\">A key answer to your question 1</h1>\n<p>Move your body</p>" } }, presenter.render_for_fact_check_manager_api)
+    end
+
+    should "return nil if edition does not respond to whole_body" do
+      edition = FactoryBot.create(:edition)
+      presenter = Formats::EditionFormatPresenter.new(edition)
+
+      edition.stub(:respond_to?, false) do
+        assert_nil presenter.render_for_fact_check_manager_api
+      end
+    end
+
+    should "return a hash with the edition title if body is nil" do
+      edition = FactoryBot.create(:edition, body: nil)
+      presenter = Formats::EditionFormatPresenter.new(edition)
+
+      assert_equal({ content: { heading: "Body", body: "<h1 id=\"a-key-answer-to-your-question-1\">A key answer to your question 1</h1>" } }, presenter.render_for_fact_check_manager_api)
+    end
+  end
 end

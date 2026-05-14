@@ -9,6 +9,12 @@ module Formats
       required_fields(republish).merge optional_fields
     end
 
+    def render_for_fact_check_manager_api
+      return unless @edition.respond_to?(:whole_body)
+
+      HtmlRenderer.render_hash({ content: { heading: "Body", body: "##{@edition.title}\n#{@edition.whole_body.presence}" } })
+    end
+
   private
 
     attr_reader :edition, :artefact
