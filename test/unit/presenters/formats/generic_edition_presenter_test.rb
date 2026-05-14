@@ -122,7 +122,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
 
       presenter = Formats::GenericEditionPresenter.new(edition)
 
-      assert_equal({ content: { heading: "Body", body: "<p>Move your body</p>" } }, presenter.render_for_fact_check_manager_api)
+      assert_equal({ content: { heading: "Body", body: "<h1 id=\"a-key-answer-to-your-question-1\">A key answer to your question 1</h1>\n<p>Move your body</p>" } }, presenter.render_for_fact_check_manager_api)
     end
 
     should "return nil if edition does not respond to whole_body" do
@@ -134,31 +134,33 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
       end
     end
 
-    should "return a hash with an empty string if body is nil" do
+    should "return a hash with the edition title if body is nil" do
       edition = FactoryBot.create(:edition, body: nil)
       presenter = Formats::GenericEditionPresenter.new(edition)
 
-      assert_equal({ content: { heading: "Body", body: "" } }, presenter.render_for_fact_check_manager_api)
+      assert_equal({ content: { heading: "Body", body: "<h1 id=\"a-key-answer-to-your-question-1\">A key answer to your question 1</h1>" } }, presenter.render_for_fact_check_manager_api)
     end
 
-    should "return a hash keyed by part id for parted editions" do
-      edition = FactoryBot.create(:guide_edition_with_two_parts)
-      presenter = Formats::GenericEditionPresenter.new(edition)
+    context "parted editions" do
+      should "return a hash keyed by part" do
+        edition = FactoryBot.create(:guide_edition_with_two_parts)
+        presenter = Formats::GenericEditionPresenter.new(edition)
 
-      part_one, part_two = edition.parts.in_order.to_a
-      expected = {
-        part_one.slug => { heading: "PART !", body: "<p>This is some version text.</p>" },
-        part_two.slug => { heading: "PART !!", body: "<p>This is some more version text.</p>" },
-      }
+        part_one, part_two = edition.parts.in_order.to_a
+        expected = {
+          part_one.slug => { heading: "PART !", body: "<p>This is some version text.</p>" },
+          part_two.slug => { heading: "PART !!", body: "<p>This is some more version text.</p>" },
+        }
 
-      assert_equal expected, presenter.render_for_fact_check_manager_api
-    end
+        assert_equal expected, presenter.render_for_fact_check_manager_api
+      end
 
-    should "return a hash with an empty string if no parts" do
-      edition = FactoryBot.create(:guide_edition)
-      presenter = Formats::GenericEditionPresenter.new(edition)
+      should "return a hash with the edition title if no parts" do
+        edition = FactoryBot.create(:guide_edition, title: "test title")
+        presenter = Formats::GenericEditionPresenter.new(edition)
 
-      assert_equal({ content: { heading: "Body", body: "" } }, presenter.render_for_fact_check_manager_api)
+        assert_equal({ content: { heading: "Body", body: "<h1 id=\"test-title\">test title</h1>" } }, presenter.render_for_fact_check_manager_api)
+      end
     end
   end
 end

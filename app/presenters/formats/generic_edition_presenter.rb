@@ -12,7 +12,7 @@ module Formats
       if @edition.editionable.is_a?(Parted) && @edition.parts.any?
         @edition.parts.in_order.to_h { |part| [part.slug, { heading: part.title, body: part.body.presence }] }
       else
-        { content: { heading: "Body", body: @edition.whole_body.presence } }
+        { content: { heading: "Body", body: "##{@edition.title}\n#{@edition.whole_body.presence}" } }
       end
     end
 
