@@ -1,5 +1,15 @@
 module Formats
   class GuidePresenter < EditionFormatPresenter
+    def render_for_fact_check_manager_api
+      return unless @edition.respond_to?(:whole_body)
+
+      if @edition.editionable.is_a?(Parted) && @edition.parts.any?
+        HtmlRenderer.render_hash(@edition.parts.in_order.to_h { |part| [part.slug, { heading: part.title, body: part.body.presence }] })
+      else
+        super
+      end
+    end
+
   private
 
     def schema_name
