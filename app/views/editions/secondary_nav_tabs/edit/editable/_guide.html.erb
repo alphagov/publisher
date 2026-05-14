@@ -9,6 +9,10 @@
   secondary_solid: true,
   href: new_edition_guide_part_path(edition),
   margin_bottom: 6,
+  data_attributes: {
+    module: "ga4-link-tracker",
+    ga4_link: '{ "event_name": "navigation", "type": "accordion", "index_link": 1, "index_section": 1, "index_section_count": 1 }',
+  },
 } %>
 
 <%= render "govuk_publishing_components/components/radio", {
