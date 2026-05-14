@@ -8,7 +8,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
     setup_users
 
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
-    @guide_edition = FactoryBot.create(:guide_edition, title: "Guide edition")
+    @guide_edition = FactoryBot.create(:guide_edition_with_two_parts, title: "Guide edition")
     @assigned_edition = FactoryBot.create(:edition, assigned_to: @author, created_at: 5.days.ago)
     @in_review_edition = FactoryBot.create(:edition, :in_review, reviewer: @reviewer, created_at: 6.days.ago)
 
@@ -90,6 +90,123 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "Enter a title", event_data[0]["text"]
       assert_equal "Title", event_data[0]["section"]
       assert_equal "Answer", event_data[0]["tool_name"]
+    end
+  end
+
+  context "Edit page of a Guide edition" do
+    setup do
+      visit edition_path(@guide_edition)
+      disable_links
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when Guide edition accordion controls are clicked" do
+      click_button "Show all sections"
+      within all(".govuk-accordion__section-header")[0] do
+        click_button "Hide"
+        click_button "Show"
+      end
+      within all(".govuk-accordion__section-content")[0] do
+        click_link "Delete chapter"
+      end
+      within all(".govuk-accordion__section-header")[1] do
+        click_button "Hide"
+        click_button "Show"
+      end
+      within all(".govuk-accordion__section-content")[1] do
+        click_link "Delete chapter"
+      end
+      click_link "Add a new chapter"
+      click_button "Hide all sections"
+      click_button "Save"
+
+      event_data = get_event_data
+
+      # click_button "Show all sections"
+      assert_equal "opened", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "accordion", event_data[0]["type"]
+      assert_equal "Show all sections", event_data[0]["text"]
+      assert_equal "0", event_data[0]["index"]["index_section"]
+      assert_equal "2", event_data[0]["index"]["index_section_count"]
+
+      # click_button "Hide"
+      assert_equal "closed", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "accordion", event_data[1]["type"]
+      assert_equal @guide_edition.parts[0].title, event_data[1]["text"]
+      assert_equal "1", event_data[1]["index"]["index_section"]
+      assert_equal "2", event_data[1]["index"]["index_section_count"]
+
+      # click_button "Show"
+      assert_equal "opened", event_data[2]["action"]
+      assert_equal "select_content", event_data[2]["event_name"]
+      assert_equal "accordion", event_data[2]["type"]
+      assert_equal @guide_edition.parts[0].title, event_data[2]["text"]
+      assert_equal "1", event_data[2]["index"]["index_section"]
+      assert_equal "2", event_data[2]["index"]["index_section_count"]
+
+      # click_link "Delete chapter"
+      assert_equal "navigation", event_data[3]["event_name"]
+      assert_equal "accordion", event_data[3]["type"]
+      assert_equal "Delete chapter", event_data[3]["text"]
+      assert_equal "2", event_data[3]["index"]["index_link"]
+      assert_equal "1", event_data[3]["index"]["index_section"]
+      assert_equal "2", event_data[3]["index"]["index_section_count"]
+      assert_equal current_host, event_data[3]["link_domain"]
+      assert_equal "/editions/#{@guide_edition.id}/guide_parts/#{@guide_edition.parts[0].id}/confirm_destroy", event_data[3]["url"]
+
+      # click_button "Hide"
+      assert_equal "closed", event_data[4]["action"]
+      assert_equal "select_content", event_data[4]["event_name"]
+      assert_equal "accordion", event_data[4]["type"]
+      assert_equal @guide_edition.parts[1].title, event_data[4]["text"]
+      assert_equal "2", event_data[4]["index"]["index_section"]
+      assert_equal "2", event_data[4]["index"]["index_section_count"]
+
+      # click_button "Show"
+      assert_equal "opened", event_data[5]["action"]
+      assert_equal "select_content", event_data[5]["event_name"]
+      assert_equal "accordion", event_data[5]["type"]
+      assert_equal @guide_edition.parts[1].title, event_data[5]["text"]
+      assert_equal "2", event_data[5]["index"]["index_section"]
+      assert_equal "2", event_data[5]["index"]["index_section_count"]
+
+      # click_link "Delete chapter"
+      assert_equal "navigation", event_data[6]["event_name"]
+      assert_equal "accordion", event_data[6]["type"]
+      assert_equal "Delete chapter", event_data[6]["text"]
+      assert_equal "2", event_data[6]["index"]["index_link"]
+      assert_equal "2", event_data[6]["index"]["index_section"]
+      assert_equal "2", event_data[6]["index"]["index_section_count"]
+      assert_equal current_host, event_data[6]["link_domain"]
+      assert_equal "/editions/#{@guide_edition.id}/guide_parts/#{@guide_edition.parts[1].id}/confirm_destroy", event_data[6]["url"]
+
+      # click_link "Add a new chapter"
+      assert_equal "navigation", event_data[7]["event_name"]
+      assert_equal "accordion", event_data[7]["type"]
+      assert_equal "Add a new chapter", event_data[7]["text"]
+      assert_equal "1", event_data[7]["index"]["index_link"]
+      assert_equal "1", event_data[7]["index"]["index_section"]
+      assert_equal "1", event_data[7]["index"]["index_section_count"]
+      assert_equal current_host, event_data[7]["link_domain"]
+      assert_equal "/editions/#{@guide_edition.id}/guide_parts/new", event_data[7]["url"]
+
+      # click_button "Hide all sections"
+      assert_equal "closed", event_data[8]["action"]
+      assert_equal "select_content", event_data[8]["event_name"]
+      assert_equal "accordion", event_data[8]["type"]
+      assert_equal "Hide all sections", event_data[8]["text"]
+      assert_equal "0", event_data[8]["index"]["index_section"]
+      assert_equal "2", event_data[8]["index"]["index_section_count"]
+
+      # click_button "Save"
+      assert_equal "Save", event_data[9]["action"]
+      assert_equal "form_response", event_data[9]["event_name"]
+      assert_equal "Edit - Guide edition", event_data[9]["section"]
+      assert_equal "{\"Title\":\"13,6,7\",\"Slug\":\"8,8\",\"Body\":\"26,31\",\"Is every chapter part of a step by step?\":\"No\",\"Is this beta content?\":\"No\"}", event_data[9]["text"]
+      assert_equal "Guide", event_data[9]["tool_name"]
+      assert_equal "edit", event_data[9]["type"]
     end
   end
 
