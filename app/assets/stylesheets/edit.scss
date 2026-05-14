@@ -28,6 +28,35 @@
       overflow-wrap: break-word;
     }
   }
+
+  &--send-fact-check-email-preview {
+    @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+
+    border: 1px solid #cecece; // Temporary workaround until govuk-functional-colour is working
+    background-color: #f4f8fb; // Temporary workaround until govuk-functional-colour is working
+    @include govuk-responsive-margin(2, "top");
+    @include govuk-responsive-padding(6, "left");
+    @include govuk-responsive-padding(6, "right");
+    @include govuk-responsive-padding(6, "top");
+    @include govuk-responsive-padding(2, "bottom");
+
+    header {
+      background: url("gds_logo.png") no-repeat;
+      background-size: contain;
+      background-position: top 0 left 7px;
+      padding-left: 45px;
+      border-left: solid 2px #005abb;
+    }
+
+    .non-functional-link{
+      @extend .govuk-link; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+      color: govuk-colour("blue"); // govuk-functional-colour("link") once that is working
+    }
+
+    .gem-c-govspeak h2{
+      @include govuk-responsive-padding(0, "top");
+    }
+  }
 }
 
 .editions__edit__summary{
