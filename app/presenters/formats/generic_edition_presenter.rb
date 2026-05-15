@@ -1,11 +1,5 @@
 module Formats
   class GenericEditionPresenter < EditionFormatPresenter
-    def render_for_fact_check_manager_api
-      return unless @edition.respond_to?(:whole_body)
-
-      HtmlRenderer.render_hash({ content: { heading: "Body", body: @edition.whole_body.presence } })
-    end
-
   private
 
     def schema_name
