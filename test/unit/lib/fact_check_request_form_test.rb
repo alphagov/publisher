@@ -241,8 +241,8 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
                            source_url: "#{Plek.find('publisher')}/editions/#{@edition.id}",
                            requester_name: "Joe Bloggs",
                            requester_email: "joe1@bloggs.com",
-                           current_content: { content: { heading: "Body", body: "<h1 id=\"new-title\">New title</h1>\n<p>Some updated body</p>" } },
-                           previous_content: { content: { heading: "Body", body: "<h1 id=\"a-key-answer-to-your-question-1\">A key answer to your question 1</h1>\n<p>Some body text</p>" } },
+                           current_content: { content: { heading: "Body", body: "<h2 class=\"edition-title\">New title</h2>\n<p>Some updated body</p>" } },
+                           previous_content: { content: { heading: "Body", body: "<h2 class=\"edition-title\">A key answer to your question 1</h2>\n<p>Some body text</p>" } },
                            deadline: target_date.iso8601,
                            reason_for_change: "because",
                            zendesk_number: "1234567",
@@ -268,7 +268,7 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
                            source_title: "New title",
                            requester_name: "Joe Bloggs",
                            requester_email: "joe1@bloggs.com",
-                           current_content: { content: { heading: "Body", body: "<h1 id=\"new-title\">New title</h1>\n<p>Some body text</p>" } },
+                           current_content: { content: { heading: "Body", body: "<h2 class=\"edition-title\">New title</h2>\n<p>Some body text</p>" } },
                            previous_content: nil,
                            deadline: target_date.iso8601,
                            reason_for_change: "because",
@@ -296,7 +296,7 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
       expected_payload = { source_app: "publisher",
                            source_id: @edition.id,
                            source_title: "New title",
-                           current_content: { content: { heading: "Body", body: "<h1 id=\"new-title\">New title</h1>\n<p>Some updated body</p>" } },
+                           current_content: { content: { heading: "Body", body: "<h2 class=\"edition-title\">New title</h2>\n<p>Some updated body</p>" } },
                            draft_auth_bypass_id: @edition.auth_bypass_id,
                            draft_slug: @edition.slug }
 

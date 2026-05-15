@@ -176,7 +176,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
 
       presenter = Formats::EditionFormatPresenter.new(edition)
 
-      assert_equal({ content: { heading: "Body", body: "<h1 id=\"a-key-answer-to-your-question-1\">A key answer to your question 1</h1>\n<p>Move your body</p>" } }, presenter.render_for_fact_check_manager_api)
+      assert_equal({ content: { heading: "Body", body: "<h2 class=\"edition-title\">A key answer to your question 1</h2>\n<p>Move your body</p>" } }, presenter.render_for_fact_check_manager_api)
     end
 
     should "return nil if edition does not respond to whole_body" do
@@ -192,7 +192,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       edition = FactoryBot.create(:edition, body: nil)
       presenter = Formats::EditionFormatPresenter.new(edition)
 
-      assert_equal({ content: { heading: "Body", body: "<h1 id=\"a-key-answer-to-your-question-1\">A key answer to your question 1</h1>" } }, presenter.render_for_fact_check_manager_api)
+      assert_equal({ content: { heading: "Body", body: "<h2 class=\"edition-title\">A key answer to your question 1</h2>" } }, presenter.render_for_fact_check_manager_api)
     end
   end
 end

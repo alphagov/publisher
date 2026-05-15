@@ -136,7 +136,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
       edition = FactoryBot.create(:guide_edition, title: "test title")
       presenter = Formats::GuidePresenter.new(edition)
 
-      assert_equal({ content: { heading: "Body", body: "<h1 id=\"test-title\">test title</h1>" } }, presenter.render_for_fact_check_manager_api)
+      assert_equal({ content: { heading: "Body", body: "<h2 class=\"edition-title\">test title</h2>" } }, presenter.render_for_fact_check_manager_api)
     end
   end
 end
