@@ -33,6 +33,19 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       assert page.has_link?("Cancel")
     end
 
+    should "pre-populate the email preview with the edition title" do
+      assert page.has_css?(".edit--send-fact-check-email-preview", text: @ready_edition.title)
+    end
+
+    should "render govspeak elements of the email preview" do
+      assert page.has_css?(".edit--send-fact-check-email-preview")
+      within ".edit--send-fact-check-email-preview" do
+        assert page.has_css?("img[src*='gds_logo']")
+        assert page.has_css?("div", class: "application-notice info-notice", text: "Deadline: DD Month YYYY")
+        assert page.has_css?("h2", id: "review-the-changes", text: "Review the changes")
+      end
+    end
+
     should "pre-populate the deadline for 5 working days" do
       today = Date.parse("2017-04-28")
       stub_calendars_has_a_bank_holiday_on(Date.parse("2017-05-01"), in_division: "england-and-wales")

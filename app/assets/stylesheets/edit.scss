@@ -28,6 +28,34 @@
       overflow-wrap: break-word;
     }
   }
+
+  &--send-fact-check-page {
+    @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+  }
+
+  &--send-fact-check-email-preview {
+    @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+
+    border: 1px solid #cecece; // Temporary workaround until govuk-functional-colour is working
+    background-color: #f4f8fb; // Temporary workaround until govuk-functional-colour is working
+    padding: 0 15px;
+
+    .logo-presentation{
+      font-size:18px;
+      line-height:23px;
+    }
+
+    .logo-presentation img{
+      padding: 0 5px 0 7px;
+      height: 27px;
+      width: auto;
+      border-left: solid 2px #005abb; // Not a standard gov.uk colour, but taken directly from Notify
+    }
+
+    .gem-c-govspeak h2{
+      padding-top: 0;
+    }
+  }
 }
 
 .editions__edit__summary{

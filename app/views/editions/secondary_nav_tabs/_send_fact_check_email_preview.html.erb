@@ -1,0 +1,60 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds edit--send-fact-check-page">
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Example email",
+      heading_level: 2,
+      font_size: "m",
+    } %>
+
+    <p>This shows the format of the fact check email that will be sent.</p>
+
+    <div class="edit--send-fact-check-email-preview">
+      <table class="logo-presentation">
+        <tr>
+          <td><%= image_tag "gds_logo.png" %></td>
+          <td><p>Government Digital Service</p></td>
+        </tr>
+      </table>
+
+      <%= render "govuk_publishing_components/components/govspeak", {} do %>
+        <%= Govspeak::Document.new(<<~GOV_SPEAK).to_html.html_safe
+            Hi,
+
+            We need you to check the factual accuracy of changes made to ‘#{@edition.title}’ before it’s published on GOV.UK.
+
+            Reason for change: Your input will go here.
+
+            Zendesk ticket: [https://govuk.zendesk.com/tickets/1234567](https://govuk.zendesk.com/tickets/1234567)
+
+            ^ Deadline: DD Month YYYY
+
+            ---
+
+            ## Review the changes
+            [View the fact check - #{@edition.title}](https://www.gov.uk/)
+
+            You can share this link with the subject matter experts. The link expires when the content is published.
+
+            They can view the information and check the changes, but are not able to submit a response.
+
+            When fact checking, they should:
+
+            * check the changed content for factual accuracy
+            * tell us if anything is wrong, and why
+
+            They do not need to suggest new wording.
+
+            ---
+
+            ## Submit your fact check response
+            [Respond to the fact check](https://www.gov.uk/)
+
+            Only one fact check response can be submitted.
+
+            Do not reply to this email.
+          GOV_SPEAK
+        %>
+      <% end %>
+    </div>
+  </div>
+</div>
