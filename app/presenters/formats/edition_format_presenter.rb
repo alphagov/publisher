@@ -12,7 +12,11 @@ module Formats
     def render_for_fact_check_manager_api
       return unless @edition.respond_to?(:whole_body)
 
-      HtmlRenderer.render_hash({ content: { heading: "Body", body: "##{@edition.title}\n#{@edition.whole_body.presence}" } })
+      title_html = %(<h2 class="edition-title">#{ERB::Util.html_escape(@edition.title)}</h2>)
+      body_html = HtmlRenderer.render_html(@edition.whole_body)
+      body = [title_html, body_html.presence].compact.join("\n")
+
+      { content: { heading: "Body", body: } }
     end
 
   private
