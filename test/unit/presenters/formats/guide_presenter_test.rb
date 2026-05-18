@@ -117,4 +117,26 @@ class GuidePresenterTest < ActiveSupport::TestCase
   should "[:rendering_app]" do
     assert_equal "frontend", result[:rendering_app]
   end
+
+  context ".render_for_fact_check_manager_api" do
+    should "return a hash keyed by part" do
+      edition = FactoryBot.create(:guide_edition_with_two_parts)
+      presenter = Formats::GuidePresenter.new(edition)
+
+      part_one, part_two = edition.parts.in_order.to_a
+      expected = {
+        part_one.slug => { heading: "PART !", body: "<p>This is some version text.</p>" },
+        part_two.slug => { heading: "PART !!", body: "<p>This is some more version text.</p>" },
+      }
+
+      assert_equal expected, presenter.render_for_fact_check_manager_api
+    end
+
+    should "return a hash with the edition title if no parts" do
+      edition = FactoryBot.create(:guide_edition, title: "test title")
+      presenter = Formats::GuidePresenter.new(edition)
+
+      assert_equal({ content: { heading: "Body", body: "<h2 class=\"edition-title\">test title</h2>" } }, presenter.render_for_fact_check_manager_api)
+    end
+  end
 end

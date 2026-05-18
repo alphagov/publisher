@@ -106,12 +106,12 @@ private
   end
 
   def current_content_presenter
-    @current_content_presenter ||= Formats::GenericEditionPresenter.new(edition)
+    @current_content_presenter ||= EditionPresenterFactory.get_presenter(edition)
   end
 
   def previous_content_presenter
     return nil unless edition&.published_edition
 
-    @previous_content_presenter ||= Formats::GenericEditionPresenter.new(edition.published_edition)
+    @previous_content_presenter ||= EditionPresenterFactory.get_presenter(edition.published_edition)
   end
 end

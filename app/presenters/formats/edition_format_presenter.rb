@@ -9,6 +9,16 @@ module Formats
       required_fields(republish).merge optional_fields
     end
 
+    def render_for_fact_check_manager_api
+      return unless @edition.respond_to?(:whole_body)
+
+      title_html = %(<h2 class="edition-title">#{ERB::Util.html_escape(@edition.title)}</h2>)
+      body_html = HtmlRenderer.render_html(@edition.whole_body)
+      body = [title_html, body_html.presence].compact.join("\n")
+
+      { content: { heading: "Body", body: } }
+    end
+
   private
 
     attr_reader :edition, :artefact
