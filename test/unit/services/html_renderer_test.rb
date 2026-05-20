@@ -58,19 +58,43 @@ class HtmlRendererTest < ActiveSupport::TestCase
       assert_equal expected_output, HtmlRenderer.render_html(input)
     end
 
-    should "call ContentBlockTools::ContentBlock.from_embed_code when a content block embed code is present" do
-      input = "Before block, {{embed:content_block_contact:content-item}}, after block"
-
-      # ContentBlockTools has some internal logic and an API call that need stubbing out here
-      mock_content_block = Minitest::Mock.new
-      mock_content_block.expect(:render, "block content")
-      ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item}}").returns(mock_content_block)
-
-      assert_equal "<p>Before block, block content, after block</p>", HtmlRenderer.render_html(input)
-    end
-
     should "return an empty string when given an empty document" do
       assert_equal "", HtmlRenderer.render_html("")
+    end
+
+    context "when the document contains content blocks" do
+      setup do
+        @mock_render = '<span class="content-block" data-embed-code="{{embed:content_block_contact:content-item}}">block content</span>'
+        @mock_content_block = stub(render: @mock_render)
+        @mock_render_two = '<span class="content-block" data-embed-code="{{embed:content_block_contact:content-item-two}}">different block content</span>'
+        @mock_content_block_two = stub(render: @mock_render_two)
+      end
+
+      should "correctly render the block when a single content block embed code is present" do
+        input = "Before block, {{embed:content_block_contact:content-item}}, after block"
+
+        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item}}").returns(@mock_content_block)
+
+        assert_equal "<p>Before block, #{@mock_render}, after block</p>", HtmlRenderer.render_html(input)
+      end
+
+      should "correctly render the blocks when two different content block embed codes are present" do
+        input = "Before block, {{embed:content_block_contact:content-item}}, {{embed:content_block_contact:content-item-two}}, after block"
+
+        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item}}").returns(@mock_content_block)
+        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item-two}}").returns(@mock_content_block_two)
+
+        assert_equal "<p>Before block, #{@mock_render}, #{@mock_render_two}, after block</p>", HtmlRenderer.render_html(input)
+      end
+
+      should "correctly render the blocks when provided with multiple instances of the same embed code" do
+        input = "Before block, {{embed:content_block_contact:content-item}}, {{embed:content_block_contact:content-item}}, {{embed:content_block_contact:content-item-two}}, after block"
+
+        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item}}").returns(@mock_content_block).once
+        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item-two}}").returns(@mock_content_block_two)
+
+        assert_equal "<p>Before block, #{@mock_render}, #{@mock_render}, #{@mock_render_two}, after block</p>", HtmlRenderer.render_html(input)
+      end
     end
   end
 end

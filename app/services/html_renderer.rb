@@ -10,7 +10,7 @@ class HtmlRenderer
 
     html_content = Govspeak::Document.new(document).to_html
 
-    ContentBlockTools::ContentBlockReference.find_all_in_document(html_content).each do |content_block|
+    ContentBlockTools::ContentBlockReference.find_all_in_document(html_content).uniq.each do |content_block|
       code = content_block.embed_code
       html_content.gsub!(code, ContentBlockTools::ContentBlock.from_embed_code(code).render)
     end
