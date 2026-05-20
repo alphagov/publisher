@@ -1,0 +1,57 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Example email",
+      heading_level: 2,
+      font_size: "m",
+      padding: true,
+    } %>
+    <p class="govuk-body">This shows the format of the fact check email that will be sent.</p>
+
+    <article class="edit--send-fact-check-email-preview">
+      <header>
+        <p class="govuk-body">Government Digital Service</p>
+      </header>
+
+      <%= render "govuk_publishing_components/components/govspeak", {} do %>
+        <%= Govspeak::Document.new(<<~GOV_SPEAK).to_html.html_safe
+            Hi,
+
+            We need you to check the factual accuracy of changes made to ‘#{@edition.title}’ before it’s published on GOV.UK.
+
+            Reason for change: Your input will go here.
+
+            Zendesk ticket: Your input will go here.
+
+            ^ Deadline: DD Month YYYY
+
+            ---
+
+            ## Review the changes
+            <span class="non-functional-link">View the fact check - #{@edition.title}</span>
+
+            You can share this link with the subject matter experts. The link expires when the content is published.
+
+            They can view the information and check the changes, but are not able to submit a response.
+
+            When fact checking, they should:
+
+            * check the changed content for factual accuracy
+            * tell us if anything is wrong, and why
+
+            They do not need to suggest new wording.
+
+            ---
+
+            ## Submit your fact check response
+            <span class="non-functional-link">Respond to the fact check</span>
+
+            Only one fact check response can be submitted.
+
+            Do not reply to this email.
+          GOV_SPEAK
+        %>
+      <% end %>
+    </article>
+  </div>
+</div>
