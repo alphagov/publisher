@@ -1,12 +1,29 @@
 <%= f.hidden_field :artefact_id %>
 
 <%= render "govuk_publishing_components/components/datetime_fields", {
-  prefix: "edition",
-  field_name: "first_published_at",
+  prefix: "downtime",
+  field_name: "start_time",
   date_heading: "From date",
   time_heading: "From time",
   date_hint: "For example, 01 08 2022",
   time_hint: "For example, 9:30 or 19:30",
+  error_items: errors_for(f.object.errors, :start_time),
+  year: {
+    name: "downtime[start_time(1i)]",
+    label: "Year",
+    width: 4
+  },
+  month: {
+    name: "downtime[start_time(2i)]",
+    label: "Month",
+    width: 2
+  },
+  day: {
+    id: "downtime_start_time",
+    name: "downtime[start_time(3i)]",
+    label: "Day",
+    width: 2
+  },
   hour: {
     value: 0
   },
@@ -53,12 +70,29 @@
 } %>
 
 <%= render "govuk_publishing_components/components/datetime_fields", {
-  prefix: "edition",
-  field_name: "first_published_at",
+  prefix: "downtime",
+  field_name: "end_time",
   date_heading: "To date",
   time_heading: "To time",
   date_hint: "For example, 01 08 2022",
   time_hint: "For example, 9:30 or 19:30",
+  error_items: errors_for(f.object.errors, :end_time),
+  year: {
+    name: "downtime[end_time(1i)]",
+    label: "Year",
+    width: 4
+  },
+  month: {
+    name: "downtime[end_time(2i)]",
+    label: "Month",
+    width: 2
+  },
+  day: {
+    id: "downtime_end_time",
+    name: "downtime[end_time(3i)]",
+    label: "Day",
+    width: 2
+  },
   hour: {
     value: 0
   },
