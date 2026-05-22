@@ -1,5 +1,31 @@
 <%= f.hidden_field :artefact_id %>
 
+<%
+  if params.dig("downtime", "start_time(4i)")
+    hour_start = params.dig("downtime", "start_time(4i)").to_i
+  else
+    hour_start = 0
+  end
+
+  if params.dig("downtime", "start_time(5i)")
+    minute_start = params.dig("downtime", "start_time(5i)").to_i
+  else
+    minute_start = 1
+  end
+
+  if params.dig("downtime", "end_time(4i)")
+    hour_end = params.dig("downtime", "end_time(4i)").to_i
+  else
+    hour_end = 0
+  end
+
+  if params.dig("downtime", "end_time(5i)")
+    minute_end = params.dig("downtime", "end_time(5i)").to_i
+  else
+    minute_end = 1
+  end
+%>
+
 <%= render "govuk_publishing_components/components/datetime_fields", {
   prefix: "downtime",
   field_name: "start_time",
@@ -11,24 +37,27 @@
   year: {
     name: "downtime[start_time(1i)]",
     label: "Year",
+    value: params.dig("downtime", "start_time(1i)") || @downtime.start_time&.year,
     width: 4
   },
   month: {
     name: "downtime[start_time(2i)]",
     label: "Month",
+    value: params.dig("downtime", "start_time(2i)") || @downtime.start_time&.month,
     width: 2
   },
   day: {
     id: "downtime_start_time",
     name: "downtime[start_time(3i)]",
     label: "Day",
+    value: params.dig("downtime", "start_time(3i)") || @downtime.start_time&.day,
     width: 2
   },
   hour: {
-    value: 0
+    value: hour_start
   },
   minute: {
-    value: 1
+    value: minute_start
   }
 } %>
 
@@ -94,10 +123,10 @@
     width: 2
   },
   hour: {
-    value: 0
+    value: hour_end
   },
   minute: {
-    value: 1
+    value: minute_end
   }
 } %>
 
