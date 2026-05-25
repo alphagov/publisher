@@ -305,15 +305,15 @@ GEM
       jquery-rails (~> 4.3)
       plek (>= 2.1)
       rails (>= 6)
-    govuk_app_config (9.24.0)
-      connection_pool (< 3)
+    govuk_app_config (9.24.1)
+      connection_pool (< 4)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.34)
       opentelemetry-instrumentation-all (>= 0.39.1, < 0.92.0)
       opentelemetry-sdk (~> 1.2)
       plek (>= 4, < 6)
       prometheus_exporter (~> 2.3)
-      puma (>= 5.6, < 8.0)
+      puma (>= 5.6, < 9.0)
       rack-proxy (~> 0.7)
       sentry-rails (>= 5.3, < 7.0)
       sentry-ruby (>= 5.3, < 7.0)
@@ -690,7 +690,7 @@ GEM
       date
       stringio
     public_suffix (7.0.5)
-    puma (7.2.0)
+    puma (8.0.1)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.6)
@@ -943,7 +943,7 @@ GEM
       chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.8.1)
+    zeitwerk (2.8.2)
 
 PLATFORMS
   aarch64-linux
@@ -971,7 +971,7 @@ DEPENDENCIES
   google-apis-gmail_v1
   govspeak
   govuk_admin_template
-  govuk_app_config (~> 9.24.0)
+  govuk_app_config (~> 9.24.1)
   govuk_publishing_components
   govuk_schemas
   govuk_sidekiq
