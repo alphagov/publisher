@@ -63,10 +63,36 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       assert_current_path edition_path(@ready_edition.id)
     end
 
-    should "redirect back to the edit tab on submit and show success message with minimal inputs" do
+    should "redirect back to the edit tab on submit and show success message with optional fields empty" do
       date = 1.day.from_now
 
-      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Email addresses", with: "fact-checker-one@example.com, fact-checker-two@example.com,fact-checker-three@example.com"
+      fill_in "Day", with: date.day
+      fill_in "Month", with: date.month
+      fill_in "Year", with: date.year
+      click_button "Send for fact check"
+
+      assert_current_path edition_path(@ready_edition.id)
+      assert page.has_text?("Sent to fact check")
+    end
+
+    should "successfully process the submission with semi-colon separated emails" do
+      date = 1.day.from_now
+
+      fill_in "Email addresses", with: "fact-checker-one@example.com; fact-checker-two@example.com;fact-checker-three@example.com"
+      fill_in "Day", with: date.day
+      fill_in "Month", with: date.month
+      fill_in "Year", with: date.year
+      click_button "Send for fact check"
+
+      assert_current_path edition_path(@ready_edition.id)
+      assert page.has_text?("Sent to fact check")
+    end
+
+    should "successfully send the api request with emails split by both separators" do
+      date = 1.day.from_now
+
+      fill_in "Email addresses", with: "fact-checker-one@example.com, fact-checker-two@example.com; fact-checker-three@example.com"
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year

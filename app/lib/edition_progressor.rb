@@ -46,7 +46,7 @@ protected
   end
 
   def invalid_email_addresses?(addresses)
-    addresses.split(",").any? do |address|
+    addresses.split(Regexp.union(",", ";")).any? do |address|
       address.strip !~ EMAIL_REGEX
     end
   end
