@@ -9,50 +9,85 @@
   comment_label_text: "Comment (optional)",
   submit_button_text: "Schedule",
   title:,
-  schedule_fields: (render "govuk_publishing_components/components/fieldset", {
-    legend_text: "Publication date",
-    heading_size: "m",
-  } do
-    render "govuk_publishing_components/components/date_input", {
-      hint: "For example, #{(Time.zone.now + 3.months).strftime("%-d %-m %Y")}",
-      items: [
-        {
-          label: "Day",
-          name: "publish_at_3i",
-          width: 2,
-        },
-        {
-          label: "Month",
-          name: "publish_at_2i",
-          width: 2,
-        },
-        {
-          label: "Year",
-          name: "publish_at_1i",
-          width: 4,
-        },
-      ],
+  schedule_fields: (render "govuk_publishing_components/components/datetime_fields", {
+    prefix: "downtime",
+    field_name: "start_time",
+    date_heading: "Publication date",
+    time_heading: "Publication time",
+    date_hint: "For example, 29 8 2026",
+    time_hint: "Use the 24-hour format, for example 17:30 for 5:30pm",
+    # horizontal_layout: true,
+    # error_items: errors_for(f.object.errors, :start_time),
+    year: {
+      name: "downtime[start_time(1i)]",
+      label: "Year",
+      # value: params.dig("downtime", "start_time(1i)") || @downtime.start_time&.year,
+      width: 4
+    },
+    month: {
+      name: "downtime[start_time(2i)]",
+      label: "Month",
+      # value: params.dig("downtime", "start_time(2i)") || @downtime.start_time&.month,
+      width: 2
+    },
+    day: {
+      id: "downtime_start_time",
+      name: "downtime[start_time(3i)]",
+      label: "Day",
+      # value: params.dig("downtime", "start_time(3i)") || @downtime.start_time&.day,
+      width: 2
+    },
+    hour: {
+      value: 0
+    },
+    minute: {
+      value: 1
     }
-  end) + (render "govuk_publishing_components/components/fieldset", {
-          legend_text: "Publication time",
-          heading_size: "m",
-        } do
-          render "downtimes/time_input", {
-            hint: "Use the 24-hour format, for example 17:30 for 5:30pm",
-            items: [
-              {
-                label: "Hour",
-                name: "publish_at_4i",
-                value: "00",
-                width: 2,
-              },
-              {
-                label: "Minute",
-                name: "publish_at_5i",
-                value: "01",
-                width: 2,
-              },
-            ],
-          }
-        end),
+  })
+  # (render "govuk_publishing_components/components/fieldset", {
+  #   legend_text: "Publication date",
+  #   heading_size: "m",
+  # } do
+  #   render "govuk_publishing_components/components/date_input", {
+  #     hint: "For example, #{(Time.zone.now + 3.months).strftime("%-d %-m %Y")}",
+  #     items: [
+  #       {
+  #         label: "Day",
+  #         name: "publish_at_3i",
+  #         width: 2,
+  #       },
+  #       {
+  #         label: "Month",
+  #         name: "publish_at_2i",
+  #         width: 2,
+  #       },
+  #       {
+  #         label: "Year",
+  #         name: "publish_at_1i",
+  #         width: 4,
+  #       },
+  #     ],
+  #   }
+  # end) + (render "govuk_publishing_components/components/fieldset", {
+  #         legend_text: "Publication time",
+  #         heading_size: "m",
+  #       } do
+  #         render "downtimes/time_input", {
+  #           hint: "Use the 24-hour format, for example 17:30 for 5:30pm",
+  #           items: [
+  #             {
+  #               label: "Hour",
+  #               name: "publish_at_4i",
+  #               value: "00",
+  #               width: 2,
+  #             },
+  #             {
+  #               label: "Minute",
+  #               name: "publish_at_5i",
+  #               value: "01",
+  #               width: 2,
+  #             },
+  #           ],
+  #         }
+  #       end),
 } %>
