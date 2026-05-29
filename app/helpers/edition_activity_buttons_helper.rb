@@ -28,7 +28,9 @@ module EditionActivityButtonsHelper
   end
 
   def resend_fact_check_buttons(edition)
-    build_review_button(edition, "resend_fact_check", "Resend fact check email")
+    link_to "Resend fact check email",
+            resend_fact_check_email_page_edition_path(edition),
+            class: "btn btn-info #{'disabled' unless edition.can_resend_fact_check?} add-top-margin"
   end
 
   def progress_buttons(edition, options = {})
@@ -48,10 +50,16 @@ module EditionActivityButtonsHelper
       disabled = !edition.send("can_#{activity}?")
       next if disabled && options.fetch(:skip_disabled_buttons, false)
 
-      link_to title,
-              "##{activity}_form",
-              data: { toggle: "modal" },
-              class: "btn btn-large btn-#{button_color} #{'disabled' if disabled}"
+      if !disabled && activity == "send_fact_check"
+        link_to title,
+                send_to_fact_check_page_edition_path(edition),
+                class: "btn btn-large btn-#{button_color}"
+      else
+        link_to title,
+                "##{activity}_form",
+                data: { toggle: "modal" },
+                class: "btn btn-large btn-#{button_color} #{'disabled' if disabled}"
+      end
     end
 
     buttons.join("\n").html_safe

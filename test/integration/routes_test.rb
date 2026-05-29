@@ -44,6 +44,13 @@ class RoutesTest < LegacyIntegrationTest
           should "route to legacy editions controller" do
             assert_legacy_editions_controller
           end
+
+          should "route fact check send and resend actions to the design system editions controller" do
+            assert_routing("/editions/#{@edition.id}/send_to_fact_check_page", controller: "editions", action: "send_to_fact_check_page", id: @edition.id.to_s)
+            assert_routing({ method: "post", path: "/editions/#{@edition.id}/send_to_fact_check" }, controller: "editions", action: "send_to_fact_check", id: @edition.id.to_s)
+            assert_routing("/editions/#{@edition.id}/resend_fact_check_email_page", controller: "editions", action: "resend_fact_check_email_page", id: @edition.id.to_s)
+            assert_routing({ method: "patch", path: "/editions/#{@edition.id}/resend_fact_check_email" }, controller: "editions", action: "resend_fact_check_email", id: @edition.id.to_s)
+          end
         end
       end
     end
