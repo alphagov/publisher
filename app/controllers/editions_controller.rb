@@ -585,7 +585,7 @@ private
   def invalid_email_addresses?(addresses)
     email_regex = /\A[\w+\-%.']+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/
     addresses.split(",").any? do |address|
-      address.strip !~ email_regex
+      !address.to_s.strip.match?(email_regex)
     end
   end
 
