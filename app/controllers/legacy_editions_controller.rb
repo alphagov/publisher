@@ -16,6 +16,8 @@ class LegacyEditionsController < InheritedResources::Base
   end
   after_action :report_state_counts, only: %i[create duplicate progress destroy]
 
+  FACT_CHECK_SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved".freeze
+
   def index
     redirect_to root_path
   end
@@ -106,7 +108,11 @@ class LegacyEditionsController < InheritedResources::Base
 
         return_to = params[:return_to] || edition_path(resource)
 
-        flash[:notice] = "#{description(resource)} edition was successfully updated."
+        if !attempted_activity && resource.can_resend_fact_check? && Flipflop.enabled?(:fact_check_manager_api)
+          update_fact_check_content
+        else
+          flash[:notice] = "#{description(resource)} edition was successfully updated."
+        end
 
         redirect_to return_to
       end
@@ -367,6 +373,21 @@ protected
   end
 
 private
+
+  def update_fact_check_content
+    form = FactCheckRequestForm.new(edition: resource, user: current_user)
+
+    unless form.valid?(:update) && Services.fact_check_manager_api.patch_update_content(**form.update_content_payload)
+      Rails.logger.error "Request form validation errors: #{form.errors.full_messages.join(', ')}"
+      flash[:danger] = FACT_CHECK_SERVICE_REQUEST_ERROR_MESSAGE
+      return
+    end
+
+    flash[:notice] = "#{description(resource)} edition was successfully updated. Fact check request updated."
+  rescue GdsApi::HTTPErrorResponse => e
+    Rails.logger.error "API Error Response for Edition id #{resource.id}: #{e.class} #{e.message}"
+    flash[:danger] = FACT_CHECK_SERVICE_REQUEST_ERROR_MESSAGE
+  end
 
   def redirect_url
     make_govuk_url_relative params["redirect_url"]

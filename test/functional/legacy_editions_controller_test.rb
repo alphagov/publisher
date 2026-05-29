@@ -854,6 +854,103 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#update calling the fact check manager API" do
+    setup do
+      @simple_smart_answer = FactoryBot.create(:simple_smart_answer_edition, :fact_check)
+      FactoryBot.create(
+        :action,
+        requester: @user,
+        request_type: Action::SEND_FACT_CHECK,
+        edition: @simple_smart_answer,
+        email_addresses: "fact-checker-one@example.com",
+      )
+    end
+
+    context "fact_check_manager_api is enabled" do
+      setup do
+        @test_strategy.switch!(:fact_check_manager_api, true)
+        stub_patch_update_fact_check_content(success: true, source_id: @simple_smart_answer.id)
+      end
+
+      should "send the updated content to the fact check manager API when saving a fact check edition" do
+        Services.fact_check_manager_api.expects(:patch_update_content).with(has_entries(source_id: @simple_smart_answer.id)).returns(GdsApi::Response.new(code: 200))
+
+        post :update,
+             params: {
+               id: @simple_smart_answer.id,
+               edition: { title: "Updated title" },
+             }
+
+        @simple_smart_answer.reload
+        assert_equal "Updated title", @simple_smart_answer.title
+        assert_includes flash[:notice], "Fact check request updated."
+      end
+
+      should "render an error but still save the edition if the fact check manager API call fails" do
+        stub_patch_update_fact_check_content(success: false, source_id: @simple_smart_answer.id)
+
+        post :update,
+             params: {
+               id: @simple_smart_answer.id,
+               edition: { title: "Updated title" },
+             }
+
+        @simple_smart_answer.reload
+        assert_equal "Updated title", @simple_smart_answer.title
+        assert_equal "Due to a service problem, the fact check request could not be updated. The edition was successfully saved", flash[:danger]
+      end
+
+      should "not call the fact check manager API when the edition is not out for fact check" do
+        draft = FactoryBot.create(:simple_smart_answer_edition, :draft)
+        Services.fact_check_manager_api.expects(:patch_update_content).never
+
+        post :update,
+             params: {
+               id: draft.id,
+               edition: { title: "Updated title" },
+             }
+      end
+
+      should "not call the fact check manager API when a workflow activity is being performed" do
+        Services.fact_check_manager_api.expects(:patch_update_content).never
+
+        post :update,
+             params: {
+               id: @simple_smart_answer.id,
+               commit: "Request amendments",
+               edition: {
+                 activity_request_amendments_attributes: {
+                   request_type: "request_amendments",
+                   comment: "Please fix this",
+                 },
+               },
+             }
+
+        @simple_smart_answer.reload
+        assert_equal "amends_needed", @simple_smart_answer.state
+      end
+    end
+
+    context "fact_check_manager_api is disabled" do
+      setup do
+        @test_strategy.switch!(:fact_check_manager_api, false)
+      end
+
+      should "not call the fact check manager API when saving a fact check edition" do
+        Services.fact_check_manager_api.expects(:patch_update_content).never
+
+        post :update,
+             params: {
+               id: @simple_smart_answer.id,
+               edition: { title: "Updated title" },
+             }
+
+        @simple_smart_answer.reload
+        assert_equal "Updated title", @simple_smart_answer.title
+      end
+    end
+  end
+
   context "#review" do
     setup do
       artefact = FactoryBot.create(:artefact)
