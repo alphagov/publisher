@@ -65,7 +65,7 @@ class GuidePartsControllerTest < ActionController::TestCase
 
           post :create, params: {
             edition_id: edition.id,
-            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+            part: { body: "test body", slug: "test-slug", title: "test title" },
             save: "save",
           }
 
@@ -78,7 +78,7 @@ class GuidePartsControllerTest < ActionController::TestCase
 
           post :create, params: {
             edition_id: edition.id,
-            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+            part: { body: "test body", slug: "test-slug", title: "test title" },
             save: "save and summary",
           }
 
@@ -97,7 +97,7 @@ class GuidePartsControllerTest < ActionController::TestCase
 
           post :create, params: {
             edition_id: edition.id,
-            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+            part: { body: "test body", slug: "test-slug", title: "test title" },
             save: "save and summary",
           }
 
@@ -117,7 +117,7 @@ class GuidePartsControllerTest < ActionController::TestCase
 
           post :create, params: {
             edition_id: edition.id,
-            part: { id: 1, body: "test body", slug: "test-slug", title: "test title" },
+            part: { body: "test body", slug: "test-slug", title: "test title" },
             save: "save and summary",
           }
 
