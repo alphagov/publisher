@@ -298,14 +298,33 @@ class EditionsController < InheritedResources::Base
   end
 
   def schedule
+    byebug
+
     if !@resource.can_schedule_for_publishing?
+      # byebug
+
       flash.now[:danger] = "Edition is not in a state where it can be scheduled for publishing"
       render "secondary_nav_tabs/schedule_page"
-    elsif params[:publish_at_1i].empty? || params[:publish_at_2i].empty? || params[:publish_at_3i].empty? || params[:publish_at_4i].empty? || params[:publish_at_5i].empty?
+    elsif 
+      # params[:publish_at_1i].empty? || params[:publish_at_2i].empty? || params[:publish_at_3i].empty? || params[:publish_at_4i].empty? || params[:publish_at_5i].empty?
+      params["publish_at(1i)"] == nil || params["publish_at(2i)"] == nil || params["publish_at(3i)"] == nil
+      
+      # byebug
+
       flash.now[:danger] = "Select a future time and/or date to schedule publication."
       render "secondary_nav_tabs/schedule_page"
     else
-      publish_at = Time.zone.local(params[:publish_at_1i].to_i, params[:publish_at_2i].to_i, params[:publish_at_3i].to_i, params[:publish_at_4i].to_i, params[:publish_at_5i].to_i)
+      # publish_at = Time.zone.local(params[:publish_at_1i].to_i, params[:publish_at_2i].to_i, params[:publish_at_3i].to_i, params[:publish_at_4i].to_i, params[:publish_at_5i].to_i)
+
+      # byebug
+
+      publish_at = Time.zone.local(
+        2026, #params["publish_at(1i)"].to_i, 
+        10, # params["publish_at(2i)"].to_i, 
+        24, # params["publish_at(3i)"].to_i, 
+        params["publish_at(4i)"].to_i, 
+        params["publish_at(5i)"].to_i
+      )
 
       if publish_at.present? && publish_at < Time.zone.now
         flash.now[:danger] = "Select a future time and/or date to schedule publication."
