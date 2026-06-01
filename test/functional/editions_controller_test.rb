@@ -846,7 +846,8 @@ class EditionsControllerTest < ActionController::TestCase
       end
 
       context "user has govuk_editor permission" do
-        ["test@test.com", "test1@test.com, test2@test.com"].each do |email_addresses|
+        # NOTE: We have allowed apostrophes in email addresses in response to a request relating to a valid HMRC email address
+        ["test@test.com", "test1@test.com, test2@test.com", "Name.O'Surname@dept.gov.uk"].each do |email_addresses|
           context "using email address(es) '#{email_addresses}'" do
             should "update the edition status to 'fact_check', generate the comment and save the user input" do
               edition = FactoryBot.create(:edition, :ready)
