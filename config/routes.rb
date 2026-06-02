@@ -26,10 +26,6 @@ Rails.application.routes.draw do
   constraints NewDesignSystemConstraint.new do
     resources :editions do
       member do
-        get "send_to_fact_check_page"
-        post "send_to_fact_check"
-        get "resend_fact_check_email_page"
-        patch "resend_fact_check_email"
         get "approve_fact_check_page"
         post "approve_fact_check"
         get "request_amendments_page"
@@ -98,6 +94,18 @@ Rails.application.routes.draw do
           get "confirm_destroy"
         end
       end
+    end
+  end
+
+  # The fact check send/resend flow uses the design system EditionsController for
+  # all content types, including those (such as simple smart answers) that
+  # otherwise still use the legacy (Bootstrap) UI.
+  resources :editions, only: [] do
+    member do
+      get "send_to_fact_check_page"
+      post "send_to_fact_check"
+      get "resend_fact_check_email_page"
+      patch "resend_fact_check_email"
     end
   end
 

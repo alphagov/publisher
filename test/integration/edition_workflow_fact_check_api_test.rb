@@ -324,4 +324,55 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       assert_equal "some new content", @fact_check_edition.body
     end
   end
+
+  context "Simple smart answer using the design system fact check pages" do
+    setup do
+      stub_linkables
+    end
+
+    should "send a simple smart answer to fact check" do
+      stub_post_new_fact_check_request(success: true)
+      ready_edition = FactoryBot.create(:simple_smart_answer_edition, :ready)
+      date = 1.day.from_now
+
+      visit send_to_fact_check_page_edition_path(ready_edition)
+
+      assert page.has_text?("Send for fact check")
+      assert page.has_text?("Reason for change (optional)")
+
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Day", with: date.day
+      fill_in "Month", with: date.month
+      fill_in "Year", with: date.year
+      click_button "Send for fact check"
+
+      assert_current_path edition_path(ready_edition.id)
+      assert page.has_text?("Sent to fact check")
+
+      ready_edition.reload
+      assert ready_edition.fact_check?
+    end
+
+    should "resend a simple smart answer fact check email" do
+      stub_post_resend_fact_check_emails(success: true)
+      fact_check_edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check)
+      FactoryBot.create(
+        :action,
+        requester: @govuk_editor,
+        request_type: Action::SEND_FACT_CHECK,
+        edition: fact_check_edition,
+        email_addresses: "fact-checker-one@example.com",
+      )
+
+      visit resend_fact_check_email_page_edition_path(fact_check_edition)
+
+      assert page.has_text?("Resend fact check email")
+      assert page.has_text?("fact-checker-one@example.com")
+
+      click_button "Resend fact check email"
+
+      assert_current_path edition_path(fact_check_edition.id)
+      assert page.has_text?("Fact check email re-sent")
+    end
+  end
 end

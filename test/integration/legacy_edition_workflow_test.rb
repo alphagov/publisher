@@ -52,11 +52,9 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
       click_link("Fact check")
 
-      within "#send_fact_check_form" do
-        customised_message = page.find_field("Customised message")
-        assert customised_message
-        assert customised_message.value.include? "Deadline: 8 May 2017 (5 working days from today - 28 April 2017)"
-      end
+      customised_message = page.find_field("Customised message")
+      assert customised_message
+      assert customised_message.value.include? "Deadline: 8 May 2017 (5 working days from today - 28 April 2017)"
     end
   end
 
@@ -68,11 +66,9 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     ActionMailer::Base.deliveries.clear
 
-    within "#send_fact_check_form" do
-      fill_in "Email address", with: "user@example.com"
-      click_on "Send for fact check"
-    end
-    assert page.has_content?("Simple smart answer updated")
+    fill_in "Email addresses", with: "user@example.com"
+    click_on "Send for fact check"
+    assert page.has_content?("Sent to fact check")
 
     fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
@@ -87,11 +83,9 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     ActionMailer::Base.deliveries.clear
 
-    within "#send_fact_check_form" do
-      fill_in "Email address", with: "user@example.com"
-      click_on "Send for fact check"
-    end
-    assert page.has_content?("Simple smart answer updated")
+    fill_in "Email addresses", with: "user@example.com"
+    click_on "Send for fact check"
+    assert page.has_content?("Sent to fact check")
 
     fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
@@ -106,12 +100,11 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     ActionMailer::Base.deliveries.clear
 
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user@example.com"
-      click_on "Send"
-    end
+    fill_in "Customised message", with: "Blah"
+    fill_in "Email addresses", with: "user@example.com"
+    click_on "Send for fact check"
 
+    assert page.has_content?("Sent to fact check")
     assert page.has_css?(".label", text: "Fact check sent")
 
     click_on "History and notes"
@@ -135,13 +128,11 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     ActionMailer::Base.deliveries.clear
 
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user1@example.com, user2@example.com"
-      click_on "Send"
-    end
+    fill_in "Customised message", with: "Blah"
+    fill_in "Email addresses", with: "user1@example.com, user2@example.com"
+    click_on "Send for fact check"
 
-    assert page.has_css?(".label", text: "Fact check sent")
+    assert page.has_content?("Sent to fact check")
     @simple_smart_answer.reload
     assert @simple_smart_answer.fact_check?
 
@@ -171,37 +162,25 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     click_link("Fact check")
 
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user1"
-      click_on "Send"
-    end
+    fill_in "Customised message", with: "Blah"
+    fill_in "Email addresses", with: "user1"
+    click_on "Send for fact check"
 
-    assert page.has_content? "The email addresses you entered appear to be invalid."
+    assert page.has_content? "Enter email addresses and/or customised message"
     @simple_smart_answer.reload
     assert_not @simple_smart_answer.fact_check?
 
-    click_link("Fact check")
+    fill_in "Email addresses", with: "user1@example.com user2@example.com"
+    click_on "Send for fact check"
 
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user1@example.com user2@example.com"
-      click_on "Send"
-    end
-
-    assert page.has_content? "The email addresses you entered appear to be invalid."
+    assert page.has_content? "Enter email addresses and/or customised message"
     @simple_smart_answer.reload
     assert_not @simple_smart_answer.fact_check?
 
-    click_link("Fact check")
+    fill_in "Email addresses", with: "user1, user2@example.com"
+    click_on "Send for fact check"
 
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah"
-      fill_in "Email address", with: "user1, user2@example.com"
-      click_on "Send"
-    end
-
-    assert page.has_content? "The email addresses you entered appear to be invalid."
+    assert page.has_content? "Enter email addresses and/or customised message"
     @simple_smart_answer.reload
     assert_not @simple_smart_answer.fact_check?
   end
@@ -234,20 +213,19 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     click_link("Fact check")
 
-    within "#send_fact_check_form" do
-      fill_in "Customised message", with: "Blah blah fact check message"
-      fill_in "Email address", with: "user-to-ask-for-fact-check@example.com"
-      click_on "Send"
-    end
+    fill_in "Customised message", with: "Blah blah fact check message"
+    fill_in "Email addresses", with: "user-to-ask-for-fact-check@example.com"
+    click_on "Send for fact check"
+    assert page.has_content?("Sent to fact check")
 
     ActionMailer::Base.deliveries.clear
 
-    send_for_generic_action @simple_smart_answer, "Resend fact check email" do
-      assert page.has_content? "Blah blah fact check message"
-      assert page.has_content? "user-to-ask-for-fact-check@example.com"
-      click_on "Resend"
-    end
-    assert page.has_content?("updated")
+    click_link "Resend fact check email"
+
+    assert page.has_content? "Blah blah fact check message"
+    assert page.has_content? "user-to-ask-for-fact-check@example.com"
+    click_on "Resend fact check email"
+    assert page.has_content?("Fact check email re-sent")
 
     click_on "History and notes"
     assert page.has_content? "Resend fact check by Alice"
@@ -272,13 +250,11 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
 
       click_link("Fact check")
 
-      within "#send_fact_check_form" do
-        fill_in "Customised message", with: "Blah blah fact check message"
-        fill_in "Email address", with: "user-to-ask-for-fact-check@example.com"
-        click_on "Send"
-      end
+      fill_in "Customised message", with: "Blah blah fact check message"
+      fill_in "Email addresses", with: "user-to-ask-for-fact-check@example.com"
+      click_on "Send for fact check"
 
-      assert page.has_content? "Error: One or more recipients not in GOV.UK Notify team (code: 400).\nThis error will not occur in Production."
+      assert page.has_content? "Due to a service problem, the request could not be made"
     end
   end
 
@@ -719,16 +695,15 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   def send_for_fact_check(simple_smart_answer)
-    button_text = "Fact check"
-    email = "test@example.com"
-    message = "Let us know what you think"
+    visit_edition simple_smart_answer
+    click_link "Fact check"
 
-    send_for_generic_action(simple_smart_answer, button_text) do
-      fill_in "Email", with: email
-      fill_in "Customised message", with: message
-      click_on "Send for fact check"
-    end
-    assert page.has_content?("updated")
+    fill_in "Email addresses", with: "test@example.com"
+    fill_in "Customised message", with: "Let us know what you think"
+    click_on "Send for fact check"
+
+    assert page.has_content?("Sent to fact check")
+    simple_smart_answer.reload
   end
 
   def send_action(simple_smart_answer, button_text, modal_button_text, message)

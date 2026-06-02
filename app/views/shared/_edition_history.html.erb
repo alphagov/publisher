@@ -23,6 +23,8 @@
               <%= action.to_s %> by
               <% if action.requester %>
                 <%= mail_to action.requester.email, action.requester.name %>
+              <% elsif action.requester_name %>
+                <%= action.requester_name %>
               <% else %>
                 GOV.UK Bot
               <% end %>
