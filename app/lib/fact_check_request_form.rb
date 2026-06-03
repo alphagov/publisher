@@ -25,7 +25,7 @@ class FactCheckRequestForm
   validate :deadline_in_range, on: :send
   validate :deadline_present, on: :send
 
-  EMAIL_REGEX = /\A[\w+\-%.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/
+  EMAIL_REGEX = /\A[\w+\-%.']+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/
 
   def deadline
     return unless deadline_1i.present? && deadline_2i.present? && deadline_3i.present?
@@ -82,7 +82,7 @@ private
   def valid_email_addresses
     return if email_addresses.blank?
 
-    if split_email_addresses.any? { |address| address.strip !~ EMAIL_REGEX }
+    if split_email_addresses.any? { |address| !address.to_s.strip.match?(EMAIL_REGEX) }
       errors.add(:email_addresses, "Email addresses are invalid")
     end
   end

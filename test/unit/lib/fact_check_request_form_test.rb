@@ -49,6 +49,13 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
         assert_empty @form.errors[:email_addresses]
       end
 
+      should "validate an email address with valid but unusual characters" do
+        @form.email_addresses = "James.O'Stewart42@test.gov.uk"
+
+        assert @form.valid?(:send)
+        assert_empty @form.errors[:email_addresses]
+      end
+
       should "split and validate multiple comma-separated email addresses" do
         ["james.stewart@test.gov.uk, stewart.james@test.gov.uk", "james.stewart@test.gov.uk,stewart.james@test.gov.uk"].each do |emails|
           @form.email_addresses = emails
