@@ -321,7 +321,7 @@ GEM
     govuk_personalisation (1.1.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (66.4.1)
+    govuk_publishing_components (66.4.2)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -780,7 +780,8 @@ GEM
     retriable (3.4.1)
     rexml (3.4.4)
     rinku (2.0.6)
-    rouge (4.7.0)
+    rouge (5.0.0)
+      strscan (~> 3.1)
     rubocop (1.86.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -903,6 +904,7 @@ GEM
     stringio (3.2.0)
     strip_attributes (2.0.1)
       activemodel (>= 3.0, < 9.0)
+    strscan (3.1.8)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
     terser (1.2.7)
