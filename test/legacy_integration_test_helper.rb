@@ -116,54 +116,6 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
     GDS::SSO.test_user = user
   end
 
-  # Fill in some sample sections for a guide
-  def fill_in_parts(guide)
-    visit_edition guide
-
-    if page.has_no_css?("#parts div.part:first-of-type input")
-      add_new_part
-    end
-
-    # Toggle the first part to be open, presuming the first part
-    # is called 'Untitled part'
-    if page.has_no_css?("#parts div.part:first-of-type input")
-      scroll_to_bottom
-      click_on "Untitled part"
-    end
-
-    within :css, "#parts div.part:first-of-type" do
-      fill_in "Title", with: "Part One"
-      fill_in "Body", with: "Body text"
-      fill_in "Slug", with: "part-one"
-    end
-
-    save_edition_and_assert_success
-  end
-
-  # Fill in some sample variants for a transaction
-  def fill_in_variants(transaction)
-    visit_edition transaction
-
-    if page.has_no_css?("#parts div.part:first-of-type input")
-      add_new_variant
-    end
-
-    # Toggle the first variant to be open, presuming the first variant
-    # is called 'Untitled variant'
-    if page.has_no_css?("#parts div.part:first-of-type input")
-      scroll_to_bottom
-      click_on "Untitled variant"
-    end
-
-    within :css, "#parts div.part:first-of-type" do
-      fill_in "Title", with: "Variant One"
-      fill_in "Introductory paragraph", with: "Body text"
-      fill_in "Slug", with: "variant-one"
-    end
-
-    save_edition_and_assert_success
-  end
-
   def switch_tab(tab)
     page.click_on(tab)
   end
