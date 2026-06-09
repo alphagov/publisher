@@ -14,7 +14,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       @artefact = FactoryBot.create(
         :artefact,
         slug: "test",
-        kind: "answer",
+        kind: "simple_smart_answer",
         name: "test",
         owning_app: "publisher",
       )
@@ -25,7 +25,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       post :create,
            params: {
              "edition" => {
-               "kind" => "answer",
+               "kind" => "simple_smart_answer",
                "panopticon_id" => @artefact.id,
                "title" => "a title",
              },
@@ -38,73 +38,38 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       post :create,
            params: {
              "edition" => {
-               "kind" => "answer",
+               "kind" => "simple_smart_answer",
                "panopticon_id" => @artefact.id,
                "title" => "a title",
              },
            }
     end
-
-    should "render the lgsl and lgil edit form successfully if creation fails" do
-      lgsl_code = 800
-      FactoryBot.create(
-        :local_service,
-        lgsl_code:,
-      )
-      artefact = FactoryBot.create(:artefact)
-
-      post :create,
-           params: {
-             "edition" => {
-               "kind" => "local_transaction",
-               "lgsl_code" => lgsl_code,
-               "lgil_code" => 1,
-               "panopticon_id" => artefact.id,
-               "title" => "a title",
-             },
-           }
-      assert_equal "302", response.code
-
-      post :create,
-           params: {
-             "edition" => {
-               "kind" => "local_transaction",
-               "lgsl_code" => lgsl_code + 1,
-               "lgil_code" => 1,
-               "panopticon_id" => artefact.id,
-               "title" => "a title",
-             },
-           }
-      assert_equal "200", response.code
-    end
   end
 
   context "#template_folder_for" do
     should "be able to create a view path for a given publication" do
-      l = FactoryBot.build(:local_transaction_edition)
-      assert_equal "app/views/local_transactions", @controller.template_folder_for(l)
-      g = FactoryBot.build(:guide_edition)
-      assert_equal "app/views/guides", @controller.template_folder_for(g)
+      l = FactoryBot.build(:simple_smart_answer_edition)
+      assert_equal "app/views/simple_smart_answers", @controller.template_folder_for(l)
     end
   end
 
   context "#duplicate" do
     context "Standard behaviour" do
       setup do
-        @guide = FactoryBot.create(:guide_edition)
+        @edition = FactoryBot.create(:simple_smart_answer_edition)
         EditionDuplicator.any_instance.expects(:duplicate).returns(true)
-        EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
+        EditionDuplicator.any_instance.expects(:new_edition).returns(@edition)
       end
 
       should "delegate complexity of duplication to appropriate collaborator" do
-        post :duplicate, params: { id: @guide.id }
+        post :duplicate, params: { id: @edition.id }
         assert_response :found
         assert_equal "New edition created", flash[:success]
       end
 
       should "update the publishing API upon duplication of an edition" do
-        UpdateWorker.expects(:perform_async).with(@guide.id.to_s)
-        post :duplicate, params: { id: @guide.id }
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
+        post :duplicate, params: { id: @edition.id }
       end
     end
 
@@ -112,7 +77,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       setup { login_as_welsh_editor }
 
       should "be able to duplicate Welsh editions" do
-        edition = FactoryBot.create(:guide_edition, :published, :welsh)
+        edition = FactoryBot.create(:simple_smart_answer_edition, :published, :welsh)
         artefact = edition.artefact
 
         post :duplicate, params: { id: edition.id }
@@ -124,7 +89,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       end
 
       should "not be able to duplicate non-Welsh editions" do
-        edition = FactoryBot.create(:guide_edition, :published)
+        edition = FactoryBot.create(:simple_smart_answer_edition, :published)
         artefact = edition.artefact
 
         post :duplicate, params: { id: edition.id }
@@ -139,7 +104,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
   context "#progress" do
     setup do
-      @guide = FactoryBot.create(:guide_edition)
+      @edition = FactoryBot.create(:simple_smart_answer_edition)
     end
 
     should "update status via progress and redirect to parent" do
@@ -148,7 +113,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
       post :progress,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              edition: {
                activity: {
                  "request_type" => "send_fact_check",
@@ -159,7 +124,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
              },
            }
 
-      assert_redirected_to controller: "editions", action: "show", id: @guide.id
+      assert_redirected_to controller: "editions", action: "show", id: @edition.id
       assert_equal "Guide updated", flash[:success]
     end
 
@@ -169,7 +134,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
       post :progress,
            params: {
-             id: @guide.id.to_s,
+             id: @edition.id.to_s,
              edition: {
                activity: {
                  "request_type" => "send_fact_check",
@@ -193,7 +158,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
       post :progress,
            params: {
-             id: @guide.id.to_s,
+             id: @edition.id.to_s,
              edition: {
                activity: {
                  "request_type" => "schedule_for_publishing",
@@ -206,8 +171,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       setup do
         login_as_welsh_editor
         @artefact = FactoryBot.create(:artefact)
-        @edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing, panopticon_id: @artefact.id)
-        @welsh_edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing, :welsh)
+        @edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, panopticon_id: @artefact.id)
+        @welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, :welsh)
       end
 
       should "be able to cancel scheduled publishing for Welsh editions" do
@@ -228,9 +193,9 @@ class LegacyEditionsControllerTest < ActionController::TestCase
         )
 
         assert_redirected_to edition_path(@welsh_edition)
-        assert_equal flash[:success], "Guide updated"
+        assert_equal "Simple smart answer updated", flash[:success]
         @welsh_edition.reload
-        assert_equal @welsh_edition.state, "ready"
+        assert_equal "ready", @welsh_edition.state
       end
 
       should "not be able to cancel scheduled publishing for non-Welsh editions" do
@@ -300,7 +265,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
   context "#update" do
     setup do
-      @guide = FactoryBot.create(:guide_edition)
+      @edition = FactoryBot.create(:simple_smart_answer_edition)
     end
 
     should "update assignment" do
@@ -308,47 +273,47 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
       post :update,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              edition: { assigned_to_id: bob.id },
            }
 
-      @guide.reload
-      assert_equal bob, @guide.assigned_to
+      @edition.reload
+      assert_equal bob, @edition.assigned_to
     end
 
     should "clear assignment if no assignment is passed" do
       post :update,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              edition: {},
            }
 
-      @guide.reload
-      assert_nil @guide.assigned_to
+      @edition.reload
+      assert_nil @edition.assigned_to
     end
 
     should "not create a new action if the assignment is unchanged" do
       bob = FactoryBot.create(:user, :govuk_editor)
-      @user.assign(@guide, bob)
+      @user.assign(@edition, bob)
 
       post :update,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              edition: { assigned_to_id: bob.id },
            }
 
-      @guide.reload
-      assert_equal(1, @guide.actions.count { |a| a.request_type == Action::ASSIGN })
+      @edition.reload
+      assert_equal(1, @edition.actions.count { |a| a.request_type == Action::ASSIGN })
     end
 
     should "show the edit page again if updating fails" do
-      Edition.expects(:find).returns(@guide)
-      @guide.stubs(:update).returns(false)
-      @guide.errors.add(:title, "values")
+      Edition.expects(:find).returns(@edition)
+      @edition.stubs(:update).returns(false)
+      @edition.errors.add(:title, "values")
 
       post :update,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              edition: { assigned_to_id: "" },
            }
       assert_response :ok
@@ -357,7 +322,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     should "save the edition changes while performing an activity" do
       post :update,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              commit: "Send to 2nd pair of eyes",
              edition: {
                title: "Updated title",
@@ -368,18 +333,18 @@ class LegacyEditionsControllerTest < ActionController::TestCase
              },
            }
 
-      @guide.reload
-      assert_equal "Updated title", @guide.title
-      assert_equal "in_review", @guide.state
-      assert_equal "Please review the updated title", @guide.actions.last.comment
+      @edition.reload
+      assert_equal "Updated title", @edition.title
+      assert_equal "in_review", @edition.state
+      assert_equal "Please review the updated title", @edition.actions.last.comment
     end
 
     should "update the publishing API on successful update" do
-      UpdateWorker.expects(:perform_async).with(@guide.id.to_s, false)
+      UpdateWorker.expects(:perform_async).with(@edition.id.to_s, false)
 
       post :update,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              edition: {
                title: "Updated title",
              },
@@ -389,8 +354,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     context "Welsh editors" do
       setup do
         login_as_welsh_editor
-        @edition = FactoryBot.create(:guide_edition, :ready)
-        @welsh_edition = FactoryBot.create(:guide_edition, :ready, :welsh)
+        @edition = FactoryBot.create(:simple_smart_answer_edition, :ready)
+        @welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :ready, :welsh)
       end
 
       should "be able to update Welsh editions" do
@@ -498,8 +463,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
-        assert_equal @welsh_edition.state, "scheduled_for_publishing"
-        assert_equal flash[:notice], "Guide edition was successfully updated."
+        assert_equal "scheduled_for_publishing", @welsh_edition.state
+        assert_equal "Simple smart answer edition was successfully updated.", flash[:notice]
       end
 
       should "not be able to schedule publishing for non-Welsh editions" do
@@ -546,8 +511,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
-        assert_equal @welsh_edition.state, "published"
-        assert_equal flash[:success], "Guide updated"
+        assert_equal "published", @welsh_edition.state
+        assert_equal "Simple smart answer updated", flash[:success]
       end
 
       should "not be able to publish a non-Welsh edition" do
@@ -572,7 +537,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       end
 
       should "be able to approve a review for Welsh editions" do
-        welsh_edition = FactoryBot.create(:guide_edition, :in_review, :welsh)
+        welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :in_review, :welsh)
 
         UpdateWorker.expects(:perform_async).with(welsh_edition.id.to_s, false)
 
@@ -590,12 +555,12 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(welsh_edition)
         welsh_edition.reload
-        assert_equal welsh_edition.state, "ready"
-        assert_equal flash[:success], "Guide updated"
+        assert_equal "ready", welsh_edition.state
+        assert_equal "Simple smart answer updated", flash[:success]
       end
 
       should "not be able to approve a review for non-Welsh editions" do
-        edition = FactoryBot.create(:guide_edition, :in_review)
+        edition = FactoryBot.create(:simple_smart_answer_edition, :in_review)
 
         UpdateWorker.expects(:perform_async).with(edition.id.to_s, false).never
 
@@ -618,7 +583,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       end
 
       should "be able to request a review for Welsh editions" do
-        welsh_edition = FactoryBot.create(:guide_edition, :draft, :welsh)
+        welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :draft, :welsh)
 
         UpdateWorker.expects(:perform_async).with(welsh_edition.id.to_s, false)
 
@@ -636,12 +601,12 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(welsh_edition)
         welsh_edition.reload
-        assert_equal welsh_edition.state, "in_review"
-        assert_equal flash[:success], "Guide updated"
+        assert_equal "in_review", welsh_edition.state
+        assert_equal "Simple smart answer updated", flash[:success]
       end
 
       should "not be able to request a review for non-Welsh editions" do
-        edition = FactoryBot.create(:guide_edition, :draft)
+        edition = FactoryBot.create(:simple_smart_answer_edition, :draft)
 
         UpdateWorker.expects(:perform_async).with(edition.id.to_s, false).never
 
@@ -680,8 +645,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
-        assert_equal @welsh_edition.state, "amends_needed"
-        assert_equal flash[:success], "Guide updated"
+        assert_equal "amends_needed", @welsh_edition.state
+        assert_equal "Simple smart answer updated", flash[:success]
       end
 
       should "not be able to request amendments to a review for non-Welsh editions" do
@@ -724,8 +689,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
-        assert_equal flash[:success], "Guide updated"
-        assert_equal @welsh_edition.state, "fact_check"
+        assert_equal "Simple smart answer updated", flash[:success]
+        assert_equal "fact_check", @welsh_edition.state
       end
 
       should "not be able to request a fact check for non-Welsh editions" do
@@ -747,8 +712,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@edition)
         @edition.reload
-        assert_equal @edition.state, "ready"
-        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+        assert_equal "ready", @edition.state
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
 
       should "be able to resend fact check emails for Welsh editions" do
@@ -781,8 +746,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
-        assert_equal flash[:success], "Guide updated"
-        assert_equal @welsh_edition.state, "fact_check"
+        assert_equal "Simple smart answer updated", flash[:success]
+        assert_equal "fact_check", @welsh_edition.state
       end
 
       should "not be able to resend fact check emails for non-Welsh editions" do
@@ -826,7 +791,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
-        assert_equal "Guide edition was successfully updated.", flash[:notice]
+        assert_equal "Simple smart answer edition was successfully updated.", flash[:notice]
         assert_equal @welsh_edition.state, "ready"
       end
 
@@ -856,12 +821,12 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
   context "#update calling the fact check manager API" do
     setup do
-      @simple_smart_answer = FactoryBot.create(:simple_smart_answer_edition, :fact_check)
+      @edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check)
       FactoryBot.create(
         :action,
         requester: @user,
         request_type: Action::SEND_FACT_CHECK,
-        edition: @simple_smart_answer,
+        edition: @edition,
         email_addresses: "fact-checker-one@example.com",
       )
     end
@@ -869,34 +834,34 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     context "fact_check_manager_api is enabled" do
       setup do
         @test_strategy.switch!(:fact_check_manager_api, true)
-        stub_patch_update_fact_check_content(success: true, source_id: @simple_smart_answer.id)
+        stub_patch_update_fact_check_content(success: true, source_id: @edition.id)
       end
 
       should "send the updated content to the fact check manager API when saving a fact check edition" do
-        Services.fact_check_manager_api.expects(:patch_update_content).with(has_entries(source_id: @simple_smart_answer.id)).returns(GdsApi::Response.new(code: 200))
+        Services.fact_check_manager_api.expects(:patch_update_content).with(has_entries(source_id: @edition.id)).returns(GdsApi::Response.new(code: 200))
 
         post :update,
              params: {
-               id: @simple_smart_answer.id,
+               id: @edition.id,
                edition: { title: "Updated title" },
              }
 
-        @simple_smart_answer.reload
-        assert_equal "Updated title", @simple_smart_answer.title
+        @edition.reload
+        assert_equal "Updated title", @edition.title
         assert_includes flash[:notice], "Fact check request updated."
       end
 
       should "render an error but still save the edition if the fact check manager API call fails" do
-        stub_patch_update_fact_check_content(success: false, source_id: @simple_smart_answer.id)
+        stub_patch_update_fact_check_content(success: false, source_id: @edition.id)
 
         post :update,
              params: {
-               id: @simple_smart_answer.id,
+               id: @edition.id,
                edition: { title: "Updated title" },
              }
 
-        @simple_smart_answer.reload
-        assert_equal "Updated title", @simple_smart_answer.title
+        @edition.reload
+        assert_equal "Updated title", @edition.title
         assert_equal "Due to a service problem, the fact check request could not be updated. The edition was successfully saved", flash[:danger]
       end
 
@@ -916,7 +881,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         post :update,
              params: {
-               id: @simple_smart_answer.id,
+               id: @edition.id,
                commit: "Request amendments",
                edition: {
                  activity_request_amendments_attributes: {
@@ -926,8 +891,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
                },
              }
 
-        @simple_smart_answer.reload
-        assert_equal "amends_needed", @simple_smart_answer.state
+        @edition.reload
+        assert_equal "amends_needed", @edition.state
       end
     end
 
@@ -941,12 +906,12 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         post :update,
              params: {
-               id: @simple_smart_answer.id,
+               id: @edition.id,
                edition: { title: "Updated title" },
              }
 
-        @simple_smart_answer.reload
-        assert_equal "Updated title", @simple_smart_answer.title
+        @edition.reload
+        assert_equal "Updated title", @edition.title
       end
     end
   end
@@ -955,8 +920,8 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     setup do
       artefact = FactoryBot.create(:artefact)
 
-      @guide = FactoryBot.create(
-        :guide_edition,
+      @edition = FactoryBot.create(
+        :simple_smart_answer_edition,
         state: "in_review",
         review_requested_at: Time.zone.now,
         panopticon_id: artefact.id,
@@ -968,17 +933,17 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
       put :review,
           params: {
-            id: @guide.id,
+            id: @edition.id,
             edition: { reviewer: bob.name },
           }
 
-      @guide.reload
-      assert_equal bob.name, @guide.reviewer
+      @edition.reload
+      assert_equal bob.name, @edition.reviewer
     end
 
     should "not be able to update the reviewer when edition is scheduled for publishing" do
       bob = FactoryBot.create(:user, name: "bob")
-      edition = FactoryBot.create(:edition, :scheduled_for_publishing)
+      edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing)
 
       put :review,
           params: {
@@ -992,7 +957,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
     context "Welsh editors" do
       setup do
-        @welsh_guide = FactoryBot.create(:guide_edition, :welsh, :in_review)
+        @welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :welsh, :in_review)
         login_as_welsh_editor
         @welsh_user = @user
       end
@@ -1000,27 +965,27 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       should "be able to claim a review for Welsh editions" do
         put :review,
             params: {
-              id: @welsh_guide.id,
+              id: @welsh_edition.id,
               edition: { reviewer: @welsh_user.name },
             }
 
-        assert_redirected_to edition_path(@welsh_guide)
-        assert_equal "You are the reviewer of this guide.", flash[:success]
-        @welsh_guide.reload
-        assert_equal @welsh_user.name, @welsh_guide.reviewer
+        assert_redirected_to edition_path(@welsh_edition)
+        assert_equal "You are the reviewer of this simple smart answer.", flash[:success]
+        @welsh_edition.reload
+        assert_equal @welsh_user.name, @welsh_edition.reviewer
       end
 
       should "not be able to claim a review for non-Welsh editions" do
         put :review,
             params: {
-              id: @guide.id,
+              id: @edition.id,
               edition: { reviewer: @welsh_user.name },
             }
 
-        assert_redirected_to edition_path(@guide)
+        assert_redirected_to edition_path(@edition)
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-        @guide.reload
-        assert_nil @guide.reviewer
+        @edition.reload
+        assert_nil @edition.reviewer
       end
     end
   end
@@ -1030,83 +995,52 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       artefact1 = FactoryBot.create(
         :artefact,
         slug: "test",
-        kind: "transaction",
+        kind: "simple_smart_answer",
         name: "test",
         owning_app: "publisher",
       )
-      @transaction = FactoryBot.create(:transaction_edition, title: "test", slug: "test", panopticon_id: artefact1.id)
-
-      artefact2 = FactoryBot.create(
-        :artefact,
-        slug: "test2",
-        kind: "guide",
-        name: "test",
-        owning_app: "publisher",
-      )
-      @guide = FactoryBot.create(:guide_edition, title: "test", slug: "test2", panopticon_id: artefact2.id)
+      @edition = FactoryBot.create(:simple_smart_answer_edition, title: "test", slug: "test", panopticon_id: artefact1.id)
 
       stub_request(:delete, "#{Plek.find('arbiter')}/slugs/test").to_return(status: 200)
     end
 
-    should "destroy transaction" do
-      assert @transaction.can_destroy?
-      assert_difference("TransactionEdition.count", -1) do
-        delete :destroy, params: { id: @transaction.id }
+    should "destroy simple_smart_answer" do
+      assert @edition.can_destroy?
+      assert_difference("SimpleSmartAnswerEdition.count", -1) do
+        delete :destroy, params: { id: @edition.id }
       end
       assert_redirected_to root_path
     end
 
-    should "can't destroy published transaction" do
-      @transaction.state = "ready"
+    should "can't destroy published simple_smart_answer" do
+      @edition.state = "ready"
       stub_register_published_content
-      @transaction.publish
-      assert_not @transaction.can_destroy?
-      @transaction.save!
-      assert_difference("TransactionEdition.count", 0) do
-        delete :destroy, params: { id: @transaction.id }
-      end
-    end
-
-    should "destroy guide" do
-      assert @guide.can_destroy?
-      assert_difference("GuideEdition.count", -1) do
-        delete :destroy, params: { id: @guide.id }
-      end
-      assert_redirected_to root_path
-    end
-
-    should "can't destroy published guide" do
-      @guide.state = "ready"
-      @guide.save!
-      stub_register_published_content
-      @guide.publish
-      @guide.save!
-      assert @guide.published?
-      assert_not @guide.can_destroy?
-
-      assert_difference("GuideEdition.count", 0) do
-        delete :destroy, params: { id: @guide.id }
+      @edition.publish
+      assert_not @edition.can_destroy?
+      @edition.save!
+      assert_difference("SimpleSmartAnswerEdition.count", 0) do
+        delete :destroy, params: { id: @edition.id }
       end
     end
 
     context "Welsh editors" do
       setup do
         login_as_welsh_editor
-        @welsh_guide = FactoryBot.create(:guide_edition, :welsh)
+        @welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :welsh)
       end
 
       should "not be able to destroy non-Welsh editions" do
-        assert_difference("GuideEdition.count", 0) do
-          delete :destroy, params: { id: @guide.id }
+        assert_difference("SimpleSmartAnswerEdition.count", 0) do
+          delete :destroy, params: { id: @edition.id }
         end
 
-        assert_redirected_to edition_path(@guide)
+        assert_redirected_to edition_path(@edition)
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
 
       should "be able to destroy Welsh editions" do
-        assert_difference("GuideEdition.count", -1) do
-          delete :destroy, params: { id: @welsh_guide.id }
+        assert_difference("SimpleSmartAnswerEdition.count", -1) do
+          delete :destroy, params: { id: @welsh_edition.id }
         end
 
         assert_redirected_to root_path
@@ -1124,33 +1058,16 @@ class LegacyEditionsControllerTest < ActionController::TestCase
   end
 
   context "#show" do
-    setup do
-      artefact2 = FactoryBot.create(
-        :artefact,
-        slug: "test2",
-        kind: "guide",
-        name: "test",
-        owning_app: "publisher",
-      )
-      @guide = FactoryBot.create(:guide_edition, title: "test", slug: "test2", panopticon_id: artefact2.id)
-    end
-
     should "requesting a publication that doesn't exist returns a 404" do
       get :show, params: { id: "101" }
       assert_response :not_found
-    end
-
-    should "we can view a guide" do
-      get :show, params: { id: @guide.id }
-      assert_response :success
-      assert_not_nil assigns(:resource)
     end
 
     should "render a link to the diagram when edition is a simple smart answer" do
       simple_smart_answer_artefact = FactoryBot.create(
         :artefact,
         slug: "my-simple-smart-answer",
-        kind: "guide",
+        kind: "simple_smart_answer",
         name: "test",
         owning_app: "publisher",
       )
@@ -1165,20 +1082,15 @@ class LegacyEditionsControllerTest < ActionController::TestCase
                       { count: 1, text: "flow diagram (opens in a new tab)" }
       end
     end
-
-    should "not render a link to the diagram when edition is not a simple smart answer" do
-      get :show, params: { id: @guide.id }
-      assert_select "p", { count: 0, text: "View the flow diagram (opens in a new tab)" }
-    end
   end
 
   context "#admin" do
     setup do
-      @guide = FactoryBot.create(:guide_edition)
+      @edition = FactoryBot.create(:simple_smart_answer_edition)
     end
 
     should "show the admin page for the edition" do
-      get :admin, params: { id: @guide.id }
+      get :admin, params: { id: @edition.id }
 
       assert_response :success
     end
@@ -1186,19 +1098,19 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     context "Welsh editors" do
       setup do
         login_as_welsh_editor
-        @welsh_guide = FactoryBot.create(:guide_edition, :welsh)
+        @welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :welsh)
       end
 
       should "be able to see the admin page for Welsh editions" do
-        get :admin, params: { id: @welsh_guide.id }
+        get :admin, params: { id: @welsh_edition.id }
 
         assert_response :success
       end
 
       should "not be able to see the admin page for non-Welsh editions" do
-        get :admin, params: { id: @guide.id }
+        get :admin, params: { id: @edition.id }
 
-        assert_redirected_to edition_path(@guide)
+        assert_redirected_to edition_path(@edition)
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
@@ -1206,7 +1118,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
   context "#diff" do
     should "we can diff the last edition" do
-      first_edition = FactoryBot.create(:guide_edition, state: "published")
+      first_edition = FactoryBot.create(:simple_smart_answer_edition, state: "published")
       second_edition = first_edition.build_clone(GuideEdition)
       second_edition.save!
       second_edition.reload
@@ -1218,26 +1130,26 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
   context "#unpublish" do
     setup do
-      @guide = FactoryBot.create(:guide_edition, :published)
+      @edition = FactoryBot.create(:simple_smart_answer_edition, :published)
       @redirect_url = "https://www.example.com/somewhere_else"
     end
 
     should "update publishing API upon unpublishing" do
-      UnpublishService.expects(:call).with(@guide.artefact, @user, @redirect_url)
+      UnpublishService.expects(:call).with(@edition.artefact, @user, @redirect_url)
 
       post :process_unpublish,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              redirect_url: @redirect_url,
            }
     end
 
     should "redirect and display success message after successful unpublish" do
-      UnpublishService.stubs(:call).with(@guide.artefact, @user, @redirect_url).returns(true)
+      UnpublishService.stubs(:call).with(@edition.artefact, @user, @redirect_url).returns(true)
 
       post :process_unpublish,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              redirect_url: @redirect_url,
            }
 
@@ -1248,19 +1160,19 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     should "not be able to unpublish with invalid redirect url" do
       post :process_unpublish,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              redirect_url: "invalid redirect url",
            }
 
-      assert_equal "Redirect path is invalid. Guide has not been unpublished.", flash[:danger]
+      assert_equal "Redirect path is invalid. Simple smart answer has not been unpublished.", flash[:danger]
     end
 
     should "alert if unable to unpublish" do
-      UnpublishService.stubs(:call).with(@guide.artefact, @user, @redirect_url).returns(nil)
+      UnpublishService.stubs(:call).with(@edition.artefact, @user, @redirect_url).returns(nil)
 
       post :process_unpublish,
            params: {
-             id: @guide.id,
+             id: @edition.id,
              redirect_url: @redirect_url,
            }
 
@@ -1270,50 +1182,50 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     context "Welsh editors" do
       setup do
         login_as_welsh_editor
-        @welsh_guide = FactoryBot.create(:guide_edition, :published, :welsh)
+        @welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :published, :welsh)
       end
 
       should "not be able to access the unpublish page of non-Welsh editions" do
-        get :unpublish, params: { id: @guide.id }
+        get :unpublish, params: { id: @edition.id }
 
-        assert_redirected_to edition_path(@guide)
+        assert_redirected_to edition_path(@edition)
         assert_equal "You do not have permission to see this page.", flash[:danger]
       end
 
       should "not be able to access the unpublish page of Welsh editions" do
-        get :unpublish, params: { id: @welsh_guide.id }
+        get :unpublish, params: { id: @welsh_edition.id }
 
-        assert_redirected_to edition_path(@welsh_guide)
+        assert_redirected_to edition_path(@welsh_edition)
         assert_equal "You do not have permission to see this page.", flash[:danger]
       end
 
       should "not be allowed to unpublish a Welsh edition" do
-        UnpublishService.expects(:call).with(@welsh_guide.artefact, @user, @redirect_url).never
+        UnpublishService.expects(:call).with(@welsh_edition.artefact, @user, @redirect_url).never
 
         post :process_unpublish,
              params: {
-               id: @welsh_guide.id,
+               id: @welsh_edition.id,
                redirect_url: @redirect_url,
              }
 
-        assert_redirected_to edition_path(@welsh_guide)
-        @welsh_guide.reload
-        assert_equal @welsh_guide.state, "published"
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal @welsh_edition.state, "published"
         assert_equal "You do not have permission to see this page.", flash[:danger]
       end
 
       should "not be allowed to unpublish a non-Welsh edition" do
-        UnpublishService.expects(:call).with(@guide.artefact, @user, @redirect_url).never
+        UnpublishService.expects(:call).with(@edition.artefact, @user, @redirect_url).never
 
         post :process_unpublish,
              params: {
-               id: @guide.id,
+               id: @edition.id,
                redirect_url: @redirect_url,
              }
 
-        assert_redirected_to edition_path(@guide)
-        @guide.reload
-        assert_equal @guide.state, "published"
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "published"
         assert_equal "You do not have permission to see this page.", flash[:danger]
       end
     end
@@ -1390,17 +1302,6 @@ class LegacyEditionsControllerTest < ActionController::TestCase
         assert_select "title", "Diagram for #{@edition.title} | GOV.UK Publisher"
       end
     end
-
-    context "given a non-simple smart answer exists" do
-      setup do
-        @welsh_guide = FactoryBot.create(:guide_edition, :welsh, :in_review)
-      end
-
-      should "return a 404" do
-        get :diagram, params: { id: @welsh_guide.id }
-        assert_response :not_found
-      end
-    end
   end
 
   context "when 'restrict_access_by_org' feature toggle is disabled" do
@@ -1411,7 +1312,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     %i[metadata history].each do |action|
       context "##{action}" do
         setup do
-          @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
+          @edition = FactoryBot.create(:simple_smart_answer_edition, owning_org_content_ids: %w[org-two])
         end
 
         should "return a 200 when requesting the #{action} tab on an edition owned by a different organisation and user has departmental_editor permission" do
@@ -1437,7 +1338,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     %i[show metadata history admin unpublish].each do |action|
       context "##{action}" do
         setup do
-          @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
+          @edition = FactoryBot.create(:simple_smart_answer_edition, owning_org_content_ids: %w[org-two])
         end
 
         should "return a 404 when requesting the #{action} tab on an edition owned by a different organisation and user has departmental_editor permission" do
