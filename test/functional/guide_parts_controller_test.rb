@@ -355,6 +355,20 @@ class GuidePartsControllerTest < ActionController::TestCase
         assert_equal "Chapter deleted successfully", flash[:success]
         assert @edition_with_parts.parts.exclude? part
       end
+
+      should "order the parts after deleting a part" do
+        login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
+        @edition_with_parts.parts.create!(title: "PART 3", slug: "part-three", order: 3)
+        middle_part = @edition_with_parts.parts.find_by(order: 2)
+
+        delete :destroy, params: { edition_id: @edition_with_parts.id, id: middle_part.id }
+
+        @edition_with_parts.reload
+
+        assert_equal 2, @edition_with_parts.parts.count
+        assert_equal [1, 2], @edition_with_parts.parts.in_order.map(&:order)
+        assert_equal %w[part-one part-three], @edition_with_parts.parts.in_order.map(&:slug)
+      end
     end
   end
 end

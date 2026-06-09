@@ -102,13 +102,14 @@ class GuidePartsController < InheritedResources::Base
 
   def destroy
     @part = Part.find(params[:id])
-    if @part.destroy!
-      UpdateWorker.perform_async(@edition.id.to_s)
-      flash[:success] = "Chapter deleted successfully"
-      redirect_to edition_path(@edition)
-    else
-      render "confirm_destroy"
+    ActiveRecord::Base.transaction do
+      @part.destroy!
+      @edition.order_parts
+      @edition.save!
     end
+    UpdateWorker.perform_async(@edition.id.to_s)
+    flash[:success] = "Chapter deleted successfully"
+    redirect_to edition_path(@edition)
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = "Due to a service problem, the chapter couldn't be deleted"
