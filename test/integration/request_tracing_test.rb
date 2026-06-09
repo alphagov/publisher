@@ -1,6 +1,6 @@
-require "legacy_integration_test_helper"
+require "integration_test_helper"
 
-class RequestTracingTest < LegacyIntegrationTest
+class RequestTracingTest < IntegrationTest
   setup do
     setup_users
     stub_register_published_content

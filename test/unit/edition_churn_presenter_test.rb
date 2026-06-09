@@ -1,6 +1,6 @@
-require "legacy_integration_test_helper"
+require "integration_test_helper"
 
-class EditionChurnPresenterTest < LegacyIntegrationTest
+class EditionChurnPresenterTest < IntegrationTest
   should "provide a CSV export of the churn in editions" do
     document = FactoryBot.create(
       :artefact,
