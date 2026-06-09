@@ -45,27 +45,13 @@ private
   end
 
   def slug_prefix
-    case @artefact.kind
-    when "help_page"
-      "help/"
-    when "completed_transaction"
-      "done/"
-    else
-      "/"
-    end
+    Artefact.slug_prefix_for_kind(@artefact.kind) || "/"
   end
 
   def slug_with_prefix(artefact_params)
     return if artefact_params[:slug].blank?
 
-    case artefact_params[:kind]
-    when "help_page"
-      "help/#{artefact_params[:slug]}"
-    when "completed_transaction"
-      "done/#{artefact_params[:slug]}"
-    else
-      artefact_params[:slug]
-    end
+    Artefact.slug_for_kind(artefact_params[:slug], artefact_params[:kind])
   end
 
   def create_artefact_and_edition

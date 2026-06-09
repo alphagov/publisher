@@ -16,8 +16,11 @@ class EditionDuplicator
       update_assignment(assign_to)
 
       if new_format.present?
-        new_edition.artefact.kind = new_edition.kind_for_artefact
-        new_edition.artefact.save!(validate: false)
+        artefact = new_edition.artefact
+        artefact.kind = new_edition.kind_for_artefact
+        artefact.slug = Artefact.slug_for_kind(artefact.slug, artefact.kind)
+        artefact.save!(validate: false)
+        new_edition.update_column(:slug, artefact.slug)
       end
 
       true

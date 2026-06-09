@@ -35,6 +35,21 @@ class Artefact < ApplicationRecord
     FORMATS_BY_DEFAULT_OWNING_APP.detect { |_app, formats| formats.include?(format) }.first
   end
 
+  SLUG_PREFIXES = {
+    "help_page" => "help/",
+    "completed_transaction" => "done/",
+  }.freeze
+
+  def self.slug_prefix_for_kind(kind)
+    SLUG_PREFIXES[kind]
+  end
+
+  def self.slug_for_kind(slug, kind)
+    base = slug.to_s.sub(/\A(help|done)\//, "")
+
+    "#{SLUG_PREFIXES[kind]}#{base}"
+  end
+
   KIND_TRANSLATIONS = {
     "standard transaction link" => "transaction",
     "local authority transaction link" => "local_transaction",

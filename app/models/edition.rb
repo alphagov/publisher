@@ -422,7 +422,9 @@ class Edition < ApplicationRecord
 
   def update_slug_from_artefact(artefact)
     self.slug = artefact.slug
-    save!
+    # The slug has already been validated against the kind on the artefact.
+    # We do not want to block the save by unrelated invalid content (e.g. when converting a published edition)
+    save!(validate: false)
   end
 
   def check_for_archived_artefact
