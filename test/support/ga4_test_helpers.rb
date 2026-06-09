@@ -33,4 +33,17 @@ module Ga4TestHelpers
 
     search_data
   end
+
+  def get_page_view_data
+    data_layer_items = evaluate_script("window.dataLayer")
+    page_view_data = []
+
+    data_layer_items.each do |item|
+      if item["page_view"] #  && item["event"]["search_results"]
+        page_view_data = item["page_view"]
+      end
+    end
+
+    page_view_data
+  end
 end

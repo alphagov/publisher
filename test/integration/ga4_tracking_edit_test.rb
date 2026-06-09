@@ -21,6 +21,19 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       visit edition_path(@edition)
     end
 
+    should "push the correct values to the dataLayer when the page loads" do
+      page_view_data = get_page_view_data
+
+      assert has_css?("h1", text: @edition.title)
+
+      puts "++page_view_data++"
+      puts page_view_data
+      puts "++++"
+
+      assert_equal "show-editions", page_view_data["document_type"]
+      assert_equal @edition.id, page_view_data["content_id"]
+    end
+
     should "push the correct values to the dataLayer when events are triggered" do
       disable_form_submit
 
