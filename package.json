@@ -42,8 +42,8 @@
     "jasmine-core": "^6.3.0",
     "postcss": "^8.5.15",
     "standardx": "^7.0.0",
-    "stylelint": "^15.11.0",
-    "stylelint-config-gds": "^1.1.0"
+    "stylelint": "^17.13.0",
+    "stylelint-config-gds": "^3.0.0"
   },
   "dependencies": {
     "mermaid": "11.15.0",

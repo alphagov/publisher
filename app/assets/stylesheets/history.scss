@@ -1,7 +1,9 @@
+// stylelint-disable selector-no-qualifying-type
+
 .history {
   .gem-c-inset-text {
+    overflow-wrap: break-word;
     padding-top: 0;
-    word-break: break-word;
   }
 
   // stylelint-disable scss/at-extend-no-missing-placeholder

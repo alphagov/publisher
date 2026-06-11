@@ -1,3 +1,5 @@
+// stylelint-disable selector-no-qualifying-type
+
 .edit {
   &--readonly {
     section > p {
@@ -24,7 +26,6 @@
       @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
 
       white-space: pre-line;
-      word-break: break-word;
       overflow-wrap: break-word;
     }
   }
