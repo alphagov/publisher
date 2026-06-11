@@ -1,6 +1,16 @@
 class ArtefactsController < ApplicationController
   layout "design_system"
-  before_action :require_govuk_editor
+  before_action :require_govuk_editor, except: :update
+  before_action only: %i[update] do
+    # In Bootstrap, it is possible to attempt to update the Metadata as a non govuk_editor.
+    # This stops such an attempt from kicking all the way back to the root path
+    # TODO: Remove this and the except: clause above once SimpleSmartAnswerEdition is migrated to Design System
+    next if current_user.govuk_editor?
+
+    flash[:danger] = "You do not have permissions to update this page"
+    artefact = Artefact.find(params[:id])
+    redirect_to metadata_edition_path(artefact.latest_edition)
+  end
 
   def new
     @artefact = Artefact.new
@@ -30,12 +40,33 @@ class ArtefactsController < ApplicationController
     end
   end
 
+  def update
+    @artefact = Artefact.find(updatable_params[:id])
+    if @artefact.update_as(current_user, updatable_params)
+      UpdateWorker.perform_async(@artefact.latest_edition_id)
+      flash[:success] = "Metadata has successfully updated".html_safe
+    else
+      flash[:danger] = @artefact.errors.full_messages.join("\n")
+    end
+
+    redirect_to metadata_artefact_path(@artefact)
+  end
+
   helper_method :slug_prefix
 
 private
 
+  def metadata_artefact_path(artefact)
+    edition = Edition.where(panopticon_id: artefact.id).order(version_number: :desc).first
+    metadata_edition_path(edition)
+  end
+
   def artefact_params
     params.require(:artefact).permit(:name, :slug, :kind, :language)
+  end
+
+  def updatable_params
+    params.require(:artefact).permit(:id, :slug, :language)
   end
 
   def local_transaction_edition_params
