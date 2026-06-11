@@ -156,8 +156,6 @@ Rails.application.routes.draw do
   post "/link-checker-api-callback" => "link_checker_api#callback", as: "link_checker_api_callback"
   get "api/lookup-by-base-path", to: "publishing_api_proxy#lookup_by_base_path"
 
-  resources :publications
-
   root to: redirect("/my-content")
   get "my-content", to: "filtered_editions#my_content"
   get "find-content", to: "filtered_editions#find_content"

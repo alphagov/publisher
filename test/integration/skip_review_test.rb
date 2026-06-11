@@ -41,7 +41,7 @@ class SkipReviewTest < LegacyJavascriptIntegrationTest
   should "allow a user with the correct permissions to skip review" do
     login_as @permitted_user
 
-    visit "/publications/#{@artefact.id}"
+    visit "/editions/#{@simple_smart_answer.id}"
 
     within(".alert-info:not(.alert-link-info)") do
       assert page.has_content? "Skip review"
@@ -71,7 +71,7 @@ class SkipReviewTest < LegacyJavascriptIntegrationTest
 
     login_as editor
 
-    visit "/publications/#{@artefact.id}"
+    visit "/editions/#{@simple_smart_answer.id}"
 
     within(".alert-info:not(.alert-link-info)") do
       assert page.has_no_content? "Skip review"

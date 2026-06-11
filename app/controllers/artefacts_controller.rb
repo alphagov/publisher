@@ -32,7 +32,8 @@ class ArtefactsController < ApplicationController
     user_slug_value = artefact_params[:slug]
 
     if create_artefact_and_edition
-      redirect_to publication_path(@artefact)
+      UpdateWorker.perform_async(@artefact.latest_edition.id.to_s)
+      redirect_to edition_path(@artefact.latest_edition)
     else
       @artefact.slug = user_slug_value
       @artefact.errors.merge!(local_transaction_edition_errors) if local_transaction_edition?

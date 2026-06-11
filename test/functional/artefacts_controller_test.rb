@@ -83,6 +83,8 @@ class ArtefactsControllerTest < ActionController::TestCase
     should "redirect to the publication page if valid params passed" do
       login_as_govuk_editor
 
+      UpdateWorker.expects(:perform_async)
+
       post :create, params: { artefact: { kind: "answer", name: "Example name", slug: "example-name", language: "en" } }
 
       @artefact = Artefact.first
@@ -90,7 +92,7 @@ class ArtefactsControllerTest < ActionController::TestCase
       assert_equal 1, Edition.count
       assert_equal 1, AnswerEdition.count
 
-      assert_redirected_to publication_path(@artefact)
+      assert_redirected_to edition_path(@artefact.latest_edition)
     end
 
     should "create an artefact with the correct attributes" do
@@ -185,7 +187,7 @@ class ArtefactsControllerTest < ActionController::TestCase
         FactoryBot.create(:local_service, lgsl_code: 1)
       end
 
-      should "create artefact and child records and redirect to the publication page if valid params passed" do
+      should "create artefact and child records and redirect to the edition page if valid params passed" do
         login_as_govuk_editor
 
         post :create, params: { artefact: { kind: "local_transaction", name: "Example name", slug: "example-name", language: "en" },
@@ -195,7 +197,7 @@ class ArtefactsControllerTest < ActionController::TestCase
         assert_equal 1, Artefact.count
         assert_equal 1, Edition.count
         assert_equal 1, LocalTransactionEdition.count
-        assert_redirected_to publication_path(@artefact)
+        assert_redirected_to edition_path(@artefact.latest_edition)
       end
 
       should "create a local transaction with the correct attributes" do
@@ -275,7 +277,7 @@ class ArtefactsControllerTest < ActionController::TestCase
         }
 
         assert_response :redirect
-        assert_redirected_to metadata_edition_path(edition.id)
+        assert_redirected_to metadata_edition_path(@edition.id)
         assert_equal "Metadata has successfully updated", flash[:success]
       end
 
