@@ -123,7 +123,20 @@
       }
     },
     initOption: function (e) {
-      var node = $(e.field).parents('.node').first()
+      var option = $(e.field)
+      var node = option.parents('.node').first()
+      var maxOrder = 0
+
+      // Find the maximum order value in the list of existing options
+      node.find('.option:visible .option-order')
+        .not(option.find('.option-order')).each(function () {
+          var val = parseInt($(this).val())
+          if (val > maxOrder) { maxOrder = val }
+        })
+
+      // Set the hidden input order value for the new option to maxOrder + 1
+      option.find('.option-order').val(maxOrder + 1)
+
       smartAnswerBuilder.reloadNextNodeList(node)
     },
     reloadAllNextNodeLists: function () {
