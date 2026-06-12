@@ -210,6 +210,59 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
     end
   end
 
+  context "Guide edition in 'ready' state" do
+    setup do
+      @guide_edition.state = "ready"
+      @guide_edition.save!
+      visit edition_path(@guide_edition)
+      disable_links
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when the 'Option' links are clicked" do
+      within ".sidebar-components" do
+        click_link "Reorder chapters"
+        click_link "Fact check"
+        click_link "Schedule"
+        click_link "Publish"
+      end
+
+      event_data = get_event_data
+
+      assert_equal "navigation", event_data[0]["event_name"]
+      assert_equal "generic_link", event_data[0]["type"]
+      assert_equal "/editions/#{@guide_edition.id}/guide_parts/reorder", event_data[0]["url"]
+      assert_equal "Reorder chapters", event_data[0]["text"]
+      assert_equal "false", event_data[0]["external"]
+      assert_equal current_host, event_data[0]["link_domain"]
+      assert_equal "primary click", event_data[0]["method"]
+
+      assert_equal "navigation", event_data[1]["event_name"]
+      assert_equal "generic_link", event_data[1]["type"]
+      assert_equal "/editions/#{@guide_edition.id}/send_to_fact_check_page", event_data[1]["url"]
+      assert_equal "Fact check", event_data[1]["text"]
+      assert_equal "false", event_data[1]["external"]
+      assert_equal current_host, event_data[1]["link_domain"]
+      assert_equal "primary click", event_data[1]["method"]
+
+      assert_equal "navigation", event_data[2]["event_name"]
+      assert_equal "generic_link", event_data[2]["type"]
+      assert_equal "/editions/#{@guide_edition.id}/schedule_page", event_data[2]["url"]
+      assert_equal "Schedule", event_data[2]["text"]
+      assert_equal "false", event_data[2]["external"]
+      assert_equal current_host, event_data[2]["link_domain"]
+      assert_equal "primary click", event_data[2]["method"]
+
+      assert_equal "navigation", event_data[3]["event_name"]
+      assert_equal "generic_link", event_data[3]["type"]
+      assert_equal "/editions/#{@guide_edition.id}/send_to_publish_page", event_data[3]["url"]
+      assert_equal "Publish", event_data[3]["text"]
+      assert_equal "false", event_data[3]["external"]
+      assert_equal current_host, event_data[3]["link_domain"]
+      assert_equal "primary click", event_data[3]["method"]
+    end
+  end
+
   context "Edit a guide page" do
     setup do
       visit edition_path(@guide_edition)
