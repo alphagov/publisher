@@ -572,6 +572,30 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
       end
     end
 
+    should "correctly order new answers" do
+      visit_edition @edition
+
+      within ".nodes .question:first-child" do
+        assert_equal "1", find(:css, ".option:nth-child(1) .option-order", visible: false).value
+        assert_equal "2", find(:css, ".option:nth-child(2) .option-order", visible: false).value
+
+        click_link("Add answer")
+
+        within ".option:nth-child(3)" do
+          assert_equal "3", find(:css, ".option-order", visible: false).value
+          find(:css, "input.option-label").set("A different answer")
+          select "Outcome 2 (Outcome Two)", from: "next-node-list"
+        end
+      end
+
+      save_edition
+
+      assert page.has_content?("Simple smart answer edition was successfully updated.")
+
+      labels = @edition.reload.nodes.where(slug: "question-1").first.options.map(&:label)
+      assert_equal ["That is the question", "That is not the question", "A different answer"], labels
+    end
+
     should "highlight an error on the select field when the next node is blank" do
       visit_edition @edition
 
