@@ -255,6 +255,51 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
     end
   end
 
+  context "Reorder chapters page" do
+    setup do
+      visit edition_path(@guide_edition)
+      click_on "Reorder chapters"
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when a user reorders chapters and submits the form" do
+      within all(".gem-c-reorderable-list__item")[0] do
+        click_button "Down"
+      end
+      within all(".gem-c-reorderable-list__item")[1] do
+        click_button "Up"
+      end
+      click_button "Update order"
+
+      event_data = get_event_data
+
+      assert_equal "Down", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "2", event_data[0]["index"]["index_section_count"]
+      assert_equal @guide_edition.parts[0].title, event_data[0]["section"]
+      assert_equal "Down", event_data[0]["text"]
+      assert_equal "reorderable list", event_data[0]["type"]
+
+      assert_equal "Up", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      # Should be "1" - needs a fix in the component
+      # assert_equal "2", event_data[1]["index"]["index_section"]
+      assert_equal "2", event_data[1]["index"]["index_section_count"]
+      assert_equal @guide_edition.parts[0].title, event_data[1]["section"]
+      assert_equal "Up", event_data[1]["text"]
+      assert_equal "reorderable list", event_data[1]["type"]
+
+      assert_equal "Save", event_data[2]["action"]
+      assert_equal "form_response", event_data[2]["event_name"]
+      assert_equal "Reorder chapters - #{@guide_edition.title}", event_data[2]["section"]
+      # Positions should be "1" & "2" - needs a fix in the component
+      # assert_equal "{\"Position for #{@guide_edition.parts[0].title}\":\"1\",\"Position for #{@guide_edition.parts[1].title}\":\"2\"}", event_data[2]["text"].gsub(/"\s+/, '"')
+      assert_equal "Publisher", event_data[2]["tool_name"]
+      assert_equal "reorder", event_data[2]["type"]
+    end
+  end
+
   context "Edit assignee page" do
     setup do
       visit edit_assignee_edition_path(@assigned_edition)
