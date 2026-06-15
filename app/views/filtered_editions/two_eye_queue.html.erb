@@ -2,7 +2,12 @@
 <% content_for :title, "2i queue" %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full two-eye-queue">
+  <div
+    class="govuk-grid-column-full two-eye-queue"
+    data-module="ga4-link-tracker"
+    data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+    data-ga4-limit-to-element-class="govuk-link"
+  >
 		<%= render "govuk_publishing_components/components/tabs", {
       panel_border: false,
 			tabs: [
