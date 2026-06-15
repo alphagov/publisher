@@ -93,6 +93,41 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
     end
   end
 
+  context "Edit page of edition in 'scheduled' state" do
+    setup do
+      @edition.state = "scheduled_for_publishing"
+      @edition.publish_at = Time.zone.now + 1.day
+      @edition.save!
+      visit edition_path(@edition)
+      disable_links
+    end
+
+    should "push the correct values to the dataLayer when the 'Option' links are clicked" do
+      within ".sidebar-components" do
+        click_link "Cancel scheduling"
+        click_link "Publish now"
+      end
+
+      event_data = get_event_data
+
+      assert_equal "navigation", event_data[0]["event_name"]
+      assert_equal "generic_link", event_data[0]["type"]
+      assert_equal "/editions/#{@edition.id}/cancel_scheduled_publishing_page", event_data[0]["url"]
+      assert_equal "Cancel scheduling", event_data[0]["text"]
+      assert_equal "false", event_data[0]["external"]
+      assert_equal current_host, event_data[0]["link_domain"]
+      assert_equal "primary click", event_data[0]["method"]
+
+      assert_equal "navigation", event_data[1]["event_name"]
+      assert_equal "generic_link", event_data[1]["type"]
+      assert_equal "/editions/#{@edition.id}/send_to_publish_page", event_data[1]["url"]
+      assert_equal "Publish now", event_data[1]["text"]
+      assert_equal "false", event_data[1]["external"]
+      assert_equal current_host, event_data[1]["link_domain"]
+      assert_equal "primary click", event_data[1]["method"]
+    end
+  end
+
   context "Edit page of a Guide edition" do
     setup do
       visit edition_path(@guide_edition)
