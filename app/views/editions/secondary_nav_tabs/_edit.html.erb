@@ -23,7 +23,11 @@
     </div>
     <% if @resource.scheduled_for_publishing? %>
       <div class="govuk-grid-column-one-third options-sidebar">
-        <div class="sidebar-components">
+        <div
+          class="sidebar-components"
+          data-module="ga4-link-tracker"
+          data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+        >
           <%= sidebar_options_heading %>
 
           <%= sidebar_items_list(scheduled_for_publishing_sidebar_buttons(@resource)) %>
@@ -31,7 +35,11 @@
       </div>
     <% elsif @resource.published? %>
       <div class="govuk-grid-column-one-third options-sidebar">
-        <div class="sidebar-components">
+        <div
+          class="sidebar-components"
+          data-module="ga4-link-tracker"
+          data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+        >
           <%= sidebar_options_heading %>
 
           <%= sidebar_items_list(published_sidebar_buttons(@resource)) %>
@@ -39,7 +47,11 @@
       </div>
     <% elsif !@resource.archived? %>
       <div class="govuk-grid-column-one-third options-sidebar">
-        <div class="sidebar-components">
+        <div
+          class="sidebar-components"
+          data-module="ga4-link-tracker"
+          data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+        >
           <%= sidebar_options_heading %>
 
           <%= sidebar_items_list(non_published_sidebar_buttons(@resource)) %>
@@ -66,7 +78,11 @@
         </div>
       </div>
       <div class="govuk-grid-column-one-third options-sidebar">
-        <div class="sidebar-components">
+        <div
+          class="sidebar-components"
+          data-module="ga4-link-tracker"
+          data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+        >
           <%= sidebar_options_heading %>
 
           <%= sidebar_items_list(non_published_sidebar_buttons(@resource)) %>

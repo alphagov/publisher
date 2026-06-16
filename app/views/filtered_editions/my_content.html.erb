@@ -2,7 +2,11 @@
 <% content_for :title, "My content" %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full my-content">
+  <div
+    class="govuk-grid-column-full my-content"
+    data-module="ga4-link-tracker"
+    data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+  >
     <% if @presenter.editions.any? %>
       <%= render "govuk_publishing_components/components/table", {
         first_cell_is_header: true,

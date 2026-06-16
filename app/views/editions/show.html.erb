@@ -8,7 +8,11 @@
 <% end %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds editions__edit__summary">
+  <div
+    class="govuk-grid-column-two-thirds editions__edit__summary"
+    data-module="ga4-link-tracker"
+    data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+  >
     <%= render "govuk_publishing_components/components/summary_list", {
       items: document_summary_items(@edition, @reviewer),
     } %>
@@ -18,48 +22,55 @@
     <% if @edition.important_note %>
       <%= render partial: "important_note" %>
     <% end %>
-    <% if @edition.in_review? %>
-      <% latest_request_review_action = @edition.latest_status_action(Action::REQUEST_REVIEW) %>
-      <%= render "govuk_publishing_components/components/inset_text", {} do %>
-        <% if latest_request_review_action&.requester == current_user %>
-          <p class="govuk-body">You've sent this edition to be reviewed</p>
-          <% if current_user.skip_review? %>
-            <p class="govuk-body"><%= link_to("Skip review", skip_review_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
-          <% end %>
-        <% else %>
-          <p class="govuk-body"><%= latest_request_review_action&.requester&.name %> sent this edition to be reviewed</p>
-          <% if current_user.has_editor_permissions?(@edition) %>
-            <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
-            <p class="govuk-body"><%= link_to("No changes needed", no_changes_needed_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
-          <% end %>
-        <% end %>
-      <% end %>
-  <% elsif @edition.ready? || @edition.fact_check? %>
-      <% if current_user.has_editor_permissions?(@edition) %>
-        <%= render "govuk_publishing_components/components/inset_text", {} do %>
-          <% if @edition.fact_check? %>
-            <% latest_send_fact_check_action = @edition.latest_status_action(Action::SEND_FACT_CHECK) %>
-            <% if latest_send_fact_check_action&.requester == current_user %>
-              <p class="govuk-body">You've requested this edition to be fact checked. We're awaiting a response.</p>
+
+    <div
+      data-module="ga4-link-tracker"
+      data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+    >
+      <% if @edition.in_review? %>
+        <% latest_request_review_action = @edition.latest_status_action(Action::REQUEST_REVIEW) %>
+          <%= render "govuk_publishing_components/components/inset_text", {} do %>
+            <% if latest_request_review_action&.requester == current_user %>
+              <p class="govuk-body">You've sent this edition to be reviewed</p>
+              <% if current_user.skip_review? %>
+                <p class="govuk-body"><%= link_to("Skip review", skip_review_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
+              <% end %>
             <% else %>
-              <p class="govuk-body"><%= latest_send_fact_check_action&.requester&.name %> requested this edition to be fact checked.
-                We're awaiting a response.</p>
+              <p class="govuk-body"><%= latest_request_review_action&.requester&.name %> sent this edition to be reviewed</p>
+              <% if current_user.has_editor_permissions?(@edition) %>
+                <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
+                <p class="govuk-body"><%= link_to("No changes needed", no_changes_needed_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
+              <% end %>
             <% end %>
-            <p class="govuk-body"><%= link_to("Resend fact check email", resend_fact_check_email_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
           <% end %>
-          <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
+        </div>
+      <% elsif @edition.ready? || @edition.fact_check? %>
+        <% if current_user.has_editor_permissions?(@edition) %>
+          <%= render "govuk_publishing_components/components/inset_text", {} do %>
+            <% if @edition.fact_check? %>
+              <% latest_send_fact_check_action = @edition.latest_status_action(Action::SEND_FACT_CHECK) %>
+              <% if latest_send_fact_check_action&.requester == current_user %>
+                <p class="govuk-body">You've requested this edition to be fact checked. We're awaiting a response.</p>
+              <% else %>
+                <p class="govuk-body"><%= latest_send_fact_check_action&.requester&.name %> requested this edition to be fact checked.
+                  We're awaiting a response.</p>
+              <% end %>
+              <p class="govuk-body"><%= link_to("Resend fact check email", resend_fact_check_email_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
+            <% end %>
+            <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
+          <% end %>
+        <% end %>
+      <% elsif @edition.fact_check_received? %>
+        <% if current_user.has_editor_permissions?(@edition) %>
+          <%= render "govuk_publishing_components/components/inset_text", {} do %>
+            <p class="govuk-body">We have received a fact check response for this edition.</p>
+            <p class="govuk-body">Please check the response in History and notes and select an action below.</p>
+            <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
+            <p class="govuk-body"><%= link_to("No changes needed", approve_fact_check_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
+          <% end %>
         <% end %>
       <% end %>
-  <% elsif @edition.fact_check_received? %>
-      <% if current_user.has_editor_permissions?(@edition) %>
-        <%= render "govuk_publishing_components/components/inset_text", {} do %>
-          <p class="govuk-body">We have received a fact check response for this edition.</p>
-          <p class="govuk-body">Please check the response in History and notes and select an action below.</p>
-          <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
-          <p class="govuk-body"><%= link_to("No changes needed", approve_fact_check_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
-        <% end %>
-      <% end %>
-  <% end %>
+    </div>
   </div>
 </div>
 
