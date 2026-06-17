@@ -30,9 +30,9 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   Ga4FormSetup.prototype.addDataAttributes = function (form) {
     var section = form.closest('[data-ga4-section]').getAttribute('data-ga4-section')
     var toolName = form.closest('[data-ga4-tool-name]').getAttribute('data-ga4-tool-name')
-    var dataModule = form.dataset.module || null
     var type
     var eventData
+    var linkData
 
     if (form.querySelector('.gem-c-reorderable-list')) {
       type = 'reorder'
@@ -48,12 +48,9 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
       tool_name: toolName
     }
 
-    if (!form.querySelector('input[type="search"]')) {
-      if (dataModule) {
-        form.setAttribute('data-module', dataModule + ' ga4-form-tracker')
-      } else {
-        form.setAttribute('data-module', 'ga4-form-tracker')
-      }
+    linkData = {
+      event_name: 'navigation',
+      type: 'generic_link'
     }
 
     form.setAttribute('data-ga4-form-include-text', '')
@@ -61,7 +58,9 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     form.setAttribute('data-ga4-form-record-json', '')
     form.setAttribute('data-ga4-form-use-text-count', '')
     form.setAttribute('data-ga4-form-use-select-count', '')
+    form.setAttribute('data-ga4-limit-to-element-class', 'govuk-link')
     form.setAttribute('data-ga4-form', JSON.stringify(eventData))
+    form.setAttribute('data-ga4-link', JSON.stringify(linkData))
 
     // If the form contains date-input components add ga4-form-section data-attributes
     var dateInputs = form.querySelectorAll('.govuk-date-input')
