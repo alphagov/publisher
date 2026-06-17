@@ -43,7 +43,6 @@
               <% end %>
             <% end %>
           <% end %>
-        </div>
       <% elsif @edition.ready? || @edition.fact_check? %>
         <% if current_user.has_editor_permissions?(@edition) %>
           <%= render "govuk_publishing_components/components/inset_text", {} do %>
