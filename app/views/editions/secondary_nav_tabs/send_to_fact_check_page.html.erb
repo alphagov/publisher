@@ -13,7 +13,7 @@
         <% content_for :error_summary, render("shared/error_summary", { object: @form, full_messages: false }) %>
       <% end %>
 
-      <%= form_with model: @form, scope: :fact_check_request_form, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "", ga4_section: "Edit - #{title}" } do %>
+      <%= form_with model: @form, scope: :fact_check_request_form, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "ga4-form-tracker ga4-link-tracker", ga4_section: "Edit - #{title}" } do %>
 
         <%= render "govuk_publishing_components/components/input", {
           label: {
@@ -98,7 +98,7 @@
 
     <% else %>
 
-      <%= form_for(:edition, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "", ga4_section: "Edit - #{title}" }) do %>
+      <%= form_for(:edition, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "ga4-form-tracker ga4-link-tracker", ga4_section: "Edit - #{title}" }) do %>
           <%= render "govuk_publishing_components/components/input", {
             label: {
               heading_size: "m",

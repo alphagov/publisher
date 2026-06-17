@@ -1,5 +1,6 @@
 <% @edition = @resource %>
-<% content_for :title_context, @edition.title %>
+<% title = @edition.title %>
+<% content_for :title_context, title %>
 <% content_for :page_title, "Unpublish" %>
 <% content_for :title, "Unpublish" %>
 <div class="govuk-grid-row">
@@ -12,7 +13,7 @@
       text: "If you unpublish a page from GOV.UK it cannot be undone.",
     } %>
 
-    <%= form_for @edition, url: process_unpublish_edition_path(@edition), method: :post do %>
+    <%= form_for @edition, url: process_unpublish_edition_path(@edition), method: :post, data: { module: "ga4-form-tracker ga4-link-tracker", ga4_section: "Unpublish - #{title}" } do %>
       <%= hidden_field_tag :redirect_url, params[:redirect_url] %>
       <p class="govuk-body govuk-!-margin-bottom-7">Are you sure you want to unpublish this document?</p>
       <div class="govuk-button-group">

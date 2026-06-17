@@ -1,5 +1,6 @@
-<% content_for :page_title, "Edit popular links" %>
-<% content_for :title, "Edit popular links" %>
+<% title = "Edit popular links" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 <% content_for :title_context, "Popular on GOV.UK" %>
 <% unless @latest_popular_links.errors.empty? %>
   <% content_for :error_summary do %>
@@ -18,7 +19,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for @latest_popular_links, url: update_popular_links_path(@latest_popular_links), method: "patch" do |form| %>
+    <%= form_for @latest_popular_links, url: update_popular_links_path(@latest_popular_links), method: "patch", data: { module: "ga4-form-tracker ga4-link-tracker", ga4_section: "Popular links - #{title}" } do |form| %>
       <% @latest_popular_links.link_items.each_with_index do |item, index| %>
         <%= render "homepage/popular_links/form", item:, index:, form: %>
       <% end %>

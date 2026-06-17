@@ -60,7 +60,7 @@
     <% end %>
   </div>
 <% else %>
-  <%= form_for @resource, as: :edition, url: edition_path(@resource), data: {module: "unsaved-changes-prompt", ga4_section: "Edit - #{@resource.title}"} do %>
+  <%= form_for @resource, as: :edition, url: edition_path(@resource), data: {module: "unsaved-changes-prompt ga4-form-tracker ga4-link-tracker", ga4_section: "Edit - #{@resource.title}"} do %>
     <div class="govuk-grid-row edit--editable">
       <div class="govuk-grid-column-two-thirds">
         <%= render partial: "editions/secondary_nav_tabs/edit/editable/#{@resource.kind_for_artefact}", locals: { edition: @resource } %>
