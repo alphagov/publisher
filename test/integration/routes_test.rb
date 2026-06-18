@@ -1,6 +1,6 @@
-require "legacy_integration_test_helper"
+require "integration_test_helper"
 
-class RoutesTest < LegacyIntegrationTest
+class RoutesTest < IntegrationTest
   should "route to downtimes controller for edit downtime" do
     edition = FactoryBot.create(:edition)
     edition_id = edition.id.to_s
@@ -29,6 +29,13 @@ class RoutesTest < LegacyIntegrationTest
           should "route to editions controller" do
             assert_editions_controller
           end
+
+          should "route to artefacts controller" do
+            assert_routing("/artefacts/new", controller: "artefacts", action: "new")
+            assert_routing({ method: "post", path: "/artefacts/new/content-details" }, controller: "artefacts", action: "content_details")
+            assert_routing({ method: "post", path: "/artefacts" }, controller: "artefacts", action: "create")
+            assert_routing({ method: "patch", path: "/artefacts/#{@edition.id}" }, controller: "artefacts", action: "update", id: @edition.id)
+          end
         end
       end
     end
@@ -51,19 +58,15 @@ class RoutesTest < LegacyIntegrationTest
             assert_routing("/editions/#{@edition.id}/resend_fact_check_email_page", controller: "editions", action: "resend_fact_check_email_page", id: @edition.id.to_s)
             assert_routing({ method: "patch", path: "/editions/#{@edition.id}/resend_fact_check_email" }, controller: "editions", action: "resend_fact_check_email", id: @edition.id.to_s)
           end
+
+          should "route to artefacts controller" do
+            assert_routing("/artefacts/new", controller: "artefacts", action: "new")
+            assert_routing({ method: "post", path: "/artefacts/new/content-details" }, controller: "artefacts", action: "content_details")
+            assert_routing({ method: "post", path: "/artefacts" }, controller: "artefacts", action: "create")
+            assert_routing({ method: "patch", path: "/artefacts/#{@edition.id}" }, controller: "artefacts", action: "update", id: @edition.id)
+          end
         end
       end
-    end
-
-    should "route to artefacts controller" do
-      assert_routing("/artefacts/new", controller: "artefacts", action: "new")
-      assert_routing({ method: "post", path: "/artefacts/new/content-details" }, controller: "artefacts", action: "content_details")
-      assert_routing({ method: "post", path: "/artefacts" }, controller: "artefacts", action: "create")
-    end
-
-    should "route update to legacy_artefacts controller" do
-      edition = FactoryBot.create(:edition)
-      assert_routing({ method: "patch", path: "/artefacts/#{edition.id}" }, controller: "legacy_artefacts", action: "update", id: edition.id)
     end
 
     context "guide parts controller" do

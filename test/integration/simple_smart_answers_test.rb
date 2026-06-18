@@ -28,7 +28,15 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
 
   context "creating a new edition" do
     setup do
-      visit "/publications/#{@artefact.id}"
+      @edition = FactoryBot.create(
+        :simple_smart_answer_edition,
+        :draft,
+        title: "Can I get a driving licence?",
+        panopticon_id: @artefact.id,
+        slug: "can-i-get-a-driving-licence",
+        nodes: [],
+      )
+      visit edition_path(@artefact.latest_edition)
     end
 
     should "show the smart answer builder form with an initial question" do

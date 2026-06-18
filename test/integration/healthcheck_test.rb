@@ -1,6 +1,6 @@
-require "legacy_integration_test_helper"
+require "integration_test_helper"
 
-class HealthcheckTest < LegacyIntegrationTest
+class HealthcheckTest < IntegrationTest
   def json
     JSON.parse(response.body)
   end

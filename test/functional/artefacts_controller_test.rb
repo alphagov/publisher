@@ -83,6 +83,8 @@ class ArtefactsControllerTest < ActionController::TestCase
     should "redirect to the publication page if valid params passed" do
       login_as_govuk_editor
 
+      UpdateWorker.expects(:perform_async)
+
       post :create, params: { artefact: { kind: "answer", name: "Example name", slug: "example-name", language: "en" } }
 
       @artefact = Artefact.first
@@ -90,7 +92,7 @@ class ArtefactsControllerTest < ActionController::TestCase
       assert_equal 1, Edition.count
       assert_equal 1, AnswerEdition.count
 
-      assert_redirected_to publication_path(@artefact)
+      assert_redirected_to edition_path(@artefact.latest_edition)
     end
 
     should "create an artefact with the correct attributes" do
@@ -185,7 +187,7 @@ class ArtefactsControllerTest < ActionController::TestCase
         FactoryBot.create(:local_service, lgsl_code: 1)
       end
 
-      should "create artefact and child records and redirect to the publication page if valid params passed" do
+      should "create artefact and child records and redirect to the edition page if valid params passed" do
         login_as_govuk_editor
 
         post :create, params: { artefact: { kind: "local_transaction", name: "Example name", slug: "example-name", language: "en" },
@@ -195,7 +197,7 @@ class ArtefactsControllerTest < ActionController::TestCase
         assert_equal 1, Artefact.count
         assert_equal 1, Edition.count
         assert_equal 1, LocalTransactionEdition.count
-        assert_redirected_to publication_path(@artefact)
+        assert_redirected_to edition_path(@artefact.latest_edition)
       end
 
       should "create a local transaction with the correct attributes" do
@@ -249,6 +251,55 @@ class ArtefactsControllerTest < ActionController::TestCase
         assert_equal 0, LocalTransactionEdition.count
 
         assert_template :content_details
+      end
+    end
+  end
+
+  context "#update" do
+    # Run these tests against a Legacy Bootstrap and a Design System content type. Both should use the same ArtefactsController
+    # TODO: When SimpleSmartAnswerEdition is migrated to Design System, this duplication can be removed
+    %i[simple_smart_answer_edition answer_edition].each do |kind|
+      setup do
+        @edition = FactoryBot.create(kind)
+        @welsh_edition = FactoryBot.create(kind, :fact_check, :welsh)
+      end
+
+      should "allow update if govuk_editor for #{kind.to_s.humanize.downcase}" do
+        login_as_govuk_editor
+
+        patch :update, params: {
+          id: @edition.artefact.id,
+          artefact: {
+            id: @edition.artefact.id,
+            slug: @edition.artefact.slug,
+            language: "en",
+          },
+        }
+
+        assert_response :redirect
+        assert_redirected_to metadata_edition_path(@edition.id)
+        assert_equal "Metadata has successfully updated", flash[:success]
+      end
+
+      should "not allow update even if welsh_editor and Welsh edition for #{kind.to_s.humanize.downcase}" do
+        login_as_welsh_editor
+
+        patch :update, params: { id: @welsh_edition.artefact.id }
+
+        assert_response :redirect
+        assert_redirected_to metadata_edition_path(@welsh_edition.id)
+        assert_includes flash[:danger], "You do not have permissions to update this page"
+      end
+
+      should "not allow update if no editor permissions for #{kind.to_s.humanize.downcase}" do
+        user = FactoryBot.create(:user, name: "Non-editor")
+        login_as(user)
+
+        patch :update, params: { id: @edition.artefact.id }
+
+        assert_response :redirect
+        assert_redirected_to metadata_edition_path(@edition.id)
+        assert_includes flash[:danger], "You do not have permissions to update this page"
       end
     end
   end

@@ -19,9 +19,8 @@ Rails.application.routes.draw do
 
   get "downtimes" => "downtimes#index"
 
-  resources :artefacts, only: %i[create new]
+  resources :artefacts, only: %i[create update new]
   post "artefacts/new/content-details", to: "artefacts#content_details", as: :new_artefact_content_details
-  resources :artefacts, controller: "legacy_artefacts", only: %i[update]
 
   constraints NewDesignSystemConstraint.new do
     resources :editions do
@@ -156,8 +155,6 @@ Rails.application.routes.draw do
 
   post "/link-checker-api-callback" => "link_checker_api#callback", as: "link_checker_api_callback"
   get "api/lookup-by-base-path", to: "publishing_api_proxy#lookup_by_base_path"
-
-  resources :publications
 
   root to: redirect("/my-content")
   get "my-content", to: "filtered_editions#my_content"
