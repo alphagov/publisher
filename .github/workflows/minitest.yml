@@ -29,20 +29,20 @@ jobs:
         uses: alphagov/govuk-infrastructure/.github/actions/setup-redis@main
 
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
         with:
           repository: alphagov/publisher
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Checkout Publishing API (for Content Schemas)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
         with:
           repository: alphagov/publishing-api
           ref: ${{ inputs.publishingApiRef }}
           path: vendor/publishing-api
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.312.0
+        uses: ruby/setup-ruby@v1.313.0
         with:
           bundler-cache: true
 
