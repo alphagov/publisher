@@ -51,4 +51,46 @@ namespace :permissions do
       log_file.close
     end
   end
+
+  desc "Remove an organisation from an document's access permissions list"
+  task :remove_organisation_access, %i[document_content_id org_content_id] => :environment do |_, args|
+    document = Artefact.find_by(id: args[:document_content_id])
+
+    if document.nil?
+      message = "Document not found, no permissions changed."
+    elsif !document.latest_edition.owning_org_content_ids.include?(args[:org_content_id])
+      message = "Organisation with ID #{args[:organisation_id]} did not have access to document with ID - #{document.id} no change made"
+    else
+      Edition.where(panopticon_id: document.id).each do |edition|
+        edition.owning_org_content_ids.delete(args[:org_content_id])
+        edition.save!(validate: false)
+      end
+      document.save_as_task!("PermissionsRemoval")
+      message = "Access permission for successfully removed for the organisation with ID #{args[:organisation_id]} from document with ID - #{document.id}"
+    end
+    puts message
+  rescue Mongoid::Errors::DocumentNotFound => e
+    error_message = "An error occurred while processing document with ID #{args[:document_content_id]}: #{e.message}"
+    puts error_message
+  end
+
+  desc "Remove all access permissions from an document"
+  task :remove_all_access_flags, %i[document_content_id] => :environment do |_, args|
+    document = Artefact.find_by(id: args[:document_content_id])
+
+    if document.nil?
+      message = "Document not found, no permissions changed."
+    else
+      Edition.where(panopticon_id: document.id).each do |edition|
+        edition.owning_org_content_ids.clear
+        edition.save!(validate: false)
+      end
+      document.save_as_task!("PermissionsClear")
+      message = "All access permissions for all organisations successfully removed from document with ID - #{document.id}"
+    end
+    puts message
+  rescue Mongoid::Errors::DocumentNotFound => e
+    error_message = "An error occurred while processing document with ID #{args[:document_content_id]}: #{e.message}"
+    puts error_message
+  end
 end
