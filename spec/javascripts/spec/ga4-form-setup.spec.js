@@ -6,7 +6,7 @@ describe('GA4FormSetup', function () {
   beforeEach(function () {
     var moduleHtml =
       `<div data-module="ga4-form-setup" data-ga4-section="The section name" data-ga4-tool-name="Answer">
-        <form data-module="">
+        <form>
           <fieldset>
             <legend>Some date</legend>
             <div class="govuk-date-input"></div>
@@ -22,11 +22,8 @@ describe('GA4FormSetup', function () {
             </fieldset>
           </div>
         </form>
-        <form data-module="some-other-module">
-          <div class="gem-c-reorderable-list"></div>
-        </form>
         <form>
-          <input type="search">
+          <div class="gem-c-reorderable-list"></div>
         </form>
       </div>`
 
@@ -43,35 +40,21 @@ describe('GA4FormSetup', function () {
   })
 
   describe('when loaded', function () {
-    var form, formGA4Data, formEventData
-
-    it('adds/updates the "data-module" parameter of the form', function () {
-      form = module.querySelectorAll('form')[0]
-      formGA4Data = form.dataset
-
-      expect(formGA4Data.module).toBe('ga4-form-tracker')
-
-      form = module.querySelectorAll('form')[1]
-      formGA4Data = form.dataset
-
-      expect(formGA4Data.module).toBe('some-other-module ga4-form-tracker')
-
-      form = module.querySelectorAll('form')[2]
-      formGA4Data = form.dataset
-
-      expect(formGA4Data.module).toBe(undefined)
-    })
+    var form, formGA4Data, formEventData, linkEventData
 
     it('adds the correct parameters to the form', function () {
       form = module.querySelectorAll('form')[0]
       formGA4Data = form.dataset
       formEventData = JSON.parse(formGA4Data.ga4Form)
+      linkEventData = JSON.parse(formGA4Data.ga4Link)
 
       expect(formEventData.action).toBe('Save')
       expect(formEventData.event_name).toBe('form_response')
       expect(formEventData.section).toBe('The section name')
       expect(formEventData.tool_name).toBe('Answer')
       expect(formEventData.type).toBe('edit')
+      expect(linkEventData.event_name).toBe('navigation')
+      expect(linkEventData.type).toBe('generic_link')
       expect(Object.keys(formGA4Data)).toContain('ga4FormIncludeText')
       expect(Object.keys(formGA4Data)).toContain('ga4FormChangeTracking')
       expect(Object.keys(formGA4Data)).toContain('ga4FormRecordJson')

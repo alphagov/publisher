@@ -9,7 +9,7 @@
       </p>
     <% end %>
 
-    <%= form_for(:edition, url: form_url, data: { module: "", ga4_section: "Edit - #{title}" }) do %>
+    <%= form_for(:edition, url: form_url, data: { module: "ga4-form-tracker ga4-link-tracker", ga4_section: "Edit - #{title}" }) do %>
       <%= render "govuk_publishing_components/components/textarea", {
         label: {
           heading_size: "m",

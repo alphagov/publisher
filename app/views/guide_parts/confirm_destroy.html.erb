@@ -1,6 +1,7 @@
+<% title = "Delete chapter" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Delete chapter" %>
-<% content_for :title, "Delete chapter" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -10,7 +11,7 @@
 
     <%= render "govuk_publishing_components/components/warning_text", { text: "Deleting this chapter will permanently remove it." } %>
 
-    <%= form_for @part, url: edition_guide_part_path(@edition, @part), method: :delete do %>
+    <%= form_for @part, url: edition_guide_part_path(@edition, @part), method: :delete, data: { module: "ga4-form-tracker ga4-link-tracker", ga4_section: "Edit - #{title}" } do %>
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
           text: "Delete chapter",

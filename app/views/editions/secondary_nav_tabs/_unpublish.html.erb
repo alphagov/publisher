@@ -9,7 +9,7 @@
       text: "If you unpublish a page from GOV.UK it cannot be undone.",
     } %>
 
-    <%= form_for @edition, url: confirm_unpublish_edition_path, method: "get", data: { module: "", ga4_section: title } do |f| %>
+    <%= form_for @edition, url: confirm_unpublish_edition_path, method: "get", data: { module: "ga4-form-tracker", ga4_section: title } do |f| %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
           text: "Redirect to URL",

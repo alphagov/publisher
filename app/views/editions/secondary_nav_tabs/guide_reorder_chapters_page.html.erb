@@ -1,6 +1,7 @@
+<% title = "Reorder chapters" %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Reorder chapters" %>
-<% content_for :title, "Reorder chapters" %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 
 <% unless @edition.errors.empty? %>
   <% content_for :error_summary do %>
@@ -9,7 +10,7 @@
 <% end %>
 
 <div class="govuk-grid-row">
-  <%= form_with url: bulk_update_reorder_edition_guide_parts_path(@edition), data: { module: "unsaved-changes-prompt" } do %>
+  <%= form_with url: bulk_update_reorder_edition_guide_parts_path(@edition), data: { module: "unsaved-changes-prompt ga4-form-tracker ga4-link-tracker", ga4_section: "Edit - #{title}" } do %>
     <div class="govuk-grid-column-two-thirds">
       <p class="govuk-hint">Use the up and down buttons to reorder chapters, or select and hold on an item to reorder using drag and drop</p>
 

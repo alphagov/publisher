@@ -4,7 +4,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= header_for(title) %>
     <% if current_user.has_editor_permissions?(@resource) %>
-      <%= form_for @edition.artefact, url: update_related_external_links_edition_path(@resource), data: {module: "unsaved-changes-prompt", ga4_section: title} do %>
+      <%= form_for @edition.artefact, url: update_related_external_links_edition_path(@resource), data: {module: "unsaved-changes-prompt ga4-form-tracker ga4-link-tracker", ga4_section: title} do %>
         <%
           if @edition.artefact.external_links.count == 0
             items = []

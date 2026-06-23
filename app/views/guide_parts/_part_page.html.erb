@@ -26,7 +26,7 @@
   </div>
 </div>
 
-<%= form_with url: form_url, method: form_method, data: { module: "unsaved-changes-prompt" } do %>
+<%= form_with url: form_url, method: form_method, data: { module: "unsaved-changes-prompt ga4-form-tracker ga4-link-tracker", ga4_section: "Edit - #{title}" } do %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div data-module="slug-autofill" data-title-input-id="part_title" data-slug-input-id="part_slug">
@@ -70,7 +70,11 @@
 
     <% if current_user.has_editor_permissions?(edition) %>
       <div class="govuk-grid-column-one-third options-sidebar">
-        <div class="sidebar-components">
+        <div
+          class="sidebar-components"
+          data-module="ga4-link-tracker"
+          data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+        >
           <%= sidebar_options_heading %>
           <%= sidebar_items_list(guide_chapter_sidebar_buttons(edition, part)) %>
         </div>
