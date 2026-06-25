@@ -535,7 +535,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
     end
   end
 
-  context "Send to fact check page" do
+  context "Send to fact check page (without Fact check manager api)" do
     setup do
       stub_holidays_used_by_fact_check
       @edition.state = "ready"
@@ -573,6 +573,147 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "{\"Email addresses\":\"28\",\"Customised message\":\"12\"}", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "edit", event_data[2]["type"]
+    end
+  end
+
+  context "Send to fact check page (with Fact check manager api)" do
+    setup do
+      today = Date.parse("2025-10-29")
+      @test_strategy.switch!(:fact_check_manager_api, true)
+      stub_holidays_used_by_fact_check
+      @edition.state = "ready"
+      @edition.save!
+
+      Timecop.freeze(today) do
+        visit send_to_fact_check_page_edition_path(@edition.id)
+      end
+    end
+
+    should "push the correct values to the dataLayer when user interacts with the form" do
+      disable_form_submit
+      disable_links
+
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Reason for change (optional)", with: "Some reason"
+      fill_in "Zendesk ticket number (optional)", with: "1234567"
+      fill_in "Day", with: "1"
+      fill_in "Month", with: "11"
+      fill_in "Year", with: "2025"
+      click_link "Cancel"
+      click_button "Send for fact check"
+
+      event_data = get_event_data
+
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "4", event_data[0]["index"]["index_section_count"]
+      assert_equal "Email addresses", event_data[0]["section"]
+      assert_equal "28", event_data[0]["text"]
+
+      assert_equal "select", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "2", event_data[1]["index"]["index_section"]
+      assert_equal "4", event_data[1]["index"]["index_section_count"]
+      assert_equal "Reason for change (optional)", event_data[1]["section"]
+      assert_equal "11", event_data[1]["text"]
+
+      assert_equal "select", event_data[2]["action"]
+      assert_equal "select_content", event_data[2]["event_name"]
+      assert_equal "3", event_data[2]["index"]["index_section"]
+      assert_equal "4", event_data[2]["index"]["index_section_count"]
+      assert_equal "Zendesk ticket number (optional)", event_data[2]["section"]
+      assert_equal "7", event_data[2]["text"]
+
+      assert_equal "select", event_data[3]["action"]
+      assert_equal "select_content", event_data[3]["event_name"]
+      assert_equal "4", event_data[3]["index"]["index_section"]
+      assert_equal "4", event_data[3]["index"]["index_section_count"]
+      assert_equal "Deadline", event_data[3]["section"]
+      assert_equal "1/11/2025", event_data[3]["text"]
+
+      assert_equal "navigation", event_data[4]["event_name"]
+      assert_equal "false", event_data[4]["external"]
+      assert_equal "Cancel", event_data[4]["text"]
+      assert_equal current_host, event_data[4]["link_domain"]
+      assert_equal "primary click", event_data[4]["method"]
+      assert_equal "generic_link", event_data[4]["type"]
+      assert_equal "/editions/#{@edition.id}", event_data[4]["url"]
+
+      assert_equal "Save", event_data[5]["action"]
+      assert_equal "form_response", event_data[5]["event_name"]
+      assert_equal "Edit - Send to fact check", event_data[5]["section"]
+      assert_equal "{\"Email addresses\":\"28\",\"Reason for change (optional)\":\"11\",\"Zendesk ticket number (optional)\":\"7\",\"Deadline - Day\":\"1\",\"Deadline - Month\":\"11\",\"Deadline - Year\":\"2025\"}", event_data[5]["text"]
+      assert_equal "Answer", event_data[5]["tool_name"]
+      assert_equal "edit", event_data[5]["type"]
+    end
+
+    should "push the correct form_error values to the dataLayer when user enters blank/non-digit/blank values" do
+      fill_in "Email addresses", with: ""
+      fill_in "Zendesk ticket number (optional)", with: "abcdefg"
+      fill_in "Day", with: ""
+      fill_in "Month", with: ""
+      fill_in "Year", with: ""
+      click_button "Send for fact check"
+
+      assert page.has_css?("h2", text: "There is a problem")
+
+      event_data = get_event_data
+
+      assert_equal "error", event_data[0]["action"]
+      assert_equal "form_error", event_data[0]["event_name"]
+      assert_equal "Email addresses", event_data[0]["section"]
+      assert_equal "Enter one or more email addresses", event_data[0]["text"]
+      assert_equal "Answer", event_data[0]["tool_name"]
+      assert_equal "Edit edition", event_data[0]["type"]
+
+      assert_equal "error", event_data[1]["action"]
+      assert_equal "form_error", event_data[1]["event_name"]
+      assert_equal "Zendesk number", event_data[1]["section"]
+      assert_equal "Zendesk number must be a number at least 7 digits long", event_data[1]["text"]
+      assert_equal "Answer", event_data[1]["tool_name"]
+      assert_equal "Edit edition", event_data[1]["type"]
+
+      assert_equal "error", event_data[2]["action"]
+      assert_equal "form_error", event_data[2]["event_name"]
+      assert_equal "Deadline", event_data[2]["section"]
+      assert_equal "Enter a deadline", event_data[2]["text"]
+      assert_equal "Answer", event_data[2]["tool_name"]
+      assert_equal "Edit edition", event_data[2]["type"]
+    end
+
+    should "push the correct form_error values to the dataLayer when user enters invalid/short/out-of-range values" do
+      fill_in "Email addresses", with: "invalid.email.address"
+      fill_in "Zendesk ticket number (optional)", with: "123456"
+      fill_in "Day", with: "28"
+      fill_in "Month", with: "9"
+      fill_in "Year", with: "2024"
+      click_button "Send for fact check"
+
+      assert page.has_css?("h2", text: "There is a problem")
+
+      event_data = get_event_data
+
+      assert_equal "error", event_data[0]["action"]
+      assert_equal "form_error", event_data[0]["event_name"]
+      assert_equal "Zendesk number", event_data[0]["section"]
+      assert_equal "Zendesk number must be a number at least 7 digits long", event_data[0]["text"]
+      assert_equal "Answer", event_data[0]["tool_name"]
+      assert_equal "Edit edition", event_data[0]["type"]
+
+      assert_equal "error", event_data[1]["action"]
+      assert_equal "form_error", event_data[1]["event_name"]
+      assert_equal "Email addresses", event_data[1]["section"]
+      assert_equal "Email addresses are invalid", event_data[1]["text"]
+      assert_equal "Answer", event_data[1]["tool_name"]
+      assert_equal "Edit edition", event_data[1]["type"]
+
+      assert_equal "error", event_data[2]["action"]
+      assert_equal "form_error", event_data[2]["event_name"]
+      assert_equal "Deadline", event_data[2]["section"]
+      assert_equal "The date must be today or up to 30 days in the future", event_data[2]["text"]
+      assert_equal "Answer", event_data[2]["tool_name"]
+      assert_equal "Edit edition", event_data[2]["type"]
     end
   end
 
