@@ -1,40 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "2cee65ee3ed052192ee50380a02fcd7c1a9d9f81e3a8f0dee8f656fb473e75ff",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/legacy_root/index.html.erb",
-      "line": 60,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => (params[:list] or \"drafts\"), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "LegacyRootController",
-          "method": "index",
-          "line": 20,
-          "file": "app/controllers/legacy_root_controller.rb",
-          "rendered": {
-            "name": "legacy_root/index",
-            "file": "app/views/legacy_root/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "legacy_root/index"
-      },
-      "user_input": "params[:list]",
-      "confidence": "High",
-      "cwe_id": [
-        22
-      ],
-      "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
-    },
-    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "3ce172087408945a462430f52e5bd728ae414d568f019a3a40528121eb9ebb98",
@@ -58,40 +24,6 @@
       "note": ""
     },
     {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "5da50023d480fee0db69426e97c68a6172b789a65999b5707297aafe8f52fd4a",
-      "check_name": "Send",
-      "message": "User controlled method execution",
-      "file": "app/views/root/index.html.erb",
-      "line": 61,
-      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "@presenter.send((params[:list] or \"drafts\"))",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "RootController",
-          "method": "index",
-          "line": 22,
-          "file": "app/controllers/root_controller.rb",
-          "rendered": {
-            "name": "root/index",
-            "file": "app/views/root/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "root/index"
-      },
-      "user_input": "params[:list]",
-      "confidence": "High",
-      "cwe_id": [
-        77
-      ],
-      "note": ""
-    },
-    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "8ec2ee49ee9801f75874d4cfa9682cdf88ea4c2e15cd52d9d307670c20a3ee37",
@@ -111,40 +43,6 @@
       "confidence": "Weak",
       "cwe_id": [
         601
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "972b67892903c561dbc192a9853832a24d38fc90f496041960d1b6801bf8b556",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/root/index.html.erb",
-      "line": 60,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => (params[:list] or \"drafts\"), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "RootController",
-          "method": "index",
-          "line": 22,
-          "file": "app/controllers/root_controller.rb",
-          "rendered": {
-            "name": "root/index",
-            "file": "app/views/root/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "root/index"
-      },
-      "user_input": "params[:list]",
-      "confidence": "High",
-      "cwe_id": [
-        22
       ],
       "note": ""
     },
@@ -282,42 +180,7 @@
         601
       ],
       "note": ""
-    },
-    {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "d114390670b08cfb4120b6e65b5b2374a0f266a3ae14b5d5630cefd811e2e110",
-      "check_name": "Send",
-      "message": "User controlled method execution",
-      "file": "app/views/legacy_root/index.html.erb",
-      "line": 61,
-      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "@presenter.send((params[:list] or \"drafts\"))",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "LegacyRootController",
-          "method": "index",
-          "line": 20,
-          "file": "app/controllers/legacy_root_controller.rb",
-          "rendered": {
-            "name": "legacy_root/index",
-            "file": "app/views/legacy_root/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "legacy_root/index"
-      },
-      "user_input": "params[:list]",
-      "confidence": "High",
-      "cwe_id": [
-        77
-      ],
-      "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
     }
   ],
-  "updated": "2024-07-11 13:48:45 +0000",
-  "brakeman_version": "6.1.2"
+  "brakeman_version": "8.0.4"
 }
