@@ -52,7 +52,7 @@
     font-weight: 400;
     margin-bottom: govuk-spacing(1);
     margin-top: govuk-spacing(1);
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
 
     &::before {
       content: open-quote;
