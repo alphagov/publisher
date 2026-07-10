@@ -20,7 +20,7 @@ class GdsApi::FactCheckManager < GdsApi::Base
   #   If a new part has been added to the document, do not provide its ID in previous_content.
   # @param [string] deadline Date a response is requested by. Use iso8601 date format: "2026-02-09"
   # @option [string] reason_for_change optional free-text response of why the change has been made, to populate the notification email. Line breaks are retained.
-  # @option [integer] zendesk_number optional number for zendesk ticket linked to the change
+  # @option [string] zendesk_number optional string of digits for the zendesk ticket linked to the change
   # @option [uuid] draft_auth_bypass_id The edition's auth_bypass_id for draft origin preview access
   # @option [uuid] draft_content_id The edition's content_id for draft origin preview access
   # @option [string] draft_slug The edition's slug for the draft origin preview URL path
