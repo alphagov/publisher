@@ -670,7 +670,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "error", event_data[1]["action"]
       assert_equal "form_error", event_data[1]["event_name"]
       assert_equal "Zendesk number", event_data[1]["section"]
-      assert_equal "Zendesk number must be a number at least 7 digits long", event_data[1]["text"]
+      assert_equal "Zendesk ticket number must be at least 7 digits long", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "Edit edition", event_data[1]["type"]
 
@@ -697,7 +697,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "error", event_data[0]["action"]
       assert_equal "form_error", event_data[0]["event_name"]
       assert_equal "Zendesk number", event_data[0]["section"]
-      assert_equal "Zendesk number must be a number at least 7 digits long", event_data[0]["text"]
+      assert_equal "Zendesk ticket number must be at least 7 digits long", event_data[0]["text"]
       assert_equal "Answer", event_data[0]["tool_name"]
       assert_equal "Edit edition", event_data[0]["type"]
 

@@ -163,7 +163,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert_equal "ready", @ready_edition.state
-      assert page.has_text?("Zendesk number must be a number at least 7 digits long")
+      assert page.has_text?("Zendesk ticket number must be at least 7 digits long")
     end
   end
 
