@@ -378,7 +378,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (8.0.0)
       railties (>= 3.2.16)
-    json (2.20.0)
+    json (2.21.1)
     json-schema (6.2.0)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
@@ -730,7 +730,7 @@ GEM
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
-    rails-erd (2.0.2)
+    rails-erd (2.1.0)
       activerecord (>= 7.0)
       activesupport (>= 7.0)
       choice (~> 0.2.0)
