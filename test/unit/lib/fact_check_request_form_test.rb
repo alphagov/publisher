@@ -16,13 +16,6 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
     context "validations on :send" do
       should validate_presence_of(:email_addresses).on(:send).with_message("Enter one or more email addresses")
 
-      should validate_numericality_of(:zendesk_number)
-               .only_integer
-               .is_greater_than(999_999)
-               .with_message("Zendesk number must be a number at least 7 digits long")
-               .allow_nil
-               .on(:send)
-
       should_not validate_presence_of(:zendesk_number).on(:send)
       should_not validate_presence_of(:reason_for_change).on(:send)
     end
@@ -95,6 +88,65 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
         assert_not @form.valid?(:send)
         assert_not_empty @form.errors[:email_addresses]
         assert_includes @form.errors[:email_addresses], "Email addresses are invalid"
+      end
+    end
+
+    context "#valid_zendesk_number" do
+      should "be valid when the zendesk number is 7 or more digits" do
+        %w[1234567 12345678 1234567890].each do |zendesk_number|
+          @form.zendesk_number = zendesk_number
+
+          assert @form.valid?(:send), "Expected #{zendesk_number} to be valid"
+          assert_empty @form.errors[:zendesk_number]
+        end
+      end
+
+      should "be valid when the zendesk number is blank" do
+        [nil, "", "   "].each do |zendesk_number|
+          @form.zendesk_number = zendesk_number
+
+          assert @form.valid?(:send)
+          assert_empty @form.errors[:zendesk_number]
+        end
+      end
+
+      should "strip a leading # from the zendesk number" do
+        @form.zendesk_number = "#1234567"
+
+        assert @form.valid?(:send)
+        assert_equal "1234567", @form.zendesk_number
+      end
+
+      should "strip surrounding whitespace from the zendesk number" do
+        [" 1234567 ", " #1234567", "# 1234567"].each do |zendesk_number|
+          @form.zendesk_number = zendesk_number
+
+          assert @form.valid?(:send), "Expected '#{zendesk_number}' to be valid"
+          assert_equal "1234567", @form.zendesk_number
+        end
+      end
+
+      should "raise an error when the zendesk number is fewer than 7 digits" do
+        @form.zendesk_number = "123456"
+
+        assert_not @form.valid?(:send)
+        assert_includes @form.errors[:zendesk_number], "Zendesk ticket number must be at least 7 digits long"
+      end
+
+      should "raise an error when the zendesk number contains non-digit characters" do
+        %w[123invalid4 notanumber 12345.67 -1234567 1234567# 123#4567].each do |zendesk_number|
+          @form.zendesk_number = zendesk_number
+
+          assert_not @form.valid?(:send), "Expected #{zendesk_number} to be invalid"
+          assert_includes @form.errors[:zendesk_number], "Zendesk ticket number must be at least 7 digits long"
+        end
+      end
+
+      should "raise an error when the zendesk number starts with zero" do
+        @form.zendesk_number = "0123456"
+
+        assert_not @form.valid?(:send)
+        assert_includes @form.errors[:zendesk_number], "Zendesk ticket numbers cannot start with zero"
       end
     end
 

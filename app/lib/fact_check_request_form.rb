@@ -12,20 +12,22 @@ class FactCheckRequestForm
   attribute :deadline_2i, :string
   attribute :deadline_3i, :string
   attribute :reason_for_change, :string, default: nil
-  # If this is typecast to integer, then non-integer values would be cast to 0 and accepted. Numericality handles non-int strings.
   attribute :zendesk_number, :string, default: nil
 
   validates :email_addresses, presence: { message: "Enter one or more email addresses" }, on: :send
-  validates :zendesk_number, numericality: { only_integer: true,
-                                             greater_than: 999_999,
-                                             message: "Zendesk number must be a number at least 7 digits long",
-                                             allow_blank: true }, on: :send
 
+  validate :valid_zendesk_number, on: :send
   validate :valid_email_addresses, on: :send
   validate :deadline_in_range, on: :send
   validate :deadline_present, on: :send
 
   EMAIL_REGEX = /\A[\w+\-%.']+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/
+  ZENDESK_NUMBER_REGEX = /\A\d{7,}\z/
+
+  def zendesk_number=(value)
+    value = value.strip.delete_prefix("#").strip if value.is_a?(String)
+    super
+  end
 
   def deadline
     return unless deadline_1i.present? && deadline_2i.present? && deadline_3i.present?
@@ -84,6 +86,16 @@ private
 
     if split_email_addresses.any? { |address| !address.to_s.strip.match?(EMAIL_REGEX) }
       errors.add(:email_addresses, "Email addresses are invalid")
+    end
+  end
+
+  def valid_zendesk_number
+    return if zendesk_number.blank?
+
+    if !zendesk_number.match?(ZENDESK_NUMBER_REGEX)
+      errors.add(:zendesk_number, "Zendesk ticket number must be at least 7 digits long")
+    elsif zendesk_number.start_with?("0")
+      errors.add(:zendesk_number, "Zendesk ticket numbers cannot start with zero")
     end
   end
 

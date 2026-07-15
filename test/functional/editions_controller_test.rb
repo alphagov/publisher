@@ -1268,7 +1268,7 @@ class EditionsControllerTest < ActionController::TestCase
 
           assert_template "secondary_nav_tabs/send_to_fact_check_page"
           assert_template "govuk_publishing_components/components/_error_summary"
-          assert_select ".gem-c-error-summary__list-item", "Zendesk number must be a number at least 7 digits long"
+          assert_select ".gem-c-error-summary__list-item", "Zendesk ticket number must be at least 7 digits long"
           edition.reload
           assert_equal "ready", edition.state
         end
