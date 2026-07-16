@@ -352,7 +352,7 @@ GEM
     hashdiff (1.2.1)
     hashie (5.1.0)
       logger
-    html2text (0.4.0)
+    html2text (0.5.0)
       nokogiri (>= 1.0, < 2.0)
     htmlentities (4.4.2)
     http-accept (1.7.0)
