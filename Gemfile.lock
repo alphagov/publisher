@@ -152,8 +152,8 @@ GEM
       minitest (~> 5.0)
     climate_control (1.2.0)
     coderay (1.1.3)
-    concurrent-ruby (1.3.7)
-    connection_pool (2.5.5)
+    concurrent-ruby (1.3.8)
+    connection_pool (3.0.2)
     content_block_tools (1.14.1)
       actionview (>= 6, < 8.1.4)
       gds-api-adapters (>= 101.0)
@@ -208,7 +208,7 @@ GEM
       dry-initializer (~> 3.2)
       dry-schema (~> 1.14)
       zeitwerk (~> 2.6)
-    erb (6.0.4)
+    erb (6.0.6)
     erb_lint (0.9.0)
       activesupport
       better_html (>= 2.0.1)
@@ -239,7 +239,7 @@ GEM
     flipflop (2.8.0)
       activesupport (>= 4.0)
       terminal-table (>= 1.8)
-    gds-api-adapters (103.3.1)
+    gds-api-adapters (103.4.0)
       addressable
       link_header
       null_logger
@@ -335,11 +335,11 @@ GEM
       sprockets-rails
     govuk_schemas (6.3.2)
       json-schema (>= 2.8, < 6.3)
-    govuk_sidekiq (11.1.2)
+    govuk_sidekiq (12.0.0)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
       redis-client (>= 0.22.2)
-      sidekiq (~> 7.0, < 8)
+      sidekiq (>= 8.1.1, < 9)
     govuk_test (4.1.3)
       brakeman (>= 5.0.2)
       capybara (>= 3.36)
@@ -430,7 +430,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2026.0414)
+    mime-types-data (3.2026.0701)
     mini_mime (1.1.5)
     minitest (5.27.0)
     minitest-reporters (1.8.0)
@@ -487,7 +487,7 @@ GEM
     omniauth-oauth2 (1.9.0)
       oauth2 (>= 2.0.2, < 3)
       omniauth (~> 2.0)
-    opentelemetry-api (1.10.1)
+    opentelemetry-api (1.11.0)
       logger
     opentelemetry-common (0.25.1)
       opentelemetry-api (~> 1.0)
@@ -520,7 +520,7 @@ GEM
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-active_storage (0.5.1)
       opentelemetry-instrumentation-active_support (~> 0.10)
-    opentelemetry-instrumentation-active_support (0.12.0)
+    opentelemetry-instrumentation-active_support (0.12.1)
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-all (0.94.0)
       opentelemetry-instrumentation-active_model_serializers (~> 0.25.0)
@@ -654,7 +654,7 @@ GEM
       opentelemetry-semantic_conventions (>= 1.8.0)
     opentelemetry-registry (0.6.3)
       opentelemetry-api (~> 1.1)
-    opentelemetry-sdk (1.12.1)
+    opentelemetry-sdk (1.13.0)
       logger
       opentelemetry-api (~> 1.1)
       opentelemetry-common (~> 0.20)
@@ -752,7 +752,7 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.4.2)
-    rbs (4.0.3)
+    rbs (4.1.0)
       logger
       prism (>= 1.6.0)
       tsort
@@ -763,7 +763,7 @@ GEM
       tsort
     redis (5.4.1)
       redis-client (>= 0.22.0)
-    redis-client (0.30.0)
+    redis-client (0.30.1)
       connection_pool
     regexp_parser (2.12.0)
     reline (0.6.3)
@@ -866,12 +866,12 @@ GEM
     shoulda-context (2.0.0)
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
-    sidekiq (7.3.10)
-      base64
-      connection_pool (>= 2.3.0, < 3)
-      logger
-      rack (>= 2.2.4, < 3.3)
-      redis-client (>= 0.23.0, < 1)
+    sidekiq (8.1.6)
+      connection_pool (>= 3.0.0)
+      json (>= 2.16.0)
+      logger (>= 1.7.0)
+      rack (>= 3.2.0)
+      redis-client (>= 0.29.0)
     signet (0.22.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
@@ -1004,7 +1004,6 @@ DEPENDENCIES
   select2-rails (~> 3.5.9)
   sentry-sidekiq
   shoulda
-  sidekiq (< 8)
   simplecov
   sprockets-rails
   state_machines
