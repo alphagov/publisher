@@ -1004,7 +1004,6 @@ DEPENDENCIES
   select2-rails (~> 3.5.9)
   sentry-sidekiq
   shoulda
-  sidekiq (< 8)
   simplecov
   sprockets-rails
   state_machines
