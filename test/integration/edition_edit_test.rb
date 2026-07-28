@@ -136,9 +136,9 @@ class EditionEditTest < IntegrationTest
           visit edition_path(@draft_edition)
 
           within :css, ".govuk-notification-banner" do
-            assert page.has_text?("Important")
+            assert page.has_text?("Important note")
             assert page.has_text?(@note_text)
-            assert page.has_text?("#{@govuk_editor.name} added an important note on #{Time.zone.today.to_date.to_fs(:govuk_date)}")
+            assert page.has_text?("#{@govuk_editor.name}, #{Time.zone.today.to_date.to_fs(:govuk_date)}")
           end
         end
       end
@@ -150,9 +150,9 @@ class EditionEditTest < IntegrationTest
           visit edition_path(@draft_edition)
 
           within :css, ".govuk-notification-banner" do
-            assert page.has_text?("Important")
+            assert page.has_text?("Important note")
             assert page.has_text?(@note_text)
-            assert page.has_text?("Important note added on #{Time.zone.today.to_date.to_fs(:govuk_date)}")
+            assert page.has_text?("Added on #{Time.zone.today.to_date.to_fs(:govuk_date)}")
           end
         end
       end

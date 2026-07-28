@@ -5,9 +5,10 @@
   description_govspeak:
     sanitize("<div class='editions__important-note'>
       <p class='govuk-body govuk-!-font-weight-bold govuk-!-text-break-word editions__important-note__details'>#{h(note_details)}</p>
-      <p class='govuk-body-m'>#{note_author_name.present? ? "#{h(note_author_name)} added an important note on" : "Important note added on"}
+      <p class='govuk-body-m'>#{note_author_name.present? ? "#{h(note_author_name)}, " : "Added on"}
       <time class='govuk-body' datetime='#{note_date}'>#{note_date.to_fs(:govuk_date)}</time></p>
       </div>"),
+  banner_title: "Important note",
   show_banner_title: true,
   margin_bottom: 6,
 } %>
