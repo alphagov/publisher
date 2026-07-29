@@ -103,6 +103,7 @@ Rails.application.routes.draw do
     member do
       get "send_to_fact_check_page"
       post "send_to_fact_check"
+      post "send_to_fact_check_page_2"
       get "resend_fact_check_email_page"
       patch "resend_fact_check_email"
     end

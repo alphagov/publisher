@@ -254,9 +254,15 @@ class EditionsController < InheritedResources::Base
           ),
         )
 
-        if @form.valid?(:send) && send_to_fact_check_for_edition(@resource, @form, comment)
-          flash[:success] = "Sent to fact check"
-          redirect_to edition_path(resource)
+        # if @form.valid?(:send) && send_to_fact_check_for_edition(@resource, @form, comment)
+        #   flash[:success] = "Sent to fact check"
+        #   redirect_to edition_path(resource)
+        #   return
+        # end
+
+        if @form.valid?(:send)
+          # flash[:success] = "Sent to fact check"
+          render "secondary_nav_tabs/send_to_fact_check_page_2"
           return
         end
 
@@ -282,6 +288,30 @@ class EditionsController < InheritedResources::Base
     end
     flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
     render "secondary_nav_tabs/send_to_fact_check_page"
+  end
+
+  def send_to_fact_check_page_2
+    comment = "Sent to fact check"
+
+    @form = FactCheckRequestForm.new(
+      permitted_fact_check_request_form_params.merge(
+        edition: @resource,
+        user: current_user,
+      ),
+    )
+
+    if @form.valid? && send_to_fact_check_for_edition(@resource, @form, comment)
+      flash[:success] = "Sent to fact check"
+      redirect_to edition_path(@resource)
+    else
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+      render "secondary_nav_tabs/send_to_fact_check_page_2"
+    end
+
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "secondary_nav_tabs/send_to_fact_check_page_2"
   end
 
   def skip_review

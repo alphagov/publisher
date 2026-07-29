@@ -90,7 +90,7 @@
 
         <div class="govuk-button-group">
           <%= render "govuk_publishing_components/components/button", {
-            text: "Send for fact check",
+            text: "Continue",
           } %>
           <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
         </div>
@@ -133,6 +133,6 @@
   </div>
 </div>
 
-<% if Flipflop.enabled?(:fact_check_manager_api) %>
-  <%= render partial: "editions/secondary_nav_tabs/send_fact_check_email_preview" %>
-<% end %>
+<%# if Flipflop.enabled?(:fact_check_manager_api) %>
+  <%#= render partial: "editions/secondary_nav_tabs/send_fact_check_email_preview" %>
+<%# end %>
