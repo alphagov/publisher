@@ -79,50 +79,62 @@ class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
     assert_includes @edition2.owning_org_content_ids, organisation_id
   end
 
-  test "remove_organisation_access removes permissions correctly" do
+  test "remove_organisation_access removes permissions from every edition on an artefact" do
     organisation_id = "org-id-to-remove"
+    artefact = FactoryBot.create(:artefact)
+    edition1 = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [organisation_id])
+    edition2 = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [organisation_id])
 
-    @add_organisation_access_task.invoke(@artefact1.id, organisation_id)
-    @edition1.reload
-    assert_includes @edition1.owning_org_content_ids, organisation_id
+    @remove_organisation_access_task.invoke(artefact.id, organisation_id)
+    edition1.reload
+    edition2.reload
 
-    @remove_organisation_access_task.invoke(@artefact1.id, organisation_id)
-    @edition1.reload
-
-    assert_not_includes @edition1.owning_org_content_ids, organisation_id
+    assert_not_includes edition1.owning_org_content_ids, organisation_id
+    assert_not_includes edition2.owning_org_content_ids, organisation_id
   end
 
   test "remove_organisation_access does not affect other organisation permissions" do
     org_id_to_keep = "saved-org-id"
     org_id_to_remove = "removable-org-id"
-    artefact3 = FactoryBot.create(:artefact, slug: "example-slug-3")
-    edition3 = FactoryBot.create(:edition, panopticon_id: artefact3.id, owning_org_content_ids: [org_id_to_keep, org_id_to_remove])
-    assert_includes edition3.owning_org_content_ids, org_id_to_keep
-    assert_includes edition3.owning_org_content_ids, org_id_to_remove
+    artefact = FactoryBot.create(:artefact)
+    edition = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [org_id_to_keep, org_id_to_remove])
 
-    @remove_organisation_access_task.invoke(artefact3.id, org_id_to_remove)
-    edition3.reload
+    @remove_organisation_access_task.invoke(artefact.id, org_id_to_remove)
+    edition.reload
 
-    assert_not_includes edition3.owning_org_content_ids, org_id_to_remove
-    assert_includes edition3.owning_org_content_ids, org_id_to_keep
+    assert_not_includes edition.owning_org_content_ids, org_id_to_remove
+    assert_includes edition.owning_org_content_ids, org_id_to_keep
   end
 
-  test "remove_all_access_flags removes all permissions" do
+  test "remove_all_access_flags removes all permissions from every edition on an artefact" do
     organisation_id1 = "org-id-one"
     organisation_id2 = "org-id-two"
+    artefact = FactoryBot.create(:artefact)
+    edition1 = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [organisation_id1, organisation_id2])
+    edition2 = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [organisation_id1, organisation_id2])
 
-    @add_organisation_access_task.invoke(@artefact1.id, organisation_id1)
-    @add_organisation_access_task.reenable
-    @add_organisation_access_task.invoke(@artefact1.id, organisation_id2)
-    @edition1.reload
+    @remove_all_access_flags_task.invoke(artefact.id)
+    edition1.reload
+    edition2.reload
 
-    assert_includes @edition1.owning_org_content_ids, organisation_id1
-    assert_includes @edition1.owning_org_content_ids, organisation_id2
+    assert_empty edition1.owning_org_content_ids
+    assert_empty edition2.owning_org_content_ids
+  end
 
-    @remove_all_access_flags_task.invoke(@artefact1.id, organisation_id2)
-    @edition1.reload
+  test "remove_all_access_flags does not affect other artefact's editions" do
+    organisation_id1 = "org-id-one"
+    organisation_id2 = "org-id-two"
+    artefact1 = FactoryBot.create(:artefact)
+    edition1 = FactoryBot.create(:edition, panopticon_id: artefact1.id, owning_org_content_ids: [organisation_id1, organisation_id2])
 
-    assert_not_includes @edition1.owning_org_content_ids, organisation_id1
-    assert_not_includes @edition1.owning_org_content_ids, organisation_id2
+    artefact2 = FactoryBot.create(:artefact)
+    edition2 = FactoryBot.create(:edition, panopticon_id: artefact2.id, owning_org_content_ids: [organisation_id1])
+
+    @remove_all_access_flags_task.invoke(artefact1.id)
+    edition1.reload
+    edition2.reload
+
+    assert_empty edition1.owning_org_content_ids
+    assert_includes edition2.owning_org_content_ids, organisation_id1
   end
 end
