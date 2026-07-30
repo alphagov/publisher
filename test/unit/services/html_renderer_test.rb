@@ -64,37 +64,132 @@ class HtmlRendererTest < ActiveSupport::TestCase
 
     context "when the document contains content blocks" do
       setup do
+        stub_publishing_api_responses_for_content_blocks
+
         @mock_render = '<span class="content-block" data-embed-code="{{embed:content_block_contact:content-item}}">block content</span>'
-        @mock_content_block = stub(render: @mock_render)
+
         @mock_render_two = '<span class="content-block" data-embed-code="{{embed:content_block_contact:content-item-two}}">different block content</span>'
-        @mock_content_block_two = stub(render: @mock_render_two)
+
+        stub_built_content_blocks
       end
 
-      should "correctly render the block when a single content block embed code is present" do
-        input = "Before block, {{embed:content_block_contact:content-item}}, after block"
+      context "rendering" do
+        context "when a single embed code is present" do
+          setup do
+            @document_contents = "First block: {{embed:content_block_contact:content-item}} done."
+          end
 
-        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item}}").returns(@mock_content_block)
+          should "render the block in the expected position" do
+            expected_html = "<p>First block: #{@mock_render} done.</p>"
 
-        assert_equal "<p>Before block, #{@mock_render}, after block</p>", HtmlRenderer.render_html(input)
-      end
+            assert_equal(
+              expected_html,
+              HtmlRenderer.render_html(@document_contents),
+            )
+          end
+        end
 
-      should "correctly render the blocks when two different content block embed codes are present" do
-        input = "Before block, {{embed:content_block_contact:content-item}}, {{embed:content_block_contact:content-item-two}}, after block"
+        context "when embed codes from two blocks are present" do
+          setup do
+            @document_contents = <<~MARKUP.squish
+              First block: {{embed:content_block_contact:content-item}} done.
+              Second block: {{embed:content_block_contact:content-item-two}} done.
+            MARKUP
+          end
 
-        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item}}").returns(@mock_content_block)
-        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item-two}}").returns(@mock_content_block_two)
+          should "render both blocks in the expected positions" do
+            expected_html = <<~HTML.squish
+              <p>First block: #{@mock_render} done.
+              Second block: #{@mock_render_two} done.</p>
+            HTML
 
-        assert_equal "<p>Before block, #{@mock_render}, #{@mock_render_two}, after block</p>", HtmlRenderer.render_html(input)
-      end
+            assert_equal(
+              expected_html,
+              HtmlRenderer.render_html(@document_contents),
+            )
+          end
+        end
 
-      should "correctly render the blocks when provided with multiple instances of the same embed code" do
-        input = "Before block, {{embed:content_block_contact:content-item}}, {{embed:content_block_contact:content-item}}, {{embed:content_block_contact:content-item-two}}, after block"
+        context "when a particular embed code appears more than once" do
+          setup do
+            @document_contents = <<~MARKUP.squish
+              First block: {{embed:content_block_contact:content-item}} done.
+              Second block: {{embed:content_block_contact:content-item-two}} done.
+              Second block again: {{embed:content_block_contact:content-item-two}} done.
+            MARKUP
+          end
 
-        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item}}").returns(@mock_content_block).once
-        ContentBlockTools::ContentBlock.expects(:from_embed_code).with("{{embed:content_block_contact:content-item-two}}").returns(@mock_content_block_two)
+          should "render the repeated block in all expected positions" do
+            expected_html = <<~HTML.squish
+              <p>First block: #{@mock_render} done.
+              Second block: #{@mock_render_two} done.
+              Second block again: #{@mock_render_two} done.</p>
+            HTML
 
-        assert_equal "<p>Before block, #{@mock_render}, #{@mock_render}, #{@mock_render_two}, after block</p>", HtmlRenderer.render_html(input)
+            assert_equal(
+              expected_html,
+              HtmlRenderer.render_html(@document_contents),
+            )
+          end
+        end
       end
     end
+  end
+
+  def stub_publishing_api_responses_for_content_blocks
+    stubbed_api_results_1 = {
+      "results" => [
+        {
+          "details" => { title: "Contact 1" },
+          "document_type" => "content_block_contact",
+          "title" => "Contact title",
+          "content_id" => "1234",
+        },
+      ],
+    }
+    stubbed_api_results_2 = {
+      "results" => [
+        {
+          "details" => { title: "Contact 2" },
+          "document_type" => "content_block_contact",
+          "title" => "Contact 2 title",
+          "content_id" => "4567",
+        },
+      ],
+    }
+
+    stubbed_api_response_1 = stub("stubbed_api_response_1", parsed_content: stubbed_api_results_1)
+    stubbed_api_response_2 = stub("stubbed_api_response_2", parsed_content: stubbed_api_results_2)
+
+    Services.publishing_api.stubs(:get_content_items).with(
+      content_id_aliases: %w[content-item],
+      document_type: "content_block_contact",
+    ).returns(stubbed_api_response_1)
+
+    Services.publishing_api.stubs(:get_content_items).with(
+      content_id_aliases: %w[content-item-two],
+      document_type: "content_block_contact",
+    ).returns(stubbed_api_response_2)
+  end
+
+  def stub_built_content_blocks
+    stubbed_content_block = stub(render: @mock_render)
+    stubbed_content_block_two = stub(render: @mock_render_two)
+
+    ContentBlockTools::ContentBlock.stubs(:new).with(
+      content_id: "1234",
+      title: "Contact title",
+      document_type: "content_block_contact",
+      details: { title: "Contact 1" },
+      embed_code: "{{embed:content_block_contact:content-item}}",
+    ).returns(stubbed_content_block)
+
+    ContentBlockTools::ContentBlock.stubs(:new).with(
+      content_id: "4567",
+      title: "Contact 2 title",
+      document_type: "content_block_contact",
+      details: { title: "Contact 2" },
+      embed_code: "{{embed:content_block_contact:content-item-two}}",
+    ).returns(stubbed_content_block_two)
   end
 end
