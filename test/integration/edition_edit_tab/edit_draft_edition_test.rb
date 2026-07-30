@@ -53,7 +53,7 @@ class EditDraftEditionTest < IntegrationTest
 
       should "show Body text field prefilled" do
         assert page.has_text?("Body")
-        assert page.has_text?("Refer to the Govspeak guidance (opens in new tab)")
+        assert page.has_text?("Read the Govspeak guide (opens in new tab)")
         assert page.has_field?("edition[body]", with: "The body")
       end
 
@@ -143,7 +143,7 @@ class EditDraftEditionTest < IntegrationTest
         assert page.has_field?("edition[place_type]", with: "The place type")
 
         assert page.has_css?(".govuk-label", text: "Introduction")
-        assert page.has_css?(".govuk-hint", text: "Refer to the Govspeak guidance (opens in new tab)")
+        assert page.has_css?(".govuk-hint", text: "Read the Govspeak guide (opens in new tab)")
         assert page.has_field?("edition[introduction]", with: "some intro")
 
         assert page.has_css?(".govuk-label", text: "Further information (optional)")
@@ -201,7 +201,7 @@ class EditDraftEditionTest < IntegrationTest
         assert page.has_field?("edition[cta_text]", with: "Find your local council")
 
         assert page.has_css?(".govuk-label", text: "Introduction")
-        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. Explain that it’s the responsibility of the local council and that we’ll take you there. Read the Govspeak guidance (opens in new tab)")
+        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. Explain that it’s the responsibility of the local council and that we’ll take you there. Read the Govspeak guide (opens in new tab)")
         assert page.has_field?("edition[introduction]", with: "Test introduction")
 
         assert page.has_css?(".govuk-label", text: "Further information (optional)")
@@ -855,7 +855,7 @@ class EditDraftEditionTest < IntegrationTest
 
         assert page.has_field?("edition[introduction]", with: "Transaction introduction")
         assert page.has_css?(".govuk-label", text: "Introduction")
-        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Refer to the Govspeak guidance (opens in new tab)")
+        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Read the Govspeak guide (opens in new tab)")
 
         assert page.has_field?("edition[start_button_text]")
         assert page.has_text?("Start button text")
