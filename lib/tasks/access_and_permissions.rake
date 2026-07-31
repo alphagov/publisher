@@ -51,4 +51,48 @@ namespace :permissions do
       log_file.close
     end
   end
+
+  desc "Remove an organisation from a document's access permissions list"
+  task :remove_organisation_access, %i[document_content_id org_content_id] => :environment do |_, args|
+    document_content_id = args[:document_content_id]
+    org_content_id = args[:org_content_id]
+
+    document = Artefact.find_by(id: document_content_id)
+
+    if document.nil?
+      puts "Document ID #{document_content_id} not found, no permissions removed for organisation with ID: #{org_content_id}"
+    else
+      editions = Edition.where(panopticon_id: document.id).select { |edition| edition.owning_org_content_ids.include?(org_content_id) }
+      if editions.empty?
+        puts "Organisation with ID #{org_content_id} did not have access to document with ID: #{document.id}. No permissions changed"
+      else
+        editions.each do |edition|
+          owning_org_content_ids = edition.owning_org_content_ids - [org_content_id]
+          edition.update_columns(owning_org_content_ids: owning_org_content_ids)
+        end
+        document.save_as_task!("PermissionsRemoval")
+        puts "Access permission successfully removed for the organisation with ID #{org_content_id} from document with ID: #{document.id}"
+      end
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    puts "An error occurred while processing document with ID #{document_content_id}: #{e.message}"
+  end
+
+  desc "Remove all access permissions from a document"
+  task :remove_all_access_flags, %i[document_content_id] => :environment do |_, args|
+    document_content_id = args[:document_content_id]
+    document = Artefact.find_by(id: document_content_id)
+
+    if document.nil?
+      puts "Document ID #{document_content_id} not found, no permissions changed"
+    else
+      Edition.where(panopticon_id: document.id).find_each do |edition|
+        edition.update_columns(owning_org_content_ids: [])
+      end
+      document.save_as_task!("PermissionsClear")
+      puts "All access permissions for all organisations successfully removed from document with ID - #{document.id}"
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    puts "An error occurred while processing document with ID #{document_content_id}: #{e.message}"
+  end
 end
