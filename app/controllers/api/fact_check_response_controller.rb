@@ -18,7 +18,7 @@ module Api
                            requester_name: response_params[:responder_name])
         render json: { id: edition.id }, status: :ok
       else
-        render json: { errors: edition.errors.full_messages }, status: :unprocessable_entity
+        render json: { errors: edition.errors }, status: :unprocessable_entity
       end
     end
 

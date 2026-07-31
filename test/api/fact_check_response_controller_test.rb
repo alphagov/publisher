@@ -124,11 +124,10 @@ class FactCheckResponseControllerTest < IntegrationTest
 
     should "return 422 with edition in invalid non-published state" do
       @edition = FactoryBot.create(:answer_edition, :draft)
-
       post api_fact_check_response_path, params: { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: true }, as: :json
 
       assert_response :unprocessable_entity
-      assert_includes response.parsed_body["errors"], "State Edition is not in a state where fact check can be submitted"
+      assert_includes response.parsed_body.dig("errors", "state"), "Edition is not in a state where fact check can be submitted"
     end
 
     should "return 422 with published edition" do
@@ -136,7 +135,7 @@ class FactCheckResponseControllerTest < IntegrationTest
       post api_fact_check_response_path, params: { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: true }, as: :json
 
       assert_response :unprocessable_entity
-      assert_includes response.parsed_body["errors"], "State Edition is not in a state where fact check can be submitted"
+      assert_includes response.parsed_body.dig("errors", "state"), "Edition is not in a state where fact check can be submitted"
     end
   end
 end
