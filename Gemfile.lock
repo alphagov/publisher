@@ -210,7 +210,7 @@ GEM
       dry-initializer (~> 3.2)
       dry-schema (~> 1.14)
       zeitwerk (~> 2.6)
-    erb (6.0.6)
+    erb (6.0.7)
     erb_lint (0.9.0)
       activesupport
       better_html (>= 2.0.1)
@@ -324,7 +324,7 @@ GEM
     govuk_personalisation (1.2.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (67.0.0)
+    govuk_publishing_components (67.0.1)
       chartkick
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
@@ -788,7 +788,7 @@ GEM
     retriable (4.2.0)
     rexml (3.4.4)
     rinku (2.0.6)
-    rouge (5.0.0)
+    rouge (5.1.0)
       strscan (~> 3.1)
     rubocop (1.86.0)
       json (~> 2.3)
