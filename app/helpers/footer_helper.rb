@@ -43,8 +43,8 @@ module FooterHelper
         text: "Check if publishing apps are working or if there’s any maintenance planned",
       },
       {
-        href: "https://www.gov.uk/government/content-publishing",
-        text: "How to write, publish, and improve content",
+        href: "https://guidance.publishing.service.gov.uk",
+        text: "Read the content and publishing guidance",
       },
     ]
   end
