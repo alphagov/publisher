@@ -15,7 +15,7 @@ class FooterHelperTest < ActionView::TestCase
           items: [
             { text: "Raise a support request", href: Plek.external_url_for("support") },
             { text: "Check if publishing apps are working or if there’s any maintenance planned", href: "https://status.publishing.service.gov.uk/" },
-            { text: "How to write, publish, and improve content", href: "https://www.gov.uk/government/content-publishing" },
+            { text: "Read the content and publishing guidance", href: "https://guidance.publishing.service.gov.uk" },
           ] },
       ], footer_items(is_editor: true)
     end
@@ -32,7 +32,7 @@ class FooterHelperTest < ActionView::TestCase
           items: [
             { text: "Raise a support request", href: Plek.external_url_for("support") },
             { text: "Check if publishing apps are working or if there’s any maintenance planned", href: "https://status.publishing.service.gov.uk/" },
-            { text: "How to write, publish, and improve content", href: "https://www.gov.uk/government/content-publishing" },
+            { text: "Read the content and publishing guidance", href: "https://guidance.publishing.service.gov.uk" },
           ] },
       ], footer_items(is_editor: false)
     end
