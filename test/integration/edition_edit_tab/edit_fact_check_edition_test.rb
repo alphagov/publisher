@@ -13,7 +13,7 @@ class EditFactCheckEditionTest < IntegrationTest
     visit edition_path(@fact_check_edition)
 
     assert page.has_link?("Resend fact check email")
-    assert page.has_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+    assert page.has_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
   end
 
   should "show the requester specific text to govuk editors" do
@@ -22,7 +22,7 @@ class EditFactCheckEditionTest < IntegrationTest
 
     visit edition_path(@fact_check_edition)
 
-    assert page.has_text?("Stub requester requested this edition to be fact checked. We're awaiting a response.")
+    assert page.has_text?("Stub requester sent this edition for fact check. We’re awaiting a response.")
   end
 
   should "show Preview link" do
@@ -47,7 +47,7 @@ class EditFactCheckEditionTest < IntegrationTest
       FactoryBot.create(:action, edition: @fact_check_edition, requester: @govuk_requester, request_type: Action::REQUEST_REVIEW)
       visit edition_path(@fact_check_edition)
 
-      assert page.has_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+      assert page.has_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
     end
   end
 
@@ -65,7 +65,7 @@ class EditFactCheckEditionTest < IntegrationTest
 
       should "show the 'Resend fact check' link" do
         assert page.has_link?("Resend fact check email")
-        assert page.has_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+        assert page.has_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
       end
 
       should "show the 'Request amendments' link" do
@@ -82,7 +82,7 @@ class EditFactCheckEditionTest < IntegrationTest
           FactoryBot.create(:action, edition: @welsh_edition, requester: @govuk_editor, request_type: Action::REQUEST_REVIEW)
           visit edition_path(@welsh_edition)
 
-          assert page.has_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+          assert page.has_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
         end
       end
     end
@@ -94,7 +94,7 @@ class EditFactCheckEditionTest < IntegrationTest
 
       should "not show the 'Resend fact check' link" do
         assert page.has_no_link?("Resend fact check email")
-        assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+        assert page.has_no_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
       end
 
       should "not show the 'Request amendments' link" do
@@ -111,7 +111,7 @@ class EditFactCheckEditionTest < IntegrationTest
 
     should "not show the 'Resend fact check email' link or text to non-editors" do
       assert page.has_no_link?("Resend fact check email")
-      assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+      assert page.has_no_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
     end
 
     should "not show any editable components" do
