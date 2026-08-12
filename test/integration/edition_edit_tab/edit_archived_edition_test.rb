@@ -70,7 +70,7 @@ class EditArchivedEditionTest < IntegrationTest
     visit edition_path(@archived_edition)
 
     assert page.has_no_link?("Resend fact check email")
-    assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+    assert page.has_no_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
   end
 
   context "guide edition" do

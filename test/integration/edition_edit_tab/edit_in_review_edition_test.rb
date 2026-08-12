@@ -31,7 +31,7 @@ class EditInReviewEditionTest < IntegrationTest
 
       should "not show the 'Resend fact check email' link and text" do
         assert page.has_no_link?("Resend fact check email")
-        assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+        assert page.has_no_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
       end
 
       should "not show the 'Request amendments' link" do
@@ -93,7 +93,7 @@ class EditInReviewEditionTest < IntegrationTest
 
       should "not show the 'Resend fact check email' link and text" do
         assert page.has_no_link?("Resend fact check email")
-        assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+        assert page.has_no_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
       end
 
       should "show the 'Request amendments' link" do
@@ -193,7 +193,7 @@ class EditInReviewEditionTest < IntegrationTest
 
       should "not show the 'Resend fact check email' link and text" do
         assert page.has_no_link?("Resend fact check email")
-        assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+        assert page.has_no_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
       end
 
       should "not show the 'Request amendments' link" do
@@ -255,7 +255,7 @@ class EditInReviewEditionTest < IntegrationTest
 
       should "not show the 'Resend fact check email' link and text" do
         assert page.has_no_link?("Resend fact check email")
-        assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+        assert page.has_no_text?("You’ve sent this edition for fact check. We’re awaiting a response.")
       end
 
       should "show the 'Request amendments' link" do

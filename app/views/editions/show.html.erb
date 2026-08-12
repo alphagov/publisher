@@ -49,10 +49,10 @@
             <% if @edition.fact_check? %>
               <% latest_send_fact_check_action = @edition.latest_status_action(Action::SEND_FACT_CHECK) %>
               <% if latest_send_fact_check_action&.requester == current_user %>
-                <p class="govuk-body">You've requested this edition to be fact checked. We're awaiting a response.</p>
+                <p class="govuk-body">You’ve sent this edition for fact check. We’re awaiting a response.</p>
               <% else %>
-                <p class="govuk-body"><%= latest_send_fact_check_action&.requester&.name %> requested this edition to be fact checked.
-                  We're awaiting a response.</p>
+                <p class="govuk-body"><%= latest_send_fact_check_action&.requester&.name %> sent this edition for fact check.
+                  We’re awaiting a response.</p>
               <% end %>
               <p class="govuk-body"><%= link_to("Resend fact check email", resend_fact_check_email_page_edition_path, class: "govuk-link govuk-link--no-visited-state") %></p>
             <% end %>
