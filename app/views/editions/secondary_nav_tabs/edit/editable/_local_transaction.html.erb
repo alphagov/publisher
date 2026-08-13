@@ -40,6 +40,9 @@
   value: edition.editionable.introduction,
   rows: 16,
   hint: ("Set the scene for the user. Explain that it’s the responsibility of the local council and that we’ll take you there. Read the #{link_to("Govspeak guide (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link govuk-link--no-visited-state")}").html_safe,
+  data: {
+    module: "paste-html-to-govspeak",
+  },
 } %>
 
 <%= render "govuk_publishing_components/components/textarea", {
@@ -50,6 +53,9 @@
   name: "edition[more_information]",
   value: edition.editionable.more_information,
   rows: 16,
+  data: {
+    module: "paste-html-to-govspeak",
+  },
 } %>
 
 <%= render "govuk_publishing_components/components/textarea", {
@@ -60,6 +66,9 @@
   name: "edition[need_to_know]",
   value: edition.editionable.need_to_know,
   rows: 6,
+  data: {
+    module: "paste,-html-to-govspeak",
+  },
 } %>
 
 <%= render "govuk_publishing_components/components/textarea", {
@@ -71,6 +80,9 @@
   value: edition.editionable.before_results,
   rows: 6,
   hint:"This content appears above the address lookup results, below the page heading",
+  data: {
+    module: "paste-html-to-govspeak",
+  },
 } %>
 
 <%= render "govuk_publishing_components/components/textarea", {
@@ -82,6 +94,9 @@
   value: edition.editionable.after_results,
   rows: 6,
   hint:"This content appears below the address lookup results",
+  data: {
+    module: "paste-html-to-govspeak",
+  },
 } %>
 
 <%= render partial:  "editions/secondary_nav_tabs/edit/editable/components/administration_availability" ,locals: { edition: @resource , heading: "Northern Ireland" , administration: "northern_ireland"} %>
