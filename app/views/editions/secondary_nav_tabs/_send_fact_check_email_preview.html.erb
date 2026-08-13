@@ -1,57 +1,59 @@
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= render "govuk_publishing_components/components/heading", {
-      text: "Example email",
-      heading_level: 2,
-      font_size: "m",
-      padding: true,
-    } %>
-    <p class="govuk-body">This shows the format of the fact check email that will be sent.</p>
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Fact check email preview",
+  heading_level: 2,
+  font_size: "m",
+  padding: true,
+} %>
+<p class="govuk-body">This shows the fact check email that will be sent.<br><br>You cannot open the links in this preview. They will work in the fact check email.
+</p>
 
-    <article class="edit--send-fact-check-email-preview">
-      <header>
-        <p class="govuk-body">Government Digital Service</p>
-      </header>
+<%# Note-begin: Temporarily placing this block here to adjust non functional link behaviour in the preview, as discussed during desk check %>
+<style>
+  .edit--send-fact-check-email-preview .non-functional-link {
+    pointer-events: none;
+    cursor: default;
+  }
+</style>
+<%# Note-end %>
 
-      <%= render "govuk_publishing_components/components/govspeak", {} do %>
-        <%= Govspeak::Document.new(<<~GOV_SPEAK).to_html.html_safe
-            Hi,
+<article class="edit--send-fact-check-email-preview">
+  <header>
+    <p class="govuk-body">Government Digital Service</p>
+  </header>
 
-            We need you to check the factual accuracy of changes made to ‘#{@edition.title}’ before it’s published on GOV.UK.
+  <%= render "govuk_publishing_components/components/govspeak", {} do %>
+    <%= Govspeak::Document.new(<<~GOV_SPEAK).to_html.html_safe
+        Hi,
 
-            Reason for change: Your input will go here.
+        We need you to check the factual accuracy of changes made to ‘#{@edition.title}’ before it’s published on GOV.UK.
 
-            Zendesk ticket: Your input will go here.
+        #{@form.reason_text}#{@form.zendesk_text}^ Deadline: #{@form.formatted_deadline}
 
-            ^ Deadline: DD Month YYYY
+        ---
 
-            ---
+        ## Review the changes
+        <span class="non-functional-link">View the fact check - #{@edition.title}</span>
 
-            ## Review the changes
-            <span class="non-functional-link">View the fact check - #{@edition.title}</span>
+        You can share this link with the subject matter experts. The link expires when the content is published.
 
-            You can share this link with the subject matter experts. The link expires when the content is published.
+        They can view the information and check the changes, but are not able to submit a response.
 
-            They can view the information and check the changes, but are not able to submit a response.
+        When fact checking, they should:
 
-            When fact checking, they should:
+        * check the changed content for factual accuracy
+        * tell us if anything is wrong, and why
 
-            * check the changed content for factual accuracy
-            * tell us if anything is wrong, and why
+        They do not need to suggest new wording.
 
-            They do not need to suggest new wording.
+        ---
 
-            ---
+        ## Submit your fact check response
+        <span class="non-functional-link">Respond to the fact check</span>
 
-            ## Submit your fact check response
-            <span class="non-functional-link">Respond to the fact check</span>
+        Only one fact check response can be submitted.
 
-            Only one fact check response can be submitted.
-
-            Do not reply to this email.
-          GOV_SPEAK
-        %>
-      <% end %>
-    </article>
-  </div>
-</div>
+        Do not reply to this email.
+      GOV_SPEAK
+    %>
+  <% end %>
+</article>

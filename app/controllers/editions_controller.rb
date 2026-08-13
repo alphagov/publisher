@@ -101,7 +101,13 @@ class EditionsController < InheritedResources::Base
   end
 
   def send_to_fact_check_page
-    @form ||= FactCheckRequestForm.new
+    @form = FactCheckRequestForm.new(
+      permitted_fact_check_request_form_params.merge(
+        edition: @resource,
+        user: current_user,
+      ),
+    )
+
     render "secondary_nav_tabs/send_to_fact_check_page"
   end
 
@@ -254,16 +260,18 @@ class EditionsController < InheritedResources::Base
           ),
         )
 
-        if @form.valid?(:send) && send_to_fact_check_for_edition(@resource, @form, comment)
-          flash[:success] = "Sent to fact check"
-          redirect_to edition_path(resource)
+        unless @form.valid?(:send)
+          render "secondary_nav_tabs/send_to_fact_check_page"
           return
         end
 
-        flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE if @form.errors.none?
-
-        # TODO: These two lines not required once below block for legacy flow is removed.
-        render "secondary_nav_tabs/send_to_fact_check_page"
+        if send_to_fact_check_for_edition(@resource, @form, comment)
+          flash[:success] = "Sent to fact check"
+          redirect_to edition_path(@resource)
+        else
+          flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+          render "secondary_nav_tabs/send_to_fact_check_email_preview_page"
+        end
         return
       end
 
@@ -282,6 +290,21 @@ class EditionsController < InheritedResources::Base
     end
     flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
     render "secondary_nav_tabs/send_to_fact_check_page"
+  end
+
+  def send_to_fact_check_email_preview_page
+    @form ||= FactCheckRequestForm.new(
+      permitted_fact_check_request_form_params.merge(
+        edition: @resource,
+        user: current_user,
+      ),
+    )
+
+    if @form.valid?(:send)
+      render "secondary_nav_tabs/send_to_fact_check_email_preview_page"
+    else
+      render "secondary_nav_tabs/send_to_fact_check_page"
+    end
   end
 
   def skip_review
@@ -642,6 +665,8 @@ private
   end
 
   def permitted_fact_check_request_form_params
+    return {} if params[:fact_check_request_form].blank?
+
     params.require(:fact_check_request_form).permit(:email_addresses,
                                                     :reason_for_change,
                                                     :zendesk_number,

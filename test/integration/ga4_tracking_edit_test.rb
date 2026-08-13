@@ -600,7 +600,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       fill_in "Month", with: "11"
       fill_in "Year", with: "2025"
       click_link "Cancel"
-      click_button "Send for fact check"
+      click_button "Continue"
 
       event_data = get_event_data
 
@@ -654,7 +654,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       fill_in "Day", with: ""
       fill_in "Month", with: ""
       fill_in "Year", with: ""
-      click_button "Send for fact check"
+      click_button "Continue"
 
       assert page.has_css?("h2", text: "There is a problem")
 
@@ -688,7 +688,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       fill_in "Day", with: "28"
       fill_in "Month", with: "9"
       fill_in "Year", with: "2024"
-      click_button "Send for fact check"
+      click_button "Continue"
 
       assert page.has_css?("h2", text: "There is a problem")
 
@@ -714,6 +714,42 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
       assert_equal "The date must be today or up to 30 days in the future", event_data[2]["text"]
       assert_equal "Answer", event_data[2]["tool_name"]
       assert_equal "Edit edition", event_data[2]["type"]
+    end
+
+    should "push the correct values to the dataLayer on Page 2 form submission and go back" do
+      today = Date.parse("2025-10-29")
+
+      Timecop.freeze(today) do
+        fill_in "Email addresses", with: "fact-checker-one@example.com"
+        click_button "Continue"
+
+        assert page.has_button?("Confirm and send for fact check")
+
+        disable_form_submit
+        disable_links
+
+        click_link "Back"
+        click_button "Confirm and send for fact check"
+
+        event_data = get_event_data
+
+        # Page 2 "Back" link navigation event
+        assert_equal "navigation", event_data[0]["event_name"]
+        assert_equal "back", event_data[0]["type"]
+        assert_equal "Back", event_data[0]["text"]
+        assert_equal "false", event_data[0]["external"]
+        assert_equal current_host, event_data[0]["link_domain"]
+        assert_equal "primary click", event_data[0]["method"]
+        assert event_data[0]["url"].start_with?("/editions/#{@edition.id}/send_to_fact_check_page")
+
+        # Page 2 final submit form response event
+        assert_equal "Save", event_data[1]["action"]
+        assert_equal "form_response", event_data[1]["event_name"]
+        assert_equal "Edit - Check email and send for fact check", event_data[1]["section"]
+        assert_equal "{}", event_data[1]["text"]
+        assert_equal "Answer", event_data[1]["tool_name"]
+        assert_equal "edit", event_data[1]["type"]
+      end
     end
   end
 

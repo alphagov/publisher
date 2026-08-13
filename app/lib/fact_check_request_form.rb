@@ -73,6 +73,24 @@ class FactCheckRequestForm
     }
   end
 
+  def reason_text
+    return if reason_for_change.blank?
+
+    escaped_reason = ERB::Util.html_escape(reason_for_change)
+    formatted_reason = escaped_reason.to_s.gsub(/\r?\n/, "<br>")
+    "Reason for change: “#{formatted_reason}”\n\n"
+  end
+
+  def zendesk_text
+    return if zendesk_number.blank?
+
+    "Zendesk ticket: [#{zendesk_number}](https://govuk.zendesk.com/tickets/#{zendesk_number})\n\n"
+  end
+
+  def formatted_deadline
+    deadline ? deadline.strftime("%e %B %Y").strip : "Not specified"
+  end
+
 private
 
   def user_has_editor_permissions
