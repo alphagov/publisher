@@ -1,4 +1,5 @@
 //= require_directory ./modules
+// require_directory ./legacy_modules
 
 //= require govuk_publishing_components/dependencies
 //= require govuk_publishing_components/lib
@@ -16,6 +17,9 @@
 //= require analytics_modules/ga4-index-section-setup
 //= require analytics_modules/ga4-search-setup
 //= require analytics_modules/ga4-search-results-setup
+// require paste-html-to-govspeak/dist/paste-html-to-markdown.js
+
+// require legacy_modules/paste_html_to_govspeak
 
 window.GOVUK.approveAllCookieTypes()
 window.GOVUK.cookie('cookies_preferences_set', 'true', { days: 365 })
