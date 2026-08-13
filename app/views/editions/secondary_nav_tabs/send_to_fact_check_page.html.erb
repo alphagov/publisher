@@ -13,7 +13,7 @@
         <% content_for :error_summary, render("shared/error_summary", { object: @form, full_messages: false }) %>
       <% end %>
 
-      <%= form_with model: @form, scope: :fact_check_request_form, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "ga4-form-tracker ga4-link-tracker", ga4_section: "Edit - #{title}" } do %>
+      <%= form_with model: @form, scope: :fact_check_request_form, url: send_to_fact_check_email_preview_page_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "ga4-form-tracker ga4-link-tracker", ga4_section: "Edit - #{title}" } do %>
 
         <%= render "govuk_publishing_components/components/input", {
           label: {
@@ -90,7 +90,7 @@
 
         <div class="govuk-button-group">
           <%= render "govuk_publishing_components/components/button", {
-            text: "Send for fact check",
+            text: "Continue",
           } %>
           <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
         </div>
@@ -132,7 +132,3 @@
     <% end %>
   </div>
 </div>
-
-<% if Flipflop.enabled?(:fact_check_manager_api) %>
-  <%= render partial: "editions/secondary_nav_tabs/send_fact_check_email_preview" %>
-<% end %>

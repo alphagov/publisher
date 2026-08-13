@@ -73,6 +73,30 @@ class FactCheckRequestForm
     }
   end
 
+  def reason_text
+    return if reason_for_change.blank?
+
+    escaped_reason = ERB::Util.html_escape(reason_for_change)
+    formatted_reason = escaped_reason.to_s.gsub(/\r?\n/, "<br>")
+    "Reason for change: “#{formatted_reason}”\n\n"
+  end
+
+  def zendesk_text
+    return if zendesk_number.blank?
+
+    "Zendesk ticket: <span class='non-functional-link'>#{zendesk_number}</span>\n\n"
+  end
+
+  def formatted_deadline
+    deadline ? deadline.strftime("%A %-e %B %Y").strip : "Not specified"
+  end
+
+  def split_email_addresses
+    return [] if email_addresses.blank?
+
+    email_addresses.split(Regexp.union(",", ";")).map(&:strip).compact_blank
+  end
+
 private
 
   def user_has_editor_permissions
@@ -111,11 +135,11 @@ private
     errors.add(:deadline, "Enter a deadline") if deadline.blank?
   end
 
-  def split_email_addresses
-    return if email_addresses.blank?
+  # def split_email_addresses
+  #   return if email_addresses.blank?
 
-    email_addresses.split(Regexp.union(",", ";")).map(&:strip)
-  end
+  #   email_addresses.split(Regexp.union(",", ";")).map(&:strip)
+  # end
 
   def current_content_presenter
     @current_content_presenter ||= EditionPresenterFactory.get_presenter(edition)
