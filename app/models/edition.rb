@@ -27,7 +27,6 @@ class Edition < ApplicationRecord
 
   scope :accessible_to,
         lambda { |user|
-          return all unless Flipflop.enabled?(:restrict_access_by_org)
           return all if user.gds_editor?
           return all unless user.departmental_editor?
 
@@ -525,7 +524,6 @@ class Edition < ApplicationRecord
   end
 
   def is_accessible_to?(user)
-    return true unless Flipflop.enabled?(:restrict_access_by_org)
     return true if user.gds_editor?
     return true unless user.departmental_editor?
 

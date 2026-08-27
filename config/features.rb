@@ -10,10 +10,6 @@ Flipflop.configure do
   end
 
   group "For all users (These features are available to everyone)" do
-    feature :restrict_access_by_org,
-            default: true,
-            description: "Restrict access to editions based on the user's org and which org(s) own the edition"
-
     feature :show_link_to_content_block_manager,
             default: %w[integration staging].include?(ENV["GOVUK_ENVIRONMENT"]),
             description: "Shows link to Content Block Manager from Mainstream editor"

@@ -133,19 +133,13 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_equal([guide_fawkes], filtered_editions.to_a)
     end
 
-    context "when 'restrict_access_by_org' feature toggle is enabled" do
-      setup do
-        @test_strategy.switch!(:restrict_access_by_org, true)
-      end
+    should "filter out editions not accessible to the user" do
+      user = FactoryBot.create(:user, :departmental_editor, organisation_content_id: "an-org")
+      FactoryBot.create(:guide_edition, owning_org_content_ids: %w[another-org])
 
-      should "filter out editions not accessible to the user" do
-        user = FactoryBot.create(:user, :departmental_editor, organisation_content_id: "an-org")
-        FactoryBot.create(:guide_edition, owning_org_content_ids: %w[another-org])
+      filtered_editions = FilteredEditionsPresenter.new(user).editions
 
-        filtered_editions = FilteredEditionsPresenter.new(user).editions
-
-        assert_equal(0, filtered_editions.count)
-      end
+      assert_equal(0, filtered_editions.count)
     end
 
     should "not return popular links" do
