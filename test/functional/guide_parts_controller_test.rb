@@ -220,9 +220,8 @@ class GuidePartsControllerTest < ActionController::TestCase
     end
   end
 
-  context "when 'restrict_access_by_org' feature toggle is enabled" do
+  context "when the edition is tagged with owning_org_content_ids" do
     setup do
-      @test_strategy.switch!(:restrict_access_by_org, true)
       @edition = FactoryBot.create(:guide_edition, owning_org_content_ids: %w[org-two])
       @edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, owning_org_content_ids: %w[org-two])
     end
