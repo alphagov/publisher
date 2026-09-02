@@ -274,13 +274,13 @@ GEM
       base64 (~> 0.2)
       faraday (>= 1.0, < 3.a)
     google-logging-utils (0.2.0)
-    google-protobuf (4.35.1-aarch64-linux-gnu)
+    google-protobuf (4.36.1-aarch64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.35.1-arm64-darwin)
+    google-protobuf (4.36.1-arm64-darwin)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.35.1-x86_64-linux-gnu)
+    google-protobuf (4.36.1-x86_64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
     googleapis-common-protos-types (1.23.0)
@@ -308,9 +308,9 @@ GEM
       jquery-rails (~> 4.3)
       plek (>= 2.1)
       rails (>= 6)
-    govuk_app_config (9.25.1)
+    govuk_app_config (9.25.2)
       connection_pool (< 4)
-      logstasher (~> 2.1)
+      logstasher (>= 2.1, < 4.0)
       opentelemetry-exporter-otlp (>= 0.25, < 0.35)
       opentelemetry-instrumentation-all (>= 0.39.1, < 0.95.0)
       opentelemetry-sdk (~> 1.2)
@@ -407,8 +407,8 @@ GEM
     link_header (0.0.8)
     lint_roller (1.1.0)
     logger (1.7.0)
-    logstasher (2.1.5)
-      activesupport (>= 5.2)
+    logstasher (3.0.0)
+      activesupport (>= 7.0)
       request_store
     loofah (2.25.2)
       crass (~> 1.0.2)
@@ -511,7 +511,7 @@ GEM
       opentelemetry-common (~> 0.21)
     opentelemetry-instrumentation-action_mailer (0.8.1)
       opentelemetry-instrumentation-active_support (~> 0.10)
-    opentelemetry-instrumentation-action_pack (0.18.0)
+    opentelemetry-instrumentation-action_pack (0.18.1)
       opentelemetry-instrumentation-rack (~> 0.29)
     opentelemetry-instrumentation-action_view (0.13.0)
       opentelemetry-instrumentation-active_support (~> 0.10)
@@ -663,7 +663,7 @@ GEM
       opentelemetry-common (~> 0.20)
       opentelemetry-registry (~> 0.2)
       opentelemetry-semantic_conventions
-    opentelemetry-semantic_conventions (1.43.0)
+    opentelemetry-semantic_conventions (1.44.0)
       opentelemetry-api (~> 1.0)
     os (1.1.4)
     ostruct (0.6.3)
@@ -755,7 +755,7 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.4.2)
-    rbs (4.1.3)
+    rbs (4.2.0)
       logger
       prism (>= 1.6.0)
       tsort
@@ -974,7 +974,7 @@ DEPENDENCIES
   google-apis-gmail_v1
   govspeak
   govuk_admin_template
-  govuk_app_config (~> 9.25.1)
+  govuk_app_config (~> 9.25.2)
   govuk_publishing_components
   govuk_schemas
   govuk_sidekiq
