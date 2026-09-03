@@ -21,7 +21,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
 
     should "render the page" do
       assert page.has_text?(@ready_edition.title)
-      assert page.has_text?("Send for fact check")
+      assert page.has_text?("Send to fact check")
       assert page.has_text?("Email addresses")
       assert page.has_text?("Reason for change (optional)")
       assert page.has_text?("Zendesk ticket number (optional)")
@@ -29,19 +29,25 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       assert page.has_css?(".gem-c-hint", text: "This is shown in the email sent to the department")
       assert page.has_css?(".gem-c-hint", text: "This defaults to 5 working days from today")
       assert page.has_css?(".govuk-input__prefix", text: "https://govuk.zendesk.com/tickets/")
-      assert page.has_button?("Send for fact check")
+      assert page.has_button?("Continue")
       assert page.has_link?("Cancel")
     end
 
     should "pre-populate the email preview with the edition title" do
+      fill_in "Email addresses", with: "fact-checker@example.com"
+      click_button "Continue"
+
       assert page.has_css?(".edit--send-fact-check-email-preview", text: @ready_edition.title)
     end
 
     should "render govspeak elements of the email preview" do
+      fill_in "Email addresses", with: "fact-checker@example.com"
+      click_button "Continue"
+
       assert page.has_css?(".edit--send-fact-check-email-preview")
       within ".edit--send-fact-check-email-preview" do
         assert page.has_css?("header", text: "Government Digital Service")
-        assert page.has_css?("div", class: "application-notice info-notice", text: "Deadline: DD Month YYYY")
+        assert page.has_text?("Deadline:")
         assert page.has_css?("h2", id: "review-the-changes", text: "Review the changes")
       end
     end
@@ -70,7 +76,8 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
+      click_button "Confirm and send for fact check"
 
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
@@ -83,7 +90,8 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
+      click_button "Confirm and send for fact check"
 
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
@@ -96,7 +104,8 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
+      click_button "Confirm and send for fact check"
 
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
@@ -111,7 +120,8 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
+      click_button "Confirm and send for fact check"
 
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
@@ -126,10 +136,10 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
       @ready_edition.reload
 
-      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert_current_path send_to_fact_check_email_preview_page_edition_path(@ready_edition.id)
       assert_equal "ready", @ready_edition.state
       assert page.has_text?("Email addresses are invalid")
     end
@@ -141,10 +151,10 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: 999
       fill_in "Month", with: 999
       fill_in "Year", with: 999
-      click_button "Send for fact check"
+      click_button "Continue"
       @ready_edition.reload
 
-      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert_current_path send_to_fact_check_email_preview_page_edition_path(@ready_edition.id)
       assert_equal "ready", @ready_edition.state
       assert page.has_text?("Enter a deadline")
     end
@@ -158,12 +168,46 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
       @ready_edition.reload
 
-      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert_current_path send_to_fact_check_email_preview_page_edition_path(@ready_edition.id)
       assert_equal "ready", @ready_edition.state
       assert page.has_text?("Zendesk ticket number must be at least 7 digits long")
+    end
+
+    should "allow user to return from Page 2 to Page 1 with pre-populated form values when Back is clicked" do
+      date = 2.days.from_now
+
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Zendesk ticket number (optional)", with: 1_234_567
+      fill_in "Reason for change", with: "Initial reason"
+      fill_in "Day", with: date.day
+      fill_in "Month", with: date.month
+      fill_in "Year", with: date.year
+      click_button "Continue"
+
+      assert_current_path send_to_fact_check_email_preview_page_edition_path(@ready_edition.id)
+
+      click_link "Back"
+
+      assert_current_path send_to_fact_check_page_edition_path(@ready_edition.id), ignore_query: true
+      assert page.has_field?("Email addresses", with: "fact-checker-one@example.com")
+      assert page.has_field?("Zendesk ticket number (optional)", with: "1234567")
+      assert page.has_field?("Reason for change", with: "Initial reason")
+      assert page.has_field?("Day", with: date.day.to_s)
+      assert page.has_field?("Month", with: date.month.to_s)
+      assert page.has_field?("Year", with: date.year.to_s)
+    end
+
+    should "render the reason for change enclosed in English curly quotes in the email preview" do
+      fill_in "Email addresses", with: "fact-checker@example.com"
+      fill_in "Reason for change", with: "Factual updates to section 2."
+      click_button "Continue"
+
+      within ".edit--send-fact-check-email-preview" do
+        assert page.has_text?("Reason for change: “Factual updates to section 2.”")
+      end
     end
   end
 
@@ -183,9 +227,9 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
 
-      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert_current_path send_to_fact_check_email_preview_page_edition_path(@ready_edition.id)
       assert page.has_text?("Email addresses are invalid")
       assert page.has_css?("input[value='fact-checker-one.com']")
       assert page.has_css?("input[value='1234567']")
@@ -201,9 +245,9 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: "not"
       fill_in "Month", with: "a"
       fill_in "Year", with: "number"
-      click_button "Send for fact check"
+      click_button "Continue"
 
-      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert_current_path send_to_fact_check_email_preview_page_edition_path(@ready_edition.id)
       assert page.has_text?("Enter a deadline")
       assert page.has_css?("input[value='fact-checker-one@email.com']")
       assert page.has_css?("input[value='not']")
@@ -220,16 +264,15 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
+      click_button "Confirm and send for fact check"
 
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Due to a service problem, the request could not be made")
-      assert page.has_css?("input[value='fact-checker-one@example.com']")
-      assert page.has_css?("input[value='1234567']")
-      assert page.has_css?("textarea", text: "A reason")
-      assert page.has_css?("input[value='#{date.day}']")
-      assert page.has_css?("input[value='#{date.month}']")
-      assert page.has_css?("input[value='#{date.year}']")
+      assert page.has_text?("fact-checker-one@example.com")
+      assert page.has_text?("1234567")
+      assert page.has_text?("A reason")
+      assert page.has_field?("fact_check_request_form[email_addresses]", type: "hidden", with: "fact-checker-one@example.com", visible: :all)
     end
 
     should "log the error" do
@@ -242,7 +285,8 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
+      click_button "Confirm and send for fact check"
     end
   end
 
@@ -359,18 +403,15 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
     should "send a simple smart answer to fact check" do
       stub_post_new_fact_check_request(success: true)
       ready_edition = FactoryBot.create(:simple_smart_answer_edition, :ready)
-      date = 1.day.from_now
 
       visit send_to_fact_check_page_edition_path(ready_edition)
 
-      assert page.has_text?("Send for fact check")
+      assert page.has_button?("Continue")
       assert page.has_text?("Reason for change (optional)")
 
       fill_in "Email addresses", with: "fact-checker-one@example.com"
-      fill_in "Day", with: date.day
-      fill_in "Month", with: date.month
-      fill_in "Year", with: date.year
-      click_button "Send for fact check"
+      click_button "Continue"
+      click_button "Confirm and send for fact check"
 
       assert_current_path edition_path(ready_edition.id)
       assert page.has_text?("Sent to fact check")
