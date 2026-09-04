@@ -28,7 +28,7 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # @return [GdsApi::Response] Basic response with code
 
   def post_fact_check(source_app:, source_id:, requester_name:, requester_email:, current_content:,
-                      recipients:, deadline:, source_title: nil, source_url: nil, previous_content: {}, reason_for_change: nil, zendesk_number: nil,
+                      recipients:, deadline:, source_title: nil, source_url: nil, previous_content: {}, current_markdown: {}, previous_markdown: {}, reason_for_change: nil, zendesk_number: nil,
                       draft_auth_bypass_id: nil, draft_content_id: nil, draft_slug: nil)
     post_json(
       "#{endpoint}/api/requests",
@@ -39,7 +39,9 @@ class GdsApi::FactCheckManager < GdsApi::Base
       requester_name:,
       requester_email:,
       current_content:,
+      current_markdown:,
       previous_content:,
+      previous_markdown:,
       deadline:,
       reason_for_change:,
       zendesk_number:,
