@@ -339,6 +339,33 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
 
       assert_equal expected_payload, @form.post_new_request_payload
     end
+
+    should "send a block per editable field for a format that declares them" do
+      transaction = FactoryBot.create(
+        :transaction_edition,
+        :draft,
+        title: "Apply for a licence",
+        introduction: "Apply online.",
+        more_information: "",
+        alternate_methods: "You can also apply by post.",
+      )
+      target_date = Time.zone.today + 5.days
+
+      @form.edition = transaction
+      @form.deadline_1i = target_date.year.to_s
+      @form.deadline_2i = target_date.month.to_s
+      @form.deadline_3i = target_date.day.to_s
+
+      payload = @form.post_new_request_payload
+
+      assert_equal(
+        %w[introduction start_button_text will_continue_on link alternate_methods need_to_know],
+        payload[:current_content].keys,
+      )
+      assert_equal({ heading: "Introduction", body: "<p>Apply online.</p>" }, payload[:current_content]["introduction"])
+      assert_equal({ heading: "Other ways to apply", body: "<p>You can also apply by post.</p>" }, payload[:current_content]["alternate_methods"])
+      assert_nil payload[:previous_content]
+    end
   end
 
   context ".resend_emails_payload" do
