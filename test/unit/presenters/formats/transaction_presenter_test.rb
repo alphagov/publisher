@@ -145,4 +145,52 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     ]
     assert_equal expected, result[:routes]
   end
+
+  context ".render_for_fact_check_manager_api" do
+    should "return a rendered block per field, in edit form order" do
+      edition = FactoryBot.create(
+        :transaction_edition,
+        introduction: "Apply online.",
+        start_button_text: "Start now",
+        will_continue_on: "the licensing service",
+        link: "https://www.gov.uk/apply",
+        more_information: "A decision takes 3 weeks.",
+        alternate_methods: "You can also apply by post.",
+        need_to_know: "You need your National Insurance number.",
+      )
+      presenter = Formats::TransactionPresenter.new(edition)
+
+      expected = {
+        "introduction" => { heading: "Introduction", body: "<p>Apply online.</p>" },
+        "start_button_text" => { heading: "Start button text", body: "<p>Start now</p>" },
+        "will_continue_on" => { heading: "Text below the start button", body: "<p>the licensing service</p>" },
+        "link" => { heading: "Link to start of transaction", body: "<p>https://www.gov.uk/apply</p>" },
+        "more_information" => { heading: "More information", body: "<p>A decision takes 3 weeks.</p>" },
+        "alternate_methods" => { heading: "Other ways to apply", body: "<p>You can also apply by post.</p>" },
+        "need_to_know" => { heading: "What you need to know", body: "<p>You need your National Insurance number.</p>" },
+      }
+
+      result = presenter.render_for_fact_check_manager_api
+
+      assert_equal expected.keys, result.keys
+      assert_equal expected, result
+    end
+
+    should "apply govspeak's typography to fields that are not govspeak on the published page" do
+      edition = FactoryBot.create(:transaction_edition, will_continue_on: "To be continued...")
+      presenter = Formats::TransactionPresenter.new(edition)
+
+      assert_equal "<p>To be continued\u2026</p>", presenter.render_for_fact_check_manager_api["will_continue_on"][:body]
+    end
+
+    should "omit any blank fields" do
+      edition = FactoryBot.create(:transaction_edition, more_information: "", alternate_methods: nil)
+      presenter = Formats::TransactionPresenter.new(edition)
+
+      assert_equal(
+        %w[introduction start_button_text will_continue_on link need_to_know],
+        presenter.render_for_fact_check_manager_api.keys,
+      )
+    end
+  end
 end

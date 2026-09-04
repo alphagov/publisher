@@ -1,5 +1,14 @@
 module Formats
   class LocalTransactionPresenter < EditionFormatPresenter
+    FIELD_LABELS = {
+      cta_text: "Button text",
+      introduction: "Introduction",
+      more_information: "Further information",
+      need_to_know: "What you need to know",
+      before_results: "Above results content",
+      after_results: "Below results content",
+    }.freeze
+
   private
 
     def schema_name

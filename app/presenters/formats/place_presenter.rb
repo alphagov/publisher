@@ -1,5 +1,11 @@
 module Formats
   class PlacePresenter < EditionFormatPresenter
+    FIELD_LABELS = {
+      introduction: "Introduction",
+      more_information: "Further information",
+      need_to_know: "What you need to know",
+    }.freeze
+
   private
 
     def schema_name
