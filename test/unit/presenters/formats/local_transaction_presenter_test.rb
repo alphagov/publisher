@@ -205,5 +205,54 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         assert_equal expected, result[:details][:northern_ireland_availability]
       end
     end
+
+    context ".render_for_fact_check_manager_api" do
+      should "return a rendered block per field, in edit form order" do
+        edition = FactoryBot.create(
+          :local_transaction_edition,
+          cta_text: "Find your council",
+          introduction: "Report a problem to your council.",
+          more_information: "Councils respond within 5 working days.",
+          need_to_know: "You need your postcode.",
+          before_results: "Enter your postcode.",
+          after_results: "Contact your council if the details are wrong.",
+        )
+        presenter = Formats::LocalTransactionPresenter.new(edition)
+
+        expected = {
+          "cta_text" => { heading: "Button text", body: "<p>Find your council</p>" },
+          "introduction" => { heading: "Introduction", body: "<p>Report a problem to your council.</p>" },
+          "more_information" => { heading: "Further information", body: "<p>Councils respond within 5 working days.</p>" },
+          "need_to_know" => { heading: "What you need to know", body: "<p>You need your postcode.</p>" },
+          "before_results" => { heading: "Above results content", body: "<p>Enter your postcode.</p>" },
+          "after_results" => { heading: "Below results content", body: "<p>Contact your council if the details are wrong.</p>" },
+        }
+
+        result = presenter.render_for_fact_check_manager_api
+
+        assert_equal expected.keys, result.keys
+        assert_equal expected, result
+      end
+
+      should "render the govspeak in each field" do
+        edition = FactoryBot.create(:local_transaction_edition, before_results: "##Before")
+        presenter = Formats::LocalTransactionPresenter.new(edition)
+
+        assert_equal(
+          "<h2 id=\"before\">Before</h2>",
+          presenter.render_for_fact_check_manager_api["before_results"][:body],
+        )
+      end
+
+      should "omit any blank fields" do
+        edition = FactoryBot.create(:local_transaction_edition, more_information: "", cta_text: nil)
+        presenter = Formats::LocalTransactionPresenter.new(edition)
+
+        assert_equal(
+          %w[introduction need_to_know before_results after_results],
+          presenter.render_for_fact_check_manager_api.keys,
+        )
+      end
+    end
   end
 end
