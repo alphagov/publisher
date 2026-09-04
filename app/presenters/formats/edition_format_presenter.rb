@@ -19,6 +19,17 @@ module Formats
       { content: { heading: "Body", body: } }
     end
 
+    def render_markdown_for_fact_check_manager_api
+      return unless @edition.respond_to?(:whole_body)
+
+
+      title_html = %( # #{ERB::Util.html_escape(@edition.title)} \n)
+      body_html = HtmlRenderer.render_html(@edition.whole_body)
+      body = [title_html, body_html.presence].compact.join("\n")
+
+      { content: { heading: "Body", body: } }
+    end
+
   private
 
     attr_reader :edition, :artefact
