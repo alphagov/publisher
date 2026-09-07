@@ -52,6 +52,8 @@
     .non-functional-link{
       @extend .govuk-link; // stylelint-disable-line scss/at-extend-no-missing-placeholder
       color: govuk-colour("blue"); // govuk-functional-colour("link") once that is working
+      pointer-events: none;
+      cursor: default;
     }
 
     .gem-c-govspeak h2{

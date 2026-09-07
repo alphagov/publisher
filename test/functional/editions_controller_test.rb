@@ -1285,7 +1285,7 @@ class EditionsControllerTest < ActionController::TestCase
                                        deadline_1i: default_test_deadline.year },
           }
 
-          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_template "secondary_nav_tabs/send_to_fact_check_email_preview_page"
           assert_equal "Due to a service problem, the request could not be made", flash[:danger]
           edition.reload
           assert_equal "ready", edition.state
@@ -1303,7 +1303,7 @@ class EditionsControllerTest < ActionController::TestCase
                                        deadline_1i: default_test_deadline.year },
           }
 
-          assert_template "secondary_nav_tabs/send_to_fact_check_page"
+          assert_template "secondary_nav_tabs/send_to_fact_check_email_preview_page"
           assert_equal "Due to a service problem, the request could not be made", flash[:danger]
           edition.reload
           assert_equal "ready", edition.state
@@ -1324,6 +1324,91 @@ class EditionsControllerTest < ActionController::TestCase
           assert_equal "Due to a service problem, the request could not be made", flash[:danger]
           edition.reload
           assert_equal "ready", edition.state
+        end
+
+        should "pre-populate the form when query parameters are present" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          get :send_to_fact_check_page, params: {
+            id: edition.id,
+            fact_check_request_form: {
+              email_addresses: "prefilled@example.com",
+              reason_for_change: "Prefilled reason for change",
+              zendesk_number: "1234567",
+            },
+          }
+
+          assert_response :success
+          assert_equal "prefilled@example.com", assigns(:form).email_addresses
+          assert_equal "Prefilled reason for change", assigns(:form).reason_for_change
+          assert_equal "1234567", assigns(:form).zendesk_number
+        end
+
+        should "initialize an empty form when no query parameters are present" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          get :send_to_fact_check_page, params: { id: edition.id }
+
+          assert_response :success
+          assert_nil assigns(:form).email_addresses
+          assert_nil assigns(:form).reason_for_change
+          assert_nil assigns(:form).zendesk_number
+        end
+      end
+    end
+
+    context "#send_to_fact_check_email_preview_page" do
+      context "user has govuk_editor permission" do
+        should "render Page 2 preview when valid parameters are provided" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          post :send_to_fact_check_email_preview_page, params: {
+            id: edition.id,
+            fact_check_request_form: { email_addresses: "stub@email.com",
+                                       deadline_1i: default_test_deadline.year,
+                                       deadline_2i: default_test_deadline.month,
+                                       deadline_3i: default_test_deadline.day },
+          }
+
+          assert_template "secondary_nav_tabs/send_to_fact_check_email_preview_page"
+        end
+
+        should "redirect to edition path with an error message when edition is in a state where going to fact check is not available" do
+          edition = FactoryBot.create(:edition, :published)
+
+          post :send_to_fact_check_email_preview_page, params: {
+            id: edition.id,
+            fact_check_request_form: { email_addresses: "stub@email.com",
+                                       deadline_1i: default_test_deadline.year,
+                                       deadline_2i: default_test_deadline.month,
+                                       deadline_3i: default_test_deadline.day },
+          }
+
+          assert_redirected_to edition_path
+          assert_equal "Edition is not in a state where it can be sent to fact check", flash[:danger]
+        end
+      end
+
+      context "user does not have govuk_editor permission" do
+        setup do
+          user = FactoryBot.create(:user)
+          login_as(user)
+        end
+
+        should "render an error message when user lacks permission" do
+          edition = FactoryBot.create(:edition, :ready)
+
+          post :send_to_fact_check_email_preview_page, params: {
+            id: edition.id,
+            fact_check_request_form: {
+              email_addresses: "stub@email.com",
+              deadline_1i: default_test_deadline.year,
+              deadline_2i: default_test_deadline.month,
+              deadline_3i: default_test_deadline.day,
+            },
+          }
+
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
         end
       end
     end
