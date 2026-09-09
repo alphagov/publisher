@@ -35,6 +35,7 @@
 
     border: 1px solid #cecece; // Temporary workaround until govuk-functional-colour is working
     background-color: #f4f8fb; // Temporary workaround until govuk-functional-colour is working
+    overflow-wrap: break-word;
     @include govuk-responsive-margin(2, "top");
     @include govuk-responsive-padding(6, "left");
     @include govuk-responsive-padding(6, "right");
