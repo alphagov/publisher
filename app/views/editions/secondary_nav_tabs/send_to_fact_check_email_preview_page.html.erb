@@ -4,17 +4,23 @@
 <% content_for :page_title, title %>
 <% content_for :title, title %>
 
-<% content_for :back_link, send_to_fact_check_page_edition_path(
-  @edition,
-  fact_check_request_form: {
-    email_addresses: @form.email_addresses,
-    reason_for_change: @form.reason_for_change,
-    zendesk_number: @form.zendesk_number,
-    deadline_3i: @form.deadline_3i.presence || @form.deadline&.day,
-    deadline_2i: @form.deadline_2i.presence || @form.deadline&.month,
-    deadline_1i: @form.deadline_1i.presence || @form.deadline&.year,
-  },
-) %>
+<article class="edit">
+  <% content_for :back_control do %>
+    <%= button_to "Back",
+                  back_to_send_to_fact_check_page_edition_path(@edition),
+                  class: "button-back-link",
+                  params: {
+                    fact_check_request_form: {
+                      email_addresses: @form.email_addresses,
+                      reason_for_change: @form.reason_for_change,
+                      zendesk_number: @form.zendesk_number,
+                      deadline_3i: @form.deadline_3i.presence || @form.deadline&.day,
+                      deadline_2i: @form.deadline_2i.presence || @form.deadline&.month,
+                      deadline_1i: @form.deadline_1i.presence || @form.deadline&.year,
+                    },
+                  } %>
+  <% end %>
+</article>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

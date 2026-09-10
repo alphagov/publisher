@@ -1,4 +1,13 @@
 // stylelint-disable selector-no-qualifying-type
+button.button-back-link {
+    @extend .govuk-back-link;
+    background: none;
+    border: none;
+
+    &:focus {
+      background: $govuk-focus-colour;
+    }
+  }
 
 .edit {
   &--readonly {
