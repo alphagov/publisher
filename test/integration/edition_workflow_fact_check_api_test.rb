@@ -189,7 +189,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
 
       assert_current_path send_to_fact_check_email_preview_page_edition_path(@ready_edition.id)
 
-      click_link "Back"
+      click_button "Back"
 
       assert_current_path send_to_fact_check_page_edition_path(@ready_edition.id), ignore_query: true
       assert page.has_field?("Email addresses", with: "fact-checker-one@example.com")
