@@ -1,5 +1,7 @@
 module Formats
   class EditionFormatPresenter
+    FIELD_LABELS = {}.freeze
+
     def initialize(edition)
       @edition = edition
       @artefact = edition.artefact
@@ -10,18 +12,35 @@ module Formats
     end
 
     def render_for_fact_check_manager_api
-      return unless @edition.respond_to?(:whole_body)
+      blocks = fact_check_blocks
+      return title_and_whole_body_block if blocks.empty?
 
-      title_html = %(<h2 class="edition-title">#{ERB::Util.html_escape(@edition.title)}</h2>)
-      body_html = HtmlRenderer.render_html(@edition.whole_body)
-      body = [title_html, body_html.presence].compact.join("\n")
-
-      { content: { heading: "Body", body: } }
+      HtmlRenderer.render_hash(blocks)
     end
 
   private
 
     attr_reader :edition, :artefact
+
+    def fact_check_blocks
+      blocks = self.class::FIELD_LABELS.filter_map do |field, heading|
+        body = edition.editionable[field]
+
+        [field.to_s, { heading:, body: }] if body.present?
+      end
+
+      blocks.to_h
+    end
+
+    def title_and_whole_body_block
+      return unless edition.respond_to?(:whole_body)
+
+      title_html = %(<h2 class="edition-title">#{ERB::Util.html_escape(edition.title)}</h2>)
+      body_html = HtmlRenderer.render_html(edition.whole_body)
+      body = [title_html, body_html.presence].compact.join("\n")
+
+      { content: { heading: "Body", body: } }
+    end
 
     def optional_fields
       access_limited = { auth_bypass_ids: [edition.auth_bypass_id] }
