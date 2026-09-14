@@ -102,6 +102,7 @@ Rails.application.routes.draw do
   resources :editions, only: [] do
     member do
       get "send_to_fact_check_page"
+      post "send_to_fact_check_page"
       post "send_to_fact_check"
       post "send_to_fact_check_email_preview_page"
       get "resend_fact_check_email_page"

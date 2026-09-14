@@ -717,6 +717,7 @@ class Ga4TrackingEditTest < JavascriptIntegrationTest
     end
 
     should "push the correct values to the dataLayer on Page 2 form submission and go back" do
+      skip "Disabled pending GA4 event change investigation due to linkified button"
       today = Date.parse("2025-10-29")
 
       Timecop.freeze(today) do

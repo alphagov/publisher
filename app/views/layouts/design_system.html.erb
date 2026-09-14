@@ -42,6 +42,8 @@
   <div class="govuk-width-container">
     <% if content_for?(:back_link) %>
       <%= render "govuk_publishing_components/components/back_link", { href: yield(:back_link) } %>
+    <% elsif content_for?(:back_control) %>
+      <%= yield(:back_control) %>  
     <% end %>
 
     <main
