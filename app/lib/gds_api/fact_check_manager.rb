@@ -76,10 +76,11 @@ class GdsApi::FactCheckManager < GdsApi::Base
   # @option [string] source_title The title of the content (optional)
   # @option [uuid] draft_auth_bypass_id The edition's auth_bypass_id for draft origin preview access (optional)
   # @option [string] draft_slug The edition's slug for the draft origin preview URL path (optional)
-  def patch_update_content(source_app:, source_id:, current_content:, source_title: nil, draft_auth_bypass_id: nil, draft_slug: nil)
+  def patch_update_content(source_app:, source_id:, current_content:, current_markdown: {}, source_title: nil, draft_auth_bypass_id: nil, draft_slug: nil)
     payload = {
       source_title:,
       current_content:,
+      current_markdown:,
       draft_auth_bypass_id:,
       draft_slug:,
     }.compact
