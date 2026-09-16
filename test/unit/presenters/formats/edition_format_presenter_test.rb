@@ -177,6 +177,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       presenter = Formats::EditionFormatPresenter.new(edition)
 
       assert_equal({ content: { heading: "Body", body: "<h2 class=\"edition-title\">A key answer to your question 1</h2>\n<p>Move your body</p>" } }, presenter.render_for_fact_check_manager_api)
+      assert_equal({ content: { heading: "Body", body: "# A key answer to your question 1 \n\nMove your body" } }, presenter.render_markdown_for_fact_check_manager_api)
     end
 
     should "return nil if edition does not respond to whole_body" do

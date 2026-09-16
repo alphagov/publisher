@@ -18,6 +18,13 @@ module Formats
       HtmlRenderer.render_hash(blocks)
     end
 
+    def render_markdown_for_fact_check_manager_api
+      blocks = fact_check_blocks
+      return markdown_title_and_whole_body_block if blocks.empty?
+
+      blocks
+    end
+
   private
 
     attr_reader :edition, :artefact
@@ -37,6 +44,16 @@ module Formats
 
       title_html = %(<h2 class="edition-title">#{ERB::Util.html_escape(edition.title)}</h2>)
       body_html = HtmlRenderer.render_html(edition.whole_body)
+      body = [title_html, body_html.presence].compact.join("\n")
+
+      { content: { heading: "Body", body: } }
+    end
+
+    def markdown_title_and_whole_body_block
+      return unless @edition.respond_to?(:whole_body)
+
+      title_html = %(# #{@edition.title} \n)
+      body_html = @edition.whole_body
       body = [title_html, body_html.presence].compact.join("\n")
 
       { content: { heading: "Body", body: } }
