@@ -21,7 +21,6 @@ class FactCheckRequestForm
   validate :deadline_in_range, on: :send
   validate :deadline_present, on: :send
 
-  EMAIL_REGEX = /\A[\w+\-%.']+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/
   ZENDESK_NUMBER_REGEX = /\A\d{7,}\z/
 
   def zendesk_number=(value)
@@ -110,7 +109,7 @@ private
   def valid_email_addresses
     return if email_addresses.blank?
 
-    if split_email_addresses.any? { |address| !address.to_s.strip.match?(EMAIL_REGEX) }
+    if split_email_addresses.any? { |address| !address.to_s.strip.match?(URI::MailTo::EMAIL_REGEXP) }
       errors.add(:email_addresses, "Email addresses are invalid")
     end
   end
