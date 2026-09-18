@@ -224,8 +224,8 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
           "introduction" => { heading: "Introduction", body: "<p>Report a problem to your council.</p>" },
           "more_information" => { heading: "Further information", body: "<p>Councils respond within 5 working days.</p>" },
           "need_to_know" => { heading: "What you need to know", body: "<p>You need your postcode.</p>" },
-          "before_results" => { heading: "Above results content", body: "<p>Enter your postcode.</p>" },
-          "after_results" => { heading: "Below results content", body: "<p>Contact your council if the details are wrong.</p>" },
+          "before_results" => { heading: "Text above the results", body: "<p>Enter your postcode.</p>" },
+          "after_results" => { heading: "Text below the results", body: "<p>Contact your council if the details are wrong.</p>" },
         }
 
         result = presenter.render_for_fact_check_manager_api

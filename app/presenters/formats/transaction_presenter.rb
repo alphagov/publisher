@@ -4,7 +4,7 @@ module Formats
       introduction: "Introduction",
       start_button_text: "Start button text",
       will_continue_on: "Text below the start button",
-      link: "Link to start of transaction",
+      link: "Start button link",
       more_information: "More information",
       alternate_methods: "Other ways to apply",
       need_to_know: "What you need to know",

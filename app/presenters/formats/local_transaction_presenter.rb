@@ -5,8 +5,8 @@ module Formats
       introduction: "Introduction",
       more_information: "Further information",
       need_to_know: "What you need to know",
-      before_results: "Above results content",
-      after_results: "Below results content",
+      before_results: "Text above the results",
+      after_results: "Text below the results",
     }.freeze
 
   private

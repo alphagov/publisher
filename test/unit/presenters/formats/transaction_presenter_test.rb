@@ -164,7 +164,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
         "introduction" => { heading: "Introduction", body: "<p>Apply online.</p>" },
         "start_button_text" => { heading: "Start button text", body: "<p>Start now</p>" },
         "will_continue_on" => { heading: "Text below the start button", body: "<p>the licensing service</p>" },
-        "link" => { heading: "Link to start of transaction", body: "<p>https://www.gov.uk/apply</p>" },
+        "link" => { heading: "Start button link", body: "<p>https://www.gov.uk/apply</p>" },
         "more_information" => { heading: "More information", body: "<p>A decision takes 3 weeks.</p>" },
         "alternate_methods" => { heading: "Other ways to apply", body: "<p>You can also apply by post.</p>" },
         "need_to_know" => { heading: "What you need to know", body: "<p>You need your National Insurance number.</p>" },
