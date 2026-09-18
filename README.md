@@ -180,6 +180,10 @@ For details on how feature flags are managed in Publisher, see the [feature flag
 
 For instructions on how to add a new type of promotion to Completed Transactions, see the ["adding a promotion" documentation](docs/adding-a-promotion-to-a-completed-transaction.md).
 
+### GA4 tracking
+
+For details on the tracking that is applied to Publisher, see the [GA4 tracking documentation](docs/ga4-tracking.md).
+
 ## Further documentation
 
 - [Fact Checking](docs/fact-checking.md)
