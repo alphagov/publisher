@@ -72,13 +72,13 @@ $strong-removed-color: #f3aeac;
       }
 
       li.del::before {
-        color: $govuk-text-colour;
+        color: govuk-functional-colour(text);
         background-color: $strong-removed-color;
         content: "−";
       }
 
       li.ins::before {
-        color: $govuk-text-colour;
+        color: govuk-functional-colour(text);
         background-color: $strong-added-color;
         content: "+";
       }

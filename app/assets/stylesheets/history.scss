@@ -16,15 +16,17 @@
 
   &__action--receive_fact_check__commment {
     .govuk-inset-text {
-      @extend .govuk-tag--light-blue;
-      color: $govuk-text-colour;
+      // UPDATE!
+      // THIS COLOUR NO LONGER EXISTS
+      @extend .govuk-tag--light-blue !optional;
+      color: govuk-functional-colour(text);
     }
   }
   // stylelint-enable scss/at-extend-no-missing-placeholder
 
   &__action--receive_fact_check--toggle {
     border-width: 0;
-    color: $govuk-link-colour;
+    color: govuk-functional-colour(link);
     background: none;
     padding: 0;
     margin: 0;
