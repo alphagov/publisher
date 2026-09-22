@@ -4,9 +4,9 @@ module EditionsHelper
     archived: "blue",
     draft: "yellow",
     fact_check: "purple",
-    fact_check_received: "pink",
+    fact_check_received: "magenta",
     ready: "green",
-    scheduled_for_publishing: "turquoise",
+    scheduled_for_publishing: "teal",
     published: "orange",
     in_review: "grey",
   }.freeze
