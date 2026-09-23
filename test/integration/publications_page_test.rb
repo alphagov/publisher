@@ -288,7 +288,7 @@ class PublicationsPageTest < IntegrationTest
 
       within find(".govuk-table__row", text: "Scheduled edition") do
         assert_link "Scheduled edition", href: edition_path(@scheduled_edition)
-        assert page.has_css?(".govuk-tag--turquoise", text: "Scheduled")
+        assert page.has_css?(".govuk-tag--teal", text: "Scheduled")
         assert_text "4 days ago"
         assert_text "Transaction"
       end
