@@ -95,7 +95,7 @@ class FactCheckRequestForm
   def split_email_addresses
     return [] if email_addresses.blank?
 
-    email_addresses.split(Regexp.union(",", ";")).map(&:strip).compact_blank
+    email_addresses.split(Regexp.union(",", ";")).map { |address| address.strip.downcase }.compact_blank
   end
 
 private

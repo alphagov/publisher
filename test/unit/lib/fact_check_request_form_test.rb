@@ -322,6 +322,12 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
       assert_equal expected_payload, @form.post_new_request_payload
     end
 
+    should "downcase recipient email addresses" do
+      @form.email_addresses = "james.stewart@TEST.GOV.UK"
+
+      assert_equal ["james.stewart@test.gov.uk"], @form.post_new_request_payload[:recipients]
+    end
+
     should "build and format the payload with no previous content" do
       @new_draft_edition = FactoryBot.build(:edition, :draft, title: "New title")
       target_date = Time.zone.today + 5.days
