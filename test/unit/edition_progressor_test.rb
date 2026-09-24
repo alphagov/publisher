@@ -26,6 +26,23 @@ class EditionProgressorTest < ActiveSupport::TestCase
     assert_equal "fact_check", @guide.state
   end
 
+  test "should save downcased fact check email addresses for the action" do
+    @guide.update!(state: :ready)
+
+    activity = {
+      request_type: "send_fact_check",
+      comment: "some comment",
+      email_addresses: "user@EXAMPLE.COM",
+      customised_message: "Hello",
+    }
+
+    command = EditionProgressor.new(@guide, @laura)
+    assert command.progress(activity)
+
+    action = @guide.reload.actions.last
+    assert_equal "user@example.com", action.email_addresses
+  end
+
   test "should not progress to fact check if the email addresses were blank" do
     @guide.update!(state: :ready)
 
