@@ -7,7 +7,7 @@
     cursor: pointer;
 
     &:focus {
-      background: $govuk-focus-colour;
+      background: govuk-functional-colour(focus);
     }
   }
 
@@ -43,8 +43,8 @@
   &--send-fact-check-email-preview {
     @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
 
-    border: 1px solid #cecece; // Temporary workaround until govuk-functional-colour is working
-    background-color: #f4f8fb; // Temporary workaround until govuk-functional-colour is working
+    border: 1px solid govuk-functional-colour(border);
+    background-color: govuk-functional-colour(template-background);
     overflow-wrap: break-word;
     @include govuk-responsive-margin(2, "top");
     @include govuk-responsive-padding(6, "left");
@@ -62,7 +62,7 @@
 
     .non-functional-link{
       @extend .govuk-link; // stylelint-disable-line scss/at-extend-no-missing-placeholder
-      color: govuk-colour("blue"); // govuk-functional-colour("link") once that is working
+      color: govuk-functional-colour("link");
       pointer-events: none;
       cursor: default;
     }

@@ -4,9 +4,9 @@ module EditionsHelper
     archived: "blue",
     draft: "yellow",
     fact_check: "purple",
-    fact_check_received: "pink",
+    fact_check_received: "magenta",
     ready: "green",
-    scheduled_for_publishing: "turquoise",
+    scheduled_for_publishing: "teal",
     published: "orange",
     in_review: "grey",
   }.freeze
@@ -101,7 +101,10 @@ module EditionsHelper
   end
 
   def edition_version_and_state_tag(edition)
-    sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>")
+    sanitize("#{edition.version_number} #{render 'govuk_publishing_components/components/tag', {
+      text: edition.state,
+      colour: EDITION_STATUS_TAG_COLOURS.fetch(edition.state.to_sym, nil),
+    }}")
   end
 
   def administration_authority(edition, administration)

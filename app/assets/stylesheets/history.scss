@@ -13,18 +13,18 @@
       @extend .govuk-link--no-visited-state;
     }
   }
+  // stylelint-enable scss/at-extend-no-missing-placeholder
 
   &__action--receive_fact_check__commment {
     .govuk-inset-text {
-      @extend .govuk-tag--light-blue;
-      color: $govuk-text-colour;
+      background: govuk-colour("blue", $variant: "tint-95");
+      color: govuk-functional-colour(text);
     }
   }
-  // stylelint-enable scss/at-extend-no-missing-placeholder
 
   &__action--receive_fact_check--toggle {
     border-width: 0;
-    color: $govuk-link-colour;
+    color: govuk-functional-colour(link);
     background: none;
     padding: 0;
     margin: 0;

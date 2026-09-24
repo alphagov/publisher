@@ -1,7 +1,7 @@
 .fact-check, 
 .two-eye-queue {
   .item-count {
-    color: $govuk-secondary-text-colour;
+    color: govuk-functional-colour(secondary-text);
     margin-left: govuk-spacing(3);
     vertical-align: middle;
     @include govuk-font(19, regular);
@@ -89,7 +89,7 @@
 
 .find-content {
   .item-count {
-    color: $govuk-secondary-text-colour;
+    color: govuk-functional-colour(secondary-text);
     @include govuk-font(19, "regular");
   }
 

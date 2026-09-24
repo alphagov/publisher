@@ -9,8 +9,8 @@ $strong-removed-color: #f3aeac;
 
 .compare-editions {
   .diff {
-    border: 1px solid govuk-colour("light-grey");
-    border-left: 40px solid govuk-colour("light-grey");
+    border: 1px solid govuk-colour("black", $variant: "tint-95");
+    border-left: 40px solid govuk-colour("black", $variant: "tint-95");
     padding: 15px;
 
     ul {
@@ -72,13 +72,13 @@ $strong-removed-color: #f3aeac;
       }
 
       li.del::before {
-        color: $govuk-text-colour;
+        color: govuk-functional-colour(text);
         background-color: $strong-removed-color;
         content: "−";
       }
 
       li.ins::before {
-        color: $govuk-text-colour;
+        color: govuk-functional-colour(text);
         background-color: $strong-added-color;
         content: "+";
       }
