@@ -862,7 +862,7 @@ class EditionsControllerTest < ActionController::TestCase
               edition.reload
               assert_equal "fact_check", edition.state
               assert_equal "Sent to fact check", edition.latest_status_action.comment
-              assert_equal email_addresses, edition.latest_status_action.email_addresses
+              assert_equal email_addresses.downcase, edition.latest_status_action.email_addresses
               assert_equal "Please fact check this", edition.latest_status_action.customised_message
             end
           end

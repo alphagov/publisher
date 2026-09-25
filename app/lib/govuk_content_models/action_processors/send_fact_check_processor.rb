@@ -22,6 +22,7 @@ module GovukContentModels
       def record_action
         # API payload does not need to be persisted in the Action record
         action_attributes.delete(:api_payload)
+        action_attributes[:email_addresses] = action_attributes[:email_addresses].downcase
 
         super
       end
