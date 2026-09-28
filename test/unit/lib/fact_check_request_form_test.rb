@@ -42,6 +42,13 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
         assert_empty @form.errors[:email_addresses]
       end
 
+      should "validate an email address with uppercase characters in the domain" do
+        @form.email_addresses = "james.stewart@TEST.GOV.UK"
+
+        assert @form.valid?(:send)
+        assert_empty @form.errors[:email_addresses]
+      end
+
       should "validate an email address with valid but unusual characters" do
         @form.email_addresses = "James.O'Stewart42@test.gov.uk"
 
@@ -313,6 +320,12 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
                            draft_slug: @edition.slug }
 
       assert_equal expected_payload, @form.post_new_request_payload
+    end
+
+    should "downcase recipient email addresses" do
+      @form.email_addresses = "james.stewart@TEST.GOV.UK"
+
+      assert_equal ["james.stewart@test.gov.uk"], @form.post_new_request_payload[:recipients]
     end
 
     should "build and format the payload with no previous content" do
