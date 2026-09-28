@@ -387,10 +387,27 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
                            source_id: @edition.id,
                            source_title: "New title",
                            current_content: { content: { heading: "Body", body: "<h2 class=\"edition-title\">New title</h2>\n<p>Some updated body</p>" } },
+                           current_markdown: { content: { heading: "Body", body: "# New title \n\nSome updated body" } },
                            draft_auth_bypass_id: @edition.auth_bypass_id,
                            draft_slug: @edition.slug }
 
       assert_equal expected_payload, @form.update_content_payload
+    end
+
+    should "send a markdown block per editable field for a format that declares them" do
+      transaction = FactoryBot.create(
+        :transaction_edition,
+        :draft,
+        title: "Apply for a licence",
+        introduction: "Apply online.",
+        alternate_methods: "You can also apply by post.",
+      )
+      @form.edition = transaction
+
+      payload = @form.update_content_payload
+
+      assert_equal payload[:current_content].keys, payload[:current_markdown].keys
+      assert_equal({ heading: "Introduction", body: "Apply online." }, payload[:current_markdown]["introduction"])
     end
   end
 end

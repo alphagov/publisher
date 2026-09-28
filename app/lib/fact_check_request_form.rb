@@ -70,6 +70,7 @@ class FactCheckRequestForm
       source_id: edition.id,
       source_title: edition.title,
       current_content: current_content_presenter.render_for_fact_check_manager_api,
+      current_markdown: current_content_presenter.render_markdown_for_fact_check_manager_api,
       draft_auth_bypass_id: edition.auth_bypass_id,
       draft_slug: edition.slug,
     }
