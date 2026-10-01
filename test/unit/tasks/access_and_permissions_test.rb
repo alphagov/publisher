@@ -33,7 +33,7 @@ class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
   test "add_organisation_access assigns permissions correctly" do
     organisation_id = "test-org-id"
 
-    @add_organisation_access_task.invoke(@artefact1.id, organisation_id)
+    @add_organisation_access_task.invoke(@artefact1.content_id, organisation_id)
     @edition1.reload
 
     assert_includes @edition1.owning_org_content_ids, organisation_id
@@ -44,7 +44,7 @@ class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
     organisation_id = "test-org-id"
     @edition1.update!(owning_org_content_ids: [organisation_id])
 
-    @add_organisation_access_task.invoke(@artefact1.id, organisation_id)
+    @add_organisation_access_task.invoke(@artefact1.content_id, organisation_id)
     @edition1.reload
 
     assert_equal(1, @edition1.owning_org_content_ids.count { |id| id == organisation_id })
@@ -59,7 +59,7 @@ class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
     original_edition_updated_at = @edition1.updated_at
     original_artefact_updated_at = @artefact1.updated_at
 
-    @add_organisation_access_task.invoke(@artefact1.id, organisation_id)
+    @add_organisation_access_task.invoke(@artefact1.content_id, organisation_id)
     @edition1.reload
     @artefact1.reload
 
@@ -85,7 +85,7 @@ class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
     edition1 = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [organisation_id])
     edition2 = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [organisation_id])
 
-    @remove_organisation_access_task.invoke(artefact.id, organisation_id)
+    @remove_organisation_access_task.invoke(artefact.content_id, organisation_id)
     edition1.reload
     edition2.reload
 
@@ -99,7 +99,7 @@ class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
     artefact = FactoryBot.create(:artefact)
     edition = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [org_id_to_keep, org_id_to_remove])
 
-    @remove_organisation_access_task.invoke(artefact.id, org_id_to_remove)
+    @remove_organisation_access_task.invoke(artefact.content_id, org_id_to_remove)
     edition.reload
 
     assert_not_includes edition.owning_org_content_ids, org_id_to_remove
@@ -113,7 +113,7 @@ class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
     edition1 = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [organisation_id1, organisation_id2])
     edition2 = FactoryBot.create(:edition, panopticon_id: artefact.id, owning_org_content_ids: [organisation_id1, organisation_id2])
 
-    @remove_all_access_flags_task.invoke(artefact.id)
+    @remove_all_access_flags_task.invoke(artefact.content_id)
     edition1.reload
     edition2.reload
 
@@ -130,7 +130,7 @@ class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
     artefact2 = FactoryBot.create(:artefact)
     edition2 = FactoryBot.create(:edition, panopticon_id: artefact2.id, owning_org_content_ids: [organisation_id1])
 
-    @remove_all_access_flags_task.invoke(artefact1.id)
+    @remove_all_access_flags_task.invoke(artefact1.content_id)
     edition1.reload
     edition2.reload
 
