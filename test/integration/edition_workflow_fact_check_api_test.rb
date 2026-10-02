@@ -293,7 +293,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
   context "Resend fact check email page with successful post requests" do
     setup do
       stub_post_resend_fact_check_emails(success: true)
-      @fact_check_edition = FactoryBot.create(:edition, :fact_check)
+      @fact_check_edition = FactoryBot.create(:edition, :fact_check_via_manager)
       visit resend_fact_check_email_page_edition_path(@fact_check_edition)
     end
 
@@ -321,7 +321,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
   context "Resend fact check email page with unsuccessful post requests" do
     setup do
       stub_post_resend_fact_check_emails(success: false)
-      @fact_check_edition = FactoryBot.create(:edition, :fact_check)
+      @fact_check_edition = FactoryBot.create(:edition, :fact_check_via_manager)
       visit resend_fact_check_email_page_edition_path(@fact_check_edition)
     end
 
@@ -345,7 +345,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
 
   context "Update Fact check page with successful post requests" do
     setup do
-      @fact_check_edition = FactoryBot.create(:edition, :fact_check)
+      @fact_check_edition = FactoryBot.create(:edition, :fact_check_via_manager)
       visit edition_path(@fact_check_edition)
       stub_patch_update_fact_check_content(success: true, source_id: @fact_check_edition.id)
     end
@@ -378,7 +378,7 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
 
   context "Update Fact check page with unsuccessful post requests" do
     setup do
-      @fact_check_edition = FactoryBot.create(:edition, :fact_check)
+      @fact_check_edition = FactoryBot.create(:edition, :fact_check_via_manager)
       visit edition_path(@fact_check_edition)
       stub_patch_update_fact_check_content(success: false, source_id: @fact_check_edition.id)
     end
