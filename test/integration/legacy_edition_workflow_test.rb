@@ -207,7 +207,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     assert_equal "amends_needed", @simple_smart_answer.state
   end
 
-  test "a simple smart answer in the fact-check state can resend the email" do
+  test "a simple smart answer sent for fact check by email cannot have the email resent" do
     @simple_smart_answer.update!(state: "ready")
     visit_edition @simple_smart_answer
 
@@ -218,22 +218,8 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
     click_on "Send for fact check"
     assert page.has_content?("Sent to fact check")
 
-    ActionMailer::Base.deliveries.clear
-
-    click_link "Resend fact check email"
-
-    assert page.has_content? "Blah blah fact check message"
-    assert page.has_content? "user-to-ask-for-fact-check@example.com"
-    click_on "Resend fact check email"
-    assert page.has_content?("Fact check email re-sent")
-
-    click_on "History and notes"
-    assert page.has_content? "Resend fact check by Alice"
-
-    resent_fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user-to-ask-for-fact-check@example.com" }.last
-    assert resent_fact_check_email
-    assert_match(/‘\[#{@simple_smart_answer.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, resent_fact_check_email.subject)
-    assert_equal "Blah blah fact check message", resent_fact_check_email.body.to_s
+    assert page.has_css?("a.disabled", text: "Resend fact check email"),
+           "a fact check sent by email can no longer be resent, so the button should be disabled"
   end
 
   test "sending a fact check email to a non-permitted address will return an error" do

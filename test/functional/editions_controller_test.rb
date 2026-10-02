@@ -751,38 +751,34 @@ class EditionsControllerTest < ActionController::TestCase
           )
         end
 
-        should "retain the edition status as 'fact_check' and save the action in 'History & notes'" do
-          patch :resend_fact_check_email, params: {
-            id: @edition.id,
-          }
-
-          assert_equal "Fact check email re-sent", flash[:success]
-          @edition.reload
-          assert_equal "fact-checker-one@example.com, fact-checker-two@example.com", @edition.latest_status_action.email_addresses
-          assert_equal "The customised message", @edition.latest_status_action.customised_message
-          assert_equal "fact_check", @edition.state
-        end
-
-        should "render 'resend_fact_check_email_page' template with an error when an error occurs" do
-          EditionProgressor.any_instance.expects(:progress).returns(false)
-
+        should "refuse to resend a fact check that was sent by email, whatever the toggle says" do
           patch :resend_fact_check_email, params: {
             id: @edition.id,
           }
 
           assert_template "secondary_nav_tabs/resend_fact_check_email_page"
-          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          assert_equal "This fact check was not sent using Fact Check Manager. You cannot resend it; you'll need to send a new request", flash[:danger]
+          assert_nil flash[:success]
           @edition.reload
           assert_equal "fact_check", @edition.state
         end
 
-        should "not call Services.fact_check_manager_api" do
-          Services.fact_check_manager_api.expects(:post_resend_emails).never
+        should "leave the send action untouched when the resend is refused" do
           patch :resend_fact_check_email, params: {
             id: @edition.id,
           }
 
-          assert_equal "Fact check email re-sent", flash[:success]
+          @edition.reload
+          assert_equal "fact-checker-one@example.com, fact-checker-two@example.com", @edition.latest_status_action.email_addresses
+          assert_equal "The customised message", @edition.latest_status_action.customised_message
+        end
+
+        should "not call Services.fact_check_manager_api" do
+          Services.fact_check_manager_api.expects(:post_resend_emails).never
+
+          patch :resend_fact_check_email, params: {
+            id: @edition.id,
+          }
         end
       end
 
@@ -950,6 +946,7 @@ class EditionsControllerTest < ActionController::TestCase
   context "fact_check_manager_api is enabled" do
     setup do
       @test_strategy.switch!(:fact_check_manager_api, true)
+      @edition = FactoryBot.create(:edition, :fact_check_via_manager)
       stub_post_new_fact_check_request(success: true, source_id: @edition.id)
       stub_post_resend_fact_check_emails(success: true, source_id: @edition.id)
       stub_patch_update_fact_check_content(success: true, source_id: @edition.id)
@@ -1075,7 +1072,6 @@ class EditionsControllerTest < ActionController::TestCase
             request_type: Action::SEND_FACT_CHECK,
             edition: @edition,
             email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
-            customised_message: "The customised message",
           )
         end
 

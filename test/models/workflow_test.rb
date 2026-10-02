@@ -236,6 +236,18 @@ class WorkflowTest < ActiveSupport::TestCase
     assert_not guide.reload.can_resend_fact_check?
   end
 
+  test "fact_check editions sent to fact-check-manager can resend the email" do
+    edition = FactoryBot.create(:edition, :fact_check_via_manager)
+
+    assert edition.can_resend_fact_check?
+  end
+
+  test "fact_check editions sent by email cannot resend, because that journey is retired" do
+    edition = FactoryBot.create(:edition, :fact_check)
+
+    assert_not edition.can_resend_fact_check?
+  end
+
   test "fact_check_received can go back to out for fact_check" do
     user = FactoryBot.create(:user, :govuk_editor, name: "Ben")
     other_user = FactoryBot.create(:user, :govuk_editor, name: "James")
