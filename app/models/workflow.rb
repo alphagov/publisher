@@ -110,8 +110,9 @@ module Workflow
     end
   end
 
+  # Email fact checks carry a customised message, and can no longer be resent.
   def can_resend_fact_check?
-    fact_check? && latest_status_action&.is_fact_check_request?
+    fact_check? && latest_status_action&.is_fact_check_request? && latest_status_action.customised_message.blank?
   end
 
   def resend_fact_check
