@@ -138,5 +138,14 @@ class GuidePresenterTest < ActiveSupport::TestCase
 
       assert_equal({ content: { heading: "Body", body: "<h2 class=\"edition-title\">test title</h2>" } }, presenter.render_for_fact_check_manager_api)
     end
+
+    should "send an empty string for a chapter with no body, as Fact Check Manager rejects null bodies" do
+      edition = FactoryBot.create(:guide_edition_with_two_parts)
+      edition.parts.find_by(slug: "part-two").update!(body: "")
+      presenter = Formats::GuidePresenter.new(edition)
+
+      assert_equal "", presenter.render_for_fact_check_manager_api["part-two"][:body]
+      assert_equal "", presenter.render_markdown_for_fact_check_manager_api["part-two"][:body]
+    end
   end
 end
