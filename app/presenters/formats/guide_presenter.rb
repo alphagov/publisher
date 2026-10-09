@@ -5,7 +5,7 @@ module Formats
     def fact_check_blocks
       return {} unless edition.editionable.is_a?(Parted)
 
-      edition.parts.in_order.to_h { |part| [part.slug, { heading: part.title, body: part.body.presence }] }
+      edition.parts.in_order.to_h { |part| [part.slug, { heading: part.title, body: part.body.to_s }] }
     end
 
     def schema_name
