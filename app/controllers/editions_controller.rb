@@ -68,6 +68,7 @@ class EditionsController < InheritedResources::Base
 
   SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the request could not be made".freeze
   FACT_CHECK_SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved".freeze
+  FACT_CHECK_RESEND_UNAVAILABLE_MESSAGE = "This fact check was not sent using Fact Check Manager. You cannot resend it; you'll need to send a new request".freeze
 
   def index
     redirect_to root_path
@@ -183,7 +184,10 @@ class EditionsController < InheritedResources::Base
 
   def resend_fact_check_email
     form = FactCheckRequestForm.new({ edition: @resource, user: current_user })
-    if !@resource.can_resend_fact_check?
+    if @resource.fact_check? && !@resource.can_resend_fact_check?
+      flash.now[:danger] = FACT_CHECK_RESEND_UNAVAILABLE_MESSAGE
+      render "secondary_nav_tabs/resend_fact_check_email_page"
+    elsif !@resource.can_resend_fact_check?
       flash.now[:danger] = "Edition is not in a state where fact check emails can be re-sent"
       render "secondary_nav_tabs/resend_fact_check_email_page"
     elsif resend_fact_check_email_for_edition(resource, form)

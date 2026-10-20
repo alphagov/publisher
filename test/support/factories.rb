@@ -194,10 +194,17 @@ FactoryBot.define do
       transient do
         requester { FactoryBot.create(:user, :govuk_editor) }
         sent_out_at { Time.zone.now }
+        customised_message { "Example customised message" }
       end
 
       state { "fact_check" }
-      actions { [FactoryBot.build(:action, request_type: Action::SEND_FACT_CHECK, customised_message: "Example customised message", requester:, created_at: sent_out_at)] }
+      actions { [FactoryBot.build(:action, request_type: Action::SEND_FACT_CHECK, customised_message:, requester:, created_at: sent_out_at)] }
+    end
+
+    # Sent through fact-check-manager, which does not record a customised message.
+    trait :fact_check_via_manager do
+      fact_check
+      customised_message { nil }
     end
 
     trait :fact_check_received do
