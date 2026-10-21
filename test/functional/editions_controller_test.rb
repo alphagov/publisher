@@ -2093,6 +2093,14 @@ class EditionsControllerTest < ActionController::TestCase
             assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
           end
         end
+
+        should "not delete the edition" do
+          delete :destroy, params: { id: @edition.id }
+
+          assert_equal 1, Edition.where(id: @edition.id).count
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
       end
 
       context "non-Welsh, non-govuk editor" do
@@ -2108,6 +2116,14 @@ class EditionsControllerTest < ActionController::TestCase
             assert_redirected_to edition_path(@edition)
             assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
           end
+        end
+
+        should "not delete the edition" do
+          delete :destroy, params: { id: @edition.id }
+
+          assert_equal 1, Edition.where(id: @edition.id).count
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
         end
       end
     end

@@ -8,7 +8,7 @@ class LegacyEditionsController < InheritedResources::Base
   before_action except: %i[index create] do
     require_user_accessibility_to_edition(@resource)
   end
-  before_action only: %i[update duplicate progress review destroy admin] do
+  before_action only: %i[update duplicate progress review destroy admin update_tagging] do
     require_editor_permissions
   end
   before_action only: %i[unpublish process_unpublish] do
@@ -422,14 +422,13 @@ private
   end
 
   def tagging_update_form_params
-    params[:tagging_legacy_tagging_update_form].permit(
-      :content_id,
+    params.require(:tagging_legacy_tagging_update_form).permit(
       :previous_version,
       :parent,
       mainstream_browse_pages: [],
       organisations: [],
       ordered_related_items: [],
-    ).to_h
+    ).to_h.merge(content_id: @resource.artefact.content_id)
   end
 
   def progress_edition(resource, activity_params)

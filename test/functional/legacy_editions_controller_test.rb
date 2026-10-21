@@ -1116,6 +1116,83 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#update_tagging" do
+    setup do
+      @edition = FactoryBot.create(:simple_smart_answer_edition)
+      @content_id = @edition.artefact.content_id
+      @other_content_id = SecureRandom.uuid
+      @tagging_params = {
+        content_id: @other_content_id,
+        previous_version: "1",
+        organisations: %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+      }
+    end
+
+    should "patch the links of the edition's artefact, ignoring any content ID in the form" do
+      post :update_tagging, params: { id: @edition.id, tagging_legacy_tagging_update_form: @tagging_params }
+
+      assert_publishing_api_patch_links(@content_id)
+      assert_not_requested :patch, "#{PUBLISHING_API_V2_ENDPOINT}/links/#{@other_content_id}"
+      assert_equal "Tags have been updated!", flash[:success]
+    end
+
+    should "reject the request without patching links if the tagging form params are missing" do
+      assert_raises(ActionController::ParameterMissing) do
+        post :update_tagging, params: { id: @edition.id }
+      end
+
+      assert_not_requested :patch, %r{#{PUBLISHING_API_V2_ENDPOINT}/links/}
+    end
+
+    should "show the update tags button to a user with editor permissions" do
+      get :linking, params: { id: @edition.id }
+
+      assert_select "input[type=submit][value='Update tags']"
+    end
+
+    should "not show the update tags button to a user without editor permissions" do
+      login_as(FactoryBot.create(:user, name: "Stub User"))
+
+      get :linking, params: { id: @edition.id }
+
+      assert_response :success
+      assert_select "input[type=submit][value='Update tags']", false
+    end
+
+    should "not patch links for a user without editor permissions" do
+      login_as(FactoryBot.create(:user, name: "Stub User"))
+
+      post :update_tagging, params: { id: @edition.id, tagging_legacy_tagging_update_form: @tagging_params }
+
+      assert_not_requested :patch, %r{#{PUBLISHING_API_V2_ENDPOINT}/links/}
+      assert_redirected_to edition_path(@edition)
+      assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+    end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+      end
+
+      should "not be able to update tagging for non-Welsh editions" do
+        post :update_tagging, params: { id: @edition.id, tagging_legacy_tagging_update_form: @tagging_params }
+
+        assert_not_requested :patch, %r{#{PUBLISHING_API_V2_ENDPOINT}/links/}
+        assert_redirected_to edition_path(@edition)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "be able to update tagging for Welsh editions" do
+        welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :welsh)
+
+        post :update_tagging, params: { id: welsh_edition.id, tagging_legacy_tagging_update_form: @tagging_params }
+
+        assert_publishing_api_patch_links(welsh_edition.artefact.content_id)
+        assert_equal "Tags have been updated!", flash[:success]
+      end
+    end
+  end
+
   context "#diff" do
     should "we can diff the last edition" do
       first_edition = FactoryBot.create(:simple_smart_answer_edition, state: "published")

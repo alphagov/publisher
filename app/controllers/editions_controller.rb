@@ -17,6 +17,7 @@ class EditionsController < InheritedResources::Base
                          approve_fact_check_page
                          update
                          confirm_destroy
+                         destroy
                          edit_assignee
                          update_assignee
                          edit_reviewer
