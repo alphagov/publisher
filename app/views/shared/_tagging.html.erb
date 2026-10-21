@@ -1,5 +1,4 @@
 <%= form_for (@tagging_update), url: update_tagging_edition_path(@resource) do |f| %>
-    <%= f.hidden_field :content_id %>
     <%= f.hidden_field :previous_version %>
 
     <h2 class="remove-top-margin add-bottom-margin h3">Tagging</h2>
@@ -93,7 +92,7 @@
       </div>
     </div>
 
-    <% unless @resource.retired_format? %>
+    <% if !@resource.retired_format? && current_user.has_editor_permissions?(@resource) %>
       <hr/>
 
       <%= f.submit "Update tags", class: "btn btn-success btn-large" %>
