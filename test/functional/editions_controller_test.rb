@@ -2085,7 +2085,7 @@ class EditionsControllerTest < ActionController::TestCase
           login_as_welsh_editor
         end
 
-        %i[admin confirm_destroy].each do |path|
+        %i[admin confirm_destroy duplicate].each do |path|
           should "show permission error and redirect to edition path for #{path} path" do
             get path, params: { id: @edition.id }
 
@@ -2109,7 +2109,7 @@ class EditionsControllerTest < ActionController::TestCase
           login_as(user)
         end
 
-        %i[admin confirm_destroy].each do |path|
+        %i[admin confirm_destroy duplicate].each do |path|
           should "show permission error and redirect to edition path for #{path} path" do
             get path, params: { id: @edition.id }
 
