@@ -189,5 +189,5 @@ Rails.application.routes.draw do
   mount SidekiqGdsSsoMiddleware, at: "/sidekiq"
   mount GovukAdminTemplate::Engine, at: "/style-guide"
   mount Flipflop::Engine => "/flipflop"
-  mount GovukPublishingComponents::Engine, at: "/component-guide"
+  mount GovukPublishingComponents::Engine, at: "/component-guide" if Rails.env.development?
 end
