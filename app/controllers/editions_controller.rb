@@ -18,6 +18,7 @@ class EditionsController < InheritedResources::Base
                          update
                          confirm_destroy
                          destroy
+                         duplicate
                          edit_assignee
                          update_assignee
                          edit_reviewer
