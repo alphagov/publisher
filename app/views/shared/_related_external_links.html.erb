@@ -31,7 +31,7 @@
     <% end %>
   </div>
 
-    <% unless @resource.retired_format? %>
+    <% if !@resource.retired_format? && current_user.has_editor_permissions?(@resource) %>
       <br/>
 
       <%= f.submit "Save links", class: "btn btn-success btn-large" %>

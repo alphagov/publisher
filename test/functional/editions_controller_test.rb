@@ -2736,6 +2736,52 @@ class EditionsControllerTest < ActionController::TestCase
 
       assert_equal "There aren't any external related links yet", flash[:danger]
     end
+
+    context "user without required permissions" do
+      should "not update related external links for a user without editor permissions" do
+        login_as(FactoryBot.create(:user, name: "Stub User"))
+
+        patch :update_related_external_links, params: {
+          id: @edition.id,
+          artefact: {
+            external_links_attributes: [{ title: "foo", url: "https://foo-bar.com", _destroy: false }],
+          },
+        }
+
+        assert_empty @edition.artefact.reload.external_links
+        assert_redirected_to edition_path(@edition)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "not update related external links for a Welsh editor on a non-Welsh edition" do
+        login_as_welsh_editor
+
+        patch :update_related_external_links, params: {
+          id: @edition.id,
+          artefact: {
+            external_links_attributes: [{ title: "foo", url: "https://foo-bar.com", _destroy: false }],
+          },
+        }
+
+        assert_empty @edition.artefact.reload.external_links
+        assert_redirected_to edition_path(@edition)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "update related external links for a Welsh editor on a Welsh edition" do
+        login_as_welsh_editor
+
+        patch :update_related_external_links, params: {
+          id: @welsh_edition.id,
+          artefact: {
+            external_links_attributes: [{ title: "foo", url: "https://foo-bar.com", _destroy: false }],
+          },
+        }
+
+        assert_equal "Related links updated.", flash[:success]
+        assert_equal "foo", @welsh_edition.artefact.reload.external_links[0].title
+      end
+    end
   end
 
   context "#diff" do

@@ -8,7 +8,7 @@ class LegacyEditionsController < InheritedResources::Base
   before_action except: %i[index create] do
     require_user_accessibility_to_edition(@resource)
   end
-  before_action only: %i[update duplicate progress review destroy admin update_tagging] do
+  before_action only: %i[update duplicate progress review destroy admin update_tagging update_related_external_links] do
     require_editor_permissions
   end
   before_action only: %i[unpublish process_unpublish] do
