@@ -97,23 +97,26 @@ class GuidePartsController < InheritedResources::Base
   end
 
   def confirm_destroy
-    @part = Part.find(params[:id])
+    @part = @edition.editionable.parts.find(params[:id])
   end
 
   def destroy
-    @part = Part.find(params[:id])
-    ActiveRecord::Base.transaction do
-      @part.destroy!
-      @edition.order_parts
-      @edition.save!
+    @part = @edition.editionable.parts.find(params[:id])
+
+    begin
+      ActiveRecord::Base.transaction do
+        @part.destroy!
+        @edition.order_parts
+        @edition.save!
+      end
+      UpdateWorker.perform_async(@edition.id.to_s)
+      flash[:success] = "Chapter deleted successfully"
+      redirect_to edition_path(@edition)
+    rescue StandardError => e
+      Rails.logger.error "Error #{e.class} #{e.message}"
+      flash.now[:danger] = "Due to a service problem, the chapter couldn't be deleted"
+      render "confirm_destroy"
     end
-    UpdateWorker.perform_async(@edition.id.to_s)
-    flash[:success] = "Chapter deleted successfully"
-    redirect_to edition_path(@edition)
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash.now[:danger] = "Due to a service problem, the chapter couldn't be deleted"
-    render "confirm_destroy"
   end
 
 private

@@ -1193,6 +1193,69 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#update_related_external_links" do
+    setup do
+      @edition = FactoryBot.create(:simple_smart_answer_edition)
+      @external_links_params = {
+        external_links_attributes: { "0" => { title: "foo", url: "https://foo-bar.com", _destroy: "false" } },
+      }
+    end
+
+    should "update related external links for a user with editor permissions" do
+      patch :update_related_external_links, params: { id: @edition.id, artefact: @external_links_params }
+
+      assert_equal "External links have been saved. They will be visible the next time this publication is published.", flash[:success]
+      assert_equal "foo", @edition.artefact.reload.external_links[0].title
+    end
+
+    should "show the save links button to a user with editor permissions" do
+      get :linking, params: { id: @edition.id }
+
+      assert_select "input[type=submit][value='Save links']"
+    end
+
+    should "not show the save links button to a user without editor permissions" do
+      login_as(FactoryBot.create(:user, name: "Stub User"))
+
+      get :linking, params: { id: @edition.id }
+
+      assert_response :success
+      assert_select "input[type=submit][value='Save links']", false
+    end
+
+    should "not update related external links for a user without editor permissions" do
+      login_as(FactoryBot.create(:user, name: "Stub User"))
+
+      patch :update_related_external_links, params: { id: @edition.id, artefact: @external_links_params }
+
+      assert_empty @edition.artefact.reload.external_links
+      assert_redirected_to edition_path(@edition)
+      assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+    end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+      end
+
+      should "not be able to update related external links for non-Welsh editions" do
+        patch :update_related_external_links, params: { id: @edition.id, artefact: @external_links_params }
+
+        assert_empty @edition.artefact.reload.external_links
+        assert_redirected_to edition_path(@edition)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "be able to update related external links for Welsh editions" do
+        welsh_edition = FactoryBot.create(:simple_smart_answer_edition, :welsh)
+
+        patch :update_related_external_links, params: { id: welsh_edition.id, artefact: @external_links_params }
+
+        assert_equal "foo", welsh_edition.artefact.reload.external_links[0].title
+      end
+    end
+  end
+
   context "#diff" do
     should "we can diff the last edition" do
       first_edition = FactoryBot.create(:simple_smart_answer_edition, state: "published")

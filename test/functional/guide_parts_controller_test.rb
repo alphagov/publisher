@@ -370,4 +370,28 @@ class GuidePartsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "deleting a chapter that belongs to a different guide" do
+    setup do
+      login_as_govuk_editor
+      @draft_edition = FactoryBot.create(:guide_edition_with_two_parts, state: "draft")
+      @published_edition = FactoryBot.create(:guide_edition_with_two_parts, state: "published")
+      @other_part = @published_edition.parts.first
+    end
+
+    should "not show the confirm delete page" do
+      get :confirm_destroy, params: { edition_id: @draft_edition.id, id: @other_part.id }
+
+      assert_response :not_found
+    end
+
+    should "not delete the chapter" do
+      delete :destroy, params: { edition_id: @draft_edition.id, id: @other_part.id }
+
+      assert_response :not_found
+      assert Part.exists?(@other_part.id)
+      assert_equal 2, @published_edition.reload.parts.count
+      assert_equal 2, @draft_edition.reload.parts.count
+    end
+  end
 end
