@@ -9,6 +9,26 @@ class FactCheckResponseControllerTest < IntegrationTest
     [123, %w[invalid], { invalid: true }, true]
   end
 
+  context "authorisation" do
+    should "allow a user with the internal_app permission" do
+      GDS::SSO.test_user = FactoryBot.create(:user, permissions: %w[signin internal_app])
+
+      post api_fact_check_response_path, params: { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: true }, as: :json
+
+      assert_response :success
+      assert_equal "fact_check_received", @edition.reload.state
+    end
+
+    should "refuse a user without the internal_app permission" do
+      GDS::SSO.test_user = FactoryBot.create(:user, :govuk_editor)
+
+      post api_fact_check_response_path, params: { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: true }, as: :json
+
+      assert_response :forbidden
+      assert_equal "fact_check", @edition.reload.state
+    end
+  end
+
   context "#process_response" do
     should "return a success response with valid params" do
       post api_fact_check_response_path, params: { edition_id: @edition.id, responder_name: "Joe Bloggs", accepted: true }, as: :json
