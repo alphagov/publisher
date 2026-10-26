@@ -294,7 +294,8 @@ class EditionsController < InheritedResources::Base
         return
       end
     rescue StandardError => e
-      Rails.logger.error "Error #{e.class} #{e.message}"
+      Rails.logger.error "Error sending edition #{@resource.id} to fact check: #{e.class} #{e.message}"
+      GovukError.notify(e, extra: { edition_id: @resource.id })
     end
     flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
     render "secondary_nav_tabs/send_to_fact_check_page"
