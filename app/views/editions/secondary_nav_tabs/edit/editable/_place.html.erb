@@ -21,6 +21,9 @@
   value: edition.editionable.introduction,
   rows: 16,
   hint: ("Read the #{link_to("Govspeak guide (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link govuk-link--no-visited-state")}").html_safe,
+  data: {
+    module: "paste-html-to-govspeak",
+  },
 } %>
 
 <%= render "govuk_publishing_components/components/textarea", {
@@ -31,6 +34,9 @@
   name: "edition[more_information]",
   value: edition.editionable.more_information,
   rows: 16,
+  data: {
+    module: "paste-html-to-govspeak",
+  },
 } %>
 
 <%= render "govuk_publishing_components/components/textarea", {
@@ -41,5 +47,7 @@
   name: "edition[need_to_know]",
   value: edition.editionable.need_to_know,
   rows: 6,
+  data: {
+    module: "paste-html-to-govspeak",
+  },
 } %>
-
