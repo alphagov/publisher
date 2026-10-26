@@ -133,6 +133,60 @@ class HtmlRendererTest < ActiveSupport::TestCase
           end
         end
       end
+
+      context "when an embed code identifies a block by content ID" do
+        setup do
+          @content_id = "b979187f-c031-4388-8259-f0e69f089d84"
+          @embed_code = "{{embed:content_block_contact:#{@content_id}}}"
+          @mock_render_by_content_id = %(<span class="content-block" data-embed-code="#{@embed_code}">block content</span>)
+        end
+
+        should "fetch the block by content ID and render it" do
+          api_response = stub(parsed_content: {
+            "details" => { title: "Contact 3" },
+            "document_type" => "content_block_contact",
+            "title" => "Contact 3 title",
+            "content_id" => @content_id,
+          })
+          Services.publishing_api.expects(:get_content).with(@content_id).returns(api_response)
+          Services.publishing_api.expects(:get_content_items).never
+          ContentBlockTools::ContentBlock.stubs(:new).with(
+            content_id: @content_id,
+            title: "Contact 3 title",
+            document_type: "content_block_contact",
+            details: { title: "Contact 3" },
+            embed_code: @embed_code,
+          ).returns(stub(render: @mock_render_by_content_id))
+
+          assert_equal(
+            "<p>Block: #{@mock_render_by_content_id} done.</p>",
+            HtmlRenderer.render_html("Block: #{@embed_code} done."),
+          )
+        end
+
+        should "raise a ContentBlockNotFoundError when no block has that content ID" do
+          Services.publishing_api.stubs(:get_content).with(@content_id).raises(GdsApi::HTTPNotFound.new(404))
+
+          error = assert_raises(HtmlRenderer::ContentBlockNotFoundError) do
+            HtmlRenderer.render_html("Block: #{@embed_code} done.")
+          end
+          assert_includes error.message, @embed_code
+        end
+      end
+
+      context "when no block has the alias in an embed code" do
+        should "raise a ContentBlockNotFoundError" do
+          Services.publishing_api.stubs(:get_content_items).with(
+            content_id_aliases: %w[missing-item],
+            document_type: "content_block_contact",
+          ).returns(stub(parsed_content: { "results" => [] }))
+
+          error = assert_raises(HtmlRenderer::ContentBlockNotFoundError) do
+            HtmlRenderer.render_html("Block: {{embed:content_block_contact:missing-item}} done.")
+          end
+          assert_includes error.message, "{{embed:content_block_contact:missing-item}}"
+        end
+      end
     end
   end
 

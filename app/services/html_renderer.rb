@@ -1,4 +1,6 @@
 class HtmlRenderer
+  class ContentBlockNotFoundError < StandardError; end
+
   def self.render_hash(hash)
     hash.each_value do |part|
       part[:body] = render_html(part[:body])
@@ -20,12 +22,24 @@ class HtmlRenderer
   end
 
   def self.build_from_publishing_api(reference)
-    api_response = Services.publishing_api.get_content_items(
-      content_id_aliases: [reference.identifier],
-      document_type: reference.document_type,
-    ).parsed_content["results"].first
+    api_response = fetch_content_block(reference)
+    raise ContentBlockNotFoundError, "Content block not found for embed code #{reference.embed_code}" if api_response.nil?
 
     build_content_block(embed_code: reference.embed_code, api_response: api_response)
+  end
+
+  # Embed codes can identify a block by its alias or by its content ID
+  def self.fetch_content_block(reference)
+    if reference.identifier_is_alias?
+      Services.publishing_api.get_content_items(
+        content_id_aliases: [reference.identifier],
+        document_type: reference.document_type,
+      ).parsed_content["results"].first
+    else
+      Services.publishing_api.get_content(reference.identifier).parsed_content
+    end
+  rescue GdsApi::HTTPNotFound
+    nil
   end
 
   def self.build_content_block(embed_code:, api_response:)
