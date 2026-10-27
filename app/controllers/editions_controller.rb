@@ -509,7 +509,7 @@ class EditionsController < InheritedResources::Base
                         elsif @resource.reviewer.nil?
                           "2i reviewer removed"
                         else
-                          "#{@resource.reviewer} is now the 2i reviewer of this edition"
+                          "<span class='ga4-redacted'>#{@resource.reviewer}</span> is now the 2i reviewer of this edition"
                         end
 
       redirect_to edition_path

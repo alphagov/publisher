@@ -2617,14 +2617,14 @@ class EditionsControllerTest < ActionController::TestCase
         patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.name }
 
         assert_redirected_to edition_path(@in_review_edition.id)
-        assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
+        assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success].gsub(/<[^>]*>/,'')
       end
 
       should "update the 2i reviewer" do
         patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.name }
         @in_review_edition.reload
         assert_equal @reviewer.name, @in_review_edition.reviewer
-        assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
+        assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success].gsub(/<[^>]*>/,'')
       end
 
       should "be able to unassign the current 2i reviewer" do
