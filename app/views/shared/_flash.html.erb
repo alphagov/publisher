@@ -6,7 +6,7 @@
     "ga4-auto": {
       event_name: "flash_#{k.to_s}",
       action: "#{k.to_s}_alerts",
-      text: sanitize(flash[k]),
+      text: sanitize(flash[k].sub(/<span class='ga4-redacted'>.+<\/span>/, "[REDACTED]")),
     },
   } %>
 
