@@ -1,14 +1,14 @@
 module EditionsHelper
   EDITION_STATUS_TAG_COLOURS = {
     amends_needed: "red",
-    archived: "blue",
+    archived: "grey",
     draft: "yellow",
     fact_check: "purple",
     fact_check_received: "magenta",
     ready: "green",
     scheduled_for_publishing: "teal",
     published: "orange",
-    in_review: "grey",
+    in_review: "blue",
   }.freeze
 
   # edition transitions are done using fields inlined in the edition form.
