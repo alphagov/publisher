@@ -1,3 +1,5 @@
+<%# component_helper = GovukPublishingComponents::Presenters::ComponentWrapperHelper.new(local_assigns) %>
+
 <%= form_with url: find_content_path, method: :get, data: { ga4_search_type: "index_additions", ga4_search_section: "Find content", ga4_search_url: find_content_path, ga4_section: "Find content" } do %>
   <div class="govuk-grid-row find-content">
     <div class="govuk-grid-column-one-quarter">
@@ -22,13 +24,26 @@
       } %>
     </div>
 
-    <div class="govuk-grid-column-one-quarter">
-      <%= render "govuk_publishing_components/components/select_with_search", {
-        id: "assignee_filter",
-        label: "Assigned to",
-        heading_size: "m",
-        options: @presenter.assignee_options,
-      } %>
+    <div class="govuk-grid-column-one-quarter js-ga4-redact-names">
+      <%# component_helper.add_data_attribute({ "ga4-redact": true }) %>
+
+      <%# tag.div(**component_helper.all_attributes) do %>
+        <%# render "govuk_publishing_components/components/fieldset", {
+          legend_text: "Do you have a passport?"
+        } do %>
+        <!-- The fieldset element should include all the filters really
+        When this is working make that change
+        But then the redaction will need to be removed from all the other filters -->
+        <fieldset>
+          <%= render "govuk_publishing_components/components/select_with_search", {
+            id: "assignee_filter",
+            label: "Assigned to",
+            heading_size: "m",
+            options: @presenter.assignee_options,
+          } %>
+        </fieldset>
+        <%# end %>
+      <%# end %>
     </div>
 
     <div class="govuk-grid-column-one-quarter">
