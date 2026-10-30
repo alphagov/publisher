@@ -102,7 +102,7 @@ module EditionsHelper
 
   def edition_version_and_state_tag(edition)
     sanitize("#{edition.version_number} #{render 'govuk_publishing_components/components/tag', {
-      text: edition.state,
+      text: edition.status_text,
       colour: EDITION_STATUS_TAG_COLOURS.fetch(edition.state.to_sym, nil),
     }}")
   end
