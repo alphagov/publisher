@@ -16,9 +16,19 @@ describe('GA4FormSetup', function () {
             <option></option>
           </select>
           <div class="js-ga4-redact-names">
-            <fieldset>
+            <fieldset id="radios">
               <input type="radio" value="User">
               <input type="radio" value="none">
+            </fieldset>
+            <fieldset id="checkboxes">
+              <input type="checkbox" value="User">
+              <input type="checkbox" value="none">
+            </fieldset>
+            <fieldset id="options">
+              <select>
+                <option value="User">
+                <option value="">
+              </select>
             </fieldset>
           </div>
         </form>
@@ -120,12 +130,24 @@ describe('GA4FormSetup', function () {
     it('adds GA4 data-attributes to the fieldset and inputs', function () {
       var form = module.querySelectorAll('form')[0]
       var redactNamesContainer = form.querySelector('.js-ga4-redact-names')
-      var fieldset = redactNamesContainer.querySelector('fieldset')
-      var inputs = fieldset.querySelectorAll('input')
+      var fieldset_radios = redactNamesContainer.querySelector('fieldset#radios')
+      var fieldset_checkboxes = redactNamesContainer.querySelector('fieldset#checkboxes')
+      var fieldset_options = redactNamesContainer.querySelector('fieldset#options')
+      var radios = fieldset_radios.querySelectorAll('input[type="radio"]')
+      var checkboxes = fieldset_checkboxes.querySelectorAll('input[type="checkbox"]')
+      var options = fieldset_options.querySelectorAll('option')
 
-      expect(fieldset.dataset.ga4Redact).toBe('true')
-      expect(inputs[0].dataset.ga4RedactPermit).toBe(undefined)
-      expect(inputs[1].dataset.ga4RedactPermit).toBe('true')
+      expect(fieldset_radios.dataset.ga4Redact).toBe('true')
+      expect(radios[0].dataset.ga4RedactPermit).toBe(undefined)
+      expect(radios[1].dataset.ga4RedactPermit).toBe('true')
+
+      expect(fieldset_checkboxes.dataset.ga4Redact).toBe('true')
+      expect(checkboxes[0].dataset.ga4RedactPermit).toBe(undefined)
+      expect(checkboxes[1].dataset.ga4RedactPermit).toBe('true')
+
+      expect(fieldset_options.dataset.ga4Redact).toBe('true')
+      expect(options[0].dataset.ga4RedactPermit).toBe(undefined)
+      expect(options[1].dataset.ga4RedactPermit).toBe('true')
     })
   })
 
