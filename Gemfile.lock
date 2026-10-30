@@ -121,7 +121,7 @@ GEM
       parser (>= 2.4)
       smart_properties
     bigdecimal (4.1.3)
-    bootsnap (1.26.0)
+    bootsnap (1.26.1)
       msgpack (~> 1.5)
     bootstrap-kaminari-views (0.0.5)
       kaminari (>= 0.13)
@@ -450,7 +450,7 @@ GEM
     momentjs-rails (2.29.4.1)
       railties (>= 3.1)
     mousetrap-rails (1.4.6)
-    msgpack (1.8.4)
+    msgpack (1.8.7)
     multi_json (1.21.2)
     multi_xml (0.9.1)
       bigdecimal (>= 3.1, < 5)
