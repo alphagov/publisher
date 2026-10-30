@@ -28,6 +28,8 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   }
 
   Ga4FormSetup.prototype.addDataAttributes = function (form) {
+    console.log('Ga4FormSetup | addDataAttributes!')
+
     var section = form.closest('[data-ga4-section]').getAttribute('data-ga4-section')
     var toolName = form.closest('[data-ga4-tool-name]').getAttribute('data-ga4-tool-name')
     var type
@@ -71,18 +73,37 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     })
 
     // If the form contains sections for redaction add required data-attributes
+    // redactNames should be named something more generic
+    // js-ga4-redact-names should follow naming convention of redactNames
     var redactNames = form.querySelectorAll('.js-ga4-redact-names')
+
+    console.log('redactNames: ', redactNames)
 
     Array.from(redactNames).forEach(function (container) {
       var radios = container.querySelectorAll('input[type="radio"]')
+      var options = container.querySelectorAll('option')
 
-      Array.from(radios).forEach(function (radio) {
-        if (radio.value === 'none') {
-          radio.setAttribute('data-ga4-redact-permit', true)
-        }
-      })
+      console.log('options: ', options)
 
-      container.querySelector('fieldset').setAttribute('data-ga4-redact', true)
+      if (radios.length > 0) {
+        Array.from(radios).forEach(function (radio) {
+          if (radio.value === 'none') {
+            radio.setAttribute('data-ga4-redact-permit', true)
+          }
+        })
+
+        container.querySelector('fieldset').setAttribute('data-ga4-redact', true)
+      }
+
+      if (options.length > 0) {
+        Array.from(options).forEach(function (option) {
+          if (option.value === '') {
+            option.setAttribute('data-ga4-redact-permit', true)
+          }
+        })
+
+        container.querySelector('fieldset').setAttribute('data-ga4-redact', true)
+      }
     })
   }
 
