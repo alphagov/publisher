@@ -39,7 +39,7 @@ class PublicationsPageTest < IntegrationTest
 
       within find(".govuk-table__row", text: "In review edition") do
         assert_link "In review edition", href: edition_path(@in_review_edition)
-        assert page.has_css?(".govuk-tag--grey", text: "In 2i")
+        assert page.has_css?(".govuk-tag--blue", text: "In 2i")
         assert_text "3 days ago"
         assert_text "Help page"
       end
@@ -281,7 +281,7 @@ class PublicationsPageTest < IntegrationTest
 
       within find(".govuk-table__row", text: "In review edition") do
         assert_link "In review edition", href: edition_path(@in_review_edition)
-        assert page.has_css?(".govuk-tag--grey", text: "In 2i")
+        assert page.has_css?(".govuk-tag--blue", text: "In 2i")
         assert_text "3 days ago"
         assert_text "Help page"
       end
