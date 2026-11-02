@@ -6,6 +6,10 @@
     padding-top: 0;
   }
 
+  &__time {
+    color: govuk-functional-colour(secondary-text);
+  }
+
   // stylelint-disable scss/at-extend-no-missing-placeholder
   &__actions {
     a {

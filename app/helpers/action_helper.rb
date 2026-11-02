@@ -53,8 +53,8 @@ module ActionHelper
 
       item = [
         sanitize("<div class='history__action--#{action.request_type}__heading'>
-          <time class='govuk-body' datetime='#{action.created_at}'>#{action.created_at.to_fs(:govuk_date)}</time>
-          <p class='govuk-body govuk-!-font-weight-bold'>#{action} by #{requester}</p>
+          <time class='govuk-body-s history__time' datetime='#{action.created_at}'>#{action.created_at.to_fs(:govuk_date)}</time>
+          <p class='govuk-body'><span class='govuk-!-font-weight-bold'>#{action}</span> by #{requester}</p>
         </div>"),
       ]
 
