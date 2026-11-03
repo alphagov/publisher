@@ -7,6 +7,7 @@ class Ga4TrackingFlashMessagesTest < JavascriptIntegrationTest
   setup do
     setup_users
     @edition = FactoryBot.create(:edition)
+    @in_review_edition = FactoryBot.create(:edition, :in_review, reviewer: @author, created_at: 6.days.ago)
     @ready_edition = FactoryBot.create(:edition, :ready)
     @published_edition = FactoryBot.create(:edition, :published)
   end
@@ -115,6 +116,20 @@ class Ga4TrackingFlashMessagesTest < JavascriptIntegrationTest
       assert_equal "success_alerts", event_data[0]["action"]
       assert_equal "flash_success", event_data[0]["event_name"]
       assert_equal "Sent to 2i", event_data[0]["text"]
+    end
+
+    should "push the correct flash message values to the dataLayer when 2i reviewer is changed" do
+      visit edit_reviewer_edition_path(@in_review_edition)
+      find("label", text: "Reviewer").click
+      click_button "Save"
+
+      assert page.has_css?(".gem-c-success-alert")
+
+      event_data = get_event_data
+
+      assert_equal "success_alerts", event_data[0]["action"]
+      assert_equal "flash_success", event_data[0]["event_name"]
+      assert_equal "[REDACTED] is now the 2i reviewer of this edition", event_data[0]["text"]
     end
   end
 end
