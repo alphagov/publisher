@@ -9,6 +9,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
         { text: "Create new content", href: new_artefact_path, active: false },
         { text: "2i queue", href: two_eye_queue_path, active: false },
         { text: "Fact check", href: fact_check_path, active: false },
+        { text: "Switch app", href: Plek.new.external_url_for("signon") },
         { text: "Sign out", href: "/auth/gds/sign_out" },
       ], navigation_items(is_editor: true)
     end
@@ -19,19 +20,9 @@ class NavigationItemsHelperTest < ActionView::TestCase
         { text: "Find content", href: find_content_path, active: false },
         { text: "2i queue", href: two_eye_queue_path, active: false },
         { text: "Fact check", href: fact_check_path, active: false },
+        { text: "Switch app", href: Plek.new.external_url_for("signon") },
         { text: "Sign out", href: "/auth/gds/sign_out" },
       ], navigation_items(is_editor: false)
-    end
-
-    should "include user name link if user has name" do
-      assert_equal [
-        { text: "My content", href: my_content_path, active: false },
-        { text: "Find content", href: find_content_path, active: false },
-        { text: "2i queue", href: two_eye_queue_path, active: false },
-        { text: "Fact check", href: fact_check_path, active: false },
-        { text: "Name", href: Plek.new.external_url_for("signon") },
-        { text: "Sign out", href: "/auth/gds/sign_out" },
-      ], navigation_items(is_editor: false, user_name: "Name")
     end
 
     should "apply set link to active if page is current link" do
