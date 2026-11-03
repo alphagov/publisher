@@ -8,6 +8,17 @@
     data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
     data-ga4-limit-to-element-class="govuk-link"
   >
+		<%= render "govuk_publishing_components/components/inset_text", {
+			text:safe_join([link_to(
+				"Check collections publisher (opens in new tab)",
+				"#{Plek.find('collections-publisher', external: true)}/step-by-step-pages?title_or_url=&status=submitted_for_2i",
+				target: "_blank",
+				rel: "noopener",
+				class: "govuk-link govuk-link--no-visited-state",
+				),
+			 " for step by steps waiting for 2i."]),
+		} %>
+
 		<%= render "govuk_publishing_components/components/tabs", {
       panel_border: false,
 			tabs: [
