@@ -28,11 +28,11 @@ module ActionHelper
     end
 
     if action.is_fact_check_request? && action.email_addresses.present?
-      notes << tag.p("Request sent to #{mail_to action.email_addresses.gsub(/\s/, ''), action.email_addresses}".html_safe)
+      notes << tag.p("Request sent to #{action.email_addresses}".html_safe)
     end
 
     if action.recipient_id.present?
-      notes << tag.p("Assigned to #{mail_to action.recipient.email, action.recipient.name}".html_safe)
+      notes << tag.p("Assigned to #{action.recipient.name}".html_safe)
     end
 
     notes.join.html_safe
