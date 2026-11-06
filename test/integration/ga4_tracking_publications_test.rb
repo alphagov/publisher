@@ -106,6 +106,11 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
         find("#choices--assignee_filter-item-choice-2").click
       end
 
+      within all(".gem-c-select-with-search")[1] do
+        find("label").click
+        find("#choices--assignee_filter-item-choice-1").click
+      end
+
       within all(".gem-c-select-with-search")[2] do
         find("label").click
         find("#choices--content_type_filter-item-choice-2").click
@@ -125,23 +130,30 @@ class Ga4TrackingPublicationsTest < JavascriptIntegrationTest
       assert_equal "select", event_data[1]["action"]
       assert_equal "select_content", event_data[1]["event_name"]
       assert_equal "Assigned to", event_data[1]["section"]
-      assert_equal "Author (You)", event_data[1]["text"]
+      assert_equal "[REDACTED]", event_data[1]["text"]
       assert_equal "3", event_data[1]["index"]["index_section"]
       assert_equal "4", event_data[1]["index"]["index_section_count"]
 
       assert_equal "select", event_data[2]["action"]
       assert_equal "select_content", event_data[2]["event_name"]
-      assert_equal "Content type", event_data[2]["section"]
-      assert_equal "Answer", event_data[2]["text"]
-      assert_equal "4", event_data[2]["index"]["index_section"]
+      assert_equal "Assigned to", event_data[2]["section"]
+      assert_equal "All assignees", event_data[2]["text"]
+      assert_equal "3", event_data[2]["index"]["index_section"]
       assert_equal "4", event_data[2]["index"]["index_section_count"]
 
-      assert_equal "search", event_data[3]["action"]
-      assert_equal "search", event_data[3]["event_name"]
-      assert_equal "index_additions", event_data[3]["type"]
-      assert_equal "Find content", event_data[3]["section"]
-      assert_equal "search-term", event_data[3]["text"]
-      assert_equal "/find-content", event_data[3]["url"]
+      assert_equal "select", event_data[3]["action"]
+      assert_equal "select_content", event_data[3]["event_name"]
+      assert_equal "Content type", event_data[3]["section"]
+      assert_equal "Answer", event_data[3]["text"]
+      assert_equal "4", event_data[3]["index"]["index_section"]
+      assert_equal "4", event_data[3]["index"]["index_section_count"]
+
+      assert_equal "search", event_data[4]["action"]
+      assert_equal "search", event_data[4]["event_name"]
+      assert_equal "index_additions", event_data[4]["type"]
+      assert_equal "Find content", event_data[4]["section"]
+      assert_equal "search-term", event_data[4]["text"]
+      assert_equal "/find-content", event_data[4]["url"]
     end
 
     should "push 'search_data' values to the dataLayer when the user selects a value in the 'Title or slug' filter and submits" do
