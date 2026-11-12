@@ -73,14 +73,7 @@ Rails.application.routes.draw do
         patch "update_assignee"
         get "edit_reviewer"
         patch "update_reviewer"
-        post "skip_fact_check",
-             to: "editions#progress",
-             edition: {
-               activity: {
-                 request_type: "skip_fact_check",
-                 comment: "Fact check skipped by request.",
-               },
-             }
+        post "skip_fact_check", to: "editions#skip_fact_check"
       end
 
       resources :guide_parts, only: %i[new create destroy] do
@@ -128,14 +121,7 @@ Rails.application.routes.draw do
       patch "update_related_external_links"
       post "progress"
       put "review"
-      post "skip_fact_check",
-           to: "legacy_editions#progress",
-           edition: {
-             activity: {
-               request_type: "skip_fact_check",
-               comment: "Fact check skipped by request.",
-             },
-           }
+      post "skip_fact_check", to: "legacy_editions#skip_fact_check"
     end
 
     resource :downtime, only: %i[new create edit update destroy]

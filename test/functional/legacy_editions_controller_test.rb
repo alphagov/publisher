@@ -224,16 +224,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       should "be able to skip fact checks for Welsh editions" do
         @welsh_edition.update!(state: "fact_check")
 
-        post :progress,
-             params: {
-               id: @welsh_edition.id,
-               edition: {
-                 activity: {
-                   "request_type" => "skip_fact_check",
-                   "comment" => "Fact check skipped by request.",
-                 },
-               },
-             }
+        post :skip_fact_check, params: { id: @welsh_edition.id }
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
@@ -244,16 +235,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       should "not be able to skip fact checks for non-Welsh editions" do
         @edition.update!(state: "fact_check")
 
-        post :progress,
-             params: {
-               id: @edition.id,
-               edition: {
-                 activity: {
-                   request_type: "skip_fact_check",
-                   comment: "Fact check skipped by request.",
-                 },
-               },
-             }
+        post :skip_fact_check, params: { id: @edition.id }
 
         assert_redirected_to edition_path(@edition)
         @edition.reload
