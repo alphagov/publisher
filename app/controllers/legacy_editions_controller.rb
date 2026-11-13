@@ -185,7 +185,7 @@ class LegacyEditionsController < InheritedResources::Base
 
   def review
     if resource.reviewer.present?
-      flash[:danger] = "#{resource.reviewer} has already claimed this 2i"
+      flash[:danger] = "<span class='ga4-redacted'>#{resource.reviewer}</span> has already claimed this 2i"
       redirect_to edition_path(resource)
       return
     end
