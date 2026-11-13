@@ -2235,23 +2235,14 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
-  context "#progress" do
+  context "#skip_fact_check" do
     context "Welsh editor" do
       setup do
         login_as_welsh_editor
       end
 
       should "be able to skip fact checks for Welsh editions" do
-        post :progress,
-             params: {
-               id: @welsh_edition.id,
-               edition: {
-                 activity: {
-                   "request_type" => "skip_fact_check",
-                   "comment" => "Fact check skipped by request.",
-                 },
-               },
-             }
+        post :skip_fact_check, params: { id: @welsh_edition.id }
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
@@ -2260,16 +2251,7 @@ class EditionsControllerTest < ActionController::TestCase
       end
 
       should "not be able to skip fact checks for non-Welsh editions" do
-        post :progress,
-             params: {
-               id: @edition.id,
-               edition: {
-                 activity: {
-                   "request_type" => "skip_fact_check",
-                   "comment" => "Fact check skipped by request.",
-                 },
-               },
-             }
+        post :skip_fact_check, params: { id: @edition.id }
 
         assert_redirected_to edition_path(@edition)
         @edition.reload
@@ -2284,16 +2266,7 @@ class EditionsControllerTest < ActionController::TestCase
       end
 
       should "be able to skip fact checks" do
-        post :progress,
-             params: {
-               id: @edition.id,
-               edition: {
-                 activity: {
-                   "request_type" => "skip_fact_check",
-                   "comment" => "Fact check skipped by request.",
-                 },
-               },
-             }
+        post :skip_fact_check, params: { id: @edition.id }
 
         assert_redirected_to edition_path(@edition)
         @edition.reload
@@ -2302,16 +2275,7 @@ class EditionsControllerTest < ActionController::TestCase
       end
 
       should "be able to skip fact checks Welsh editions" do
-        post :progress,
-             params: {
-               id: @welsh_edition.id,
-               edition: {
-                 activity: {
-                   "request_type" => "skip_fact_check",
-                   "comment" => "Fact check skipped by request.",
-                 },
-               },
-             }
+        post :skip_fact_check, params: { id: @welsh_edition.id }
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
