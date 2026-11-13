@@ -116,11 +116,12 @@ class TaggingController < InheritedResources::Base
   def organisations_page
     @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
-    @linkables = Tagging::Linkables.new.organisations.map do |linkable|
+    @linkables = Tagging::Organisations.new.organisations.map do |linkable|
       {
-        text: linkable[0],
-        value: linkable[1],
-        selected: @tagging_update_form_values.organisations&.include?(linkable[1]),
+        text: "#{linkable[:title]}#{
+                " (#{linkable[:acronym]})" unless linkable[:acronym].blank? || linkable[:acronym] == linkable[:title]}",
+        value: linkable[:content_id],
+        selected: @tagging_update_form_values.organisations&.include?(linkable[:content_id]),
       }
     end
 
