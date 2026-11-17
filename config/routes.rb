@@ -68,7 +68,6 @@ Rails.application.routes.draw do
         post "process_unpublish"
         get "admin/confirm-destroy", to: "editions#confirm_destroy", as: "confirm_destroy"
         delete "admin/delete-edition", to: "editions#destroy", as: "admin_delete"
-        post "progress"
         get "edit_assignee"
         patch "update_assignee"
         get "edit_reviewer"

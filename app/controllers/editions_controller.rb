@@ -11,8 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress
-                         skip_fact_check
+  before_action only: %i[skip_fact_check
                          admin
                          approve_fact_check
                          approve_fact_check_page
@@ -433,23 +432,17 @@ class EditionsController < InheritedResources::Base
     render_confirm_page_with_error
   end
 
-  def progress
-    @command_success = progress_edition(
-      resource,
-      squash_multiparameter_datetime_attributes(
-        params[:edition][:activity].permit(:comment, :request_type, :publish_at).to_h,
-        %w[publish_at],
-      ),
-    )
-    redirect_after_progress
-  end
-
   def skip_fact_check
-    @command_success = progress_edition(resource, {
+    if progress_edition(resource, {
       request_type: "skip_fact_check",
       comment: "Fact check skipped by request.",
     })
-    redirect_after_progress
+      flash[:success] = @command.status_message
+    else
+      flash[:danger] = @command.status_message
+    end
+
+    redirect_to edition_path(resource)
   end
 
   def diff
@@ -542,16 +535,6 @@ protected
   end
 
 private
-
-  def redirect_after_progress
-    if @command_success
-      flash[:success] = @command.status_message
-    else
-      flash[:danger] = @command.status_message
-    end
-
-    redirect_to edition_path(resource)
-  end
 
   def update_fact_check
     form = FactCheckRequestForm.new({ edition: @resource, user: current_user })
