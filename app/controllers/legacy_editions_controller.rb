@@ -8,13 +8,13 @@ class LegacyEditionsController < InheritedResources::Base
   before_action except: %i[index create] do
     require_user_accessibility_to_edition(@resource)
   end
-  before_action only: %i[update duplicate progress review destroy admin update_tagging update_related_external_links] do
+  before_action only: %i[update duplicate progress skip_fact_check review destroy admin update_tagging update_related_external_links] do
     require_editor_permissions
   end
   before_action only: %i[unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  after_action :report_state_counts, only: %i[create duplicate progress destroy]
+  after_action :report_state_counts, only: %i[create duplicate progress skip_fact_check destroy]
 
   FACT_CHECK_SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the fact check request could not be updated. The edition was successfully saved".freeze
 
@@ -214,14 +214,22 @@ class LegacyEditionsController < InheritedResources::Base
   end
 
   def progress
-    if progress_edition(resource, params[:edition][:activity].permit(:comment, :request_type, :publish_at))
-      PublishWorker.perform_async(resource.id.to_s) if progress_action_is_publish?
+    @command_success = progress_edition(
+      resource,
+      params[:edition][:activity].permit(:comment, :request_type, :publish_at),
+    )
 
-      flash[:success] = @command.status_message
-    else
-      flash[:danger] = @command.status_message
-    end
-    redirect_to edition_path(resource)
+    PublishWorker.perform_async(resource.id.to_s) if @command_success && progress_action_is_publish?
+
+    redirect_after_progress
+  end
+
+  def skip_fact_check
+    @command_success = progress_edition(resource, {
+      "request_type" => "skip_fact_check",
+      "comment" => "Fact check skipped by request.",
+    })
+    redirect_after_progress
   end
 
   def diff
@@ -374,6 +382,16 @@ protected
 
 private
 
+  def redirect_after_progress
+    if @command_success
+      flash[:success] = @command.status_message
+    else
+      flash[:danger] = @command.status_message
+    end
+
+    redirect_to edition_path(resource)
+  end
+
   def update_fact_check_content
     form = FactCheckRequestForm.new(edition: resource, user: current_user)
 
@@ -433,7 +451,8 @@ private
 
   def progress_edition(resource, activity_params)
     @command = EditionProgressor.new(resource, current_user)
-    @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at]))
+    activity_params = squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at])
+    @command.progress(activity_params.with_indifferent_access)
   end
 
   def report_state_counts

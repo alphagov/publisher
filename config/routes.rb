@@ -68,19 +68,11 @@ Rails.application.routes.draw do
         post "process_unpublish"
         get "admin/confirm-destroy", to: "editions#confirm_destroy", as: "confirm_destroy"
         delete "admin/delete-edition", to: "editions#destroy", as: "admin_delete"
-        post "progress"
         get "edit_assignee"
         patch "update_assignee"
         get "edit_reviewer"
         patch "update_reviewer"
-        post "skip_fact_check",
-             to: "editions#progress",
-             edition: {
-               activity: {
-                 request_type: "skip_fact_check",
-                 comment: "Fact check skipped by request.",
-               },
-             }
+        post "skip_fact_check", to: "editions#skip_fact_check"
       end
 
       resources :guide_parts, only: %i[new create destroy] do
@@ -128,14 +120,7 @@ Rails.application.routes.draw do
       patch "update_related_external_links"
       post "progress"
       put "review"
-      post "skip_fact_check",
-           to: "legacy_editions#progress",
-           edition: {
-             activity: {
-               request_type: "skip_fact_check",
-               comment: "Fact check skipped by request.",
-             },
-           }
+      post "skip_fact_check", to: "legacy_editions#skip_fact_check"
     end
 
     resource :downtime, only: %i[new create edit update destroy]
