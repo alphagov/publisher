@@ -71,18 +71,24 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     })
 
     // If the form contains sections for redaction add required data-attributes
-    var redactNames = form.querySelectorAll('.js-ga4-redact-names')
+    var redactableSections = form.querySelectorAll('.js-ga4-redact')
 
-    Array.from(redactNames).forEach(function (container) {
-      var radios = container.querySelectorAll('input[type="radio"]')
+    Array.from(redactableSections).forEach(function (container) {
+      var fieldsets = container.querySelectorAll('fieldset')
 
-      Array.from(radios).forEach(function (radio) {
-        if (radio.value === 'none') {
-          radio.setAttribute('data-ga4-redact-permit', true)
+      Array.from(fieldsets).forEach(function (fieldset) {
+        var redactableElements = fieldset.querySelectorAll('input[type="radio"], input[type="checkbox"], select option')
+
+        if (redactableElements.length > 0) {
+          Array.from(redactableElements).forEach(function (redactableElement) {
+            if (redactableElement.value === 'none' || redactableElement.value === '') {
+              redactableElement.setAttribute('data-ga4-redact-permit', true)
+            }
+          })
+
+          fieldset.setAttribute('data-ga4-redact', true)
         }
       })
-
-      container.querySelector('fieldset').setAttribute('data-ga4-redact', true)
     })
   }
 

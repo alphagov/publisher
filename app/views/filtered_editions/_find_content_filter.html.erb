@@ -22,13 +22,15 @@
       } %>
     </div>
 
-    <div class="govuk-grid-column-one-quarter">
-      <%= render "govuk_publishing_components/components/select_with_search", {
-        id: "assignee_filter",
-        label: "Assigned to",
-        heading_size: "m",
-        options: @presenter.assignee_options,
-      } %>
+    <div class="govuk-grid-column-one-quarter js-ga4-redact">
+      <fieldset class="govuk-fieldset">
+        <%= render "govuk_publishing_components/components/select_with_search", {
+          id: "assignee_filter",
+          label: "Assigned to",
+          heading_size: "m",
+          options: @presenter.assignee_options,
+        } %>
+      </fieldset>
     </div>
 
     <div class="govuk-grid-column-one-quarter">
