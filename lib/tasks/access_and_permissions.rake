@@ -3,7 +3,7 @@ require "csv"
 namespace :permissions do
   desc "Add an organisation to a document's access permissions list"
   task :add_organisation_access, %i[document_content_id org_content_id log_file] => :environment do |_, args|
-    document = Artefact.find_by(id: args[:document_content_id])
+    document = Artefact.find_by(content_id: args[:document_content_id])
 
     if document.nil?
       message = "Document ID #{args[:document_content_id]} not found, no permissions added for organisation with ID: #{args[:org_content_id]}"
@@ -41,7 +41,7 @@ namespace :permissions do
         end
 
         Rake::Task["permissions:add_organisation_access"].reenable
-        Rake::Task["permissions:add_organisation_access"].invoke(document.id, args[:organisation_id], log_file)
+        Rake::Task["permissions:add_organisation_access"].invoke(document.content_id, args[:organisation_id], log_file)
       rescue StandardError => e
         log_file.puts "--- Error occurred ---"
         log_file.puts e.detailed_message
@@ -57,14 +57,14 @@ namespace :permissions do
     document_content_id = args[:document_content_id]
     org_content_id = args[:org_content_id]
 
-    document = Artefact.find_by(id: document_content_id)
+    document = Artefact.find_by(content_id: document_content_id)
 
     if document.nil?
       puts "Document ID #{document_content_id} not found, no permissions removed for organisation with ID: #{org_content_id}"
     else
       editions = Edition.where(panopticon_id: document.id).select { |edition| edition.owning_org_content_ids.include?(org_content_id) }
       if editions.empty?
-        puts "Organisation with ID #{org_content_id} did not have access to document with ID: #{document.id}. No permissions changed"
+        puts "Organisation with ID #{org_content_id} did not have access to document with ID: #{document.content_id}. No permissions changed"
       else
         editions.each do |edition|
           owning_org_content_ids = edition.owning_org_content_ids - [org_content_id]
@@ -81,7 +81,7 @@ namespace :permissions do
   desc "Remove all access permissions from a document"
   task :remove_all_access_flags, %i[document_content_id] => :environment do |_, args|
     document_content_id = args[:document_content_id]
-    document = Artefact.find_by(id: document_content_id)
+    document = Artefact.find_by(content_id: document_content_id)
 
     if document.nil?
       puts "Document ID #{document_content_id} not found, no permissions changed"
@@ -90,7 +90,7 @@ namespace :permissions do
         edition.update_columns(owning_org_content_ids: [])
       end
       document.save_as_task!("PermissionsClear")
-      puts "All access permissions for all organisations successfully removed from document with ID - #{document.id}"
+      puts "All access permissions for all organisations successfully removed from document with ID - #{document.content_id}"
     end
   rescue ActiveRecord::RecordNotFound => e
     puts "An error occurred while processing document with ID #{document_content_id}: #{e.message}"
