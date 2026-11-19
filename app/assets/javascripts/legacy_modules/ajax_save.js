@@ -4,10 +4,10 @@
   'use strict'
   Modules.AjaxSave = function () {
     this.start = function (element) {
-      var url = element.attr('action') + '.json'
-      var message = element.find('.js-status-message')
-      var requestRunning = false
-      var hideTimeout
+      const url = element.attr('action') + '.json'
+      const message = element.find('.js-status-message')
+      let requestRunning = false
+      let hideTimeout
 
       GOVUKAdmin.Data = GOVUKAdmin.Data || {}
       element.on('click', '.js-save', save)
@@ -20,7 +20,7 @@
       }
 
       function save (evt) {
-        var canPreventDefault = typeof evt.preventDefault === 'function'
+        const canPreventDefault = typeof evt.preventDefault === 'function'
 
         if (requestRunning) {
           if (canPreventDefault) {
@@ -46,11 +46,11 @@
         requestRunning = true
 
         $.ajax({
-          url: url,
+          url,
           type: 'POST',
           data: element.serialize(),
-          success: success,
-          error: error,
+          success,
+          error,
           complete: function () {
             requestRunning = false
           }
@@ -58,10 +58,10 @@
       }
 
       function allFieldsCanBeSavedWithAjax () {
-        var ok = true
+        let ok = true
         element.find('.js-no-ajax, input[type="file"]').each(function () {
-          var $input = $(this)
-          var value = $input.val()
+          const $input = $(this)
+          const value = $input.val()
 
           if ($input.is(':checkbox')) {
             if ($input.is(':checked')) {
@@ -90,8 +90,8 @@
       }
 
       function error (response, textStatus, errorThrown) {
-        var responseJSON = response.responseJSON
-        var messageAddendum = 'Please check the form above.'
+        const responseJSON = response.responseJSON
+        let messageAddendum = 'Please check the form above.'
 
         if (typeof responseJSON === 'object') {
           showErrors(responseJSON)
@@ -116,12 +116,12 @@
 
       function showErrors (errors) {
         $.each(errors, function (errorKey, errorMessages) {
-          var errorElement = element.find('#edition_' + errorKey)
-          var parents = errorElement.parents('.form-group')
+          const errorElement = element.find('#edition_' + errorKey)
+          const parents = errorElement.parents('.form-group')
           parents.addClass('has-error')
 
-          var list = parents.find('.error-block')
-          for (var j = 0, m = errorMessages.length; j < m; j++) {
+          const list = parents.find('.error-block')
+          for (let j = 0, m = errorMessages.length; j < m; j++) {
             list.append('<li>' + errorMessages[j] + '</li>')
           }
         })
@@ -131,7 +131,7 @@
         createErrorSummaryComponent()
 
         $.each(errors, function (errorKey, errorMessages) {
-          for (var i = 0, m = errorMessages.length; i < m; i++) {
+          for (let i = 0, m = errorMessages.length; i < m; i++) {
             if (errorKey !== 'parts' && errorMessages[i] !== 'is invalid') {
               createAndAppendLinkToErrorSummaryComponent(errorKey, errorMessages[i])
             }
@@ -140,27 +140,27 @@
       }
 
       function createErrorSummaryComponent () {
-        var heading = document.getElementsByClassName('page-title')[0]
+        const heading = document.getElementsByClassName('page-title')[0]
 
-        var div = document.createElement('div')
+        const div = document.createElement('div')
         div.id = 'error-summary'
         div.classList.add('alert', 'alert-danger')
         heading.after(div)
 
-        var h3 = document.createElement('h3')
+        const h3 = document.createElement('h3')
         h3.id = 'error-heading'
         h3.innerText = 'There is a problem'
         div.append(h3)
 
-        var ul = document.createElement('ul')
+        const ul = document.createElement('ul')
         ul.classList.add('no-bullets')
         div.append(ul)
       }
 
       function createAndAppendLinkToErrorSummaryComponent (errorKey, errorMessage) {
-        var ul = document.getElementsByClassName('no-bullets')[0]
-        var list = document.createElement('li')
-        var errorLink = document.createElement('a')
+        const ul = document.getElementsByClassName('no-bullets')[0]
+        const list = document.createElement('li')
+        const errorLink = document.createElement('a')
         errorLink.href = '#edition_' + errorKey
         errorLink.innerText = errorMessage
         ul.append(list)
@@ -168,7 +168,7 @@
       }
 
       function destroyErrorSummaryComponent () {
-        var errorSummaryComponent = document.getElementById('error-summary')
+        const errorSummaryComponent = document.getElementById('error-summary')
 
         if (errorSummaryComponent != null) {
           errorSummaryComponent.remove()

@@ -2,9 +2,9 @@ window.GOVUK = window.GOVUK || {}
 window.GOVUK.Modules = window.GOVUK.Modules || {};
 
 (function (Modules) {
-  var form
-  var formSubmit = false
-  var userChange = false
+  let form
+  let formSubmit = false
+  let userChange = false
 
   function UnsavedChangesPrompt ($module) {
     form = $module

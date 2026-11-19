@@ -1,7 +1,7 @@
 describe('A check all module', function () {
   'use strict'
 
-  var checkAll,
+  let checkAll,
     form
 
   beforeEach(function () {
@@ -25,7 +25,7 @@ describe('A check all module', function () {
 
   describe('clicking a check all checkbox', function () {
     it('toggles all enabled checkbox inputs to match', function () {
-      var checkbox = form.find('input.js-check-all')
+      const checkbox = form.find('input.js-check-all')
 
       checkbox.trigger('click')
       expect(form.find(':checkbox:checked').length).toBe(4)
@@ -38,7 +38,7 @@ describe('A check all module', function () {
 
   describe('clicking a disabled check all checkbox', function () {
     it('has no effect', function () {
-      var checkbox = form.find('input.js-check-all')
+      const checkbox = form.find('input.js-check-all')
       checkbox.prop('disabled', true)
       checkbox.trigger('click')
 

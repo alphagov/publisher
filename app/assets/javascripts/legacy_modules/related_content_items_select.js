@@ -4,7 +4,7 @@
     this.start = function (element) {
       element.find("input[value='']").closest('li').remove()
 
-      var $inputFields = element.find('input')
+      const $inputFields = element.find('input')
       $inputFields.prop('readonly', true)
       $inputFields.wrap('<div class="input-group"></div>')
       $inputFields.before('<span class="input-group-addon vertical-drag">&updownarrow;</span>')
@@ -15,9 +15,9 @@
       element.append(buildAddRelatedItemEl())
     }
 
-    var buildRemoveRelaltedItemEl = function () {
-      var $buttonGroupEl = $('<span class="input-group-btn">')
-      var $buttonEl = $('<button class="btn btn-default" type="button">Remove</button>')
+    const buildRemoveRelaltedItemEl = function () {
+      const $buttonGroupEl = $('<span class="input-group-btn">')
+      const $buttonEl = $('<button class="btn btn-default" type="button">Remove</button>')
 
       $buttonEl.on('click', function (e) {
         $(this).closest('li').remove()
@@ -27,11 +27,11 @@
       return $buttonGroupEl
     }
 
-    var buildAddRelatedItemEl = function () {
-      var $inputGroupEl = $('<div class="input-group">')
-      var $inputEl = $('<input id="add-related-item" type="text" class="form-control js-path-field" placeholder="URL or path">')
-      var $buttonGroupEl = $('<span class="input-group-btn"></span>')
-      var $buttonEl = $('<button class="btn btn-default" type="button">Add related item</button>')
+    const buildAddRelatedItemEl = function () {
+      const $inputGroupEl = $('<div class="input-group">')
+      const $inputEl = $('<input id="add-related-item" type="text" class="form-control js-path-field" placeholder="URL or path">')
+      const $buttonGroupEl = $('<span class="input-group-btn"></span>')
+      const $buttonEl = $('<button class="btn btn-default" type="button">Add related item</button>')
 
       $inputEl.on('keypress', function (e) {
         if (e.keyCode === 13) { // Enter key
@@ -42,7 +42,7 @@
       })
 
       $buttonEl.on('click', function (e) {
-        var inputValue = $('input.js-path-field').val()
+        const inputValue = $('input.js-path-field').val()
         if (inputValue.length === 0) return
         lookupBasePath(inputValue)
       })
@@ -54,11 +54,11 @@
       return $inputGroupEl
     }
 
-    var buildInputGroupEl = function (path) {
-      var $listItemEl = $('<li></li>')
-      var $inputGroupEl = $('<div class="input-group"></div>')
-      var $dragEl = $('<span class="input-group-addon">↕</span>')
-      var $inputEl = $('<input />', {
+    const buildInputGroupEl = function (path) {
+      const $listItemEl = $('<li></li>')
+      const $inputGroupEl = $('<div class="input-group"></div>')
+      const $dragEl = $('<span class="input-group-addon">↕</span>')
+      const $inputEl = $('<input />', {
         type: 'text',
         name: 'tagging_legacy_tagging_update_form[ordered_related_items][]',
         value: path,
@@ -74,7 +74,7 @@
       return $listItemEl
     }
 
-    var lookupBasePath = function (path) {
+    const lookupBasePath = function (path) {
       $.getJSON('/api/lookup-by-base-path?base_path=' + encodeURIComponent(path))
         .done(function (contentId) {
           $('.js-path-field').removeClass('field-with-error')

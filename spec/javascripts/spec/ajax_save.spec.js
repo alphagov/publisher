@@ -3,7 +3,7 @@
 describe('An ajax save module', function () {
   'use strict'
 
-  var ajaxSave,
+  let ajaxSave,
     element,
     form
 
@@ -42,7 +42,7 @@ describe('An ajax save module', function () {
     ajaxSave = new GOVUKAdmin.Modules.AjaxSave()
     ajaxSave.start(form)
 
-    var submitCallbackSpy = jasmine.createSpy('some/url').and.returnValue(false)
+    const submitCallbackSpy = jasmine.createSpy('some/url').and.returnValue(false)
     element.submit(submitCallbackSpy)
   })
 
@@ -87,7 +87,7 @@ describe('An ajax save module', function () {
     })
 
     it('saves again afterwards', function () {
-      var complete
+      let complete
       spyOn($, 'ajax').and.callFake(function (options) {
         complete = options.complete
       })
@@ -104,13 +104,13 @@ describe('An ajax save module', function () {
     it('indicates the form is saving', function () {
       element.find('.js-save').trigger('click')
 
-      var statusMessage = element.find('.js-status-message')
+      const statusMessage = element.find('.js-status-message')
       expect(statusMessage.text()).toBe('Saving…')
       expect(statusMessage.is('.workflow-message-saving')).toBe(true)
     })
 
     it('posts the form using ajax', function () {
-      var ajaxOptions
+      let ajaxOptions
       spyOn($, 'ajax').and.callFake(function (options) {
         ajaxOptions = options
       })
@@ -124,7 +124,7 @@ describe('An ajax save module', function () {
   })
 
   describe('when an ajax save is successful', function () {
-    var timeoutTime
+    let timeoutTime
 
     beforeEach(function () {
       GOVUKAdmin.Data.editionFormDirty = true
@@ -140,7 +140,7 @@ describe('An ajax save module', function () {
     })
 
     it('says that it has saved', function () {
-      var statusMessage = element.find('.js-status-message')
+      const statusMessage = element.find('.js-status-message')
       expect(statusMessage.text()).toBe('Saved')
       expect(statusMessage.is('.workflow-message-saved')).toBe(true)
     })
@@ -155,7 +155,7 @@ describe('An ajax save module', function () {
     })
 
     it('triggers a success.ajaxsave.admin dom event', function () {
-      var successResponse = false
+      let successResponse = false
       element.on('success.ajaxsave.admin', function (evt, response) {
         successResponse = response
       })
@@ -165,7 +165,7 @@ describe('An ajax save module', function () {
   })
 
   describe('when an ajax save errors with validation messages', function () {
-    var timeoutTime, ajaxError, ajaxSuccess
+    let timeoutTime, ajaxError, ajaxSuccess
 
     beforeEach(function () {
       spyOn($, 'ajax').and.callFake(function (options) {
@@ -196,7 +196,7 @@ describe('An ajax save module', function () {
 
     it('says that it couldn’t save', function () {
       ajaxError()
-      var statusMessage = element.find('.js-status-message')
+      const statusMessage = element.find('.js-status-message')
       expect(statusMessage.text()).toBe('We had some problems saving. Please check the form above.')
       expect(statusMessage.is('.workflow-message-error')).toBe(true)
     })
@@ -210,7 +210,7 @@ describe('An ajax save module', function () {
     it('shows the error alongside the erroring field', function () {
       ajaxError({ test: ['must be changed'] })
 
-      var parents = element.find('#edition_test').parents('.form-group')
+      const parents = element.find('#edition_test').parents('.form-group')
 
       expect(parents.is('.has-error')).toBe(true)
       expect(parents.find('.error-block li').length).toBe(1)
@@ -219,7 +219,7 @@ describe('An ajax save module', function () {
 
     it('includes the base error in the save dialogue', function () {
       ajaxError({ base: ['Form is wholly wrong'] })
-      var statusMessage = element.find('.js-status-message')
+      const statusMessage = element.find('.js-status-message')
       expect(statusMessage.text()).toBe('We had some problems saving. Form is wholly wrong.')
     })
 
@@ -231,8 +231,8 @@ describe('An ajax save module', function () {
     it('can show multiple errors', function () {
       ajaxError({ test: ['must be changed', 'must be blue'], another: ['must rhyme'] })
 
-      var el = element.find('#edition_test')
-      var parents = el.parents('.form-group')
+      let el = element.find('#edition_test')
+      let parents = el.parents('.form-group')
       expect(parents.is('.has-error')).toBe(true)
       expect(parents.find('.error-block li').length).toBe(2)
       expect(parents.find('.error-block li:first').text()).toBe('must be changed')
@@ -248,12 +248,12 @@ describe('An ajax save module', function () {
     it('renders an error summary component which link to the correct inputs', function () {
       ajaxError({ test: ['must be changed', 'must be blue'], another: ['must rhyme'] })
 
-      var errorSummary = element.find('#error-summary')
-      var heading = errorSummary.find('h3')[0]
-      var links = errorSummary.find('a')
-      var error1 = links[0]
-      var error2 = links[1]
-      var error3 = links[2]
+      const errorSummary = element.find('#error-summary')
+      const heading = errorSummary.find('h3')[0]
+      const links = errorSummary.find('a')
+      const error1 = links[0]
+      const error2 = links[1]
+      const error3 = links[2]
 
       expect(heading.textContent).toBe('There is a problem')
       expect(error1.hash).toBe('#edition_test')
@@ -267,13 +267,13 @@ describe('An ajax save module', function () {
     it('does not render errors with the message "is invalid" or where the errorKey is "parts"', function () {
       ajaxError({ test: ['must be changed', 'is invalid'], parts: ['must rhyme'] })
 
-      var links = element.find('#error-summary').find('a')
+      const links = element.find('#error-summary').find('a')
 
       expect(links.length).toBe(1)
     })
 
     it('triggers an error.ajaxsave.admin dom event', function () {
-      var errorResponse = false
+      let errorResponse = false
       element.on('errors.ajaxsave.admin', function (evt, response) {
         errorResponse = response
       })
@@ -314,7 +314,7 @@ describe('An ajax save module', function () {
       element.find('.js-no-ajax[name="fake-file-input"]').val('has value as if file was selected')
       element.find('.js-save').trigger('click')
 
-      var statusMessage = element.find('.js-status-message')
+      const statusMessage = element.find('.js-status-message')
       expect(statusMessage.text()).toBe('Saving…')
       expect(statusMessage.is('.workflow-message-saving')).toBe(true)
     })

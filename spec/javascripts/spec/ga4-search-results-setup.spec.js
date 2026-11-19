@@ -1,10 +1,10 @@
 describe('GA4SearchResultsSetup', function () {
   'use strict'
 
-  var module, ga4SearchResultsSetup
+  let module, ga4SearchResultsSetup
 
   beforeEach(function () {
-    var moduleHtml =
+    const moduleHtml =
       `<div data-ga4-ecommerce>
         <form>
           <input name="search_text">
@@ -23,8 +23,8 @@ describe('GA4SearchResultsSetup', function () {
 
   describe('when initialised', function () {
     it('should initialise Ga4EcommerceTracker', function () {
-      var ga4EcommerceTracker = window.GOVUK.analyticsGa4.Ga4EcommerceTracker
-      var ga4EcommerceTrackerSpyInit = spyOn(ga4EcommerceTracker, 'init')
+      const ga4EcommerceTracker = window.GOVUK.analyticsGa4.Ga4EcommerceTracker
+      const ga4EcommerceTrackerSpyInit = spyOn(ga4EcommerceTracker, 'init')
 
       ga4SearchResultsSetup.init()
 

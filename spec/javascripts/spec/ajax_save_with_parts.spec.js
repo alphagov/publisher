@@ -1,7 +1,7 @@
 describe('An ajax save with parts module', function () {
   'use strict'
 
-  var ajaxSaveWithParts,
+  let ajaxSaveWithParts,
     element,
     form
 
@@ -157,7 +157,7 @@ describe('An ajax save with parts module', function () {
     })
 
     it('adds a hidden input containing the part’s new ID', function () {
-      var $input = form.find('input[value="5f00000003"]')
+      const $input = form.find('input[value="5f00000003"]')
 
       expect($input.length).toBe(1)
       expect($input.attr('id')).toBe('edition_part_4535667_id')
@@ -206,11 +206,11 @@ describe('An ajax save with parts module', function () {
     })
 
     it('renders an error summary banner with the correct links to errors', function () {
-      var links = element.find('#error-summary').find('a')
-      var error1 = links[0]
-      var error2 = links[1]
-      var error3 = links[2]
-      var error4 = links[3]
+      const links = element.find('#error-summary').find('a')
+      const error1 = links[0]
+      const error2 = links[1]
+      const error3 = links[2]
+      const error4 = links[3]
 
       expect(error1.hash).toBe('#edition_part_100_slug')
       expect(error1.text).toBe("can't be blank")

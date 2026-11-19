@@ -1,11 +1,11 @@
 describe('A parts module', function () {
   'use strict'
 
-  var parts,
+  let parts,
     element
 
   function createHtmlPasteEvent (html = null) {
-    var event = new window.Event('paste')
+    const event = new window.Event('paste')
     event.clipboardData = {
       getData: (type) => {
         if (type === 'text/html') {
@@ -108,7 +108,7 @@ describe('A parts module', function () {
     })
 
     it('applies the paste html to govspeak data module to the new parts body field', function () {
-      var $textarea = $('#part_4').find('.body')[0]
+      const $textarea = $('#part_4').find('.body')[0]
       $textarea.dispatchEvent(createHtmlPasteEvent('<h2>This is a h2</h2>'))
 
       expect($textarea.value).toEqual('## This is a h2')

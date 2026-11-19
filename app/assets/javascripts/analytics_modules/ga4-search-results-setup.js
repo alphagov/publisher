@@ -12,8 +12,8 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   }
 
   Ga4SearchResultsSetup.prototype.trackEcommerce = function () {
-    var searchTarget = document.querySelector('[data-ga4-ecommerce]')
-    var searchTerm = document.querySelector('input[name="search_text"]').value
+    const searchTarget = document.querySelector('[data-ga4-ecommerce]')
+    const searchTerm = document.querySelector('input[name="search_text"]').value
 
     searchTarget.dataset.ga4SearchQuery = searchTerm
 

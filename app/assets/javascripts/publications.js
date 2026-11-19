@@ -9,7 +9,7 @@ $(function () {
   GOVUKAdmin.Data = GOVUKAdmin.Data || {}
   GOVUKAdmin.Data.editionFormDirty = false
 
-  var $editionForm = $('#edition-form')
+  const $editionForm = $('#edition-form')
 
   $editionForm.change(function () {
     GOVUKAdmin.Data.editionFormDirty = true
