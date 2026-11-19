@@ -198,7 +198,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "Organisations", event_data[0]["section"]
-      assert_equal "Department for Education", event_data[0]["text"]
+      assert_equal "Department for Education (DfE)", event_data[0]["text"]
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "1", event_data[0]["index"]["index_section_count"]
 
@@ -206,7 +206,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "select", event_data[1]["action"]
       assert_equal "select_content", event_data[1]["event_name"]
       assert_equal "Organisations", event_data[1]["section"]
-      assert_equal "Student Loans Company", event_data[1]["text"]
+      assert_equal "Student Loans Company (SLC)", event_data[1]["text"]
       assert_equal "1", event_data[1]["index"]["index_section"]
       assert_equal "1", event_data[1]["index"]["index_section_count"]
 
@@ -234,7 +234,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "select", event_data[0]["action"]
       assert_equal "select_content", event_data[0]["event_name"]
       assert_equal "Organisations", event_data[0]["section"]
-      assert_equal "Student Loans Company", event_data[0]["text"]
+      assert_equal "Student Loans Company (SLC)", event_data[0]["text"]
       assert_equal "1", event_data[0]["index"]["index_section"]
       assert_equal "1", event_data[0]["index"]["index_section_count"]
 
@@ -242,7 +242,7 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "Save", event_data[1]["action"]
       assert_equal "form_response", event_data[1]["event_name"]
       assert_equal "Tagging - Tag organisations", event_data[1]["section"]
-      assert_equal "{\"Organisations\":\"Student Loans Company\"}", event_data[1]["text"]
+      assert_equal "{\"Organisations\":\"Student Loans Company (SLC)\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
     end
