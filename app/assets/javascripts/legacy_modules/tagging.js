@@ -1,17 +1,17 @@
 (function (Modules) {
   'use strict'
   Modules.Tagging = function () {
-    var that = this
+    const that = this
     that.start = function (element) {
-      var $primaryMainstream = $('#tagging_tagging_update_form_parent')
-      var $mainstreams = $('#tagging_tagging_update_form_mainstream_browse_pages')
-      var $mainstreamAlertWarning = $('.mainstream.alert-warning')
+      const $primaryMainstream = $('#tagging_tagging_update_form_parent')
+      const $mainstreams = $('#tagging_tagging_update_form_mainstream_browse_pages')
+      const $mainstreamAlertWarning = $('.mainstream.alert-warning')
 
       element.on('change', function () {
         element.addClass('interacted')
 
-        var mainstreams = $mainstreams.val() || []
-        var primaryMainstream = $primaryMainstream.val() || []
+        const mainstreams = $mainstreams.val() || []
+        const primaryMainstream = $primaryMainstream.val() || []
 
         if (primaryMainstream.length !== 0) {
           if (mainstreams.length === 0 || (mainstreams.indexOf(primaryMainstream) === -1)) {

@@ -1,8 +1,8 @@
 describe('GOVUKAdmin.Modules.PasteHtmlToGovspeak', function () {
-  var textarea
+  let textarea
 
   function createHtmlPasteEvent (html = null) {
-    var event = new window.Event('paste')
+    const event = new window.Event('paste')
     event.clipboardData = {
       getData: (type) => {
         if (type === 'text/html') {
@@ -17,7 +17,7 @@ describe('GOVUKAdmin.Modules.PasteHtmlToGovspeak', function () {
   beforeEach(function () {
     textarea = document.createElement('textarea')
 
-    var pasteHtmlToGovspeak = new GOVUKAdmin.Modules.PasteHtmlToGovspeak()
+    const pasteHtmlToGovspeak = new GOVUKAdmin.Modules.PasteHtmlToGovspeak()
     pasteHtmlToGovspeak.start($(textarea))
   })
 

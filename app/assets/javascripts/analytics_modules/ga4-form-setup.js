@@ -8,8 +8,8 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   function Ga4FormSetup () {}
 
   Ga4FormSetup.prototype.init = function () {
-    var forms
-    var modules = document.querySelectorAll(
+    let forms
+    const modules = document.querySelectorAll(
       "[data-module~='ga4-form-setup']"
     )
 
@@ -28,11 +28,9 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   }
 
   Ga4FormSetup.prototype.addDataAttributes = function (form) {
-    var section = form.closest('[data-ga4-section]').getAttribute('data-ga4-section')
-    var toolName = form.closest('[data-ga4-tool-name]').getAttribute('data-ga4-tool-name')
-    var type
-    var eventData
-    var linkData
+    const section = form.closest('[data-ga4-section]').getAttribute('data-ga4-section')
+    const toolName = form.closest('[data-ga4-tool-name]').getAttribute('data-ga4-tool-name')
+    let type
 
     if (form.querySelector('.gem-c-reorderable-list')) {
       type = 'reorder'
@@ -40,15 +38,15 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
       type = 'edit'
     }
 
-    eventData = {
+    const eventData = {
       event_name: 'form_response',
-      type: type,
-      section: section,
+      type,
+      section,
       action: 'Save',
       tool_name: toolName
     }
 
-    linkData = {
+    const linkData = {
       event_name: 'navigation',
       type: 'generic_link'
     }
@@ -63,21 +61,21 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     form.setAttribute('data-ga4-link', JSON.stringify(linkData))
 
     // If the form contains date-input components add ga4-form-section data-attributes
-    var dateInputs = form.querySelectorAll('.govuk-date-input')
+    const dateInputs = form.querySelectorAll('.govuk-date-input')
 
     Array.from(dateInputs).forEach(function (dateInput) {
-      var fieldset = dateInput.closest('fieldset')
+      const fieldset = dateInput.closest('fieldset')
       fieldset.setAttribute('data-ga4-form-section', fieldset.querySelector('legend').textContent)
     })
 
     // If the form contains sections for redaction add required data-attributes
-    var redactableSections = form.querySelectorAll('.js-ga4-redact')
+    const redactableSections = form.querySelectorAll('.js-ga4-redact')
 
     Array.from(redactableSections).forEach(function (container) {
-      var fieldsets = container.querySelectorAll('fieldset')
+      const fieldsets = container.querySelectorAll('fieldset')
 
       Array.from(fieldsets).forEach(function (fieldset) {
-        var redactableElements = fieldset.querySelectorAll('input[type="radio"], input[type="checkbox"], select option')
+        const redactableElements = fieldset.querySelectorAll('input[type="radio"], input[type="checkbox"], select option')
 
         if (redactableElements.length > 0) {
           Array.from(redactableElements).forEach(function (redactableElement) {
@@ -93,7 +91,7 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   }
 
   Ga4FormSetup.prototype.callFormChangeTracker = function (form) {
-    var ga4FormChangeTracker = new window.GOVUK.Modules.Ga4FormChangeTracker(form)
+    const ga4FormChangeTracker = new window.GOVUK.Modules.Ga4FormChangeTracker(form)
 
     ga4FormChangeTracker.init()
   }
@@ -102,8 +100,8 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   // set the "ga4-form-use-select-count" data-attribute
   // when multiple selections are made
   Ga4FormSetup.prototype.setUpMultipleSelect = function (form) {
-    var select = form.querySelector('select')
-    var optionsSelected = []
+    const select = form.querySelector('select')
+    let optionsSelected = []
 
     select.addEventListener('change', function (e) {
       Array.from(e.target.options).forEach(function (option) {

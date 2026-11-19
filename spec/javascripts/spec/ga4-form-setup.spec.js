@@ -1,10 +1,10 @@
 describe('GA4FormSetup', function () {
   'use strict'
 
-  var module, ga4FormSetup
+  let module, ga4FormSetup
 
   beforeEach(function () {
-    var moduleHtml =
+    const moduleHtml =
       `<div data-module="ga4-form-setup" data-ga4-section="The section name" data-ga4-tool-name="Answer">
         <form>
           <fieldset>
@@ -50,7 +50,7 @@ describe('GA4FormSetup', function () {
   })
 
   describe('when loaded', function () {
-    var form, formGA4Data, formEventData, linkEventData
+    let form, formGA4Data, formEventData, linkEventData
 
     it('adds the correct parameters to the form', function () {
       form = module.querySelectorAll('form')[0]
@@ -79,7 +79,7 @@ describe('GA4FormSetup', function () {
   })
 
   describe('when the form contains a multiple select element', function () {
-    var form, select, options, change
+    let form, select, options, change
 
     describe('the correct "data-module" attribute of the form is set', function () {
       beforeEach(function () {
@@ -128,14 +128,14 @@ describe('GA4FormSetup', function () {
 
   describe('when the form contains a js-ga4-redact-names element', function () {
     it('adds GA4 data-attributes to the fieldset, inputs and options', function () {
-      var form = module.querySelectorAll('form')[0]
-      var redactNamesContainer = form.querySelector('.js-ga4-redact')
-      var fieldsetRadios = redactNamesContainer.querySelector('fieldset#radios')
-      var fieldsetCheckboxes = redactNamesContainer.querySelector('fieldset#checkboxes')
-      var fieldsetOptions = redactNamesContainer.querySelector('fieldset#options')
-      var radios = fieldsetRadios.querySelectorAll('input[type="radio"]')
-      var checkboxes = fieldsetCheckboxes.querySelectorAll('input[type="checkbox"]')
-      var options = fieldsetOptions.querySelectorAll('option')
+      const form = module.querySelectorAll('form')[0]
+      const redactNamesContainer = form.querySelector('.js-ga4-redact')
+      const fieldsetRadios = redactNamesContainer.querySelector('fieldset#radios')
+      const fieldsetCheckboxes = redactNamesContainer.querySelector('fieldset#checkboxes')
+      const fieldsetOptions = redactNamesContainer.querySelector('fieldset#options')
+      const radios = fieldsetRadios.querySelectorAll('input[type="radio"]')
+      const checkboxes = fieldsetCheckboxes.querySelectorAll('input[type="checkbox"]')
+      const options = fieldsetOptions.querySelectorAll('option')
 
       expect(fieldsetRadios.dataset.ga4Redact).toBe('true')
       expect(radios[0].dataset.ga4RedactPermit).toBe(undefined)
@@ -153,9 +153,9 @@ describe('GA4FormSetup', function () {
 
   describe('when the form contains a reorderable-list component', function () {
     it('adds the correct parameters to the form', function () {
-      var form = module.querySelectorAll('form')[1]
-      var formGA4Data = form.dataset
-      var formEventData = JSON.parse(formGA4Data.ga4Form)
+      const form = module.querySelectorAll('form')[1]
+      const formGA4Data = form.dataset
+      const formEventData = JSON.parse(formGA4Data.ga4Form)
 
       expect(formEventData.action).toBe('Save')
       expect(formEventData.event_name).toBe('form_response')

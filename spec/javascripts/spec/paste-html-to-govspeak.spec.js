@@ -1,11 +1,11 @@
 describe('PasteHtmlToGovspeak', function () {
   'use strict'
 
-  var module, pasteHtmlToGovspeak, textarea, createClipboardPasteEvent, pasteHtml
+  let module, pasteHtmlToGovspeak, textarea, createClipboardPasteEvent, pasteHtml
 
   beforeAll(function () {
     createClipboardPasteEvent = function (content) {
-      var event = new Event('paste')
+      const event = new Event('paste')
 
       event.clipboardData = {
         getData: function () {
@@ -17,13 +17,13 @@ describe('PasteHtmlToGovspeak', function () {
     }
 
     pasteHtml = function (content) {
-      var event = createClipboardPasteEvent(content)
+      const event = createClipboardPasteEvent(content)
       textarea.dispatchEvent(event)
     }
   })
 
   beforeEach(function () {
-    var moduleHtml = '<textarea></textarea>'
+    const moduleHtml = '<textarea></textarea>'
 
     module = document.createElement('div')
     module.innerHTML = moduleHtml

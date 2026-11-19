@@ -5,8 +5,8 @@
 
   Modules.SmartAnswerFlowchart = function () {
     this.start = function (element) {
-      var diagram = element.find('.flowchart')
-      var flowchartLoading = element.find('.flowchart__loading')
+      const diagram = element.find('.flowchart')
+      const flowchartLoading = element.find('.flowchart__loading')
 
       // eslint-disable-next-line
       mermaid.initialize(

@@ -12,9 +12,9 @@
       makePartsSortable()
 
       function generateSlug () {
-        var $titleInput = $(this)
-        var value = $titleInput.val()
-        var $slugInput = $titleInput.closest('.part').find('.slug')
+        const $titleInput = $(this)
+        const value = $titleInput.val()
+        const $slugInput = $titleInput.closest('.part').find('.slug')
 
         if ($slugInput.val() === '' || $slugInput.data('accepts-generated-value')) {
           $slugInput.data('accepts-generated-value', true)
@@ -28,14 +28,14 @@
       }
 
       function addPasteHtmlToGovspeak () {
-        var input = element.find('.body').slice(-1)
-        var pasteHtmlToGovspeak = new GOVUKAdmin.Modules.PasteHtmlToGovspeak()
+        const input = element.find('.body').slice(-1)
+        const pasteHtmlToGovspeak = new GOVUKAdmin.Modules.PasteHtmlToGovspeak()
         pasteHtmlToGovspeak.start(input)
       }
 
       function makePartsSortable () {
-        var accordionSelector = '.js-sort-handle'
-        var sortableOptions = {
+        const accordionSelector = '.js-sort-handle'
+        const sortableOptions = {
           axis: 'y',
           handle: accordionSelector,
           stop: function (event, ui) {
@@ -54,7 +54,7 @@
       }
 
       function removeValidationMessages (evt) {
-        var $part = $(evt.target)
+        const $part = $(evt.target)
 
         $part.find('.error, .has-error').removeClass('error').removeClass('has-error')
         $part.find('.error-block').empty()

@@ -14,8 +14,8 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   }
 
   Ga4SearchSetup.prototype.trackSearches = function (module) {
-    var searchForm = module.querySelector('form')
-    var tracker = new window.GOVUK.Modules.Ga4SearchTracker(searchForm)
+    const searchForm = module.querySelector('form')
+    const tracker = new window.GOVUK.Modules.Ga4SearchTracker(searchForm)
 
     tracker.init()
   }

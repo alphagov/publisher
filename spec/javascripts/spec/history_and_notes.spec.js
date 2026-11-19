@@ -4,10 +4,10 @@ window.GOVUK.Modules = window.GOVUK.Modules || {}
 describe('History and Notes component', function () {
   'use strict'
 
-  var module, historyAndNotes
+  let module, historyAndNotes
 
   beforeEach(function () {
-    var moduleHtml =
+    const moduleHtml =
       `<ul>
         <li>
           <div>
