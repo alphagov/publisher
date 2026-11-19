@@ -22,7 +22,7 @@ jobs:
         id: setup-postgres
         uses: alphagov/govuk-infrastructure/.github/actions/setup-postgres@main
         with:
-          POSTGRES_IMAGE_TAG: 16
+          POSTGRES_IMAGE_TAG: 18
           POSTGRES_DB: publisher_test
 
       - name: Setup Redis
