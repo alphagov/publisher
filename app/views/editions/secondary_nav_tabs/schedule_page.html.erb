@@ -9,54 +9,28 @@
   comment_label_text: "Comment (optional)",
   submit_button_text: "Schedule",
   title:,
-  schedule_fields: (render "govuk_publishing_components/components/datetime_fields", {})
+  schedule_fields: (render "govuk_publishing_components/components/datetime_fields", {
+    heading_size: "m",
+    date_heading: "Publication date",
+    time_heading: "Publication time",
+    date_hint: "For example, #{(Time.zone.now + 3.months).strftime("%-d %-m %Y")}",
+    time_hint: "Use the 24-hour format, for example 17:30 for 5:30pm",
+    year: {
+      name: "publish_at_1i",
+    },
+    month: {
+      name: "publish_at_2i",
+    },
+    day: {
+      name: "publish_at_3i",
+    },
+    hour: {
+      name: "publish_at_4i",
+      value: 0
+    },
+    minute: {
+      name: "publish_at_5i",
+      value: 1
+    }
+  })
 } %>
-
-<%#
-schedule_fields: (render "govuk_publishing_components/components/fieldset", {
-  legend_text: "Publication date",
-  heading_size: "m",
-} do
-  render "govuk_publishing_components/components/date_input", {
-    hint: "For example, #{(Time.zone.now + 3.months).strftime("%-d %-m %Y")}",
-    items: [
-      {
-        label: "Day",
-        name: "publish_at_3i",
-        width: 2,
-      },
-      {
-        label: "Month",
-        name: "publish_at_2i",
-        width: 2,
-      },
-      {
-        label: "Year",
-        name: "publish_at_1i",
-        width: 4,
-      },
-    ],
-  }
-end) + (render "govuk_publishing_components/components/fieldset", {
-        legend_text: "Publication time",
-        heading_size: "m",
-      } do
-        render "downtimes/time_input", {
-          hint: "Use the 24-hour format, for example 17:30 for 5:30pm",
-          items: [
-            {
-              label: "Hour",
-              name: "publish_at_4i",
-              value: "00",
-              width: 2,
-            },
-            {
-              label: "Minute",
-              name: "publish_at_5i",
-              value: "01",
-              width: 2,
-            },
-          ],
-        }
-      end),
-%>
