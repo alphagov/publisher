@@ -95,9 +95,13 @@ class EditionWorkflowTest < IntegrationTest
       within all(".govuk-fieldset")[1] do
         assert page.has_css?("legend", text: "Publication time")
         assert page.has_css?(".govuk-label", text: "Hour")
-        assert page.has_css?("input[name='publish_at_4i'][value='00']")
+        within :css, "select[name='publish_at_4i']" do
+          assert find("option[value='00']")
+        end
         assert page.has_css?(".govuk-label", text: "Minute")
-        assert page.has_css?("input[name='publish_at_5i'][value='01']")
+        within :css, "select[name='publish_at_5i']" do
+          assert find("option[value='01']")
+        end
       end
 
       assert page.has_button?("Schedule")
@@ -122,8 +126,8 @@ class EditionWorkflowTest < IntegrationTest
       fill_in "Day", with: date.day
       fill_in "Month", with: date.month
       fill_in "Year", with: date.year
-      fill_in "Hour", with: date.hour
-      fill_in "Minute", with: date.min
+      select date.hour, from: "Hour"
+      select date.min, from: "Minute"
       click_button "Schedule"
 
       assert_current_path edition_path(@ready_edition.id)
