@@ -1,78 +1,70 @@
+<% component_helper = GovukPublishingComponents::Presenters::ComponentWrapperHelper.new(local_assigns) %>
+
 <%= f.hidden_field :artefact_id %>
 
-<%= render partial: "downtimes/datetime_fields", locals: {
-  date_legend_text: "From date",
-  time_legend_text: "From time",
-  error_items: errors_for(f.object.errors, :start_time),
-  year: {
-    name: "downtime[start_time(1i)]",
-    label: "Year",
-    value: params.dig("downtime", "start_time(1i)") || @downtime.start_time&.year,
-    width: 4,
-  },
-  month: {
-    name: "downtime[start_time(2i)]",
-    label: "Month",
-    value: params.dig("downtime", "start_time(2i)") || @downtime.start_time&.month,
-    width: 2,
-  },
-  day: {
-    id: "downtime_start_time",
-    name: "downtime[start_time(3i)]",
-    label: "Day",
-    value: params.dig("downtime", "start_time(3i)") || @downtime.start_time&.day,
-    width: 2,
-  },
-  hour: {
-    name: "downtime[start_time(4i)]",
-    label: "Hour",
-    value: params.dig("downtime", "start_time(4i)") || @downtime.start_time&.hour,
-    width: 2,
-  },
-  minute: {
-    name: "downtime[start_time(5i)]",
-    label: "Minute",
-    value: params.dig("downtime", "start_time(5i)") || @downtime.start_time&.min,
-    width: 2,
-  },
-} %>
+<% component_helper.set_id("downtime_start_time") %>
 
-<%= render partial: "downtimes/datetime_fields", locals: {
-  date_legend_text: "To date",
-  time_legend_text: "To time",
-  error_items: errors_for(f.object.errors, :end_time),
-  year: {
-    name: "downtime[end_time(1i)]",
-    label: "Year",
-    value: params.dig("downtime", "end_time(1i)") || @downtime.end_time&.year,
-    width: 4,
-  },
-  month: {
-    name: "downtime[end_time(2i)]",
-    label: "Month",
-    value: params.dig("downtime", "end_time(2i)") || @downtime.end_time&.month,
-    width: 2,
-  },
-  day: {
-    id: "downtime_end_time",
-    name: "downtime[end_time(3i)]",
-    label: "Day",
-    value: params.dig("downtime", "end_time(3i)") || @downtime.end_time&.day,
-    width: 2,
-  },
-  hour: {
-    name: "downtime[end_time(4i)]",
-    label: "Hour",
-    value: params.dig("downtime", "end_time(4i)") || @downtime.end_time&.hour,
-    width: 2,
-  },
-  minute: {
-    name: "downtime[end_time(5i)]",
-    label: "Minute",
-    value: params.dig("downtime", "end_time(5i)") || @downtime.end_time&.min,
-    width: 2,
-  },
-} %>
+<%= tag.div(**component_helper.all_attributes) do %>
+  <%= render "govuk_publishing_components/components/datetime_fields", {
+    heading_size: "m",
+    date_heading: "From date",
+    time_heading: "From time",
+    date_hint: "For example, #{(Time.zone.now + 3.months).strftime("%-d %-m %Y")}",
+    error_items: errors_for(f.object.errors, :start_time),
+    year: {
+      name: "downtime[start_time(1i)]",
+      value: params.dig("downtime", "start_time(1i)") || @downtime.start_time&.year,
+    },
+    month: {
+      name: "downtime[start_time(2i)]",
+      value: params.dig("downtime", "start_time(2i)") || @downtime.start_time&.month,
+    },
+    day: {
+      name: "downtime[start_time(3i)]",
+      value: params.dig("downtime", "start_time(3i)") || @downtime.start_time&.day,
+    },
+    hour: {
+      name: "downtime[start_time(4i)]",
+      value: @downtime.start_time&.hour.to_i || nil
+    },
+    minute: {
+      name: "downtime[start_time(5i)]",
+      value: @downtime.start_time&.min.to_i || nil
+    }
+  } %>
+<% end %>
+
+<% component_helper.set_id("downtime_end_time") %>
+
+<%= tag.div(**component_helper.all_attributes) do %>
+  <%= render "govuk_publishing_components/components/datetime_fields", {
+    heading_size: "m",
+    date_heading: "To date",
+    time_heading: "To time",
+    date_hint: "For example, #{(Time.zone.now + 3.months).strftime("%-d %-m %Y")}",
+    error_items: errors_for(f.object.errors, :end_time),
+    year: {
+      name: "downtime[end_time(1i)]",
+      value: params.dig("downtime", "end_time(1i)") || @downtime.end_time&.year,
+    },
+    month: {
+      name: "downtime[end_time(2i)]",
+      value: params.dig("downtime", "end_time(2i)") || @downtime.end_time&.month,
+    },
+    day: {
+      name: "downtime[end_time(3i)]",
+      value: params.dig("downtime", "end_time(3i)") || @downtime.end_time&.day,
+    },
+    hour: {
+      name: "downtime[end_time(4i)]",
+      value: @downtime.end_time&.hour.to_i || nil
+    },
+    minute: {
+      name: "downtime[end_time(5i)]",
+      value: @downtime.end_time&.min.to_i || nil
+    }
+  } %>
+<% end %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
