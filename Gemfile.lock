@@ -314,12 +314,13 @@ GEM
       jquery-rails (~> 4.3)
       plek (>= 2.1)
       rails (>= 6)
-    govuk_app_config (9.28.0)
+    govuk_app_config (10.0.0)
       connection_pool (< 4)
       logstasher (>= 2.1, < 4.0)
       opentelemetry-exporter-otlp (>= 0.25, < 0.35)
       opentelemetry-instrumentation-all (>= 0.39.1, < 0.98.0)
       opentelemetry-sdk (~> 1.2)
+      ostruct (~> 0.6)
       plek (>= 4, < 6)
       prometheus_exporter (~> 2.3)
       puma (>= 5.6, < 9.0)
@@ -991,7 +992,7 @@ DEPENDENCIES
   google-apis-gmail_v1
   govspeak
   govuk_admin_template
-  govuk_app_config (~> 9.28.0)
+  govuk_app_config (~> 10.0.0)
   govuk_publishing_components
   govuk_schemas
   govuk_sidekiq
