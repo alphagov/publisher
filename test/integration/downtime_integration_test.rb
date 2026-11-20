@@ -78,8 +78,12 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     fill_in "downtime[#{prefix}_time(3i)]", with: time.day.to_s
     fill_in "downtime[#{prefix}_time(2i)]", with: time.month.to_s
     fill_in "downtime[#{prefix}_time(1i)]", with: time.year.to_s
-    fill_in "downtime[#{prefix}_time(4i)]", with: time.hour.to_s
-    fill_in "downtime[#{prefix}_time(5i)]", with: time.min.to_s
+    within :css, "select[name='downtime[#{prefix}_time(4i)]']" do
+      select time.hour.to_s.rjust(2, "0")
+    end
+    within :css, "select[name='downtime[#{prefix}_time(5i)]']" do
+      select time.min.to_s.rjust(2, "0")
+    end
   end
 
   def complete_date_inputs(input_id, time)
