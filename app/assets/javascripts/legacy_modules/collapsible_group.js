@@ -7,19 +7,19 @@
      http://getbootstrap.com/javascript/#collapse
   */
   Modules.CollapsibleGroup = function () {
-    var that = this
+    const that = this
 
     that.start = function (element) {
-      var collapseText = element.data('collapse-text')
-      var expandText = element.data('expand-text')
-      var $links = element.find('.js-toggle-all')
+      const collapseText = element.data('collapse-text')
+      const expandText = element.data('expand-text')
+      const $links = element.find('.js-toggle-all')
 
       element.on('click', '.js-toggle-all', toggleAll)
       element.on('shown.bs.collapse hidden.bs.collapse nested:fieldRemoved nested:fieldAdded', updateLinkText)
       updateLinkText()
 
       function toggleAll (event) {
-        var action = hasOpenItems() ? 'hide' : 'show'
+        const action = hasOpenItems() ? 'hide' : 'show'
 
         element.find('.collapse').collapse(action)
         event.preventDefault()

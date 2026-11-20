@@ -4,10 +4,10 @@ window.GOVUK.Modules = window.GOVUK.Modules || {}
 describe('Publications Table component', function () {
   'use strict'
 
-  var module, publicationsTable
+  let module, publicationsTable
 
   beforeEach(function () {
-    var moduleHtml =
+    const moduleHtml =
       `<p class="publications-table__heading">20 documents</p>
       <table>
         <thead>
@@ -71,7 +71,7 @@ describe('Publications Table component', function () {
 
   describe('When initialised', function () {
     it('should have an "Expand/Collapse All" button', function () {
-      var heading = module.querySelector('p.publications-table__heading')
+      const heading = module.querySelector('p.publications-table__heading')
 
       expect(heading.querySelector('a')).not.toBeNull()
       expect(heading.querySelector('a').classList).toContain('publications-table--expand-link')
@@ -79,7 +79,7 @@ describe('Publications Table component', function () {
     })
 
     it('all "More details" sections should be closed', function () {
-      var detailsSections = module.querySelectorAll('details')
+      const detailsSections = module.querySelectorAll('details')
 
       expect(detailsSections[0].getAttribute('open')).not.toBe(true)
       expect(detailsSections[1].getAttribute('open')).not.toBe(true)
@@ -88,7 +88,7 @@ describe('Publications Table component', function () {
   })
 
   describe('The Expand/Contract all link', function () {
-    var expandContractLink, detailsSections, clickEvent
+    let expandContractLink, detailsSections, clickEvent
 
     beforeEach(function () {
       expandContractLink = module.querySelector('p.publications-table__heading a')

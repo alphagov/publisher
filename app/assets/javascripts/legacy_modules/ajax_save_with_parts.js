@@ -2,16 +2,16 @@
   'use strict'
   Modules.AjaxSaveWithParts = function () {
     this.start = function (element) {
-      var ajaxSave = new GOVUKAdmin.Modules.AjaxSave()
+      const ajaxSave = new GOVUKAdmin.Modules.AjaxSave()
 
       element.on('success.ajaxsave.admin', success)
       element.on('errors.ajaxsave.admin', error)
       ajaxSave.start(element)
 
       function success (evt, response) {
-        var parts = response.parts || response.variants
+        const parts = response.parts || response.variants
         if (parts) {
-          for (var i = 0, l = parts.length; i < l; i++) {
+          for (let i = 0, l = parts.length; i < l; i++) {
             updatePart(parts[i])
           }
         }
@@ -19,42 +19,42 @@
       }
 
       function error (evt, response) {
-        var responseJSON = response.responseJSON
-        var partErrors = typeof responseJSON === 'object' && (responseJSON.parts || responseJSON.variants)
+        const responseJSON = response.responseJSON
+        const partErrors = typeof responseJSON === 'object' && (responseJSON.parts || responseJSON.variants)
         if (partErrors) {
           $.each(partErrors[0], showPartErrors)
         }
       }
 
       function removeDeletedParts () {
-        var deletedParts = $("[id*='__destroy'][value='1']")
+        const deletedParts = $("[id*='__destroy'][value='1']")
         deletedParts.parents('.fields').remove()
       }
 
       function showPartErrors (partKey, partErrors) {
-        var partKeyParts = partKey.split(':')
-        var id = partKeyParts[0]
-        var order = partKeyParts[1]
-        var $partContainer = identifyPartContainer(id, order)
+        const partKeyParts = partKey.split(':')
+        const id = partKeyParts[0]
+        const order = partKeyParts[1]
+        const $partContainer = identifyPartContainer(id, order)
 
         $partContainer.find('.collapse').collapse('show')
         $.each(partErrors, function (fieldKey, messages) {
-          var $errorElement = $partContainer.find('[id*=' + fieldKey + '_input]')
+          const $errorElement = $partContainer.find('[id*=' + fieldKey + '_input]')
 
           $errorElement.addClass('has-error')
-          var list = $errorElement.find('.error-block')
-          for (var j = 0, m = messages.length; j < m; j++) {
+          const list = $errorElement.find('.error-block')
+          for (let j = 0, m = messages.length; j < m; j++) {
             list.append('<li>' + messages[j] + '</li>')
-            var elementId = '#' + $errorElement.find('input')[0].id
+            const elementId = '#' + $errorElement.find('input')[0].id
             appendPartErrorsToErrorSummaryComponent(elementId, messages[j])
           }
         })
       }
 
       function appendPartErrorsToErrorSummaryComponent (elementId, message) {
-        var ul = document.getElementById('error-summary').childNodes[1]
-        var list = document.createElement('li')
-        var errorLink = document.createElement('a')
+        const ul = document.getElementById('error-summary').childNodes[1]
+        const list = document.createElement('li')
+        const errorLink = document.createElement('a')
         errorLink.href = elementId
         errorLink.innerText = message
         ul.append(list)
@@ -62,9 +62,9 @@
       }
 
       function updatePart (part) {
-        var partId = part.id
-        var $partContainer = identifyPartContainer(partId, part.order)
-        var $hiddenInputId = $partContainer.find('input[value="' + partId + '"]')
+        const partId = part.id
+        const $partContainer = identifyPartContainer(partId, part.order)
+        const $hiddenInputId = $partContainer.find('input[value="' + partId + '"]')
 
         $partContainer.find('.js-part-title').text(part.title)
         $partContainer.find('.js-part-toggle-target').attr('id', part.slug)
@@ -76,8 +76,8 @@
       }
 
       function identifyPartContainer (id, order) {
-        var $hiddenIdInput = element.find('input[value="' + id + '"]')
-        var $order
+        const $hiddenIdInput = element.find('input[value="' + id + '"]')
+        let $order
 
         if ($hiddenIdInput.length > 0) {
           return $hiddenIdInput.parents('.fields')
@@ -94,10 +94,10 @@
          they must have a hidden element that contains their server
          generated ID */
       function generateHiddenIdInput ($partContainer, id) {
-        var $hiddenInputId = $('<input type="hidden">')
-        var $titleInput = $partContainer.find('input.title')
-        var namePrefix = $titleInput.attr('name').replace(/\[title\]/, '')
-        var idPrefix = $titleInput.attr('id').replace(/_title/, '')
+        const $hiddenInputId = $('<input type="hidden">')
+        const $titleInput = $partContainer.find('input.title')
+        const namePrefix = $titleInput.attr('name').replace(/\[title\]/, '')
+        const idPrefix = $titleInput.attr('id').replace(/_title/, '')
 
         $hiddenInputId.attr('value', id)
         $hiddenInputId.attr('id', idPrefix + '_id')

@@ -1,11 +1,11 @@
 (function () {
   'use strict'
 
-  var root = this
-  var $ = root.jQuery
+  const root = this
+  const $ = root.jQuery
   if (typeof root.Publisher === 'undefined') { root.Publisher = {} }
 
-  var smartAnswerBuilder = {
+  const smartAnswerBuilder = {
     init: function () {
       smartAnswerBuilder.setEventHandlers()
       smartAnswerBuilder.reloadAllNextNodeLists()
@@ -43,10 +43,10 @@
       }
     },
     initNode: function (e) {
-      var kind = smartAnswerBuilder.lastNodeKind
-      var index = smartAnswerBuilder.indexOfKind(kind)
+      const kind = smartAnswerBuilder.lastNodeKind
+      const index = smartAnswerBuilder.indexOfKind(kind)
 
-      var node = e.field
+      const node = e.field
       smartAnswerBuilder.lastNodeKind = null
 
       node.find('input.node-kind').val(kind)
@@ -56,16 +56,16 @@
       node.addClass(kind).attr('id', nodeId(kind, index))
       node.find('.remove-node-label').text('Remove ' + kind)
 
-      var body = node.find('.node-body')
+      const body = node.find('.node-body')
       addPasteHtmlToGovspeak(body)
 
-      var questions = $('.nodes .question:visible')
-      var outcomes = $('.nodes .outcome:visible')
+      const questions = $('.nodes .question:visible')
+      const outcomes = $('.nodes .outcome:visible')
 
       if (kind === 'outcome') {
         node.find('.options').remove()
 
-        var i = 0
+        let i = 0
         if (outcomes.length > 1) {
           i = outcomes.eq(-2).find('input.node-order').val()
         } else {
@@ -100,37 +100,37 @@
       }
 
       function nodeLabel (kind, index) {
-        var capitalizedKind = kind.charAt(0).toUpperCase() + kind.slice(1)
+        const capitalizedKind = kind.charAt(0).toUpperCase() + kind.slice(1)
         return capitalizedKind + ' ' + index
       }
 
       function addPasteHtmlToGovspeak (field) {
-        var pasteHtmlToGovspeak = new GOVUKAdmin.Modules.PasteHtmlToGovspeak()
+        const pasteHtmlToGovspeak = new GOVUKAdmin.Modules.PasteHtmlToGovspeak()
         pasteHtmlToGovspeak.start(field)
       }
     },
     indexOfKind: function (kind) {
-      var kindMatch = new RegExp(kind + '-')
-      var indexes = smartAnswerBuilder.container.find('.node.' + kind + ' .node-slug').map(function () {
-        var index = $(this).val().replace(kindMatch, '')
+      const kindMatch = new RegExp(kind + '-')
+      const indexes = smartAnswerBuilder.container.find('.node.' + kind + ' .node-slug').map(function () {
+        const index = $(this).val().replace(kindMatch, '')
         return parseInt(index)
       }).get()
       if (indexes.length < 1) {
         return 1
       } else {
-        var max = Math.max.apply(null, indexes)
+        const max = Math.max.apply(null, indexes)
         return max + 1
       }
     },
     initOption: function (e) {
-      var option = $(e.field)
-      var node = option.parents('.node').first()
-      var maxOrder = 0
+      const option = $(e.field)
+      const node = option.parents('.node').first()
+      let maxOrder = 0
 
       // Find the maximum order value in the list of existing options
       node.find('.option:visible .option-order')
         .not(option.find('.option-order')).each(function () {
-          var val = parseInt($(this).val())
+          const val = parseInt($(this).val())
           if (val > maxOrder) { maxOrder = val }
         })
 
@@ -145,14 +145,14 @@
       })
     },
     reloadNextNodeList: function (node) {
-      var nextNodeField = node.find('.next-node-list')
+      const nextNodeField = node.find('.next-node-list')
       nextNodeField.find('option:not(.default)').remove()
 
-      var validNextNodes = smartAnswerBuilder.optionsForNode(node)
-      var validNextIds = $.map(validNextNodes, function (n) { return n.id })
+      const validNextNodes = smartAnswerBuilder.optionsForNode(node)
+      const validNextIds = $.map(validNextNodes, function (n) { return n.id })
 
       $.each(validNextNodes, function (i, x) {
-        var optionLabel = x.name
+        let optionLabel = x.name
         if (x.label !== '') {
           optionLabel = optionLabel + ' (' + x.label + ')'
         }
@@ -160,10 +160,10 @@
       })
 
       node.find('.option').each(function (i, option) {
-        var valueField = $(option).find('.next-node-id').first()
-        var selectList = $(option).find('.next-node-list')
+        const valueField = $(option).find('.next-node-id').first()
+        const selectList = $(option).find('.next-node-list')
 
-        var nextNodeId = valueField.val()
+        const nextNodeId = valueField.val()
 
         if (validNextIds.indexOf(nextNodeId) !== -1) {
           selectList.val(nextNodeId)
@@ -174,7 +174,7 @@
       })
     },
     optionsForNode: function (node) {
-      var nextNodes = node.nextAll(':visible')
+      const nextNodes = node.nextAll(':visible')
 
       return $.map(nextNodes, function (nodeContainer, i) {
         node = $(nodeContainer)
@@ -182,7 +182,7 @@
       })
     },
     updateNextNode: function () {
-      var nextNode = $(this).val()
+      const nextNode = $(this).val()
       $(this).closest('.option').find('.next-node-id').val(nextNode)
     }
   }

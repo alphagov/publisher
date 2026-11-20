@@ -1,7 +1,7 @@
 describe('A collapsible group module', function () {
   'use strict'
 
-  var group,
+  let group,
     element
 
   beforeEach(function () {

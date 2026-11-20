@@ -6,30 +6,19 @@
   "license": "MIT",
   "scripts": {
     "lint": "yarn run lint:js && yarn run lint:scss",
-    "lint:js": "standardx 'app/assets/javascripts/**/*.js' 'spec/javascripts/**/*.js'",
+    "lint:js": "standard 'app/assets/javascripts/**/*.js' 'spec/javascripts/**/*.js'",
     "lint:scss": "stylelint app/assets/stylesheets/",
     "jasmine:prepare": "RAILS_ENV=test bundle exec rails assets:clobber assets:precompile",
     "jasmine:ci": "yarn run jasmine:prepare && yarn run jasmine-browser-runner runSpecs",
     "jasmine:browser": "yarn run jasmine:prepare && yarn run jasmine-browser-runner"
   },
-  "standardx": {
-    "env": {
-      "browser": true,
-      "jquery": true,
-      "jasmine": true
-    },
-    "globals": [
-      "GOVUKAdmin"
-    ],
+  "standard": {
+    "env": ["browser", "jquery", "jasmine"],
+    "globals": ["GOVUKAdmin"],
     "ignore": [
       "app/assets/javascripts/vendor",
       "spec/javascripts/helpers/jquery.simulate.drag-sortable.js"
     ]
-  },
-  "eslintConfig": {
-    "rules": {
-      "no-var": 0
-    }
   },
   "stylelint": {
     "extends": "stylelint-config-gds/scss",
@@ -41,7 +30,7 @@
     "jasmine-browser-runner": "^5.0.0",
     "jasmine-core": "^7.0.2",
     "postcss": "^8.5.32",
-    "standardx": "^7.0.0",
+    "standard": "^17.1.2",
     "stylelint": "^17.16.0",
     "stylelint-config-gds": "^3.0.0"
   },

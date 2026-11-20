@@ -19,7 +19,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
 
   // Add Expand/Contract link to DOM
   PublicationsTable.prototype.addExpandlink = function () {
-    var expandLink = document.createElement('a')
+    const expandLink = document.createElement('a')
     expandLink.classList.add('govuk-link', 'publications-table--expand-link')
     expandLink.textContent = 'Expand all'
     this.$module.querySelector('.publications-table__heading').append(expandLink)
