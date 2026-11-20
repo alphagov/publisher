@@ -240,7 +240,7 @@ class LegacyEditionWorkflowTest < LegacyJavascriptIntegrationTest
       fill_in "Email addresses", with: "user-to-ask-for-fact-check@example.com"
       click_on "Send for fact check"
 
-      assert page.has_content? "Due to a service problem, the request could not be made"
+      assert page.has_content? "One or more recipients are not in the GOV.UK Notify team. This error will not occur in production"
     end
   end
 

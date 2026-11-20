@@ -11,6 +11,8 @@ module GovukContentModels
 
         edition.resend_fact_check
       rescue GdsApi::HTTPErrorResponse => e
+        raise if NotifyTeamOnlyError.matches?(e)
+
         Rails.logger.error "API Error Response for Edition #{edition.id}: #{e.class} #{e.message}"
         false
       end
