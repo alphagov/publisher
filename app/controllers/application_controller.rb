@@ -34,6 +34,8 @@ class ApplicationController < ActionController::Base
   end
 
   def notify_bad_request(exception)
+    @last_error = "Notify error: #{exception.class} #{exception.message.inspect}"
+
     # If we use a team-only Notify API key in future for staging and integration
     # the team-only error may be encountered, this logs a more helpful message
     if GovukEnvironment.current != "production" && exception.message =~ /team-only API key/
@@ -42,7 +44,7 @@ class ApplicationController < ActionController::Base
         This error will not occur in Production.
       ERROR
 
-      Rails.logger.error("#{error}, code: #{exception.code}")
+      render plain: error, status: :bad_request
     else
       raise
     end

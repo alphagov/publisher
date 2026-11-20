@@ -277,7 +277,8 @@ class EditionsController < InheritedResources::Base
           flash[:success] = "Sent to fact check"
           redirect_to edition_path(@resource)
         else
-          flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+
+          flash.now[:danger] = "#{SERVICE_REQUEST_ERROR_MESSAGE} (debugging: #{@last_error})"
           render "secondary_nav_tabs/send_to_fact_check_email_preview_page"
         end
         return
