@@ -1,6 +1,29 @@
 <%= f.hidden_field :artefact_id %>
 
-<%= render partial: "downtimes/datetime_fields", locals: {
+<%= render "govuk_publishing_components/components/datetime_fields", {
+  heading_size: "m",
+  date_heading: "From date",
+  time_heading: "From time",
+  date_hint: "For example, 01 08 2022",
+  time_hint: "For example, 9:30 or 19:30",
+  year: {
+    name: "downtime[start_time(1i)]",
+  },
+  month: {
+    name: "downtime[start_time(2i)]",
+  },
+  day: {
+    name: "downtime[start_time(3i)]",
+  },
+  hour: {
+    name: "downtime[start_time(4i)]",
+  },
+  minute: {
+    name: "downtime[start_time(5i)]",
+  }
+} %>
+
+<%# render partial: "downtimes/datetime_fields", locals: {
   date_legend_text: "From date",
   time_legend_text: "From time",
   error_items: errors_for(f.object.errors, :start_time),
@@ -37,7 +60,30 @@
   },
 } %>
 
-<%= render partial: "downtimes/datetime_fields", locals: {
+<%= render "govuk_publishing_components/components/datetime_fields", {
+  heading_size: "m",
+  date_heading: "To date",
+  time_heading: "To time",
+  date_hint: "For example, 01 08 2022",
+  time_hint: "For example, 9:30 or 19:30",
+  year: {
+    name: "downtime[end_time(1i)]",
+  },
+  month: {
+    name: "downtime[end_time(2i)]",
+  },
+  day: {
+    name: "downtime[end_time(3i)]",
+  },
+  hour: {
+    name: "downtime[end_time(4i)]",
+  },
+  minute: {
+    name: "downtime[end_time(5i)]",
+  }
+} %>
+
+<%# render partial: "downtimes/datetime_fields", locals: {
   date_legend_text: "To date",
   time_legend_text: "To time",
   error_items: errors_for(f.object.errors, :end_time),
