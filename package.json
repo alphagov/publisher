@@ -13,7 +13,8 @@
     "jasmine:browser": "yarn run jasmine:prepare && yarn run jasmine-browser-runner"
   },
   "standard": {
-    "env": ["browser", "jquery", "jasmine"], "globals": ["GOVUKAdmin"],
+    "env": ["browser", "jquery", "jasmine"],
+    "globals": ["GOVUKAdmin"],
     "ignore": [
       "app/assets/javascripts/vendor",
       "spec/javascripts/helpers/jquery.simulate.drag-sortable.js"
