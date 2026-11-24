@@ -21,7 +21,7 @@ module ApplicationHelper
   end
 
   def diff_html(version1, version2)
-    Diffy::Diff.new(version1, version2, allow_empty_diff: false).to_s(:html).html_safe
+    Diffy::Diff.new(version1.to_s, version2.to_s, allow_empty_diff: false).to_s(:html).html_safe
   end
 
   def permitted_params
