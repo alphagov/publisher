@@ -379,6 +379,21 @@ class EditionHistoryTest < IntegrationTest
         assert page.has_css?("h1", text: "Compare edition 1 and 2")
         assert page.has_content?(edition_two.title)
       end
+
+      should "compare editions that have no body" do
+        edition_one = FactoryBot.create(:answer_edition, :published, body: nil)
+        edition_two = FactoryBot.create(
+          :answer_edition,
+          :published,
+          panopticon_id: edition_one.panopticon_id,
+          body: nil,
+        )
+
+        visit history_edition_path(edition_two)
+        page.find("a", text: "Compare with Edition 1").click
+
+        assert page.has_css?("h1", text: "Compare edition 1 and 2")
+      end
     end
 
     context "when there are not previous editions" do
