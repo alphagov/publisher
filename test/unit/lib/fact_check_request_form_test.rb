@@ -329,7 +329,7 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
     end
 
     should "build and format the payload with no previous content" do
-      @new_draft_edition = FactoryBot.build(:edition, :draft, title: "New title")
+      @new_draft_edition = FactoryBot.build(:edition, :draft, title: "New title", id: SecureRandom.uuid, auth_bypass_id: SecureRandom.uuid)
       target_date = Time.zone.today + 5.days
 
       @form.deadline_1i = target_date.year.to_s
@@ -344,8 +344,6 @@ class FactCheckRequestFormTest < ActiveSupport::TestCase
                            requester_email: "joe1@bloggs.com",
                            current_content: { content: { heading: "Body", body: "<h2 class=\"edition-title\">New title</h2>\n<p>Some body text</p>" } },
                            current_markdown: { content: { heading: "Body", body: "# New title \n\nSome body text" } },
-                           previous_content: nil,
-                           previous_markdown: nil,
                            deadline: target_date.iso8601,
                            reason_for_change: "because",
                            zendesk_number: "1234567",

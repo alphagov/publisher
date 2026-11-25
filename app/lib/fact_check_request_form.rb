@@ -53,7 +53,7 @@ class FactCheckRequestForm
       zendesk_number: zendesk_number,
       draft_content_id: @edition.content_id,
       draft_auth_bypass_id: @edition.auth_bypass_id,
-      draft_slug: @edition.slug }
+      draft_slug: @edition.slug }.compact
   end
 
   def resend_emails_payload

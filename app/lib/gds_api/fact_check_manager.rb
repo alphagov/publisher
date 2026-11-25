@@ -30,8 +30,7 @@ class GdsApi::FactCheckManager < GdsApi::Base
   def post_fact_check(source_app:, source_id:, requester_name:, requester_email:, current_content:,
                       recipients:, deadline:, source_title: nil, source_url: nil, previous_content: {}, current_markdown: {}, previous_markdown: {}, reason_for_change: nil, zendesk_number: nil,
                       draft_auth_bypass_id: nil, draft_content_id: nil, draft_slug: nil)
-    post_json(
-      "#{endpoint}/api/requests",
+    payload = {
       source_app:,
       source_id:,
       source_title:,
@@ -49,7 +48,9 @@ class GdsApi::FactCheckManager < GdsApi::Base
       draft_auth_bypass_id:,
       draft_content_id:,
       draft_slug:,
-    )
+    }.compact
+
+    post_json("#{endpoint}/api/requests", payload)
   end
 
   # Post a request to resend fact check emails for an existing fact check request
