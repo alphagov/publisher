@@ -200,6 +200,10 @@ class EditionsController < InheritedResources::Base
       flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/resend_fact_check_email_page"
     end
+  rescue GdsApi::HTTPErrorResponse => e
+    Rails.logger.warn "Error resending fact check email for edition #{@resource.id}: #{e.class} #{e.message}"
+    flash.now[:danger] = NotifyTeamOnlyError::MESSAGE
+    render "secondary_nav_tabs/resend_fact_check_email_page"
   end
 
   def request_amendments
@@ -294,6 +298,15 @@ class EditionsController < InheritedResources::Base
         return
       end
     rescue StandardError => e
+      if NotifyTeamOnlyError.matches?(e)
+        Rails.logger.warn "Error sending edition #{@resource.id} to fact check: #{e.class} #{e.message}"
+        flash.now[:danger] = NotifyTeamOnlyError::MESSAGE
+        render "secondary_nav_tabs/send_to_fact_check_email_preview_page"
+        return
+      end
+
+      raise if e.is_a?(Notifications::Client::BadRequestError)
+
       Rails.logger.error "Error sending edition #{@resource.id} to fact check: #{e.class} #{e.message}"
       GovukError.notify(e, extra: { edition_id: @resource.id })
     end

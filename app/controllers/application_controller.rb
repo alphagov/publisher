@@ -34,19 +34,12 @@ class ApplicationController < ActionController::Base
   end
 
   def notify_bad_request(exception)
-    # TODO: control this via the log level rather than an environment variable
-    if %w[integration staging].include?(ENV["GOVUK_ENVIRONMENT"]) && exception.message =~ /team-only API key/
-      # in production we care about all errors
-      # in staging and integration the team-only error may be encountered by
-      # end-users who should see a more helpful error message
-      raise
+    # We use a team-only Notify API key in staging and integration this logs a more helpful message if an email is not in the team
+    if NotifyTeamOnlyError.matches?(exception)
+      Rails.logger.warn "Notify team-only API key error: #{exception.message}"
+      render plain: NotifyTeamOnlyError::MESSAGE, status: :bad_request
     else
-      error = <<~ERROR
-        Error: One or more recipients not in GOV.UK Notify team (code: 400).
-        This error will not occur in Production.
-      ERROR
-
-      render plain: error, status: :bad_request
+      raise exception
     end
   end
 

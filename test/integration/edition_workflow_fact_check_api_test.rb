@@ -211,6 +211,24 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
     end
   end
 
+  context "Send to Fact check page when Notify rejects a recipient (team-only API key)" do
+    setup do
+      stub_post_new_fact_check_request(success: false, notify_team_only: true)
+      @ready_edition = FactoryBot.create(:answer_edition, :ready)
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+    end
+
+    should "show the team-only error message rather than the generic service problem message" do
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      click_button "Continue"
+      click_button "Confirm and send for fact check"
+
+      assert page.has_text?(NotifyTeamOnlyError::MESSAGE)
+      assert page.has_no_text?("Due to a service problem")
+      assert page.has_text?("fact-checker-one@example.com")
+    end
+  end
+
   context "Send to Fact check page with unsuccessful post requests" do
     setup do
       stub_post_new_fact_check_request(success: false)
@@ -315,6 +333,22 @@ class EditionWorkflowFactCheckApiTest < IntegrationTest
 
       assert_current_path edition_path(@fact_check_edition.id)
       assert page.has_text?("Fact check email re-sent")
+    end
+  end
+
+  context "Resend fact check email page when Notify rejects a recipient (team-only API key)" do
+    setup do
+      stub_post_resend_fact_check_emails(success: false, notify_team_only: true)
+      @fact_check_edition = FactoryBot.create(:edition, :fact_check_via_manager)
+      visit resend_fact_check_email_page_edition_path(@fact_check_edition)
+    end
+
+    should "show the team-only error message rather than the generic service problem message" do
+      click_button "Resend fact check email"
+
+      assert page.has_text?(NotifyTeamOnlyError::MESSAGE)
+      assert page.has_no_text?("Due to a service problem")
+      assert page.has_button?("Resend fact check email")
     end
   end
 
