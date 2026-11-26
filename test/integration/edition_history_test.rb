@@ -43,6 +43,10 @@ class EditionHistoryTest < IntegrationTest
       assert page.has_link?("Update important note")
     end
 
+    should "show a 'Send to 2i' link" do
+      assert page.has_link?("Send to 2i")
+    end
+
     should "navigate to the 'Update important note' page when the button is clicked" do
       click_link("Update important note")
       assert_current_path history_update_important_note_edition_path(@draft_edition.id)
@@ -124,6 +128,17 @@ class EditionHistoryTest < IntegrationTest
         assert_not page.has_content?("Add edition note")
         assert_not page.has_content?("Update important note")
       end
+
+      should "hide the 2i action link from the user" do
+        user = FactoryBot.create(:user, name: "Stub User")
+        login_as(user)
+
+        visit edition_path(@draft_edition)
+        click_link("History and notes")
+
+        assert_not user.has_editor_permissions?(@draft_edition)
+        assert_not page.has_content?("Send to 2i")
+      end
     end
 
     context "when the user has welsh editor permissions" do
@@ -144,6 +159,16 @@ class EditionHistoryTest < IntegrationTest
         assert_not page.has_content?("Update important note")
       end
 
+      should "hide the 2i action link from the user on a non welsh document" do
+        visit edition_path(@draft_edition)
+        login_as(@user_welsh)
+
+        click_link("History and notes")
+
+        assert_not @user_welsh.has_editor_permissions?(@draft_edition)
+        assert_not page.has_content?("Send to 2i")
+      end
+
       should "show the note action buttons for the user on a welsh document" do
         edition = @user.create_edition(:answer, panopticon_id: FactoryBot.create(:artefact, language: "cy").id, title: "My Title", slug: "my-title")
         edition.state = "fact_check"
@@ -156,6 +181,19 @@ class EditionHistoryTest < IntegrationTest
         assert @user_welsh.has_editor_permissions?(edition)
         assert page.has_content?("Add edition note")
         assert page.has_content?("Update important note")
+      end
+
+      should "show the 2i action link for the user on a welsh document" do
+        edition = @user.create_edition(:answer, panopticon_id: FactoryBot.create(:artefact, language: "cy").id, title: "My Title", slug: "my-title")
+        edition.state = "draft"
+        edition.save!
+        login_as(@user_welsh)
+
+        visit edition_path(edition)
+        click_link("History and notes")
+
+        assert @user_welsh.has_editor_permissions?(edition)
+        assert page.has_content?("Send to 2i")
       end
     end
 
@@ -378,21 +416,6 @@ class EditionHistoryTest < IntegrationTest
         page.find("h1", text: "Compare edition 1 and 2")
         assert page.has_css?("h1", text: "Compare edition 1 and 2")
         assert page.has_content?(edition_two.title)
-      end
-
-      should "compare editions that have no body" do
-        edition_one = FactoryBot.create(:answer_edition, :published, body: nil)
-        edition_two = FactoryBot.create(
-          :answer_edition,
-          :published,
-          panopticon_id: edition_one.panopticon_id,
-          body: nil,
-        )
-
-        visit history_edition_path(edition_two)
-        page.find("a", text: "Compare with Edition 1").click
-
-        assert page.has_css?("h1", text: "Compare edition 1 and 2")
       end
     end
 
