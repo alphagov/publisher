@@ -206,6 +206,10 @@ module EditionsSidebarButtonsHelper
           href: history_update_important_note_edition_path,
         },
       )
+
+      if edition.can_request_review?
+        buttons << link_to("Send to 2i", send_to_2i_page_edition_path(edition), class: "govuk-link govuk-link--no-visited-state")
+      end
     end
 
     buttons << if edition.published? || edition.archived?
